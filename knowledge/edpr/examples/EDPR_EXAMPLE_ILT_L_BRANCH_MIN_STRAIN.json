@@ -1,0 +1,913 @@
+{
+  "schema": "edpr-problem-map/0.3-draft",
+  "id": "edpr:p_ilt_l_branch_min_strain_001",
+  "parserMetadata": {
+    "parserName": "EDPR-APF Parser",
+    "parserVersion": "0.3",
+    "basis": [
+      "P-Maps",
+      "APF via LLM",
+      "FBS",
+      "Knowloop"
+    ],
+    "parseConfidence": "high"
+  },
+  "sourceRequest": {
+    "rawText": "Requirement\n-ILT layout\n-branch is l shaped with horizontal connector\n-branch can be fixed to the top frame or free to slide\n-give the solution that minimizes strains on header and branch lines",
+    "language": "en"
+  },
+  "problemIdentity": {
+    "title": "L-shaped inline tee branch support option comparison",
+    "problemClass": "option_comparison",
+    "domain": "subsea_inline_structure",
+    "solverMode": "concept_screening"
+  },
+  "pMap": {
+    "requirements": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:ilt_layout",
+        "type": "requirement",
+        "label": "Use inline tee layout",
+        "sourcePhrase": "ILT layout",
+        "ontologyLinks": [
+          "edes:GD-B",
+          "ILS-ILT"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:l_branch",
+        "type": "requirement",
+        "label": "Use L-shaped branch with horizontal support connector",
+        "sourcePhrase": "branch is l shaped with horizontal connector",
+        "ontologyLinks": [
+          "edes:GD-BrPipe",
+          "edikb:p2_branch_layout_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:compare_branch_support",
+        "type": "requirement",
+        "label": "Compare fixed and slotted branch support",
+        "sourcePhrase": "branch can be fixed to the top frame or free to slide",
+        "ontologyLinks": [
+          "edes:GD-Con",
+          "edikb:p2_branch_support_connector_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:minimize_strains",
+        "type": "requirement",
+        "label": "Minimize both header and branch line strains",
+        "sourcePhrase": "give the solution that minimizes strains on header and branch lines",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "functions": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:function:provide_branch_connection",
+        "type": "function",
+        "label": "Provide branch connection from header pipe through inline tee layout",
+        "sourcePhrase": "ILT layout",
+        "ontologyLinks": [
+          "edes:GD-B"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:function:control_installation_strain",
+        "type": "function",
+        "label": "Control installation strain in header and branch lines",
+        "sourcePhrase": "minimizes strains on header and branch lines",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:artifact:inline_tee",
+        "type": "artifact",
+        "label": "Inline tee branch layout",
+        "sourcePhrase": "ILT layout",
+        "ontologyLinks": [
+          "edes:GD-B",
+          "ILS-ILT"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:artifact:top_frame",
+        "type": "artifact",
+        "label": "Top frame",
+        "sourcePhrase": "top frame",
+        "ontologyLinks": [
+          "edes:GD-ST"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "behaviours": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:header_strain",
+        "type": "behaviour",
+        "label": "Peak nominal strain in header pipeline",
+        "sourcePhrase": "strains on header",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:branch_strain",
+        "type": "behaviour",
+        "label": "Peak nominal strain in branch pipe",
+        "sourcePhrase": "strains on branch lines",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "issues": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:pmap:issue:top_frame_system_unspecified",
+        "type": "issue",
+        "label": "Top-frame connection system not specified by user",
+        "sourcePhrase": "top frame",
+        "ontologyLinks": [
+          "edikb:p2_branch_east_connection_system_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "links": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:branch_support_affects_branch_and_header",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:compare_branch_support",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:header_strain",
+        "relation": "affects"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:branch_support_affects_branch",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:compare_branch_support",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:branch_strain",
+        "relation": "affects"
+      }
+    ]
+  },
+  "designContext": {
+    "installationMethod": "S-lay",
+    "installationRegion": "overbend",
+    "analysisStage": "conceptual_screening",
+    "codeBasis": [],
+    "notes": [
+      "Installation context is inferred from current EDIKB Paper 2 inline-structure dataset.",
+      "Paper 2 branch evidence uses header OD 0.4064 m, header WT 0.021 m, branch OD 0.2731 m, branch WT 0.0159 m, stinger radius 85 m, and top tension 100 MT."
+    ]
+  },
+  "knownInputs": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:known:layout_family",
+      "parameter": "layout_family",
+      "value": "ILS-ILT",
+      "unit": null,
+      "sourcePhrase": "ILT layout",
+      "ontologyLinks": [
+        "ILS-ILT"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:known:branch_shape",
+      "parameter": "branch_shape",
+      "value": "L",
+      "unit": null,
+      "sourcePhrase": "branch is l shaped",
+      "ontologyLinks": [
+        "edikb:p2_branch_layout_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:known:branch_support_option_set",
+      "parameter": "branch_support_connection",
+      "value": [
+        "fixed_to_top_structure",
+        "slotted_to_top_structure"
+      ],
+      "unit": null,
+      "sourcePhrase": "fixed to the top frame or free to slide",
+      "ontologyLinks": [
+        "edikb:p2_branch_support_connector_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:known:branch_support_orientation",
+      "parameter": "branch_support_orientation",
+      "value": "horizontal_side_connection",
+      "unit": null,
+      "sourcePhrase": "horizontal connector",
+      "ontologyLinks": [
+        "ILS-ILT"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "unknownInputs": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:unknown:top_frame_connection_system",
+      "parameter": "structure_connection_system",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Paper 2 branch results depend on the EA-ST/top-frame connection system. Available L-branch numeric cases include F1, F2, and PS.",
+      "suggestedDefault": "compare_available_dataset_options",
+      "askUser": false
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:unknown:project_strain_limits",
+      "parameter": "allowable_strain_percent",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "The user requested minimization, not pass/fail against a project strain limit.",
+      "suggestedDefault": null,
+      "askUser": false
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:unknown:weighting_between_header_and_branch",
+      "parameter": "objective_weighting",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Header and branch strains may trade off. Without explicit weighting, solve as Pareto/listwise ranking and prefer lower maximum normalized concern.",
+      "suggestedDefault": "pareto_then_engineering_judgement",
+      "askUser": false
+    }
+  ],
+  "requirements": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:req:layout_ilt",
+      "requirementType": "hard_constraint",
+      "statement": "Candidate shall be an inline tee layout.",
+      "sourcePhrase": "ILT layout",
+      "ontologyLinks": [
+        "ILS-ILT",
+        "edes:GD-B"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:req:l_branch",
+      "requirementType": "hard_constraint",
+      "statement": "Branch shall be L-shaped with horizontal branch support/interface to the top frame.",
+      "sourcePhrase": "branch is l shaped with horizontal connector",
+      "ontologyLinks": [
+        "edes:GD-BrPipe",
+        "ILS-ILT"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:req:compare_fixed_slotted",
+      "requirementType": "comparison",
+      "statement": "Compare branch support fixed to top frame versus free-to-slide/slotted support.",
+      "sourcePhrase": "branch can be fixed to the top frame or free to slide",
+      "ontologyLinks": [
+        "edikb:p2_branch_support_connector_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:req:minimize_header_branch_strain",
+      "requirementType": "objective",
+      "statement": "Select the solution that minimizes both header-pipeline and branch-pipe peak nominal strains.",
+      "sourcePhrase": "give the solution that minimizes strains on header and branch lines",
+      "ontologyLinks": [
+        "edikb:p2_branch_header_branch_independence_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:constraint:edas_valid_layout",
+      "constraintType": "assembly_validity",
+      "statement": "Selected standard ILT anchor must be valid under EDAS layout/build rules.",
+      "ontologyLinks": [
+        "ILS-ILT",
+        "edas:branch_layout"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:constraint:separate_response_owners",
+      "constraintType": "behaviour_accounting",
+      "statement": "Header and branch line strains shall remain separate response targets during comparison.",
+      "ontologyLinks": [
+        "edikb:p2_branch_header_branch_independence_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "requirementFormalization": {
+    "basis": "APF-inspired requirement tuple r = (Z, M, C)",
+    "objectiveRequirements": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:req:obj_minimize_header_strain",
+        "sourcePhrase": "minimizes strains on header",
+        "requirementType": "objective",
+        "Z": {
+          "evaluationRegion": "S-lay overbend",
+          "condition": "L-shaped ILT candidate layouts"
+        },
+        "M": {
+          "metric": "peak_nominal_strain",
+          "responseTarget": "header_pipeline",
+          "unit": "percent"
+        },
+        "C": {
+          "intent": "minimize",
+          "operator": "listwise_rank",
+          "threshold": null
+        },
+        "formalExpression": "minimize peak_nominal_strain_percent where response_target == 'header_pipeline'",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:req:obj_minimize_branch_strain",
+        "sourcePhrase": "minimizes strains on branch lines",
+        "requirementType": "objective",
+        "Z": {
+          "evaluationRegion": "S-lay overbend",
+          "condition": "L-shaped ILT candidate layouts"
+        },
+        "M": {
+          "metric": "peak_nominal_strain",
+          "responseTarget": "branch_pipe",
+          "unit": "percent"
+        },
+        "C": {
+          "intent": "minimize",
+          "operator": "listwise_rank",
+          "threshold": null
+        },
+        "formalExpression": "minimize peak_nominal_strain_percent where response_target == 'branch_pipe'",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "constraintRequirements": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:req:constraint_l_branch_only",
+        "sourcePhrase": "branch is l shaped",
+        "requirementType": "constraint",
+        "Z": {
+          "evaluationRegion": "candidate_layout_set"
+        },
+        "M": {
+          "metric": "branch_shape"
+        },
+        "C": {
+          "intent": "must_satisfy",
+          "operator": "==",
+          "threshold": "L"
+        },
+        "formalExpression": "candidate.branch_shape == 'L'",
+        "ontologyLinks": [
+          "edikb:p2_branch_layout_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "preferenceRequirements": [],
+    "comparisonRequirements": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:req:compare_fixed_vs_slotted",
+        "sourcePhrase": "fixed to the top frame or free to slide",
+        "requirementType": "comparison",
+        "Z": {
+          "evaluationRegion": "candidate_layout_set",
+          "optionSet": [
+            "fixed_to_top_structure",
+            "slotted_to_top_structure"
+          ]
+        },
+        "M": {
+          "metric": [
+            "peak_nominal_strain_header_pipeline",
+            "peak_nominal_strain_branch_pipe"
+          ],
+          "unit": "percent"
+        },
+        "C": {
+          "intent": "compare_and_rank",
+          "operator": "pareto_or_weighted_listwise",
+          "threshold": null
+        },
+        "formalExpression": "rank candidates by header strain and branch strain using Paper 2 branch rows; preserve Pareto tradeoffs if no single option dominates",
+        "ontologyLinks": [
+          "edikb:p2_branch_support_connector_01",
+          "edikb:p2_branch_header_branch_independence_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "verificationRequirements": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:req:verify_outside_dataset",
+        "sourcePhrase": "give the solution",
+        "requirementType": "verification_need",
+        "Z": {
+          "evaluationRegion": "project_specific_geometry"
+        },
+        "M": {
+          "metric": "evidence_applicability"
+        },
+        "C": {
+          "intent": "verify_if_project_inputs_differ_from_paper_dataset",
+          "operator": "requires_FEA_or_ML_case_if_outside_scope",
+          "threshold": null
+        },
+        "formalExpression": "if project geometry != Paper 2 branch evidence domain, mark recommendation as concept-screening result and create FEA/ML verification case",
+        "ontologyLinks": [
+          "edikb:p2_branch_missing_z_slot_cases_01",
+          "edikb:candidate_full_layout_feature_interactions_01"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "formalizedChecks": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:check:retrieve_l_branch_rows",
+        "checkType": "numeric_evidence",
+        "statement": "Retrieve Paper 2 rows where layout_id begins with L-, branch_shape is L, and response_target is header_pipeline or branch_pipe.",
+        "ontologyLinks": [
+          "edikb:p2_branch_layout_01"
+        ]
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:check:separate_header_branch_rank",
+        "checkType": "ranking",
+        "statement": "Rank header and branch strains separately before choosing a balanced solution.",
+        "ontologyLinks": [
+          "edikb:p2_branch_header_branch_independence_01"
+        ]
+      }
+    ]
+  },
+  "evaluationVariables": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evalvar:layout_id",
+      "name": "layout_id",
+      "allowedValues": [
+        "L-FT-F1",
+        "L-ST-F1",
+        "L-FT-F2",
+        "L-ST-F2",
+        "L-FT-PS",
+        "L-ST-PS"
+      ],
+      "reason": "These L-branch cases are available in the current Paper 2 branch numeric dataset.",
+      "source": "EDIKB_PAPER2_BRANCH_ML_DATASET_v0_1.csv"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evalvar:branch_support_connection",
+      "name": "branch_support_connection",
+      "allowedValues": [
+        "fixed_to_top_structure",
+        "slotted_to_top_structure"
+      ],
+      "reason": "User explicitly asks to compare fixed and sliding/free branch support.",
+      "source": "user_request"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evalvar:structure_connection_system",
+      "name": "structure_connection_system",
+      "allowedValues": [
+        "F1",
+        "F2",
+        "PS"
+      ],
+      "reason": "Available L-branch Paper 2 cases include these EA-ST/top-frame connection systems.",
+      "source": "EDIKB_PAPER2_BRANCH_ML_DATASET_v0_1.csv"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evalvar:response_target",
+      "name": "response_target",
+      "allowedValues": [
+        "header_pipeline",
+        "branch_pipe"
+      ],
+      "reason": "The problem requires minimizing strains in two response owners.",
+      "source": "user_request"
+    }
+  ],
+  "candidateComponents": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:component:gd_b",
+      "componentId": "edes:GD-B",
+      "componentLabel": "branch layout subassembly",
+      "selectionReason": "User requested an ILT branch layout.",
+      "sourcePhrase": "ILT layout",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:component:gd_brpipe",
+      "componentId": "edes:GD-BrPipe",
+      "componentLabel": "branch pipe",
+      "selectionReason": "User specified an L-shaped branch line.",
+      "sourcePhrase": "branch is l shaped",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:component:gd_st",
+      "componentId": "edes:GD-ST",
+      "componentLabel": "top frame",
+      "selectionReason": "User specified branch connection to top frame.",
+      "sourcePhrase": "top frame",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:component:gd_con",
+      "componentId": "edes:GD-Con",
+      "componentLabel": "connector",
+      "selectionReason": "User specified fixed or free-to-slide support.",
+      "sourcePhrase": "fixed to the top frame or free to slide",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "candidateAssemblies": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:assembly:ilt_l_branch_to_top_frame",
+      "assemblyPatternId": "edas:branch_layout",
+      "assemblyLabel": "L-shaped branch layout attached to top frame",
+      "status": "requires_EDAS_validation",
+      "reason": "The request defines a branch layout with branch pipe, top frame, and connector association.",
+      "confidence": "medium",
+      "ontologyStatus": "unresolved_if_EDAS_id_absent"
+    }
+  ],
+  "standardLayoutCandidates": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:standard_layout:ilt_l_ft_f1p",
+      "layoutId": "ILT-L-FT-F1p",
+      "layoutFamily": "ILS-ILT",
+      "selectionReason": "L-shaped branch with fixed support to top frame; standard-layout anchor exists.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "ILS-ILT",
+        "edes:GD-B",
+        "edes:GD-ST",
+        "edes:GD-Con"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:standard_layout:ilt_l_st_f1p",
+      "layoutId": "ILT-L-ST-F1p",
+      "layoutFamily": "ILS-ILT",
+      "selectionReason": "L-shaped branch with slotted/free-to-slide support to top frame; standard-layout anchor exists.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "ILS-ILT",
+        "edes:GD-B",
+        "edes:GD-ST",
+        "edes:GD-Con"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:standard_layout:ilt_l_ft_f2",
+      "layoutId": "ILT-L-FT-F2",
+      "layoutFamily": "ILS-ILT",
+      "selectionReason": "Dataset-supported L fixed branch support with F2 top-frame connector system.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "edikb:p2_branch_east_connection_system_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:standard_layout:ilt_l_st_ps",
+      "layoutId": "ILT-L-ST-PS",
+      "layoutFamily": "ILS-ILT",
+      "selectionReason": "Dataset-supported L slotted branch support with PS top-frame connector system; likely relevant to minimizing header strain while keeping branch strain low.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "edikb:p2_branch_support_connector_01",
+        "edikb:p2_branch_east_connection_system_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "behaviourConcerns": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:behaviour:header_peak_strain",
+      "responseMetric": "peak_nominal_strain",
+      "responseTarget": "header_pipeline",
+      "priority": "high",
+      "reason": "User requested minimization of header line strain.",
+      "sourcePhrase": "header",
+      "ontologyLinks": [
+        "edikb:p2_branch_header_branch_independence_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:behaviour:branch_peak_strain",
+      "responseMetric": "peak_nominal_strain",
+      "responseTarget": "branch_pipe",
+      "priority": "high",
+      "reason": "User requested minimization of branch line strain.",
+      "sourcePhrase": "branch lines",
+      "ontologyLinks": [
+        "edikb:p2_branch_header_branch_independence_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:behaviour:branch_support_effect",
+      "responseMetric": "connection_system_effect",
+      "priority": "high",
+      "reason": "Fixed versus slotted branch support changes branch and header response.",
+      "sourcePhrase": "fixed to the top frame or free to slide",
+      "ontologyLinks": [
+        "edikb:p2_branch_support_connector_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "retrievalPlan": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:retrieval:component_definitions",
+      "queryType": "component_definition",
+      "targets": [
+        "edes:GD-B",
+        "edes:GD-BrPipe",
+        "edes:GD-ST",
+        "edes:GD-Con"
+      ],
+      "reason": "Need component identities and interface parameters for ILT branch layout.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:retrieval:standard_layouts",
+      "queryType": "standard_layout_archetype",
+      "targets": [
+        "ILS-ILT",
+        "ILT-L-FT-F1p",
+        "ILT-L-ST-F1p",
+        "ILT-L-FT-F2",
+        "ILT-L-FT-PS",
+        "ILT-L-ST-PS"
+      ],
+      "reason": "Use standard ILT anchors as starting layout candidates.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:retrieval:assembly_rules",
+      "queryType": "assembly_rule",
+      "targets": [
+        "edas:branch_layout"
+      ],
+      "reason": "Validate branch-to-top-frame association, connector type, and horizontal L-branch support geometry.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:retrieval:branch_behaviour_rules",
+      "queryType": "behaviour_rule",
+      "targets": [
+        "edikb:p2_branch_layout_01",
+        "edikb:p2_branch_support_connector_01",
+        "edikb:p2_branch_header_branch_independence_01",
+        "edikb:p2_branch_east_connection_system_01"
+      ],
+      "reason": "Need EDIKB rules for branch support, top-frame connection system, and separate header/branch response.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:retrieval:interaction_policy",
+      "queryType": "behaviour_rule",
+      "targets": [
+        "edikb:policy_direct_combined_evidence_over_superposition_01",
+        "edikb:policy_superposition_requires_evidence_01",
+        "edikb:candidate_full_layout_feature_interactions_01"
+      ],
+      "reason": "ILT is a multi-component layout. Use direct combined branch-layout evidence before isolated component effect summation.",
+      "priority": "medium"
+    }
+  ],
+  "numericComparisonPlan": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:numeric:l_branch_rows",
+      "dataset": "EDIKB_FULL_WITH_EAST_EASB_COMBINED_DEDUPED_v0_1.csv",
+      "filters": {
+        "dataset_source_family": "paper2_branch_layout_behaviour",
+        "branch_shape": "L",
+        "response_metric": "peak_nominal_strain",
+        "response_target": [
+          "header_pipeline",
+          "branch_pipe"
+        ],
+        "branch_support_connection": [
+          "fixed_to_top_structure",
+          "slotted_to_top_structure"
+        ],
+        "structure_connection_system": [
+          "F1",
+          "F2",
+          "PS"
+        ]
+      },
+      "purpose": "Rank available L-shaped ILT options by header and branch peak nominal strain.",
+      "expectedOutput": "paired header/branch strain table by layout_id"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:numeric:dataset_hint_available_cases",
+      "dataset": "EDIKB_PAPER2_BRANCH_ML_DATASET_v0_1.csv",
+      "filters": {
+        "layout_id": [
+          "L-FT-F1",
+          "L-ST-F1",
+          "L-FT-F2",
+          "L-ST-F2",
+          "L-FT-PS",
+          "L-ST-PS"
+        ]
+      },
+      "purpose": "Use exact Paper 2 branch rows for first-pass concept screening.",
+      "expectedOutput": "case evidence for fixed/slotted branch support comparison"
+    }
+  ],
+  "interactionEffectPlan": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:interaction:branch_top_frame_header",
+      "type": "feature_interaction_check",
+      "componentSet": [
+        "edes:GD-B",
+        "edes:GD-BrPipe",
+        "edes:GD-ST",
+        "edes:GD-Con"
+      ],
+      "assemblyPattern": "edas:branch_layout",
+      "isolatedEffectRules": [
+        "edikb:p2_branch_support_connector_01",
+        "edikb:p2_branch_east_connection_system_01"
+      ],
+      "combinedEffectRules": [
+        "edikb:p2_branch_layout_01",
+        "edikb:p2_branch_header_branch_independence_01"
+      ],
+      "interactionCandidateRules": [
+        "edikb:candidate_full_layout_feature_interactions_01"
+      ],
+      "superpositionPolicy": "direct_combined_evidence_overrides_isolated_effect_summation",
+      "simpleSuperpositionAllowed": "no",
+      "candidateEquationForms": [
+        "Y_header = f(branch_shape, branch_support_connection, structure_connection_system, P_b1_D, P_b2_D, P_bc_D)",
+        "Y_branch = f(branch_shape, branch_support_connection, structure_connection_system, P_b1_D, P_b2_D, P_bc_D)",
+        "DeltaY_layout = DeltaY_branch_support + DeltaY_top_frame_connection + DeltaY_interaction"
+      ],
+      "requiredDatasetQueries": [
+        "edpr:p_ilt_l_branch_min_strain_001:numeric:l_branch_rows"
+      ],
+      "verificationNeed": "dataset_lookup"
+    }
+  ],
+  "solverPlan": {
+    "solverMode": "option_comparison",
+    "recommendedNextAction": "retrieve_dataset_rows_and_rank",
+    "steps": [
+      "Retrieve standard ILT L-branch anchors from standard layout library.",
+      "Validate candidate layout construction using EDAS branch layout rules.",
+      "Retrieve EDIKB branch layout and branch support behaviour rules.",
+      "Retrieve Paper 2 L-branch numeric rows for fixed and slotted branch supports.",
+      "Create paired header/branch comparison by layout_id.",
+      "Rank options using Pareto/listwise ranking because header and branch strain are separate response targets.",
+      "Prefer direct Paper 2 combined layout evidence over isolated component-effect superposition.",
+      "Report the best-supported option and any tradeoff between header and branch strain."
+    ],
+    "verificationNeeds": [
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:verify:project_geometry",
+        "statement": "If project pipe/branch geometry, top-frame dimensions, or installation parameters differ materially from Paper 2 cases, create FEA/ML verification cases before final design."
+      }
+    ],
+    "doNotDo": [
+      "Do not merge header and branch strain into one unlabelled response.",
+      "Do not choose the lowest branch strain option if it creates an unacceptable header strain penalty.",
+      "Do not estimate branch layout response by adding isolated branch support and top-frame rules when direct branch layout evidence exists."
+    ]
+  },
+  "rankingCriteria": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:rank:pareto_header_branch",
+      "method": "APF-style listwise ranking with Pareto check",
+      "candidateSet": [
+        "L-FT-F1",
+        "L-ST-F1",
+        "L-FT-F2",
+        "L-ST-F2",
+        "L-FT-PS",
+        "L-ST-PS"
+      ],
+      "order": [
+        "satisfy ILT and L-branch hard constraints",
+        "minimize header_pipeline peak_nominal_strain",
+        "minimize branch_pipe peak_nominal_strain",
+        "prefer candidates with direct numeric evidence",
+        "flag options with high header increment over plain-pipe baseline",
+        "state tradeoff if no single candidate minimizes both responses"
+      ],
+      "tieBreakers": [
+        "prefer lower maximum normalized concern across header and branch",
+        "prefer lower header strain if branch strain difference is small and header strain has baseline increment data"
+      ]
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:question:top_frame_connection_system",
+      "question": "Should the top-frame connection system be restricted to a specific family, or should F1, F2, and PS all be compared?",
+      "importance": "important_but_assumable"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:question:objective_weighting",
+      "question": "Should header strain and branch strain be weighted equally, or should header strain be treated as the governing objective?",
+      "importance": "important_but_assumable"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:assumption:paper2_domain",
+      "statement": "Use Paper 2 branch-layout evidence as the concept-screening domain.",
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:assumption:compare_all_available_top_frame_systems",
+      "statement": "Because the user did not specify EA-ST/top-frame connection system, compare available F1, F2, and PS dataset cases.",
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:assumption:horizontal_connector_maps_to_l_branch_side_attachment",
+      "statement": "Interpret horizontal connector as the L-branch side/horizontal support connection to the top frame in the standard ILT layout library.",
+      "confidence": "medium"
+    }
+  ],
+  "evidenceTrace": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evidence:branch_dataset",
+      "source": "EDIKB_PAPER2_BRANCH_ML_DATASET_v0_1.csv",
+      "sourceAnchor": "paper2:table_xii",
+      "relevance": "Contains direct numeric header and branch strain rows for L-shaped branch layouts with fixed and slotted branch support."
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evidence:full_graph",
+      "source": "EDIKB_FULL_KNOWLEDGE_GRAPH_v0_3.json",
+      "sourceAnchor": [
+        "edikb:p2_branch_layout_01",
+        "edikb:p2_branch_support_connector_01",
+        "edikb:p2_branch_header_branch_independence_01",
+        "edikb:p2_branch_east_connection_system_01"
+      ],
+      "relevance": "Provides semantic behaviour rules for branch layout comparison and response separation."
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:evidence:standard_layout_library",
+      "source": "standard_ils_layouts-9.json",
+      "sourceAnchor": [
+        "ILS-ILT",
+        "ILT-L-FT-F1p",
+        "ILT-L-ST-F1p",
+        "ILT-L-FT-F2",
+        "ILT-L-FT-PS",
+        "ILT-L-ST-PS"
+      ],
+      "relevance": "Provides reusable ILT layout archetypes and anchors for L-shaped branch candidates."
+    }
+  ],
+  "parserWarnings": [
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:warning:no_uploaded_edpr_metaschema_validation",
+      "severity": "medium",
+      "message": "This example follows EDPR v0.3 prompt/spec shape. Validate against the user's latest EDPR metaschema when it is uploaded or made available."
+    },
+    {
+      "id": "edpr:p_ilt_l_branch_min_strain_001:warning:f1p_anchor_vs_dataset_code",
+      "severity": "low",
+      "message": "Standard layout anchors include F1p for post-style structure, while the numeric branch dataset uses F1 as the structure connection code. Solver should map this carefully during layout-to-dataset lookup."
+    }
+  ]
+}

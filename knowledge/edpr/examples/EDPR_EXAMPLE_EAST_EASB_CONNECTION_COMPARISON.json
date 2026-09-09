@@ -1,0 +1,616 @@
+{
+  "schema": "edpr-problem-map/0.3-draft",
+  "id": "edpr:p_east_easb_connection_compare_001",
+  "parserMetadata": {
+    "parserName": "EDPR-APF Parser",
+    "parserVersion": "0.3",
+    "basis": [
+      "P-Maps",
+      "APF via LLM",
+      "FBS",
+      "Knowloop"
+    ],
+    "parseConfidence": "high"
+  },
+  "sourceRequest": {
+    "rawText": "Compare EA-ST and EA-SB external attachment layouts with F1, F2, PS and deadband connector systems. Choose concepts that minimize installation strain while checking low-strain pocket behaviour and high-strain penalties.",
+    "language": "en"
+  },
+  "problemIdentity": {
+    "title": "EA-ST and EA-SB connection-system strain comparison",
+    "problemClass": "option_comparison",
+    "domain": "subsea_inline_structure",
+    "solverMode": "concept_screening"
+  },
+  "pMap": {
+    "requirements": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:requirement:compare_external_attachments",
+        "type": "requirement",
+        "label": "Compare EA-ST and EA-SB external attachment layouts",
+        "sourcePhrase": "Compare EA-ST and EA-SB external attachment layouts",
+        "ontologyLinks": [
+          "edes:GD-ST",
+          "edes:GD-SB"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:requirement:connector_systems",
+        "type": "requirement",
+        "label": "Compare connector systems including deadband variants",
+        "sourcePhrase": "F1, F2, PS and deadband connector systems",
+        "ontologyLinks": [
+          "edes:GD-Con"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "functions": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:function:attach_external_structure",
+        "type": "function",
+        "label": "Attach external top or base structure to header pipe",
+        "sourcePhrase": "external attachment layouts",
+        "ontologyLinks": [
+          "edes:GD-ST",
+          "edes:GD-SB",
+          "edes:GD-Con"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:artifact:gd_st",
+        "type": "artifact",
+        "label": "External top structure",
+        "sourcePhrase": "EA-ST",
+        "ontologyLinks": [
+          "edes:GD-ST",
+          "ILS-EAST"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:artifact:gd_sb",
+        "type": "artifact",
+        "label": "External base structure",
+        "sourcePhrase": "EA-SB",
+        "ontologyLinks": [
+          "edes:GD-SB",
+          "ILS-EASB"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "behaviours": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:low_strain_pocket",
+        "type": "behaviour",
+        "label": "Low-strain pocket behaviour",
+        "sourcePhrase": "low-strain pocket behaviour",
+        "ontologyLinks": [
+          "edikb:p2_east_low_strain_pocket_01",
+          "edikb:p2_easb_low_strain_pocket_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:high_strain_penalty",
+        "type": "behaviour",
+        "label": "High-strain penalty",
+        "sourcePhrase": "high-strain penalties",
+        "ontologyLinks": [
+          "edikb:p2_east_high_strain_penalty_01",
+          "edikb:p2_easb_high_strain_penalty_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "issues": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:pmap:issue:easb_contact_ownership",
+        "type": "issue",
+        "label": "EA-SB contact ownership changes response mechanism",
+        "sourcePhrase": "EA-SB",
+        "ontologyLinks": [
+          "edikb:p2_easb_connector_system_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "links": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:link:connectors_affect_strain",
+        "source": "edpr:p_east_easb_connection_compare_001:pmap:requirement:connector_systems",
+        "target": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:high_strain_penalty",
+        "relation": "affects"
+      }
+    ]
+  },
+  "designContext": {
+    "installationMethod": "S-lay",
+    "installationRegion": "overbend",
+    "analysisStage": "conceptual_screening",
+    "codeBasis": [],
+    "notes": [
+      "Uses Paper 2 EA-ST and EA-SB behaviour rows.",
+      "EA-ST does not own roller contact; EA-SB may own the contact surface and redirect reaction through connectors."
+    ]
+  },
+  "knownInputs": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:known:component_set",
+      "parameter": "component_set",
+      "value": [
+        "GD-ST",
+        "GD-SB",
+        "GD-Con"
+      ],
+      "unit": null,
+      "sourcePhrase": "EA-ST and EA-SB external attachment layouts",
+      "ontologyLinks": [
+        "edes:GD-ST",
+        "edes:GD-SB",
+        "edes:GD-Con"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:known:connection_systems",
+      "parameter": "connection_system",
+      "value": [
+        "F1",
+        "F1D",
+        "F2",
+        "F2D",
+        "PS",
+        "PSD"
+      ],
+      "unit": null,
+      "sourcePhrase": "F1, F2, PS and deadband connector systems",
+      "ontologyLinks": [
+        "edes:GD-Con"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "unknownInputs": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:unknown:connector_locations",
+      "parameter": "P_c1_D_and_P_c2_D",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Connector location parameters affect response and should be checked against Paper 2 case scope.",
+      "suggestedDefault": "use_paper2_case_values",
+      "askUser": false
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:unknown:strain_limit",
+      "parameter": "allowable_strain_percent",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "User asks for minimization rather than a pass/fail code check.",
+      "suggestedDefault": null,
+      "askUser": false
+    }
+  ],
+  "requirements": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:req:compare_east_easb",
+      "requirementType": "comparison",
+      "statement": "Compare EA-ST and EA-SB connection-system concepts.",
+      "sourcePhrase": "Compare EA-ST and EA-SB",
+      "ontologyLinks": [
+        "edes:GD-ST",
+        "edes:GD-SB"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:req:minimize_strain",
+      "requirementType": "objective",
+      "statement": "Minimize installation strain while checking low-strain pocket and high-strain penalty behaviour.",
+      "sourcePhrase": "minimize installation strain",
+      "ontologyLinks": [
+        "edikb:p2_east_connector_system_01",
+        "edikb:p2_easb_connector_system_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:constraint:separate_east_easb_mechanisms",
+      "constraintType": "behaviour_accounting",
+      "statement": "Do not transfer EA-ST PS plain-like behaviour directly to EA-SB PS because EA-SB owns contact and has a different load path.",
+      "ontologyLinks": [
+        "edikb:p2_easb_ps_not_plain_like_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "requirementFormalization": {
+    "basis": "APF-inspired requirement tuple r = (Z, M, C)",
+    "objectiveRequirements": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:req:obj_minimize_case_max_strain",
+        "sourcePhrase": "minimize installation strain",
+        "requirementType": "objective",
+        "Z": {
+          "evaluationRegion": "EA-ST and EA-SB response regions",
+          "condition": "connection-system option set"
+        },
+        "M": {
+          "metric": "case_max_strain_percent",
+          "unit": "percent"
+        },
+        "C": {
+          "intent": "minimize",
+          "operator": "listwise_rank",
+          "threshold": null
+        },
+        "formalExpression": "minimize case_max_strain_percent by component_type and connection_system",
+        "ontologyLinks": [
+          "edikb:p2_east_connector_system_01",
+          "edikb:p2_easb_connector_system_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "constraintRequirements": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:req:constraint_direct_evidence",
+        "sourcePhrase": "Compare EA-ST and EA-SB",
+        "requirementType": "constraint",
+        "Z": {
+          "evaluationRegion": "evidence selection"
+        },
+        "M": {
+          "metric": "evidence_applicability"
+        },
+        "C": {
+          "intent": "must_use_direct_family_evidence",
+          "operator": "==",
+          "threshold": true
+        },
+        "formalExpression": "use EA-ST rows for GD-ST and EA-SB rows for GD-SB; do not transfer PS behaviour between families",
+        "ontologyLinks": [
+          "edikb:p2_easb_ps_not_plain_like_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "preferenceRequirements": [],
+    "comparisonRequirements": [],
+    "verificationRequirements": [],
+    "formalizedChecks": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:check:low_pocket_vs_penalty",
+        "checkType": "ranking",
+        "statement": "Compare low-strain pocket benefit against high-strain penalty for each connection system.",
+        "ontologyLinks": [
+          "edikb:p2_east_low_strain_pocket_01",
+          "edikb:p2_easb_low_strain_pocket_01",
+          "edikb:p2_east_high_strain_penalty_01",
+          "edikb:p2_easb_high_strain_penalty_01"
+        ]
+      }
+    ]
+  },
+  "evaluationVariables": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:evalvar:component_type",
+      "name": "component_type",
+      "allowedValues": [
+        "GD-ST",
+        "GD-SB"
+      ],
+      "reason": "EA-ST and EA-SB have different structural/contact mechanisms.",
+      "source": "EDIKB"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:evalvar:connection_system",
+      "name": "connection_system",
+      "allowedValues": [
+        "F1",
+        "F1D",
+        "F2",
+        "F2D",
+        "PS",
+        "PSD"
+      ],
+      "reason": "Connector system is the main option variable.",
+      "source": "EDIKB"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:evalvar:response_region",
+      "name": "response_region",
+      "allowedValues": [
+        "X_c",
+        "X_i",
+        "X_i1",
+        "X_i2",
+        "X_e"
+      ],
+      "reason": "Paper 2 response depends on connector-relative regions.",
+      "source": "EDIKB"
+    }
+  ],
+  "candidateComponents": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:component:gd_st",
+      "componentId": "edes:GD-ST",
+      "componentLabel": "external top structure",
+      "selectionReason": "User requested EA-ST.",
+      "sourcePhrase": "EA-ST",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:component:gd_sb",
+      "componentId": "edes:GD-SB",
+      "componentLabel": "external base structure",
+      "selectionReason": "User requested EA-SB.",
+      "sourcePhrase": "EA-SB",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:component:gd_con",
+      "componentId": "edes:GD-Con",
+      "componentLabel": "connector system",
+      "selectionReason": "User requested F1/F2/PS/deadband connector systems.",
+      "sourcePhrase": "connector systems",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "candidateAssemblies": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:assembly:east",
+      "assemblyPatternId": "edas:external_attachment_top_structure",
+      "assemblyLabel": "EA-ST connector-mediated top structure",
+      "status": "requires_EDAS_validation",
+      "reason": "Top structure connects to pipe through connector system.",
+      "confidence": "medium",
+      "ontologyStatus": "unresolved_if_EDAS_id_absent"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:assembly:easb",
+      "assemblyPatternId": "edas:external_attachment_base_structure",
+      "assemblyLabel": "EA-SB connector-mediated base structure",
+      "status": "requires_EDAS_validation",
+      "reason": "Base structure may own contact and return reaction through connectors.",
+      "confidence": "medium",
+      "ontologyStatus": "unresolved_if_EDAS_id_absent"
+    }
+  ],
+  "standardLayoutCandidates": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:standard_layout:ils_east",
+      "layoutId": "ILS-EAST",
+      "layoutFamily": "ILS-EAST",
+      "selectionReason": "Standard EA-ST family should be expanded to F1/F1D/F2/F2D/PS/PSD anchors.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "ILS-EAST",
+        "edes:GD-ST",
+        "edes:GD-Con"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:standard_layout:ils_easb",
+      "layoutId": "ILS-EASB",
+      "layoutFamily": "ILS-EASB",
+      "selectionReason": "Standard EA-SB family should be expanded to F1/F1D/F2/F2D/PS/PSD anchors.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "ILS-EASB",
+        "edes:GD-SB",
+        "edes:GD-Con"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "behaviourConcerns": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:behaviour:case_max_strain",
+      "responseMetric": "case_max_strain_percent",
+      "responseTarget": "header_pipeline",
+      "priority": "high",
+      "reason": "Primary objective is to minimize installation strain.",
+      "sourcePhrase": "minimize installation strain",
+      "ontologyLinks": [
+        "edikb:p2_east_connector_system_01",
+        "edikb:p2_easb_connector_system_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:behaviour:low_strain_pocket",
+      "responseMetric": "case_min_strain_percent",
+      "responseTarget": "internal_region",
+      "priority": "medium",
+      "reason": "Low-strain pocket can be beneficial but must be checked against strain relocation.",
+      "sourcePhrase": "low-strain pocket behaviour",
+      "ontologyLinks": [
+        "edikb:p2_east_low_strain_pocket_01",
+        "edikb:p2_easb_low_strain_pocket_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "retrievalPlan": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:retrieval:components",
+      "queryType": "component_definition",
+      "targets": [
+        "edes:GD-ST",
+        "edes:GD-SB",
+        "edes:GD-Con"
+      ],
+      "reason": "Need component and connector definitions.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:retrieval:assemblies",
+      "queryType": "assembly_rule",
+      "targets": [
+        "edas:external_attachment_top_structure",
+        "edas:external_attachment_base_structure"
+      ],
+      "reason": "Need EDAS construction rules for external attachments.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:retrieval:standard_layouts",
+      "queryType": "standard_layout_archetype",
+      "targets": [
+        "ILS-EAST",
+        "ILS-EASB"
+      ],
+      "reason": "Need standard layout anchors for available connection systems.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:retrieval:behaviour",
+      "queryType": "behaviour_rule",
+      "targets": [
+        "edikb:p2_east_connector_system_01",
+        "edikb:p2_easb_connector_system_01",
+        "edikb:p2_east_low_strain_pocket_01",
+        "edikb:p2_easb_low_strain_pocket_01",
+        "edikb:p2_easb_ps_not_plain_like_01"
+      ],
+      "reason": "Need EA-ST and EA-SB connector-system behaviour rules.",
+      "priority": "high"
+    }
+  ],
+  "numericComparisonPlan": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:numeric:east_easb_rows",
+      "dataset": "EDIKB_FULL_WITH_EAST_EASB_COMBINED_DEDUPED_v0_1.csv",
+      "filters": {
+        "dataset_source_family": [
+          "paper2_east_behaviour",
+          "paper2_easb_behaviour"
+        ],
+        "component_type": [
+          "GD-ST",
+          "GD-SB"
+        ],
+        "connection_system": [
+          "F1",
+          "F1D",
+          "F2",
+          "F2D",
+          "PS",
+          "PSD"
+        ]
+      },
+      "purpose": "Compare case maximum/minimum strain and region-specific response for EA-ST and EA-SB connector systems.",
+      "expectedOutput": "ranked EA-ST/EA-SB connection-system options with pocket/penalty explanation"
+    }
+  ],
+  "interactionEffectPlan": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:interaction:external_attachment",
+      "type": "feature_interaction_check",
+      "componentSet": [
+        "edes:GD-ST",
+        "edes:GD-SB",
+        "edes:GD-Con"
+      ],
+      "assemblyPattern": "edas:external_attachment",
+      "isolatedEffectRules": [
+        "edikb:p2_east_connector_system_01",
+        "edikb:p2_easb_connector_system_01"
+      ],
+      "combinedEffectRules": [],
+      "interactionCandidateRules": [
+        "edikb:p2_easb_f2_stiffness_elevation_vs_gdtp_gdsh_candidate_01",
+        "edikb:candidate_easb_gdtp_gdsh_interaction_equation_01",
+        "edikb:candidate_full_layout_feature_interactions_01"
+      ],
+      "superpositionPolicy": "direct_family_evidence_required_before_cross_family_transfer",
+      "simpleSuperpositionAllowed": "assumption_only",
+      "candidateEquationForms": [
+        "Y = f(component_type, connection_system, response_region, contact_ownership, combined_stiffness_ratio)"
+      ],
+      "requiredDatasetQueries": [
+        "edpr:p_east_easb_connection_compare_001:numeric:east_easb_rows"
+      ],
+      "verificationNeed": "dataset_lookup"
+    }
+  ],
+  "solverPlan": {
+    "solverMode": "option_comparison",
+    "recommendedNextAction": "retrieve_rows_and_rank_by_case_max_strain",
+    "steps": [
+      "Retrieve EDES definitions for GD-ST, GD-SB, and GD-Con.",
+      "Retrieve standard layout anchors for ILS-EAST and ILS-EASB.",
+      "Validate assembly patterns using EDAS.",
+      "Retrieve EDIKB behaviour rules for connector systems, low-strain pockets, and high-strain penalties.",
+      "Retrieve numeric rows by component type and connection system.",
+      "Rank by case maximum strain, then explain low-strain pocket and high-strain relocation."
+    ],
+    "verificationNeeds": [
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:verify:project_geometry",
+        "statement": "Run FEA/ML verification when connector geometry or stiffness differs from Paper 2 cases."
+      }
+    ],
+    "doNotDo": [
+      "Do not assume EA-ST PS behaviour transfers to EA-SB PS.",
+      "Do not select a low-strain pocket case without reporting the high-strain penalty region."
+    ]
+  },
+  "rankingCriteria": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:rank:pocket_penalty",
+      "method": "APF-style listwise ranking",
+      "candidateSet": [
+        "ILS-EAST-F1",
+        "ILS-EAST-F1D",
+        "ILS-EAST-F2",
+        "ILS-EAST-F2D",
+        "ILS-EAST-PS",
+        "ILS-EAST-PSD",
+        "ILS-EASB-F1",
+        "ILS-EASB-F1D",
+        "ILS-EASB-F2",
+        "ILS-EASB-F2D",
+        "ILS-EASB-PS",
+        "ILS-EASB-PSD"
+      ],
+      "order": [
+        "satisfy EDAS validity",
+        "minimize case maximum strain",
+        "prefer useful low-strain pocket only if high-strain penalty is acceptable",
+        "prefer direct numeric evidence",
+        "flag contact-ownership and stiffness/elevation interactions"
+      ]
+    }
+  ],
+  "openQuestions": [],
+  "assumptions": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:assumption:paper2_domain",
+      "statement": "Use Paper 2 EA-ST/EA-SB data as concept-screening evidence.",
+      "confidence": "medium"
+    }
+  ],
+  "evidenceTrace": [
+    {
+      "id": "edpr:p_east_easb_connection_compare_001:evidence:paper2_graph",
+      "source": "EDIKB_FULL_KNOWLEDGE_GRAPH_v0_3.json",
+      "sourceAnchor": [
+        "edikb:p2_east_connector_system_01",
+        "edikb:p2_easb_connector_system_01"
+      ],
+      "relevance": "Provides EA-ST and EA-SB connection-system behaviour rules."
+    }
+  ],
+  "parserWarnings": []
+}

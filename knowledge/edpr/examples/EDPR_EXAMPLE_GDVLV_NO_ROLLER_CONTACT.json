@@ -1,0 +1,581 @@
+{
+  "schema": "edpr-problem-map/0.3-draft",
+  "id": "edpr:p_gdvlv_no_roller_contact_001",
+  "parserMetadata": {
+    "parserName": "EDPR-APF Parser",
+    "parserVersion": "0.3",
+    "basis": [
+      "P-Maps",
+      "APF via LLM",
+      "FBS",
+      "Knowloop"
+    ],
+    "parseConfidence": "high"
+  },
+  "sourceRequest": {
+    "rawText": "A valve need to be installed as an inline components. No other piping. Valve cannot contact rollers",
+    "language": "en"
+  },
+  "problemIdentity": {
+    "title": "Inline valve no-roller-contact installation problem",
+    "problemClass": "behaviour_screening",
+    "domain": "subsea_inline_structure",
+    "solverMode": "concept_screening"
+  },
+  "pMap": {
+    "requirements": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:inline_valve",
+        "type": "requirement",
+        "label": "Install a valve as an inline component",
+        "sourcePhrase": "valve need to be installed as an inline components",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:no_other_piping",
+        "type": "requirement",
+        "label": "Do not add other piping components",
+        "sourcePhrase": "No other piping",
+        "ontologyLinks": [
+          "edas:chain"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:no_roller_contact",
+        "type": "requirement",
+        "label": "Valve body cannot contact rollers",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "functions": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:function:provide_inline_valve",
+        "type": "function",
+        "label": "Provide inline valve function in the pipeline run",
+        "sourcePhrase": "valve need to be installed as an inline components",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:function:avoid_installation_contact",
+        "type": "function",
+        "label": "Avoid roller contact with valve during installation handling",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:artifact:gd_vlv",
+        "type": "artifact",
+        "label": "Inline valve",
+        "sourcePhrase": "valve",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "behaviours": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:roller_contact",
+        "type": "behaviour",
+        "label": "Roller contact with valve body",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:installation_feasibility",
+        "type": "behaviour",
+        "label": "Installation feasibility without valve roller contact",
+        "sourcePhrase": "installed as an inline components",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "issues": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:issue:valve_cannot_pass_rollers",
+        "type": "issue",
+        "label": "GD-VLV scope states canPassRollers is false",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:pmap:issue:no_numeric_valve_dataset",
+        "type": "issue",
+        "label": "No current EDIKB numeric valve passage dataset is available",
+        "sourcePhrase": "installed",
+        "ontologyLinks": [
+          "local:missing_valve_installation_dataset"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "links": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:valve_contact_blocks_roller_passage",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:artifact:gd_vlv",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:roller_contact",
+        "relation": "must_avoid"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:no_contact_affects_feasibility",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:no_roller_contact",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:installation_feasibility",
+        "relation": "constrains"
+      }
+    ]
+  },
+  "designContext": {
+    "installationMethod": null,
+    "installationRegion": null,
+    "analysisStage": "conceptual_screening",
+    "codeBasis": [
+      "API 6D",
+      "ASME B16.34"
+    ],
+    "notes": [
+      "EDES GD-VLV identifies the valve as a pressure-containing mechanical component with design-code treatment outside the shared DNV pipe-component rule.",
+      "EDES GD-VLV scope states canPassRollers is false; a roller-passage sweep over the valve would model a passage that should not physically occur.",
+      "No other piping is interpreted as excluding additional branch/side piping components, not excluding necessary installation procedure or handling constraints."
+    ]
+  },
+  "knownInputs": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:known:component_type",
+      "parameter": "component_type",
+      "value": "GD-VLV",
+      "unit": null,
+      "sourcePhrase": "valve",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:known:can_pass_rollers",
+      "parameter": "canPassRollers",
+      "value": false,
+      "unit": null,
+      "sourcePhrase": "Valve cannot contact rollers",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:known:no_other_piping",
+      "parameter": "additional_piping_allowed",
+      "value": false,
+      "unit": null,
+      "sourcePhrase": "No other piping",
+      "ontologyLinks": [
+        "edas:chain"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "unknownInputs": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:unknown:installation_method",
+      "parameter": "installationMethod",
+      "importance": "blocking",
+      "reasonNeeded": "The feasible handling solution depends on whether installation uses S-lay rollers, lift/hold-back operations, or a procedure that bypasses direct valve roller contact.",
+      "suggestedDefault": null,
+      "askUser": true
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:unknown:valve_geometry",
+      "parameter": "valve_geometry",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Valve body length, OD/protrusion, stem geometry, and shoulder proudness control clearance and exclusion-zone checks.",
+      "suggestedDefault": "retrieve_from_EDES_GD-VLV_or_project_valve_datasheet",
+      "askUser": false
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:unknown:roller_geometry",
+      "parameter": "roller_geometry_and_clearance",
+      "importance": "blocking",
+      "reasonNeeded": "No-contact feasibility needs roller envelope, stinger geometry, support spacing, and clearance rule.",
+      "suggestedDefault": null,
+      "askUser": true
+    }
+  ],
+  "requirements": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:req:inline_valve",
+      "requirementType": "hard_constraint",
+      "statement": "Install one GD-VLV valve as an inline component.",
+      "sourcePhrase": "valve need to be installed as an inline components",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:req:no_other_piping",
+      "requirementType": "hard_constraint",
+      "statement": "Do not introduce additional piping components beyond the inline valve in the problem representation.",
+      "sourcePhrase": "No other piping",
+      "ontologyLinks": [
+        "edas:chain"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:req:no_roller_contact",
+      "requirementType": "hard_constraint",
+      "statement": "Valve body shall not contact installation rollers.",
+      "sourcePhrase": "Valve cannot contact rollers",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:constraint:no_valve_roller_contact",
+      "constraintType": "contact_exclusion",
+      "statement": "For any installation phase, roller contact state for GD-VLV shall be false.",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:constraint:no_normal_passage_sweep",
+      "constraintType": "analysis_validity",
+      "statement": "Do not run or interpret a normal S-lay roller-passage sweep in which GD-VLV contacts rollers.",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "requirementFormalization": {
+    "basis": "APF-inspired requirement tuple r = (Z, M, C)",
+    "objectiveRequirements": [],
+    "constraintRequirements": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:req:constraint_contact_exclusion",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "requirementType": "constraint",
+        "Z": {
+          "evaluationRegion": "all installation roller contact states",
+          "condition": "GD-VLV inline component"
+        },
+        "M": {
+          "metric": "roller_contact_state",
+          "responseTarget": "valve_body",
+          "unit": null
+        },
+        "C": {
+          "intent": "must_satisfy",
+          "operator": "==",
+          "threshold": false
+        },
+        "formalExpression": "contact_at(edes:GD-VLV, roller) == false for all installation phases",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:req:constraint_no_added_piping",
+        "sourcePhrase": "No other piping",
+        "requirementType": "constraint",
+        "Z": {
+          "evaluationRegion": "candidate component set"
+        },
+        "M": {
+          "metric": "additional_piping_components"
+        },
+        "C": {
+          "intent": "must_satisfy",
+          "operator": "==",
+          "threshold": 0
+        },
+        "formalExpression": "count(candidate piping components excluding header pipe and GD-VLV) == 0",
+        "ontologyLinks": [
+          "edas:chain"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "preferenceRequirements": [],
+    "comparisonRequirements": [],
+    "verificationRequirements": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:req:verify_clearance",
+        "sourcePhrase": "Valve cannot contact rollers",
+        "requirementType": "verification_need",
+        "Z": {
+          "evaluationRegion": "installation route and roller envelope"
+        },
+        "M": {
+          "metric": "minimum_valve_to_roller_clearance"
+        },
+        "C": {
+          "intent": "verify_positive_clearance",
+          "operator": ">",
+          "threshold": 0
+        },
+        "formalExpression": "minimum_clearance(valve_envelope, roller_envelope, installation_path) > required_clearance",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "formalizedChecks": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:check:can_pass_rollers_false",
+        "checkType": "behaviour_applicability",
+        "statement": "Retrieve EDES GD-VLV scope and enforce canPassRollers == false.",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ]
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:check:clearance_not_strain_first",
+        "checkType": "verification",
+        "statement": "Treat roller-contact exclusion as the first feasibility check before strain comparison.",
+        "ontologyLinks": [
+          "edes:GD-VLV"
+        ]
+      }
+    ]
+  },
+  "evaluationVariables": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:evalvar:contact_state",
+      "name": "roller_contact_state",
+      "allowedValues": [
+        true,
+        false
+      ],
+      "reason": "The key requirement is no valve contact with rollers.",
+      "source": "user_request"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:evalvar:installation_phase",
+      "name": "installation_phase",
+      "allowedValues": [
+        "all_relevant_phases"
+      ],
+      "reason": "No-contact condition must hold across the installation sequence.",
+      "source": "EDPR"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:evalvar:minimum_clearance",
+      "name": "minimum_valve_to_roller_clearance",
+      "allowedValues": [],
+      "reason": "Clearance needs project roller and valve envelope data.",
+      "source": "future_project_input"
+    }
+  ],
+  "candidateComponents": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:component:gd_vlv",
+      "componentId": "edes:GD-VLV",
+      "componentLabel": "inline valve",
+      "selectionReason": "User requested a valve installed as an inline component.",
+      "sourcePhrase": "valve",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "candidateAssemblies": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:assembly:single_inline_valve",
+      "assemblyPatternId": "edas:chain",
+      "assemblyLabel": "single inline valve in pipeline run",
+      "status": "requires_EDAS_validation",
+      "reason": "A valve is installed inline with no branch or additional piping components.",
+      "confidence": "medium",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "standardLayoutCandidates": [],
+  "behaviourConcerns": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:behaviour:roller_contact_exclusion",
+      "responseMetric": "roller_contact_state",
+      "responseTarget": "valve_body",
+      "priority": "high",
+      "reason": "Hard requirement states valve cannot contact rollers.",
+      "sourcePhrase": "Valve cannot contact rollers",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:behaviour:installation_feasibility",
+      "responseMetric": "installation_feasibility",
+      "responseTarget": "inline_valve_layout",
+      "priority": "high",
+      "reason": "If the valve cannot contact rollers, normal roller-supported passage may be infeasible without procedural or handling changes.",
+      "sourcePhrase": "installed as an inline components",
+      "ontologyLinks": [
+        "edes:GD-VLV"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "retrievalPlan": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:retrieval:valve_definition",
+      "queryType": "component_definition",
+      "targets": [
+        "edes:GD-VLV"
+      ],
+      "reason": "Need valve geometry, scope, canPassRollers, and design-code notes.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:retrieval:inline_assembly_rule",
+      "queryType": "assembly_rule",
+      "targets": [
+        "edas:chain"
+      ],
+      "reason": "Need EDAS validity for a single inline component with no additional piping components.",
+      "priority": "medium"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:retrieval:no_contact_guidance",
+      "queryType": "design_guidance",
+      "targets": [
+        "edes:GD-VLV",
+        "local:valve_no_roller_contact_installation_guidance"
+      ],
+      "reason": "Need guidance on installation solution route when GD-VLV cannot physically pass over rollers.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:retrieval:missing_valve_dataset",
+      "queryType": "missing_case_check",
+      "targets": [
+        "local:missing_valve_installation_dataset"
+      ],
+      "reason": "Current EDIKB has no direct numeric valve roller-passage dataset for solving by strain comparison.",
+      "priority": "medium"
+    }
+  ],
+  "numericComparisonPlan": [],
+  "interactionEffectPlan": [],
+  "solverPlan": {
+    "solverMode": "concept_screening",
+    "recommendedNextAction": "retrieve_valve_definition_and_check_installation_feasibility",
+    "steps": [
+      "Retrieve EDES GD-VLV component knowledge.",
+      "Confirm canPassRollers is false and preserve no-roller-contact as a hard constraint.",
+      "Validate that no additional piping components are introduced in the EDAS assembly representation.",
+      "Request installation method and roller envelope because they are blocking inputs for clearance feasibility.",
+      "If rollers are part of the installation path, do not propose direct valve passage over rollers; propose a handling/procedure or layout-level avoidance solution for downstream review.",
+      "If no direct evidence exists, mark any proposed solution as requiring project-specific clearance/FEA verification."
+    ],
+    "verificationNeeds": [
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:verify:clearance",
+        "statement": "Check minimum valve-to-roller clearance using actual valve envelope and installation roller geometry."
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:verify:procedure",
+        "statement": "Confirm installation procedure avoids direct roller contact with the valve body."
+      }
+    ],
+    "doNotDo": [
+      "Do not model the valve as a GD-TP or GD-TT thick pipe equivalent.",
+      "Do not allow valve body roller contact in the candidate solution.",
+      "Do not use normal roller-passage strain evidence as if it proves valve installation feasibility."
+    ]
+  },
+  "rankingCriteria": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:rank:feasibility_first",
+      "method": "constraint-first feasibility ranking",
+      "candidateSet": [
+        "single_inline_GD-VLV_no_contact_solution"
+      ],
+      "order": [
+        "satisfy no valve roller contact",
+        "satisfy no additional piping components",
+        "satisfy valve design-code basis",
+        "verify installation clearance/procedure",
+        "only then evaluate strain or secondary responses if required"
+      ]
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:question:installation_method",
+      "question": "What installation method and roller/support arrangement will be used?",
+      "importance": "blocking"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:question:valve_datasheet",
+      "question": "What are the valve body envelope, stem/protrusion dimensions, mass, and required clearance?",
+      "importance": "important_but_assumable"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:assumption:no_other_piping_scope",
+      "statement": "No other piping is interpreted as no additional branch/side piping components; it does not prohibit non-piping installation procedure constraints.",
+      "confidence": "medium"
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:assumption:no_numeric_solution",
+      "statement": "Because the requirement is a hard contact exclusion and no valve numeric passage dataset is available, the EDPR output should route to feasibility/clearance verification before numeric strain comparison.",
+      "confidence": "high"
+    }
+  ],
+  "evidenceTrace": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:evidence:edes_gd_vlv",
+      "source": "EDES_GD-VLV_KNOWLEDGE.json",
+      "sourceAnchor": [
+        "edes:GD-VLV",
+        "scope.canPassRollers",
+        "scope.consequence"
+      ],
+      "relevance": "Identifies inline valve as GD-VLV and states that it cannot pass rollers; roller-passage sweep would model a passage that does not physically happen."
+    }
+  ],
+  "parserWarnings": [
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:warning:blocking_installation_inputs",
+      "severity": "medium",
+      "message": "Installation method and roller geometry are blocking inputs for a final no-contact solution."
+    },
+    {
+      "id": "edpr:p_gdvlv_no_roller_contact_001:warning:no_standard_vlv_layout",
+      "severity": "low",
+      "message": "No current standard layout family such as ILS-VLV is available, so standardLayoutCandidates is intentionally empty."
+    }
+  ]
+}

@@ -1,0 +1,542 @@
+{
+  "schema": "edpr-problem-map/0.3-draft",
+  "id": "edpr:p_gdsh_gdtp_min_strain_001",
+  "parserMetadata": {
+    "parserName": "EDPR-APF Parser",
+    "parserVersion": "0.3",
+    "basis": [
+      "P-Maps",
+      "APF via LLM",
+      "FBS",
+      "Knowloop"
+    ],
+    "parseConfidence": "high"
+  },
+  "sourceRequest": {
+    "rawText": "Design a guide shroud with a thick pipe section inside it for S-lay overbend installation. Compare possible thick-pipe locations and choose the option that minimizes peak pipeline strain, while also checking component bending moment.",
+    "language": "en"
+  },
+  "problemIdentity": {
+    "title": "GD-SH plus GD-TP nested assembly strain screening",
+    "problemClass": "option_comparison",
+    "domain": "subsea_inline_structure",
+    "solverMode": "concept_screening"
+  },
+  "pMap": {
+    "requirements": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:requirement:nested_shroud_thick_pipe",
+        "type": "requirement",
+        "label": "Use a nested guide shroud and thick pipe assembly",
+        "sourcePhrase": "guide shroud with a thick pipe section inside it",
+        "ontologyLinks": [
+          "edes:GD-SH",
+          "edes:GD-TP",
+          "edas:GD-SH_contains_GD-TP"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:requirement:minimize_pipeline_strain",
+        "type": "requirement",
+        "label": "Minimize peak pipeline strain",
+        "sourcePhrase": "minimizes peak pipeline strain",
+        "ontologyLinks": [
+          "edikb:p1_c1_shtp_location_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "functions": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:function:contact_control",
+        "type": "function",
+        "label": "Provide contact/offset control through guide shroud",
+        "sourcePhrase": "guide shroud",
+        "ontologyLinks": [
+          "edes:GD-SH"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:function:local_section_stiffening",
+        "type": "function",
+        "label": "Provide local wall/stiffness increase through thick pipe",
+        "sourcePhrase": "thick pipe section",
+        "ontologyLinks": [
+          "edes:GD-TP"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:artifact:gd_sh",
+        "type": "artifact",
+        "label": "Guide shroud",
+        "sourcePhrase": "guide shroud",
+        "ontologyLinks": [
+          "edes:GD-SH"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:artifact:gd_tp",
+        "type": "artifact",
+        "label": "Thick pipe section",
+        "sourcePhrase": "thick pipe section",
+        "ontologyLinks": [
+          "edes:GD-TP"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "behaviours": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:peak_pipeline_strain",
+        "type": "behaviour",
+        "label": "Peak pipeline strain during overbend installation",
+        "sourcePhrase": "peak pipeline strain",
+        "ontologyLinks": [
+          "edikb:p1_c1_shtp_location_01"
+        ],
+        "confidence": "high"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:component_bm",
+        "type": "behaviour",
+        "label": "Peak component bending moment",
+        "sourcePhrase": "component bending moment",
+        "ontologyLinks": [
+          "edikb:p1_cross_strain_bm_diverge_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "issues": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:pmap:issue:nonadditive_response",
+        "type": "issue",
+        "label": "Combined shroud and thick-pipe behaviour is non-additive",
+        "sourcePhrase": "with a thick pipe section inside it",
+        "ontologyLinks": [
+          "edikb:p1_c1_shtp_nonadditive_01",
+          "edikb:p1_cross_no_simple_superposition_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "links": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:link:nesting_affects_strain",
+        "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:requirement:nested_shroud_thick_pipe",
+        "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:peak_pipeline_strain",
+        "relation": "affects"
+      }
+    ]
+  },
+  "designContext": {
+    "installationMethod": "S-lay",
+    "installationRegion": "overbend",
+    "analysisStage": "conceptual_screening",
+    "codeBasis": [],
+    "notes": [
+      "Uses Paper 1 evidence for GD-SH + GD-TP C1 behaviour.",
+      "Paper 1 roller spacing is generally 9 m for these extracted cases."
+    ]
+  },
+  "knownInputs": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:known:component_system",
+      "parameter": "component_system",
+      "value": "GD-SH+GD-TP",
+      "unit": null,
+      "sourcePhrase": "guide shroud with a thick pipe section inside it",
+      "ontologyLinks": [
+        "edes:GD-SH",
+        "edes:GD-TP"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "unknownInputs": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:unknown:source_region",
+      "parameter": "source_region",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Peak response depends on whether GD-TP is placed in X2, X3, X4, or overlapping regions inside the shroud.",
+      "suggestedDefault": "compare_available_dataset_options",
+      "askUser": false
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:unknown:shroud_depth",
+      "parameter": "shroud_V_D",
+      "importance": "important_but_assumable",
+      "reasonNeeded": "Guide shroud offset/depth affects contact and strain response.",
+      "suggestedDefault": "use_paper1_available_values",
+      "askUser": false
+    }
+  ],
+  "requirements": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:req:nested_assembly",
+      "requirementType": "hard_constraint",
+      "statement": "GD-TP shall be inside the GD-SH shroud/contact region.",
+      "sourcePhrase": "inside it",
+      "ontologyLinks": [
+        "edas:GD-SH_contains_GD-TP"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:req:minimize_pipeline_strain",
+      "requirementType": "objective",
+      "statement": "Minimize peak pipeline strain for available thick-pipe location cases.",
+      "sourcePhrase": "minimizes peak pipeline strain",
+      "ontologyLinks": [
+        "edikb:p1_c1_shtp_location_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:constraint:no_simple_superposition",
+      "constraintType": "behaviour_accounting",
+      "statement": "Do not estimate GD-SH + GD-TP behaviour by adding isolated GD-SH and GD-TP effects.",
+      "ontologyLinks": [
+        "edikb:p1_cross_no_simple_superposition_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "requirementFormalization": {
+    "basis": "APF-inspired requirement tuple r = (Z, M, C)",
+    "objectiveRequirements": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:req:obj_minimize_pipeline_strain",
+        "sourcePhrase": "minimizes peak pipeline strain",
+        "requirementType": "objective",
+        "Z": {
+          "evaluationRegion": "S-lay overbend",
+          "condition": "GD-SH + GD-TP location candidate set"
+        },
+        "M": {
+          "metric": "peak_pipeline_strain",
+          "unit": "percent"
+        },
+        "C": {
+          "intent": "minimize",
+          "operator": "listwise_rank",
+          "threshold": null
+        },
+        "formalExpression": "minimize peak_pipeline_strain_percent over available GD-SH+GD-TP location rows",
+        "ontologyLinks": [
+          "edikb:p1_c1_shtp_location_01"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "constraintRequirements": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:req:constraint_valid_nesting",
+        "sourcePhrase": "inside it",
+        "requirementType": "constraint",
+        "Z": {
+          "evaluationRegion": "assembly topology"
+        },
+        "M": {
+          "metric": "EDAS_build_validity"
+        },
+        "C": {
+          "intent": "must_satisfy",
+          "operator": "==",
+          "threshold": true
+        },
+        "formalExpression": "EDAS_validate(edas:GD-SH_contains_GD-TP) == true",
+        "ontologyLinks": [
+          "edas:GD-SH_contains_GD-TP"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "preferenceRequirements": [],
+    "comparisonRequirements": [],
+    "verificationRequirements": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:req:verify_outside_paper1",
+        "sourcePhrase": "Design",
+        "requirementType": "verification_need",
+        "Z": {
+          "evaluationRegion": "project-specific geometry"
+        },
+        "M": {
+          "metric": "evidence_applicability"
+        },
+        "C": {
+          "intent": "verify_if_outside_paper1_scope",
+          "operator": "requires_FEA_or_ML_case_if_outside_scope",
+          "threshold": null
+        },
+        "formalExpression": "if requested geometry is outside Paper 1 evidence range, create FEA/ML verification case",
+        "ontologyLinks": [
+          "edikb:candidate_full_layout_feature_interactions_01"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "formalizedChecks": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:check:no_c1_superposition",
+        "checkType": "behaviour_applicability",
+        "statement": "Use C1 combined assembly rules and dataset rows; do not add isolated GD-SH and GD-TP effects.",
+        "ontologyLinks": [
+          "edikb:p1_c1_shtp_nonadditive_01",
+          "edikb:p1_cross_no_simple_superposition_01"
+        ]
+      }
+    ]
+  },
+  "evaluationVariables": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:evalvar:source_region",
+      "name": "source_region",
+      "allowedValues": [
+        "X2",
+        "X3",
+        "X4",
+        "X3_partial_X2_X4"
+      ],
+      "reason": "GD-TP location inside the shroud changes the response.",
+      "source": "EDIKB"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:evalvar:response_metric",
+      "name": "response_metric",
+      "allowedValues": [
+        "peak_pipeline_strain",
+        "peak_component_bending_moment"
+      ],
+      "reason": "Pipeline strain and component bending moment may diverge.",
+      "source": "EDIKB"
+    }
+  ],
+  "candidateComponents": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:component:gd_sh",
+      "componentId": "edes:GD-SH",
+      "componentLabel": "guide shroud",
+      "selectionReason": "User requested guide shroud.",
+      "sourcePhrase": "guide shroud",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:component:gd_tp",
+      "componentId": "edes:GD-TP",
+      "componentLabel": "thick pipe",
+      "selectionReason": "User requested thick pipe section.",
+      "sourcePhrase": "thick pipe section",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "candidateAssemblies": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:assembly:gdsh_contains_gdtp",
+      "assemblyPatternId": "edas:GD-SH_contains_GD-TP",
+      "assemblyLabel": "GD-SH contains GD-TP",
+      "status": "requires_EDAS_validation",
+      "reason": "The problem requires thick pipe inside guide shroud.",
+      "confidence": "high",
+      "ontologyStatus": "resolved"
+    }
+  ],
+  "standardLayoutCandidates": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:standard_layout:ils_shtp",
+      "layoutId": "ILS-SHTP",
+      "layoutFamily": "ILS-SHTP",
+      "selectionReason": "Standard layout family for shroud plus thick pipe.",
+      "status": "retrieve_standard_layout_and_validate_with_EDAS",
+      "ontologyLinks": [
+        "ILS-SHTP",
+        "edes:GD-SH",
+        "edes:GD-TP"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "behaviourConcerns": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:behaviour:peak_pipeline_strain",
+      "responseMetric": "peak_pipeline_strain",
+      "responseTarget": "header_pipeline",
+      "priority": "high",
+      "reason": "Primary objective is to minimize installation strain.",
+      "sourcePhrase": "peak pipeline strain",
+      "ontologyLinks": [
+        "edikb:p1_c1_shtp_location_01"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:behaviour:component_bm",
+      "responseMetric": "peak_component_bending_moment",
+      "responseTarget": "component_body",
+      "priority": "medium",
+      "reason": "Component bending moment may not rank the same way as pipeline strain.",
+      "sourcePhrase": "component bending moment",
+      "ontologyLinks": [
+        "edikb:p1_cross_strain_bm_diverge_01"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "retrievalPlan": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:retrieval:components",
+      "queryType": "component_definition",
+      "targets": [
+        "edes:GD-SH",
+        "edes:GD-TP"
+      ],
+      "reason": "Need component definitions and assembly features.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:retrieval:assembly",
+      "queryType": "assembly_rule",
+      "targets": [
+        "edas:GD-SH_contains_GD-TP"
+      ],
+      "reason": "Need EDAS nesting validity.",
+      "priority": "high"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:retrieval:standard_layout",
+      "queryType": "standard_layout_archetype",
+      "targets": [
+        "ILS-SHTP"
+      ],
+      "reason": "Use standard SHTP layout as candidate starting form.",
+      "priority": "medium"
+    },
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:retrieval:behaviour",
+      "queryType": "behaviour_rule",
+      "targets": [
+        "edikb:p1_c1_shtp_location_01",
+        "edikb:p1_c1_shtp_nonadditive_01",
+        "edikb:p1_cross_no_simple_superposition_01",
+        "edikb:p1_cross_strain_bm_diverge_01"
+      ],
+      "reason": "Need combined assembly behaviour and warning against isolated-effect summation.",
+      "priority": "high"
+    }
+  ],
+  "numericComparisonPlan": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:numeric:shtp_rows",
+      "dataset": "EDIKB_FULL_WITH_EAST_EASB_COMBINED_DEDUPED_v0_1.csv",
+      "filters": {
+        "component_system": "GD-SH+GD-TP",
+        "response_metric": [
+          "peak_pipeline_strain",
+          "peak_component_bending_moment"
+        ]
+      },
+      "purpose": "Compare available GD-SH+GD-TP rows by location and response metric.",
+      "expectedOutput": "ranked location options and evidence scope"
+    }
+  ],
+  "interactionEffectPlan": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:interaction:gdsh_gdtp",
+      "type": "feature_interaction_check",
+      "componentSet": [
+        "edes:GD-SH",
+        "edes:GD-TP"
+      ],
+      "assemblyPattern": "edas:GD-SH_contains_GD-TP",
+      "isolatedEffectRules": [
+        "edikb:p1_a1_tp_length_01",
+        "edikb:p1_b1_sh_v_01"
+      ],
+      "combinedEffectRules": [
+        "edikb:p1_c1_shtp_location_01",
+        "edikb:p1_c1_shtp_nonadditive_01"
+      ],
+      "interactionCandidateRules": [
+        "edikb:candidate_full_layout_feature_interactions_01"
+      ],
+      "superpositionPolicy": "direct_combined_evidence_overrides_isolated_effect_summation",
+      "simpleSuperpositionAllowed": "no",
+      "candidateEquationForms": [
+        "Y = f(GDTP_location, shroud_V_D, shroud_L1_D, L_comp_D, interaction_terms)"
+      ],
+      "requiredDatasetQueries": [
+        "edpr:p_gdsh_gdtp_min_strain_001:numeric:shtp_rows"
+      ],
+      "verificationNeed": "dataset_lookup"
+    }
+  ],
+  "solverPlan": {
+    "solverMode": "option_comparison",
+    "recommendedNextAction": "retrieve_and_rank_combined_evidence",
+    "steps": [
+      "Retrieve EDES component definitions for GD-SH and GD-TP.",
+      "Validate nesting with EDAS.",
+      "Retrieve combined GD-SH+GD-TP EDIKB behaviour rules.",
+      "Retrieve numeric rows for GD-SH+GD-TP location cases.",
+      "Rank peak pipeline strain and separately report component bending moment.",
+      "Do not use isolated-effect summation."
+    ],
+    "verificationNeeds": [
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:verify:outside_domain",
+        "statement": "Run FEA/ML verification if requested geometry falls outside Paper 1 cases."
+      }
+    ],
+    "doNotDo": [
+      "Do not add isolated GD-SH and GD-TP effects.",
+      "Do not merge pipeline strain and component bending moment as one objective."
+    ]
+  },
+  "rankingCriteria": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:rank:strain_then_bm",
+      "method": "APF-style listwise ranking",
+      "candidateSet": [
+        "available_GD-SH+GD-TP_location_cases"
+      ],
+      "order": [
+        "satisfy EDAS nesting validity",
+        "minimize peak pipeline strain",
+        "check peak component bending moment",
+        "prefer direct combined evidence",
+        "flag sparse or outside-domain cases"
+      ]
+    }
+  ],
+  "openQuestions": [],
+  "assumptions": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:assumption:paper1_domain",
+      "statement": "Use Paper 1 combined GD-SH+GD-TP cases as the first screening domain.",
+      "confidence": "medium"
+    }
+  ],
+  "evidenceTrace": [
+    {
+      "id": "edpr:p_gdsh_gdtp_min_strain_001:evidence:paper1_graph",
+      "source": "EDIKB_FULL_KNOWLEDGE_GRAPH_v0_3.json",
+      "sourceAnchor": [
+        "edikb:p1_c1_shtp_location_01",
+        "edikb:p1_c1_shtp_nonadditive_01"
+      ],
+      "relevance": "Provides combined GD-SH+GD-TP behaviour rules."
+    }
+  ],
+  "parserWarnings": []
+}
