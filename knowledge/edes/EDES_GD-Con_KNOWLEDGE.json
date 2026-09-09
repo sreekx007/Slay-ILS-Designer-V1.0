@@ -1,0 +1,295 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-Con",
+ "type": "edes:ComponentType",
+ "label": "Connector",
+ "sourceRef": "component_spec.Connector",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "EA-O"
+ ],
+ "iwEaNote": "EA-O, the same class as edes:GD-SH, and the fit is uncomfortable enough to flag rather than assert quietly. EA-O has meant 'externally attached, other' -- used for a geometry-only component that owns contact but no connector. GD-Con is close to its inverse: it IS the connector and owns no geometry to speak of. The two share only the negative property of fitting nothing else. NOT IW-* because a connector is not inline in the pipeline and has no section of its own; NOT EA-ST/EA-SB because those denote specific structure families. Recorded as the least-wrong existing value, with the observation that EA-O is becoming a catch-all -- see openQuestions.",
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "Per the 1Sep26 project decision, PART: a connector has no sub-member and no internal junction. It is the lowest-level component in the OAM sense -- the thing two artifacts are associated THROUGH, not an artifact composed of others. Listed under Part in shared.oam.partAssemblyRule.assignments."
+ },
+ "subclassOf": null,
+ "note": "Would subclass component_spec.Component directly, though it is the least Component-like member of the corpus: it has no extent along the pipeline in the usual sense, and at zero length it has no extent at all. Whether that makes Component the wrong base is an open question below. PROMOTED from edes:FutureComponent to edes:ComponentType 1Sep26 once the class was written and probed. IMPLEMENTED 1Sep26. VERIFIED LIVE across all five types; zero-length (y_struct=0) builds and validates, as specified. One design change from this file's original spec: L_conn is now DERIVED as |y_struct| rather than being a free input, because a bare length cannot say which side of the pipe the structure is on, and both sides are real (GD-ST above, GD-SB below). y_struct is the signed free parameter, matching the P_vt convention already used by GD-ST/GD-SB. Validation is stricter than specified: a D connector without P_gap is now rejected, not just a non-D connector with one.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func2",
+   "note": "Func2 is the pipe-side attachment function for a connection that does NOT transfer Mz. GD-Con is the artifact that physically realises such an attachment -- but note Func2 is authored as a function of the PIPE-side component (which provides the attachment point), not of the connector itself. Whether a connector realises a Function at all, or merely enables one, is unresolved -- see openQuestions."
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func14",
+   "note": "branch to structure"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func13",
+   "note": "structure to boss"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func12",
+   "note": "structure to thickened inline section -- the ordinary path"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-ST",
+   "note": "GD-ST's assemblyFeatures.twoNodeElement is the existing implicit description of this component: PIPE-side node always Fixed, EA-side node carries the connector type, stiffness a preset stiff value never derived from length. GD-Con formalises exactly that."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-SB",
+   "note": "same implicit connector mechanism, and the file that records the arm ambiguity GD-Con inherits: GD-SB's connector arm (|P_vt|, top face) and contact arm (|P_vt+P_v|, bottom face) are different quantities sharing one name."
+  }
+ ],
+ "designCode": {
+  "status": "OPEN",
+  "reason": "shared.designCode's rule is keyed on section_at (pipe-shaped vs non-pipe interface). GD-Con has no section at all and no pipe-shaped geometry, so the rule's premise does not hold -- same structural reason as edes:GD-ST/GD-SB/GD-SH.",
+  "consequence": "a connector between a pipeline and a structure is plausibly governed by a structural or mechanical-joint standard rather than a pipeline code, but nothing in either source paper names one, and none is invented here."
+ },
+ "scope": {
+  "isTheConnectionMadeReal": "GD-Con is the artifact that a F/P/S/D connection is realised BY. edes:shared#/oam/connectionClassMap maps each connType to an OAM class (FixedConnection, MovableConnection with a kinematic pair, IntermittentConnection); GD-Con is the physical two-node element carrying that behaviour. The map classifies; GD-Con instantiates.",
+  "zeroLengthIsLegal": "an explicitly supported case, not an edge case to guard against. edes:GD-ST records that P_vt=0 is legal and makes the connector genuinely zero-length. This is WHY stiffness must be an independent property rather than a derived one -- see stiffnessOverride. A zero-length connector still transfers force and still has a DOF signature; it simply has no extent.",
+  "stiffnessOverride": "the defining parametric property. Stiffness is an OVERRIDE -- a preset value assigned to the connector -- and must NEVER be derived from the connector's own length or from the arm of the structure it serves. edes:GD-ST states the reason directly: deriving stiffness from |P_vt| would break at exactly the legal P_vt=0 case. So GD-Con carries stiffness as free input, not as a consequence of geometry, which inverts the usual pattern in this corpus where mechanical properties follow from dimensions.",
+  "twoNodeElement": "PIPE-side node always Fixed; EA-side node carries the connector type. Inherited verbatim from edes:GD-ST/GD-SB's existing description, which is the authority for this component until a class exists.",
+  "notOwnedByEitherEnd": "a connector belongs to neither the pipe-side component nor the structure it connects. Today it is produced by the EA component's active_connectors() and assembled by whatever consumes that tuple, which makes it look like a property of the structure. Naming it as its own artifact is the point of this file: an AssemblyFeatureAssociation associates two features THROUGH something, and that something now has an id."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "conn_type",
+    "meaning": "KIND OF JOINT: F fixed, P pinned/revolute, S sliding/prismatic, D intermittent with a deadband, W girth weld. A string.",
+    "type": "string enum",
+    "default": "no proposed default",
+    "note": "one of F / P / S / D / W. Determines the DOF signature and the OAM class via edes:shared#/oam/connectionClassMap. No default proposed: a connector with an unspecified type has no defined behaviour, unlike a length or stiffness which could sensibly fall back."
+   },
+   {
+    "name": "L_conn",
+    "meaning": "LENGTH of the connector. DERIVED as |y_struct| in code, not an independent input -- zero is legal and is the default.",
+    "unit": "m",
+    "default": "0.0",
+    "note": "connector length. ZERO IS THE PROPOSED DEFAULT and a fully legal value -- see scope.zeroLengthIsLegal. Contrast every other component in this corpus, where a zero dimension is rejected (edes:GD-HdPipe HP-C01, edes:GD-B B-C04, edes:GD-SB SB-C02 all forbid it). GD-Con is the sole component where zero extent is meaningful rather than degenerate."
+   },
+   {
+    "name": "k_axial",
+    "meaning": "AXIAL STIFFNESS of the connector element. An absolute override, never derived from its length.",
+    "unit": "N/m",
+    "default": "preset stiff value, not yet defined",
+    "note": "stiffness override. See scope.stiffnessOverride -- free input, never derived from L_conn. The actual preset value is undefined anywhere in the project (see implementationStatus.blockers)."
+   },
+   {
+    "name": "k_shear",
+    "meaning": "SHEAR STIFFNESS. Absolute override.",
+    "unit": "N/m",
+    "default": "preset stiff value, not yet defined"
+   },
+   {
+    "name": "k_rot",
+    "meaning": "ROTATIONAL STIFFNESS. The DOF that actually distinguishes a fixed joint from a pinned one.",
+    "unit": "N.m/rad",
+    "default": "preset stiff value, not yet defined",
+    "note": "the DOF that actually distinguishes the connection types: restrained for F and W, released for P (revolute). Its value is what makes a connector 'fixed' rather than 'pinned' in practice, so it is the one stiffness that cannot be a single global preset across all types."
+   },
+   {
+    "name": "P_gap",
+    "meaning": "DEADBAND free travel before a D connector engages. REQUIRED for type D, rejected for every other type.",
+    "unit": "m",
+    "default": null,
+    "optional": true,
+    "note": "deadband free travel before a D connector closes and begins restraining. Meaningless for F/P/S/W. Same semantics and same criticality as the P_gap on edes:GD-ST/GD-SB -- it REDISTRIBUTES strain rather than removing it. Currently supplied by the EA component and passed through active_connectors()'s 5-tuple; would move here."
+   }
+  ],
+  "refused": [
+   "stiffness derived from L_conn or from the parent structure's arm -- explicitly forbidden, see scope.stiffnessOverride"
+  ],
+  "derived": [
+   {
+    "name": "oamClass",
+    "expr": "lookup(conn_type) in edes:shared#/oam/connectionClassMap",
+    "note": "F and W both resolve to FixedConnection; P and S to MovableConnection with revolute and prismatic kinematic pairs; D to IntermittentConnection."
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = 0. A connector occupies no span along the pipeline: it is a transverse element at one station.",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 0.0,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 2,
+  "structuralNodes": 2,
+  "lines": 1,
+  "structuralLines": 1,
+  "junctions": [],
+  "specified": "2 nodes -- one pipe-side, one structure-side -- joined by a single element. At L_conn=0 the two nodes are coincident and the element is zero-length, which is legal. Node priority proposed MANDATORY on both: a connector node that the mesher moved or merged away would silently delete the connection. NOT VERIFIED -- no class exists.",
+  "contact": "none. A connector is not a roller-contact surface under any configuration.",
+  "section": "none. Stiffness is carried as an override (k_axial/k_shear/k_rot), not as a Section -- the same mechanism edes:GD-ST/GD-SB use with stiffness_ratio, and for a related reason: there is no genuine pipe-like cross-section to compute from. Unlike those two, GD-Con's stiffness is not even a RATIO of a pipe's -- it is an absolute preset."
+ },
+ "constraints": [
+  {
+   "id": "CN-C01",
+   "expr": "L_conn >= 0",
+   "source": "Connector.validate",
+   "severity": "error",
+   "repair": "set L_conn to 0 or a positive value",
+   "note": "NON-STRICT, deliberately, and the only such bound in the corpus -- every other component forbids a zero dimension. Zero length is a legal, meaningful connector; negative length is not."
+  },
+  {
+   "id": "CN-C02",
+   "expr": "conn_type in ('F','P','S','D','W')",
+   "source": "Connector.validate",
+   "severity": "error",
+   "repair": "set conn_type to one of the five defined types"
+  },
+  {
+   "id": "CN-C03",
+   "expr": "P_gap is None or (conn_type == 'D' and P_gap > 0)",
+   "source": "Connector.validate",
+   "severity": "error",
+   "repair": "clear P_gap, or set conn_type to D and P_gap positive",
+   "note": "stricter than the equivalent rule on edes:GD-ST/GD-SB, which check only that P_gap is positive if present and never check it against the connection system. Here the type is known on the same object, so a gap on a non-D connector can be caught rather than silently ignored."
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate() -- 8000 cases across all five valid conn_types plus invalid ones, signed y_struct, present/absent/negative P_gap, and non-positive stiffness",
+  "probes": 8000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no upper bound on L_conn -- a very long connector is geometrically valid and physically implausible, same convention as every other component",
+  "no check that k_axial/k_shear/k_rot are actually stiff. Nothing prevents a connector being assigned a soft stiffness that silently behaves as a release, which is the failure mode the never-derive-from-length rule exists to prevent -- the rule protects against one route to a wrong stiffness but not against simply entering one",
+  "no check that k_rot is released for P or restrained for F/W -- the DOF signature is implied by conn_type but not enforced against the stiffness values, so a self-contradictory connector (type P with a high k_rot) is not caught"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed",
+    "reason": "GD-Con is the artifact that REALISES a connection rather than a component that RECEIVES one, so these rows read differently from every other file's: they are the types this connector can BE, not the types that may attach to it. All five are real in that sense -- the connector is the connection."
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed"
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed"
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed",
+    "requiresParam": "P_gap"
+   },
+   {
+    "type": "W",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed",
+    "reason": "the girth-weld type added 1Sep26. A GD-Con of type W is the joint at an inline component's weldL/weldR mate point -- so this component is also what realises the chain joins described in edes:shared#/oam/endFeatureNaming, not only pipe-to-structure connections."
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "pipeEnd",
+    "position": "the pipe-side node",
+    "sourceNodeId": "pipeEnd (intended)",
+    "note": "always Fixed, per edes:GD-ST's twoNodeElement rule -- the connector type is carried on the other end, not this one"
+   },
+   {
+    "id": "structEnd",
+    "position": "the structure-side node",
+    "sourceNodeId": "structEnd (intended)",
+    "note": "carries conn_type. For a W connector joining two inline components, 'struct' is a misnomer inherited from the pipe-to-structure case -- see axisNote."
+   }
+  ],
+  "status": "two mating interfaces, one per end. Deliberately NOT named weldL/weldR: edes:shared#/oam/endFeatureNaming applies to INLINE components whose two ends are both welded pipe stations, and GD-Con is not inline and its two ends are not equivalent -- one is always Fixed and the other carries the type. Naming them L/R would imply a symmetry that the twoNodeElement rule explicitly denies.",
+  "axisNote": "'pipeEnd' and 'structEnd' fit the pipe-to-structure case that motivated the connector. They fit less well for a type-W connector joining two inline pipe components, where both ends are pipe. Retained because the asymmetry they encode (one end Fixed, one end typed) still holds, but flagged rather than papered over -- see openQuestions.",
+  "strictnessCaveat": "unlike every other component's features, these are never unmated: a connector with a free end is not a connector. So the candidate-vs-populated ambiguity recorded in edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy does not arise here -- GD-Con's two features are OAMFeatures in the strict sense by definition.",
+  "candidateTypesNote": "DELIBERATELY ABSENT from this component's slot records, unlike every other component. Elsewhere candidateTypes answers 'which connection types may attach AT this feature'. GD-Con is the connector itself, so the question inverts: its type is a property of the whole artifact (conn_type, one of F/P/S/D/W), not of either end, and both ends necessarily carry the same one. Adding candidateTypes per end would imply the two ends could differ, which they cannot. See permittedConnections, whose rows on this file already read as 'types this connector can BE' rather than 'types that may attach'."
+ },
+ "behaviourDerived": {
+  "mechanism": "transfers force between a pipe node and a structure node with a DOF signature set by conn_type -- all restrained for F and W, Rz released for P, translation released along one axis for S, and for D no transfer at all until the deadband P_gap closes. The connector's own body has no mechanical behaviour beyond this transfer; it has no section, no mass and no contact.",
+  "referenceBase": "not applicable -- there is no plain-pipe equivalent of a connector to compare against, unlike every inline component in this corpus.",
+  "tier": "not evaluated. Connection type IS the primary studied variable in Paper 2 (the F1/F1D/F2/F2D/PS/PSD systems are named arrangements of connector types), so evidence exists at the SYSTEM level -- but nothing has been attached to the connector as an individual artifact, and no result is invented here.",
+  "rollerContact": {
+   "capable": false,
+   "reason": "categorical -- a connector is not a contact surface."
+  },
+  "deadbandNote": "for a D connector the behaviour is genuinely two-regime: free travel, then restraint. edes:GD-ST records that a deadband REDISTRIBUTES strain rather than removing it, which is the single most consequential behavioural fact about this component and the reason P_gap is treated as a critical tuning parameter rather than a tolerance."
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {},
+  "anchorCount": 0,
+  "absent": "no archetype in standard_ils_layouts.json contains this component. That is not necessarily a gap in the library -- it may simply never have been the subject of a published study -- but it does mean there is no worked layout to copy parameter values or placement from, so an LLM configuring one has this component's own constraints and nothing else to go on."
+ },
+ "openQuestions": [
+  "IS A CONNECTOR A COMPONENT OR A RELATIONSHIP? The most consequential question on this file. Modelled here as an artifact (a Part with two features), which fits OAM's own structure -- an AssemblyFeatureAssociation associates two features THROUGH something. But it could equally be the AFA itself rather than a Part joined by two AFAs, in which case GD-Con should not be a component file at all. The choice determines whether a connector appears in ils_builder's component list or is synthesised by the builder from the two things it joins.",
+  "does a connector REALISE a Function or merely ENABLE one? edes:Func2 is authored as a function of the pipe-side component that provides the attachment point, not of the connector. The realizes edge to Func2 in this file is therefore arguable -- it may belong on the components at either end instead, with GD-Con realising nothing.",
+  "EA-O is being stretched. It was created for edes:GD-SH (geometry-only, owns contact, no connector) and GD-Con is close to its inverse (no geometry, owns no contact, IS the connector). Both fit only by failing to fit anything else, which is how a class becomes a catch-all. If a third EA-O component appears with a fourth unrelated character, the class needs splitting.",
+  "stiffness preset values are undefined project-wide. edes:GD-ST states stiffness must be 'a preset stiff value' without saying what it is, and nothing in component_spec defines one. Until a number exists, k_axial/k_shear/k_rot are named but unusable.",
+  "no rule ties conn_type to its stiffness values (nonConstraints, third item), so a type-P connector with a restrained k_rot would validate. Whether the stiffnesses should be DERIVED from conn_type -- contradicting the free-input treatment above -- or merely checked against it, is unresolved.",
+  "the pipeEnd/structEnd feature names assume the pipe-to-structure case and fit a type-W inline joint poorly. Renaming to something symmetric (endA/endB) would lose the Fixed-vs-typed asymmetry the current names carry; keeping them mislabels the W case.",
+  "W as a connector type overlaps edes:shared#/oam/endFeatureNaming's weld ends. If every inline chain join is a GD-Con of type W, then a chain of n components implies n-1 connector artifacts that nothing currently creates or tracks -- either the weld joins are GD-Con instances, or they are implicit and W is only used for the rarer explicit cases. Not decided."
+ ],
+ "defects": [],
+ "regressionCase": {
+  "status": "none recorded yet"
+ },
+ "requirements": [],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. conn_type is a STRING, one of F/P/S/D/W. y_struct is the SIGNED position of the structure end (negative above the pipe centreline), and its magnitude IS the connector length -- zero is legal and is the default. A D connector REQUIRES P_gap and validate() rejects it without one; every other type rejects P_gap if present.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": {
+    "conn_type": "REQUIRED -- no default. one of F / P / S / D / W. Determines the DOF signature and the OAM class via edes:shared#/oam/connectionClassMap. No default proposed: a connector wit"
+   },
+   "optional": {
+    "L_conn": "defaults to 0.0. m. connector length. ZERO IS THE PROPOSED DEFAULT and a fully legal value -- see scope.zeroLengthIsLegal. Contrast every other component in this corpus,",
+    "k_axial": "defaults to preset stiff value, not yet defined. N/m. stiffness override. See scope.stiffnessOverride -- free input, never derived from L_conn. The actual preset value is undefined anywhere in the project",
+    "k_shear": "defaults to preset stiff value, not yet defined. N/m",
+    "k_rot": "defaults to preset stiff value, not yet defined. N.m/rad. the DOF that actually distinguishes the connection types: restrained for F and W, released for P (revolute). Its value is what makes a connector 'fixe",
+    "P_gap": "defaults to None. m. deadband free travel before a D connector closes and begins restraining. Meaningless for F/P/S/W. Same semantics and same criticality as the P_gap on"
+   }
+  },
+  "placement": {
+   "centre_x": "REQUIRED. The station along the header where the connector attaches."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

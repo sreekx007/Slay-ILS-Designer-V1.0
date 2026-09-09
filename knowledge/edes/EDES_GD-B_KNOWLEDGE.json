@@ -1,0 +1,422 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-B",
+ "type": "edes:ComponentType",
+ "label": "Branch Piping",
+ "sourceRef": "component_spec.BranchPiping",
+ "docRef": "COMPONENT_GEOMETRY_DEFINITIONS.md (Table II / Fig 15 / Fig 24)",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-B"
+ ],
+ "iwEaNote": "third IW-family value, distinct from IW-A and IW-P, added specifically for this file. Per the CSV's own fbs_function_id_needed field: 'third IW class -- evidence the Func taxonomy gap is real'. Not an EA-* value despite tying into an EA-ST/EA-SB connector at its far end -- the branch itself is IW: it is teed off the header (a pipe-side origin), unlike GD-ST/GD-SB which are wholly external structures.",
+ "artifactType": {
+  "current": "Sub-Assembly",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "SETTLED 1Sep26 by project decision: SUB-ASSEMBLY, replacing the previous 'Part, open -- not yet formally assessed' state carried from the FBS/OAM reconciliation CSV. GD-B owns a real declared junction (the Tee, verified live) and a real external tie at its far end to a GD-ST/GD-SB connector slot, and is subordinate to the ILS rather than standing alone. Note this is a change of substance, not just of label: the CSV's own reading was Part ('structurally, chain/branch like GD-VLV'), and GD-VLV has now been settled the other way, as a Part. The distinguishing fact is that GD-B's far end ties to a SEPARATE component, whereas GD-VLV's stem terminates free -- an external tie, not an internal sub-member. Sub-Assembly is EDES's own value; see edes:shared#/oam/partAssemblyRule.subAssemblyNote."
+ },
+ "subclassOf": null,
+ "note": "subclasses component_spec.Component directly, same as edes:GD-VLV -- NOT ExternalStructure, despite tying into one at its far end. GD-B owns real pipe (a Section throughout its own structural lines, per Table XII figures), which neither GD-ST nor GD-SB has; it is closer in kind to GD-VLV's stem (a branch off a main line, terminating in space) than to the EA-ST/EA-SB family, except that GD-VLV's stem terminates free while GD-B's terminates at a real external connector.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func9",
+   "note": "Func9 is a ProposedFunction, not yet in the authored edes:shared.nodes set -- the third IW-class Function the CSV itself flags as evidence of a real taxonomy gap"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-VLV",
+   "note": "same OAM pattern per the CSV: a branch off a main structural line via a declared junction. GD-VLV's stem junction (:smid) and GD-B's Tee junction are both entries returned by the base Component.junctions() method -- GD-B is not introducing a new mechanism, it is the fourth component in this corpus to use one already defined on the base class (the others being GD-PIP's outer-pipe root and GD-VLV's stem root)."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-ST",
+   "note": "GD-B's far end ties to a GD-ST connector slot via top_structure_for_branch(), verified live to produce real node coincidence: for an L-branch (connector_axis='horizontal'), GD-ST's right_connector_y is set to the branch end's y; for a Z-branch (connector_axis='vertical'), GD-ST's top_connector_x is set to the branch end's x. Default GD-ST geometry otherwise, so a branch is always presented on a workable structure. This is a cross-component BUILDER function, not a property either component carries on itself -- GD-B does not know about GD-ST, and GD-ST does not know about GD-B; top_structure_for_branch() is what connects them."
+  }
+ ],
+ "designCode": {
+  "status": "OPEN -- does not fit edes:shared.designCode rule as stated, though closer to fitting than any EA-* component",
+  "reason": "shared.designCode's rule realises Func1/Func3 for a pipe-shaped, constant-bore component with no non-pipe interface. GD-B IS pipe-shaped throughout its own structural lines (a real Section, OD_branch/t_branch, Table XII) -- closer to the rule's premise than GD-ST/GD-SB/GD-SH, none of which have a section at all. But GD-B realises neither Func1 (it is not a stand-in on the HEADER's own line) nor Func3 (its wall is not the header's design wall) -- it is a second, independent line that merely originates on the header via a Tee.",
+  "consequence": "not evaluated against the rule's actual test (section_at) because that test is about the HEADER at a given x, and GD-B's own section_at(x) always returns None for that reason (see scope.neverOwnsHeaderSection) -- the rule's premise is answered 'no' immediately, without needing to reach the pipe-shaped/non-pipe-interface distinction it was written to make. GD-B's own piping would likely be DNV-governed like the header, but this is not stated in source and is recorded as a gap."
+ },
+ "scope": {
+  "twoVariants": "L (3-segment: tee->elbow->valve->end, HORIZONTAL connector axis, sliding guide) and Z (4-segment: tee->elbow1->valve->elbow2->end, VERTICAL connector axis, rigid to the EA-ST top plate) -- Table II / Fig 15. Both verified live: L produces 4 geometry nodes/3 lines, Z produces 5 nodes/4 lines.",
+  "neverOwnsHeaderSection": "section_at(x) is unconditionally None -- 'teed off; adds no section to the header itself' per source. Verified live. owns(x) is also unconditionally False -- 'teed off the header; owns no span of it' -- distinct from section_at returning None but making the same point from the assembly-ownership-arbitration side rather than the section-query side.",
+  "neverOwnsContact": "contact_at(x) is unconditionally None and every geometry_line reports owns_contact=False -- 'the branch rises AWAY from the rollers and can never be touched by one', per source and confirmed by the CSV's own contact_ownership field ('none -- excluded by design'). Verified live across both variants, all 3 (L) / 4 (Z) segments.",
+  "valveNodeIsMandatoryNotPreferred": "the Tee and the valve are BOTH NodePriority.MANDATORY; every other node (elbow(s), end) is PREFERRED. The Tee's reason is standard (a shared structural node either exists or the two lines are not connected -- a beam line cannot attach to the interior of an element). The valve's reason is NOT the standard contact-distribution argument used elsewhere in this corpus (a lumped mass CAN normally be distributed to bracketing nodes by shape functions, same as contact): it fails specifically because this component's OWN mesh_advice sets min_elements=1, so on a single-element horizontal run the bracketing nodes ARE the elbow(s) and the end -- a PREFERRED valve node would let the mesher silently put the 3 mT mass back onto an elbow, exactly the placement P_bv exists to prevent. This was a real, since-fixed defect (see source comment): point_masses() previously returned the elbow node directly while its own docstring claimed mid-run, off by half the run in one direction or the other depending on variant.",
+  "p_b3AndP_bcUndocumented": "per the CSV's own notes_open_questions field: P_bc (Tee -> nearest EA-ST connection) and P_b3 (Z-variant run elevation) are BOTH undocumented in the source paper. P_b3 is given a placeholder default (P_b2/2, half the total rise) flagged explicitly in source as NOT SPECIFIED IN THE PAPER -- Fig 24 shows the Z's horizontal run at an intermediate height but gives no parameter for it. P_bc, notably, is defined and defaulted (2.5D for L, 1.25D for L... wait -- see params.free note on P_bc's own default_for asymmetry) but is NEVER READ by any geometry, structural, or connector method in the class -- verified by search: no reference to self.P_bc anywhere outside its own field declaration and default_for. It is a stored, validated-by-nothing, displayed-but-unused parameter.",
+  "P_bvFixedDefect": "point_masses() previously returned the ELBOW node ('elbow' for L, 'elbow2' for Z) despite its own docstring claiming mid-run placement -- at the L default the valve mass sat at x=0.000 and at the Z default at x=4.064, against a true mid-run of 2.032 m, a full half-run error in the moment arm for a 3 mT mass on a cantilevered branch. Fixed by introducing P_bv as a real Optional parameter, resolved in __post_init__ before validate() runs (same ordering fix as edes:GD-ST/edes:GD-SB's P_c1/P_c2). Recorded here as a FIXED defect, not an open one -- see defects."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "variant",
+    "meaning": "BRANCH SHAPE. 'L' turns once and ends horizontally; 'Z' turns twice and ends vertically. A string, not a number.",
+    "type": "string enum",
+    "default": "L",
+    "note": "'L' or 'Z' only, validated against VALID_BRANCH_VARIANTS={'L','Z'}. Confirmed live: any other string is rejected."
+   },
+   {
+    "name": "P_b1",
+    "meaning": "AXIAL LENGTH of the horizontal run, from the Tee outward.",
+    "unit": "m",
+    "default": "10.0*OD_pipe",
+    "note": "horizontal run length. Same default ratio for both variants."
+   },
+   {
+    "name": "P_b2",
+    "meaning": "TOTAL VERTICAL RISE from the Tee to the far-end connector.",
+    "unit": "m",
+    "default": "2.0*OD_pipe (L) or 3.5*OD_pipe (Z)",
+    "note": "TOTAL vertical rise, Tee to connector -- differs by variant per default_for(pipe, variant), verified live (0.8128 m for L, 1.4224 m for Z at STD_PIPELINE)."
+   },
+   {
+    "name": "P_bc",
+    "meaning": "AXIAL DISTANCE from the Tee to the nearest structure connection point. NOTE: stored and defaulted but READ BY NOTHING -- it drives no geometry.",
+    "unit": "m",
+    "default": "2.5*OD_pipe (L) or 1.25*OD_pipe (Z)",
+    "note": "Tee -> nearest EA-ST connection point. STORED AND DEFAULTED BUT NEVER READ by any method on this class -- see scope.p_b3AndP_bcUndocumented. Confirmed by source search: appears only in its own field declaration and default_for()."
+   },
+   {
+    "name": "P_b3",
+    "meaning": "ELEVATION of the Z-variant's horizontal run above the Tee. Z ONLY. Placeholder default with no basis in the source paper.",
+    "unit": "m",
+    "default": "P_b2/2.0, Z variant only",
+    "optional": true,
+    "note": "elevation of the Z-variant's horizontal run. NOT GIVEN IN THE SOURCE PAPER -- Fig 24 shows an intermediate height with no parameter for it; the half-total-rise default is an explicit placeholder, flagged rather than hidden. Resolved in __post_init__, before validate() checks it strictly between 0 and P_b2."
+   },
+   {
+    "name": "P_bv",
+    "meaning": "POSITION OF THE VALVE along the horizontal run, measured from its start elbow. Placeholder default (mid-run) with no basis in the source paper.",
+    "unit": "m",
+    "default": "P_b1/2.0",
+    "optional": true,
+    "note": "valve position measured along the horizontal run from its start elbow. NOT GIVEN IN THE SOURCE PAPER either -- same treatment as P_b3. Fixed a real defect (see scope.P_bvFixedDefect and defects GD-B-D1). validate() checks it STRICTLY between 0 and P_b1 -- confirmed live at both boundaries (0.0 and P_b1 both rejected) -- because a valve node at either boundary would coincide with an elbow node, giving `path` two entries at one coordinate and a zero-length element."
+   },
+   {
+    "name": "OD_branch",
+    "meaning": "OUTSIDE DIAMETER of the branch pipe. Must be smaller than the header's.",
+    "unit": "m",
+    "default": 0.2731,
+    "note": "Table XII. Must be strictly less than the header's OD_pipe -- confirmed live."
+   },
+   {
+    "name": "t_branch",
+    "meaning": "WALL THICKNESS of the branch pipe.",
+    "unit": "m",
+    "default": 0.0159,
+    "note": "Table XII"
+   },
+   {
+    "name": "mass_valve",
+    "meaning": "LUMPED MASS of the valve on the branch run.",
+    "unit": "kg",
+    "default": 3000.0,
+    "note": "3 mT, per source figures"
+   },
+   {
+    "name": "mass_connector",
+    "meaning": "LUMPED MASS of the end connector.",
+    "unit": "kg",
+    "default": 3000.0,
+    "note": "3 mT, per source figures"
+   },
+   {
+    "name": "support_connector",
+    "meaning": "TYPE of the far-end support, 'F' (fixed) or 'S' (slotted). A string; only these two are valid.",
+    "type": "string enum",
+    "default": "F",
+    "note": "'F' (fixed) or 'S' (slotted), validated live -- ties the branch END to the EA-ST structural node. Per the CSV's own oam_connection_representation field: 'Type recorded (F/S) but no parametric constraint set alongside it yet' -- confirmed by source search, this string is validated and feeds support_code (a display label, e.g. 'L-FT'/'Z-ST') and NOTHING else. No arm, gap, or stiffness value is derived from it, unlike GD-ST/GD-SB's active_connectors(), which returns a full (slot, x, type, arm, gap) tuple per connector."
+   }
+  ],
+  "refused": [],
+  "derived": [
+   {
+    "name": "code_full",
+    "expr": "code + variant",
+    "note": "'GD-BL' or 'GD-BZ' -- verified live"
+   },
+   {
+    "name": "connector_axis",
+    "expr": "'horizontal' if variant=='L' else 'vertical'",
+    "note": "Table II / Fig 15 -- HORIZONTAL for L (sliding guide), VERTICAL for Z (rigid to the EA-ST top plate). Drives which edge of a paired GD-ST moves in top_structure_for_branch()."
+   },
+   {
+    "name": "support_code",
+    "expr": "f'{variant}-{\"FT\" if support_connector==\"F\" else \"ST\"}'",
+    "note": "the source paper's support-layout code fragment (L-FT-/L-ST-/Z-FT-/Z-ST-). A display label built from support_connector, confirming that field's only real consumer."
+   },
+   {
+    "name": "path",
+    "expr": "list of (node_suffix, x, y) tuples, Tee to connector",
+    "note": "L: tee, elbow, valve, end (4 stations). Z: tee, elbow1, valve, elbow2, end (5 stations). y NEGATIVE = rising above the header. The valve IS a real node on this polyline (not a station reported alongside it) specifically so point_masses can attach to it -- see scope.valveNodeIsMandatoryNotPreferred."
+   },
+   {
+    "name": "extent",
+    "expr": "(centre_x, centre_x + P_b1)",
+    "note": "axial footprint the branch SHADOWS on the header -- not owned (owns(x) is always False), just the span reported for bookkeeping/plotting."
+   },
+   {
+    "name": "extent",
+    "expr": "extent = (centre_x, centre_x + P_b1)  -- ONE-SIDED, not symmetric",
+    "meaning": "GD-B is the ONLY component whose extent is not centred on centre_x. The Tee sits AT centre_x and the branch runs away from it in +x, so there is no halfExtent: the component starts at its centre_x rather than straddling it. Placing a neighbour to its left means abutting centre_x itself, not centre_x - something. See edas:shared#/chaining.",
+    "verifiedValue": "(0.0, 4.064) for centre_x=0, P_b1=4.064",
+    "verifiedAt": "variant='L', P_b1=4.064, P_b2=0.8128"
+   }
+  ],
+  "verifiedAt": {
+   "OD_pipe": 0.4064,
+   "L_variant": {
+    "P_b1": 4.064,
+    "P_b2": 0.8128,
+    "P_bc": 1.016,
+    "P_bv_default": 2.032
+   },
+   "Z_variant": {
+    "P_b1": 4.064,
+    "P_b2": 1.4223999999999999,
+    "P_bc": 0.508,
+    "P_b3_default": 0.7111999999999999,
+    "P_bv_default": 2.032
+   }
+  },
+  "defaultForNote": "default_for(pipe, variant) is the SINGLE place the 10D/2D-or-3.5D/2.5D-or-1.25D ratios are computed. NOTE the signature takes a second required-by-convention argument (variant), unlike every other default_for in this corpus (all single-argument, pipe only) -- because P_b2 and P_bc genuinely differ by variant. A caller building this component must supply variant to BOTH the constructor and default_for consistently, or the two will silently disagree; nothing in source enforces that the two match."
+ },
+ "geometry": {
+  "nodesL": 4,
+  "linesL": 3,
+  "nodesZ": 5,
+  "linesZ": 4,
+  "structuralNodesEqualGeometryNodes": true,
+  "structuralLinesEqualGeometryLines": true,
+  "junctions": [
+   "Tee -> pipeline (header structural line), via the base Component.junctions() mechanism"
+  ],
+  "verifiedLive": "L: geometry_nodes()=4 (tee=MANDATORY, elbow=PREFERRED, valve=MANDATORY, end=PREFERRED), geometry_lines()=3, all owns_contact=False. Z: geometry_nodes()=5 (tee=MANDATORY, elbow1=PREFERRED, valve=MANDATORY, elbow2=PREFERRED, end=PREFERRED), geometry_lines()=4, all owns_contact=False. structural_nodes() shares coordinates and priority with geometry_nodes() in both variants -- 'the branch pipe's centreline IS its structural line'. junctions() returns exactly one entry in both variants: (tee_node_id, 'pipeline').",
+  "contact": "none anywhere -- see scope.neverOwnsContact",
+  "section": "REAL Section throughout every structural line (OD=OD_branch, t=t_branch, owner=code_full) -- unlike edes:GD-ST/edes:GD-SB, whose members use stiffness_ratio because they have no genuine pipe-like cross-section. GD-B is genuine pipe, so its stiffness is mesh-independent, same category as edes:GD-TP/GD-TT/GD-PIP/GD-VLV rather than edes:GD-ST/GD-SB."
+ },
+ "constraints": [
+  {
+   "id": "B-C01",
+   "expr": "variant in {'L','Z'}",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "set variant to 'L' or 'Z'"
+  },
+  {
+   "id": "B-C02",
+   "expr": "min(P_b1,P_b2)>0",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "increase whichever of P_b1/P_b2 is <=0"
+  },
+  {
+   "id": "B-C03",
+   "expr": "variant!='Z' or 0<P_b3<P_b2",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "for a Z-branch, set P_b3 strictly between 0 and P_b2",
+   "note": "Z-only. Confirmed live at both boundaries (0.0 and P_b2 both rejected)."
+  },
+  {
+   "id": "B-C04",
+   "expr": "0<P_bv<P_b1",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "set P_bv strictly between 0 and P_b1",
+   "note": "STRICT at both ends deliberately -- at 0 or P_b1 the valve node would coincide with an elbow node, giving `path` two entries at one coordinate and a zero-length element. Confirmed live at both boundaries."
+  },
+  {
+   "id": "B-C05",
+   "expr": "support_connector in ('F','S')",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "set support_connector to 'F' or 'S'"
+  },
+  {
+   "id": "B-C06",
+   "expr": "OD_branch<OD_pipe",
+   "source": "BranchPiping.validate",
+   "severity": "error",
+   "repair": "reduce OD_branch below the header's OD_pipe"
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate(), across both variants and invalid variant/support_connector strings",
+  "probes": 8000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "P_bc is never validated against anything -- it is not read by any method, so no geometric consequence exists for it to be checked against (see scope.p_b3AndP_bcUndocumented)",
+  "no check relating P_bc to the actual distance from the Tee to wherever a paired GD-ST's connector slot ends up -- the two are never compared, since P_bc feeds nothing and top_structure_for_branch() computes the real tie-in independently from path[-1]",
+  "no upper bound on P_b1/P_b2/P_b3/P_bv magnitude beyond the strict pairwise relations already checked -- geometric validity != evidence coverage, same convention as every other component in this corpus",
+  "no check that t_branch is appropriate for OD_branch (e.g. no wall-ratio bound), unlike edes:GD-TP's t_comp>t_pipe rule",
+  "no check that provenance=DESIGN is appropriate given the fully open designCode status"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "provisional",
+    "reason": "support_connector='F' (fixed) is a valid, live value -- but per the CSV's own oam_connection_representation field, the type is recorded with NO parametric constraint set alongside it (no arm/gap/stiffness), unlike edes:GD-ST/GD-SB's active_connectors(). dofStatus is provisional rather than confirmed for this reason: no DOF table or force-transfer rule has been written for this connection at all, only a validated label."
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "provisional",
+    "reason": "support_connector='S' (slotted) -- same gap as F above"
+   },
+   {
+    "type": "P",
+    "permitted": false,
+    "status": "excluded",
+    "reason": "support_connector only accepts 'F' or 'S' -- P and D are not valid values for this field, categorical by the source paper's own -FT-/-ST- support taxonomy"
+   },
+   {
+    "type": "D",
+    "permitted": false,
+    "status": "excluded",
+    "reason": "same as P above -- not part of the -FT-/-ST- taxonomy this field represents"
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "tee",
+    "position": "branch root, on the header structural line at centre_x",
+    "sourceNodeId": "tee",
+    "featureKind": "welded junction to the header",
+    "note": "welded, but NOT a chain mate point in the weldL/weldR sense -- it attaches the branch TO the header rather than continuing the header line through it. Realised as a declared junction (junctions() returns exactly one entry, (tee_node_id, 'pipeline')), not as an end-to-end mate with a neighbouring inline component.",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "end",
+    "position": "branch far end, path[-1]",
+    "sourceNodeId": "end",
+    "featureKind": "connector to an external structure",
+    "note": "NOT a weld at all -- ties to an edes:GD-ST / edes:GD-SB connector slot, typed by support_connector ('F' fixed or 'S' slotted). This is the branch's true AssemblyFeature in the OAM sense, per the FBS/OAM reconciliation CSV ('End connector is the AssemblyFeature -- ties to an EA-ST slot').",
+    "candidateTypes": [
+     "F",
+     "S"
+    ]
+   }
+  ],
+  "whyNotWeldLWeldR": "edes:GD-TP, edes:GD-TT, edes:GD-VLV and edes:GD-PIP all carry symmetric welded end stations named weldL/weldR, because each is an INLINE component: the header line enters one end and leaves the other. GD-B is not inline -- it is IW-B, the only branch class, and it LEAVES the header rather than continuing it. Its two ends are therefore asymmetric and differently typed: tee is a welded junction onto the header, end is a bolted/slotted connector onto an external structure. Applying the weldL/weldR convention here would be wrong in both directions -- it would imply the two ends are interchangeable welds, and it would imply the branch continues a line it actually departs from. VERIFIED LIVE 1Sep26: component_spec.BranchPiping emits :tee and :end, not :weldL/:weldR, consistent with this.",
+  "strictnessCaveat": "whether these are OAMFeatures in NISTIR 7436's strict sense or merely Features depends on whether the component is mated in a given layout -- see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy. The tee end is effectively always mated (a branch with no header attachment is not a branch); the end connector is likewise always mated in a complete ILS, but its mate is recorded nowhere on this component -- see required below.",
+  "required": [
+   "a genuine parametric constraint set (arm/gap/stiffness) alongside support_connector, matching what edes:GD-ST/GD-SB provide per slot -- currently just a validated label (see permittedConnections)",
+   "GD-B carries no reciprocal reference to the specific GD-ST/GD-SB instance it connects to -- the tie only exists in the direction top_structure_for_branch() builds it (GD-ST built FROM a branch), not as a stored relationship either component holds"
+  ],
+  "featureScopedTypes": "candidateTypes differ sharply by feature here, and this component is the clearest case for why the component-level rows are inadequate: tee accepts W only (a weld onto the header), end accepts F or S only (the support_connector taxonomy, which validate() enforces as exactly those two). No feature on this component accepts P or D, yet a component-level reading of the rows would suggest otherwise."
+ },
+ "behaviourDerived": {
+  "mechanism": "per the CSV: branch stiffness behaviour varies depending on the support conditions (F vs S) -- not yet quantified, behaviourExpected below is a placeholder per shared.behaviourExpected convention",
+  "referenceBase": "not established -- GD-B never touches the roller/stinger system (contact_at unconditionally None), so no 'plain pipe at same stinger radius' baseline applies the way it does for edes:GD-TP",
+  "tier": "not evaluated (per CSV fbs_behaviour_expected: 'not evaluated')",
+  "rollerContact": {
+   "capable": false,
+   "reason": "rises away from the rollers by design -- categorical, same class of fact as edes:GD-ST's inability to own contact, for the identical structural reason (both are entirely off the roller/stinger axis)"
+  },
+  "pointMasses": "IMPLEMENTED -- (valve, mass_valve) and (end, mass_connector), both 3000 kg default. Verified live: point_loads(g=9.80665) returns Fy=29419.95 N at each mass node, POSITIVE (y-positive-down convention, so a downward gravity load is positive Fy) -- both the valve and the connector pull the branch down onto whatever supports it. g is an explicit method argument defaulting to config.G, not a constant reached for internally, specifically so a caller running a different acceleration case can supply one without this module having an opinion."
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {
+   "ILS-ILT": {
+    "componentId": "B",
+    "purpose": "Branch piping teed off the header, rising to a support on the top structure. The branch adds a load path that leaves the header, travels through the structure and returns to the pipe at the structure ",
+    "paramsUsed": {
+     "centre_x": 0.0,
+     "variant": "L",
+     "support_connector": "F",
+     "P_b1": 4.064,
+     "P_b2": 0.8128,
+     "P_bc": 0.40639999999999965
+    },
+    "coComponents": [
+     "GD-ST"
+    ],
+    "anchors": [
+     "ILT-L-FT-F1p",
+     "ILT-L-ST-F1p",
+     "ILT-L-FT-F2",
+     "ILT-L-FT-F2D",
+     "ILT-L-FT-PS",
+     "ILT-L-FT-PSD",
+     "ILT-Z-FT-F1p",
+     "ILT-Z-ST-F1p",
+     "ILT-Z-FT-F2",
+     "ILT-Z-FT-F2D",
+     "ILT-Z-FT-PS",
+     "ILT-Z-FT-PSD"
+    ]
+   }
+  },
+  "anchorCount": 12
+ },
+ "defects": [
+  {
+   "id": "B-D1",
+   "status": "fixed",
+   "severity": "major",
+   "fixedDate": "2026-08-30",
+   "summary": "point_masses() returned the ELBOW node ('elbow' for L, 'elbow2' for Z) as the valve mass location, while its own docstring claimed mid-run placement -- at defaults this put the 3 mT valve mass at x=0.000 (L) or x=4.064 (Z) against a true mid-run of 2.032 m, a full half-run error in the moment arm for a mass on a cantilevered branch",
+   "fix": "introduced P_bv (Optional, defaulting to P_b1/2 in __post_init__, resolved before validate() runs) as a real node on the `path` polyline, and point_masses() now attaches to that node instead of an elbow"
+  }
+ ],
+ "regressionCase": {
+  "status": "none recorded yet -- no Foundation Sec.3 equivalent has been run for GD-B"
+ },
+ "openQuestions": [
+  "no Function in the authored set (Func1-5) or the proposed EA-side set (Func6-8) fits GD-B -- Func9 added as the third IW-class Function, per the CSV's own explicit statement that this is 'evidence the Func taxonomy gap is real'; whether Func9 should eventually be split (e.g. an F-support vs S-support distinction) is unexamined",
+  "P_bc is stored, validated by nothing, and read by nothing -- either a real consumer needs to be written for it, or it should be marked deprecated/removed rather than left silently unused; currently a caller has no way to discover this without reading source",
+  "the branch-to-structure tie (top_structure_for_branch) is one-directional and unrecorded on either component -- GD-B does not know which GD-ST/GD-SB it connects to, and neither stores the relationship after construction; whether this needs to become a real declared reference (analogous to junctions()) once an ILS-level assembly actually needs to walk the connection is open",
+  "designCode left fully open -- GD-B is the first EA-adjacent/IW-B component with a REAL section (unlike GD-ST/GD-SB/GD-SH), so it is the closest fit yet to shared.designCode's stated rule, but was not evaluated against it because section_at(x) answers 'no interface at this header x' before the rule's pipe-shaped-vs-non-pipe-interface distinction is ever reached -- whether the rule should be restated to also cover a component's OWN section (not just the header's) is unexamined",
+  "P_b3's placeholder default (P_b2/2) has no basis in the source paper at all, per source's own comment -- unlike GD-B's other undocumented default (P_bv), which at least has an intuitive 'mid-run' justification, P_b3's half-rise placeholder is acknowledged in source as arbitrary"
+ ],
+ "requirements": [],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. variant ('L' or 'Z') and support_connector ('F' or 'S') are STRINGS, not numbers. P_b3 applies to the Z variant only. Two undocumented parameters carry placeholder defaults with no basis in the source paper -- P_b3 (half the total rise) and P_bv (mid-run); if either matters to the case, query rather than accepting the placeholder.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": "none beyond placement -- every free parameter has a usable default",
+   "optional": {
+    "variant": "defaults to L. 'L' or 'Z' only, validated against VALID_BRANCH_VARIANTS={'L','Z'}. Confirmed live: any other string is rejected",
+    "P_b1": "defaults to 10.0*OD_pipe. m. horizontal run length. Same default ratio for both variants",
+    "P_b2": "defaults to 2.0*OD_pipe (L) or 3.5*OD_pipe (Z). m. TOTAL vertical rise, Tee to connector -- differs by variant per default_for(pipe, variant), verified live (0.8128 m for L, 1.4224 m for Z at STD_PIPEL",
+    "P_bc": "defaults to 2.5*OD_pipe (L) or 1.25*OD_pipe (Z). m. Tee -> nearest EA-ST connection point. STORED AND DEFAULTED BUT NEVER READ by any method on this class -- see scope.p_b3AndP_bcUndocumented. Confirmed",
+    "P_b3": "defaults to P_b2/2.0, Z variant only. m. elevation of the Z-variant's horizontal run. NOT GIVEN IN THE SOURCE PAPER -- Fig 24 shows an intermediate height with no parameter for it; the half-t",
+    "P_bv": "defaults to P_b1/2.0. m. valve position measured along the horizontal run from its start elbow. NOT GIVEN IN THE SOURCE PAPER either -- same treatment as P_b3. Fixed a real de",
+    "OD_branch": "defaults to 0.2731. m. Table XII. Must be strictly less than the header's OD_pipe -- confirmed live",
+    "t_branch": "defaults to 0.0159. m. Table XII",
+    "mass_valve": "defaults to 3000.0. kg. 3 mT, per source figures",
+    "mass_connector": "defaults to 3000.0. kg. 3 mT, per source figures",
+    "support_connector": "defaults to F. 'F' (fixed) or 'S' (slotted), validated live -- ties the branch END to the EA-ST structural node. Per the CSV's own oam_connection_representation fiel"
+   }
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value. See usedInLayouts for worked precedents (ILS-ILT), or query."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

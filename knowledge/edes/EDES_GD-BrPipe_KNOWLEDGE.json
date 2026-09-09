@@ -1,0 +1,238 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-BrPipe",
+ "type": "edes:ComponentType",
+ "label": "Branch Pipe Segment",
+ "sourceRef": "component_spec.BranchPipeSegment",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-P"
+ ],
+ "iwEaNote": "IW-P, same reasoning as edes:GD-HdPipe: a branch pipe segment has a section of its own (the branch's OD/wall), so it is a piping item; it provides no attachment point, so not IW-A. Deliberately NOT IW-B despite sitting on the branch line -- IW-B is edes:GD-B's class and denotes a component that LEAVES the header, a statement about the branch as a whole. A segment WITHIN that branch does not itself leave anything. Classifying by which line a component sits on rather than by what it does would make the IW taxonomy a location tag, which is not what it encodes. HISTORY: IW-N proposed and reverted 1Sep26, see edes:GD-HdPipe's iwEaNote for why.",
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "Identical to edes:GD-HdPipe: a single uniform pipe run, no sub-member, no declared junction, no frame, no connector slots. Follows from the specification itself and does not depend on unwritten code. asserted rather than inferred, per the corpus-wide departure recorded once in edes:shared#/frameworks OAM.usedButLooser."
+ },
+ "subclassOf": null,
+ "note": "Would subclass component_spec.Component directly. Structurally identical to edes:GD-HdPipe -- the ONLY difference is which BasePipeline is supplied. That raises a real question, flagged in openQuestions, of whether these should be two components at all rather than one component used twice. PROMOTED from edes:FutureComponent to edes:ComponentType 1Sep26 once the class was written and probed. IMPLEMENTED 1Sep26 as a SUBCLASS of HeaderPipeSegment, overriding one property (_owns_contact -> False). This resolves the openQuestion asking whether the two should be separate components: they are one component and one override, not two parallel classes, which makes the single real difference visible instead of hiding it in duplication. VERIFIED LIVE: contact_at returns None, geometry_lines report owns_contact=False, and the branch Section (OD 0.2731, t 0.0159) is carried when built against the branch BasePipeline.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func10",
+   "note": "same spacing/continuity function as edes:GD-HdPipe. Shared rather than duplicated, matching how edes:Func7 is realised by both GD-ST and GD-SB."
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func3",
+   "note": "carries the branch line's own design wall by definition"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-HdPipe",
+   "note": "the header-line twin. Same mechanism, same params, different pipe argument."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-B",
+   "note": "the branch this segment would sit inside. GD-B is currently monolithic (all structural lines owner='GD-BL', verified live), so this component cannot be used without restructuring GD-B first -- see implementationStatus.blockers."
+  }
+ ],
+ "designCode": {
+  "status": "answerable, same as edes:GD-HdPipe",
+  "reason": "IS the branch line pipe -- same OD, wall and material as the branch it sits in -- so the governing code is the branch piping's own code. Note this may differ from the header's: a 8in branch off a 16in header is a different pipe with its own design basis, so 'the pipeline code' resolves to a different specific case than it does for edes:GD-HdPipe even though the RULE is the same.",
+  "caveat": "girth welds at the ends are fabrication-governed, not a design code on this body. Not represented."
+ },
+ "scope": {
+  "purpose": "an explicitly-represented length of plain branch pipe, so that spacing between branch fittings (elbow, valve, end connector) becomes a first-class parameter rather than emerging from edes:GD-B's P_b1/P_b2/P_bv arithmetic.",
+  "optional": "NOT compulsory, same as edes:GD-HdPipe.",
+  "noMechanicalDelta": "adds no section change, stiffness step, elevation or mass beyond the branch pipe it represents. A segment differing in any of these would be a edes:GD-TP or edes:GD-TT sitting on the branch line -- which both files now confirm is legitimate.",
+  "gdTpGdTtOnTheBranch": "edes:GD-TP and edes:GD-TT explicitly support being placed on a branch line: both take `pipe` as a constructor argument and every equation re-derives from it, VERIFIED LIVE against branch properties on 1Sep26. So a branch chain could read GD-BrPipe -> GD-TT -> GD-BrPipe exactly as a header chain does, with all three evaluated against the branch pipe rather than the header.",
+  "notPipelineSpecific": "the same pipe-as-argument mechanism as its header twin -- which is precisely why the two components are structurally identical and why openQuestions asks whether they should be one."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "L_pipe",
+    "meaning": "LENGTH of the plain branch-pipe segment, measured ALONG THE BRANCH's own path -- not along the header axis. No default.",
+    "unit": "m",
+    "default": "no proposed default",
+    "note": "same as edes:GD-HdPipe -- no natural pipe-relative ratio exists for a spacer's length, so default_for(pipe) would have nothing meaningful to return. Same departure from the corpus-wide default_for convention, flagged in openQuestions."
+   }
+  ],
+  "refused": [
+   "OD_pipe / t_pipe -- taken from the `pipe` argument (the BRANCH pipe here, not the header's), never overridden"
+  ],
+  "derived": [
+   {
+    "name": "extent",
+    "expr": "(s_start, s_start + L_pipe) along the branch path",
+    "note": "measured along the branch's own arc length, NOT along header x -- see assemblyFeatures.axisWarning. This is the one place GD-BrPipe genuinely differs from its header twin rather than merely taking a different pipe argument."
+   },
+   {
+    "name": "section",
+    "expr": "the branch's own Section (OD_branch, t_branch)",
+    "note": "real Section, not None -- genuine pipe, mesh-independent stiffness, same category as edes:GD-B's own structural lines which carry Section(OD=0.2731, t=0.0159) verified live."
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_pipe/2, measured along the BRANCH path",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 0.5,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.2731,
+     "t_pipe": 0.0159
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 2,
+  "structuralNodes": 2,
+  "lines": 1,
+  "structuralLines": 1,
+  "junctions": [],
+  "specified": "2 nodes at the girth welds, 1 line between them carrying the branch Section. MANDATORY priority proposed at both ends, same reasoning as edes:GD-HdPipe. NOT VERIFIED -- no class exists.",
+  "contact": "none. Specified as never owning contact, matching edes:GD-B, whose every geometry_line reports owns_contact=False (verified live) because the branch rises away from the rollers. A branch segment inherits that: it cannot be touched by a roller regardless of its length. This is the sharpest behavioural difference from edes:GD-HdPipe, which owns plain-pipe contact over its whole extent."
+ },
+ "constraints": [
+  {
+   "id": "BP-C01",
+   "expr": "L_pipe > 0",
+   "source": "BranchPipeSegment.validate",
+   "severity": "error",
+   "repair": "increase L_pipe above 0",
+   "note": "strict, same reasoning as edes:GD-HdPipe HP-C01 -- a zero-length segment is the direct mate it replaces, and a zero-length element."
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate() -- 8000 random L_pipe values; inherits HeaderPipeSegment.validate unchanged",
+  "probes": 8000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no check that the segment fits within the branch run it sits on -- a GD-BrPipe longer than edes:GD-B's P_b1 would overshoot the branch, and nothing specified here catches it",
+  "no minimum practical length proposed; no figure appears in either source paper and none is invented",
+  "no upper bound on L_pipe"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": false,
+    "status": "excluded",
+    "reason": "same DNV line-pipe exclusion as edes:GD-HdPipe and edes:GD-TP -- direct welding onto line pipe is prohibited because it is line pipe. Applies identically on the branch."
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "reason": "provisional in the same strong sense as edes:GD-HdPipe -- no class, no active_connectors mechanism, and no specified attachment station along the segment. Note edes:GD-B's own support_connector accepts only F or S, so if a branch segment were ever to carry the branch's support connection, the permitted set here would need reconciling with that narrower F/S taxonomy. Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable.",
+    "requires": [
+     "edes:GD-BrPipe"
+    ]
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BrPipe"
+    ],
+    "reason": "Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable."
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BrPipe"
+    ],
+    "reason": "Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable."
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "the end nearer the branch root (lower arc length along the branch path)",
+    "sourceNodeId": "weldL (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "the end farther from the branch root (higher arc length)",
+    "sourceNodeId": "weldR (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   }
+  ],
+  "status": "conforms to edes:shared#/oam/endFeatureNaming, but with a caveat that does not apply to any inline header component -- see axisWarning.",
+  "axisWarning": "'L' and 'R' are SPATIALLY MISLEADING on this component. A branch runs horizontally then turns vertically (edes:GD-B's L variant: tee -> elbow -> valve -> end; Z variant adds a second elbow and a vertical rise), so a GD-BrPipe on the riser portion has ends that are ABOVE and BELOW each other, not left and right. The names are retained for consistency with the corpus-wide convention rather than renamed to start/end, but they must be read as ORDERED ALONG THE BRANCH'S OWN ARC LENGTH -- weldL nearer the tee, weldR farther -- not as directions in the ILS x-y frame. This matches the direction edes:GD-B's own path is built (tee first, end last, verified live) and the arc-length parameterisation already used elsewhere in the toolchain.",
+  "noOffset": "no NIB, no taper -- ends sit directly at the extent boundary, same as edes:GD-HdPipe and edes:GD-TP.",
+  "strictnessCaveat": "see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy -- strict OAMFeature status depends on actual mating."
+ },
+ "behaviourDerived": {
+  "mechanism": "none by design on its own body. Its length sets the spacing between branch fittings, and any strain consequence belongs to that spacing and to the branch's overall cantilever geometry, not to this segment.",
+  "referenceBase": "plain branch pipe -- but note this is NOT the same baseline as edes:GD-HdPipe's. The header baseline is plain pipe ON ROLLERS at a stinger radius; a branch segment never touches a roller at all, so its baseline is an unloaded cantilever length, a different reference entirely.",
+  "tier": "not evaluated. edes:GD-B's own behaviourDerived is likewise 'not evaluated' per the FBS/OAM reconciliation CSV, so there is no branch-side result to inherit.",
+  "rollerContact": {
+   "capable": false,
+   "reason": "categorical, inherited from the branch's own geometry -- rises away from the rollers, cannot be contacted. Same class of fact as edes:GD-ST's inability to own contact, and the direct opposite of edes:GD-HdPipe, which is a roller-contact surface over its whole length."
+  }
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {},
+  "anchorCount": 0,
+  "absent": "no archetype in standard_ils_layouts.json contains this component. That is not necessarily a gap in the library -- it may simply never have been the subject of a published study -- but it does mean there is no worked layout to copy parameter values or placement from, so an LLM configuring one has this component's own constraints and nothing else to go on."
+ },
+ "openQuestions": [
+  "No authoritative definition of IW-A / IW-P / IW-B exists anywhere in EDES -- the classes are used on every inline component but characterised only incidentally, in per-component notes (edes:GD-PIP's 'purely anchoring, not a piping stand-in', edes:GD-VLV's 'provides no connection point', edes:GD-SH's 'not a piping item (no section of its own)'). Those notes are consistent but were written to justify one component's classification, not to define the class. This directly caused a wrong call on 1Sep26: a new class IW-N was proposed for this component on the strength of one such note, then reverted once a different note supplied the better criterion. The taxonomy should be defined once in edes:shared, the way oam.connectionClassMap and oam.endFeatureNaming are.",
+  "SHOULD THIS BE A SEPARATE COMPONENT AT ALL? edes:GD-HdPipe and edes:GD-BrPipe are structurally identical -- same params, same geometry, same constraints -- differing only in which BasePipeline is supplied and in whether they own roller contact. Since edes:GD-TP and edes:GD-TT are single components used on either line (verified live against branch properties), the consistent choice may be ONE 'GD-Pipe' component used twice, with contact ownership following from which line it sits on rather than from its class. Two components were drafted because that is what was asked for, but this is the most consequential open item across both files.",
+  "contact ownership is the one real behavioural difference, and it may not be a property of the COMPONENT: a segment owns roller contact if it is on the header and not if it is on the branch. That is a fact about the line, not about the pipe segment -- which weakens the case for two classes further, and suggests contact capability should be resolved at assembly time.",
+  "no default_for(pipe) proposed, same convention break as the header twin.",
+  "using this component requires restructuring edes:GD-B from a monolithic component (all lines owner='GD-BL', verified live) into a chain of segments plus fittings. That is a significant change to a component that currently works, and the benefit -- explicit spacing parameters on the branch -- has not been weighed against the cost anywhere.",
+  "weldL/weldR naming is retained but spatially wrong on vertical runs (see assemblyFeatures.axisWarning). If a future component has ends that are neither left-right nor along a single monotonic arc, the convention will need revisiting rather than stretching further."
+ ],
+ "defects": [],
+ "regressionCase": {
+  "status": "none recorded yet"
+ },
+ "requirements": [],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. As edes:GD-HdPipe: L_pipe must be supplied. Note the `pipeline` block for a layout containing this component is still the HEADER's -- but this component's own OD/wall come from whichever BasePipeline it is built against, which for a branch segment is the BRANCH pipe, not the header. That distinction is not expressible in the current definition format and is a real gap; query the branch properties explicitly.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": {
+    "L_pipe": "REQUIRED -- no default. m. same as edes:GD-HdPipe -- no natural pipe-relative ratio exists for a spacer's length, so default_for(pipe) would have nothing meaningful to return. S"
+   },
+   "optional": {}
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value. No archetype in the layout library contains this component, so there is NO worked precedent to take a value from -- query."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

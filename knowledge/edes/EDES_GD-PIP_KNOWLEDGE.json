@@ -1,0 +1,430 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-PIP",
+ "type": "edes:ComponentType",
+ "label": "Pipe-in-Pipe Bulkhead",
+ "sourceRef": "component_spec.PipBulkhead",
+ "docRef": "COMPONENT_GEOMETRY_DEFINITIONS.md Sec.5",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-A"
+ ],
+ "iwEaNote": "IW-P dropped vs GD-TT — purely anchoring, not a piping stand-in",
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "reason": "SETTLED 1Sep26 by project decision: PART. GD-PIP gained a real sub-member and declared junction on 30Aug26 (the outer pipe and its root), which had pushed it toward Assembly under the literal Sec.3.2 test and left this field open with candidate=Assembly. The decision is that an internal sub-member does not make an artifact an assembly when it is not independently placeable: a PiP outer sleeve is concentric with and fabricated onto the inner pipe, never positioned as a separate component in a layout. Supersedes the previous open state.",
+  "rule": "edes:shared#/oam/partAssemblyRule"
+ },
+ "subclassOf": "edes:GD-TT",
+ "variants": [
+  "R",
+  "L",
+  "B"
+ ],
+ "variantWarning": "all 3 share runtime code 'GD-PIP' — no namespace separation; node ids can collide if both R&L land at same centre_x (now rejected by PIP-C03)",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func2"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func4",
+   "note": "the outer sleeve and its junction give the lever arm a moment-transferring attachment needs, which a plain or tapered wall lacks"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "chainsWith",
+   "to": "edes:GD-BOSS",
+   "status": "unimplemented",
+   "note": "F-capability is GD-PIP+BOSS as a CHAIN, not a GD-PIP property alone"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-BOSS",
+   "note": "a boss takes its OD and wall from THIS component's outer pipe, and is the alternative realiser of edes:Func4"
+  }
+ ],
+ "designCode": {
+  "summary": "inner pipe: DNV (per edes:GD-TT). Outer pipe: pipe-shaped, concentric -> DNV also, by inspection."
+ },
+ "scope": {
+  "summary": "reduced-order model per edes:shared.modelFidelity — outer pipe IS this component's own member (in scope, implemented 30Aug26); BOSS is the separate future component (still unimplemented)"
+ },
+ "params": {
+  "free": [
+   {
+    "name": "x_interior_R",
+    "meaning": "AXIAL POSITION, relative to centre_x, of the junction where the outer sleeve meets the inner pipe on the RIGHT. Its presence is what creates a right-hand outer member.",
+    "unit": "m",
+    "optional": true
+   },
+   {
+    "name": "x_interior_L",
+    "meaning": "Same on the LEFT. At least one of the two is required -- a bulkhead with neither has no outer member at all.",
+    "unit": "m",
+    "optional": true
+   },
+   {
+    "name": "OD_outer",
+    "meaning": "OUTSIDE DIAMETER of the outer sleeve. REQUIRED -- the outer pipe is a real structural member with its own contact surface and cannot be inferred from the inner pipe.",
+    "unit": "m",
+    "required": true,
+    "note": "no pipe-relative default — would guess a diameter into every contact result",
+    "default": "four NOMINAL SIZES above the line (nps_step_up(OD_pipe, 4))",
+    "defaultNote": "DEFAULTED since 5Sep26; previously required. FOUR NOMINAL SIZES larger, NOT OD + 4 inches -- the two differ for every line below NPS 14, since nominal size is not the OD there (NPS 6 is 168.3 mm, not 152.4). On a 16 in line the sleeve is NPS 20 = 508.0 mm. The earlier code comment refused a default on the grounds that no basis existed and inventing one would put a guessed diameter into every contact result; that reasoning stood until a basis was supplied.\nCLEARANCE INTERACTION, found on introducing the default: the sleeve must clear the INNER thick body, and NPS+4 leaves only 19.3 mm of radial room against a default inner body (t_comp = 2.5*t_pipe gives OD_comp = 469.4 mm on a 16 in line). So t_outer must be under about 19 mm for the default pairing to build -- 25 mm is rejected. The default OD is not generous, and t_outer keeps no default of its own because a wall does not follow from a diameter."
+   },
+   {
+    "name": "t_outer",
+    "meaning": "WALL THICKNESS of the outer sleeve.",
+    "unit": "m",
+    "required": true,
+    "stillRequired": "No default. Deliberate: nothing was supplied for it, and a wall thickness does not follow from a diameter. Note it is CONSTRAINED by OD_outer via the clearance check -- see OD_outer.defaultNote."
+   }
+  ],
+  "derived": [
+   {
+    "name": "L_outer",
+    "expr": "OD_pipe",
+    "note": "fixed 1D, not free"
+   },
+   {
+    "name": "x_structural_R/L",
+    "expr": "x_interior +/- L_outer"
+   },
+   {
+    "name": "y_outer_contact",
+    "expr": "OD_outer/2",
+    "verifiedAt": {
+     "OD_outer": 0.508
+    },
+    "value": 0.254,
+    "note": "concentric, no offset term"
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = same as edes:GD-TT (inherited). The OUTER sleeve may reach further: outer stations sit at x_interior_L/R and the sleeve ends, so the component extent is the wider of the two.",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 0.8272,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": "6 inner (weldL/taperL/bodyL/bodyR/taperR/weldR -- conMid explicitly filtered out, see assemblyFeatures.noMidConnector) + 2 per outer member. VERIFIED LIVE at 8 nodes with one interior node set, 10 with two.",
+  "lines": "5 inner (one per consecutive station pair) + 1 per outer member, own line id. VERIFIED LIVE at 6 lines with one interior node set. The inherited builder derives this count from the station list rather than hard-coding it, so the filtered station list produces 5 not 6.",
+  "junctions": "[outer-pipe root -> pipeline], per side. DECLARED not inferred — root x is caller-supplied, no coordinate coincidence to detect it by.",
+  "contact": "outer pipe wins wherever it overlaps the inner pipe axially — lowest surface. contact_at fixed 30Aug26: previously returned inner surface over outer span despite docstring claiming refusal."
+ },
+ "sectionClaim": {
+  "claimsSection": true,
+  "claimsContact": true,
+  "verified": "section_at() returns Section(OD=0.4694) at centre_x on STD_PIPELINE, VERIFIED LIVE; contact_at() returns a real Contact.",
+  "consequence": "Same as edes:GD-VLV -- may not overlap another section-claiming component, and an explicit header chain must be split around it and welded on both sides.",
+  "twoWeldChains": "NOTE this component sits in TWO chains, and only one of them is the pipeline. The INNER pipe (weldL/weldR) carries the header line and is what ils_builder.weld_chain() joins. The OUTER sleeve ends (outLEnd/outREnd) are a SEPARATE weld chain for the pipe-in-pipe outer line; a neighbour mated to those would be joined to the annulus, not to the pipeline.",
+  "inTheWeldChain": "GD-PIP is in ils_builder.INLINE_CODES via its inner pipe."
+ },
+ "constraints": [
+  {
+   "id": "TP-C01",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C01"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C02",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C02"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C03",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C03"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C04",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C04"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TT-C01",
+   "ref": {
+    "node": "edes:GD-TT",
+    "section": "constraints",
+    "id": "TT-C01"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TT-C02",
+   "ref": {
+    "node": "edes:GD-TT",
+    "section": "constraints",
+    "id": "TT-C02"
+   },
+   "inherited": true
+  },
+  {
+   "id": "PIP-C01",
+   "expr": "x_interior_R is not None or x_interior_L is not None",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "set at least one of x_interior_R, x_interior_L"
+  },
+  {
+   "id": "PIP-C02",
+   "expr": "abs(x_interior_R)<=L_comp/2 and abs(x_interior_L)<=L_comp/2",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "doc": "Sec.5.2",
+   "repair": "move the interior node inside +/- L_comp/2, or increase L_comp"
+  },
+  {
+   "id": "PIP-C03",
+   "expr": "x_interior_R != x_interior_L when both set",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "added": "2026-08-30",
+   "repair": "separate x_interior_R and x_interior_L, or use single-side R/L variant instead of B"
+  },
+  {
+   "id": "PIP-C04",
+   "expr": "OD_outer is not None",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "supply OD_outer — no pipe-relative default exists"
+  },
+  {
+   "id": "PIP-C05",
+   "expr": "t_outer is not None",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "supply t_outer — no pipe-relative default exists"
+  },
+  {
+   "id": "PIP-C06",
+   "expr": "OD_outer>0",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "increase OD_outer above 0"
+  },
+  {
+   "id": "PIP-C07",
+   "expr": "t_outer>0",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "increase t_outer above 0"
+  },
+  {
+   "id": "PIP-C08",
+   "expr": "t_outer<OD_outer/2",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "repair": "reduce t_outer, or increase OD_outer — wall currently leaves no bore"
+  },
+  {
+   "id": "PIP-C09",
+   "expr": "ID_outer>OD_comp",
+   "source": "PipBulkhead.validate",
+   "severity": "error",
+   "doc": "Sec.5.2, concentric outer pipe must clear the thick body",
+   "repair": "increase OD_outer or reduce t_outer so the outer bore clears the inner body OD"
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate()",
+  "probes": 12000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "structural node COULD escape extent for legal x_interior at max range — FIXED 30Aug26 by extent=union(weld-to-weld, cantilevers)",
+  "constant-bore ceiling inherited unchanged — GD-PIP cannot represent a free-OD body either (valve regression case)"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "chain": "connector -weld-> BOSS -weld-> outer-pipe-end-node -> outer pipe -> bulkhead -> line pipe",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": false,
+    "status": "blocked",
+    "requires": [
+     "edes:GD-BOSS"
+    ],
+    "reason": "F needs a real member with a lever arm to react Mz; BOSS is that member and is unimplemented"
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "provisional"
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "provisional"
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed",
+    "requiresParam": "P_gap"
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "left girth-weld end of the INNER pipe, x_weld[0]",
+    "sourceNodeId": "weldL",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "right girth-weld end of the INNER pipe, x_weld[1]",
+    "sourceNodeId": "weldR",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "outLEnd",
+    "position": "left free end of the OUTER pipe sleeve",
+    "sourceNodeId": "outLEnd",
+    "candidateTypes": [
+     "W"
+    ],
+    "note": "where the pipe-in-pipe line's own outer pipe is welded on. Present only when x_interior_L is set -- VERIFIED LIVE 1Sep26: with both interior nodes supplied, geometry_nodes() emits outLJn/outLEnd/outRJn/outREnd; with only one, just that side's pair."
+   },
+   {
+    "id": "outREnd",
+    "position": "right free end of the OUTER pipe sleeve",
+    "sourceNodeId": "outREnd",
+    "candidateTypes": [
+     "W"
+    ],
+    "note": "where the pipe-in-pipe line's own outer pipe is welded on. Present only when x_interior_R is set -- VERIFIED LIVE 1Sep26: with both interior nodes supplied, geometry_nodes() emits outLJn/outLEnd/outRJn/outREnd; with only one, just that side's pair."
+   }
+  ],
+  "status": "the mate points an adjacent component ties to are weldL/weldR, inherited unchanged from edes:GD-TT (PipBulkhead subclasses TaperedThickBody) and VERIFIED LIVE 1Sep26. Same NIB caveat as GD-TT applies: weldL/weldR sit past L_NIB from the taper toe, so a join naming taperL/taperR would place the neighbour too close by that length.",
+  "outerPipeNotChainMatable": "CORRECTED 1Sep26. This field previously stated that the outer-pipe stations 'are NOT chain mate points' and described outREnd as 'the outer pipe's own free end' -- WRONG for the End stations. outLEnd/outREnd are real AssemblyFeatures that accept a W (weld) connection: they are where the PiP line's own outer pipe is welded onto the bulkhead sleeve. They are now listed in slots above. What remains true, and was the defensible half of the original claim, is that they do not continue the HEADER line: a chain join along the pipeline runs weldL -> weldR through the inner pipe, and a neighbour mated to outREnd would be joined to the annulus, not to the pipeline. So there are TWO distinct weld chains through this component -- inner (weldL/weldR, the header) and outer (outLEnd/outREnd, the sleeve) -- and confusing them is the error the original wording was reaching for but overstated.",
+  "strictnessCaveat": "whether these are OAMFeatures in NISTIR 7436's strict sense or merely Features depends on whether the component is mated in a given layout -- see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy.",
+  "junctionsAreNotFeatures": "outLJn/outRJn are NOT AssemblyFeatures and are deliberately absent from slots. They are the internal junctions where the outer sleeve meets the inner pipe -- declared node-merges within one component, not interfaces to a separate artifact. Per edes:shared#/frameworks OAM.narrowerOnPurpose.junction, a junction is directional and internal; an AssemblyFeature is an interface to another Part. Nothing external mates at outLJn/outRJn.",
+  "noMidConnector": "GD-PIP has NO mid-body connector station, by explicit decision 1Sep26. It briefly inherited one: conMid was added to TaperedThickBody._station_xs for GD-TP/GD-TT and propagated here through super(), taking this component from 8 nodes to 9 as an unassessed side effect. PipBulkhead now overrides _station_xs to filter it out by id. Reason: a PiP bulkhead already has its attachment point -- the outer member's free end (outLEnd/outREnd), where a Boss attaches -- and a second competing attachment mid-body is not part of this component's definition. VERIFIED LIVE back at 8 nodes with one interior node set."
+ },
+ "behaviourDerived": {
+  "outerLoadPath": "IMPLEMENTED 30Aug26 as component_spec.PipBulkhead.outer_load_path. Rule: external load on outer pipe -> outer pipe's OWN end nodes (structural distribution) -> junction -> pipeline, by stiffness ratio. Two hops, not one — PIPE_ELEMENT on contact_at means reaction is on the OUTER element, not already on the pipeline.",
+  "connectorLoadPath": "not representable — needs BOSS",
+  "mass": "NO catalogue archetype exists for GD-PIP — no independent oracle, unlike GD-TP/GD-TT"
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {},
+  "anchorCount": 0,
+  "absent": "no archetype in standard_ils_layouts.json contains this component. That is not necessarily a gap in the library -- it may simply never have been the subject of a published study -- but it does mean there is no worked layout to copy parameter values or placement from, so an LLM configuring one has this component's own constraints and nothing else to go on."
+ },
+ "defects": [
+  {
+   "id": "PIP-D1",
+   "status": "fixed",
+   "severity": "major",
+   "fixedDate": "2026-08-30",
+   "summary": "outer pipe had no line/nodes/section AND contact_at silently returned inner surface over its span despite docstring claiming refusal",
+   "history": "misdiagnosed as scope (not a defect) in an intermediate pass, reinstated after re-check against edes:shared.modelFidelity.scopeTest"
+  },
+  {
+   "id": "PIP-D2",
+   "status": "fixed",
+   "severity": "major",
+   "fixedDate": "2026-08-30",
+   "summary": "structural node could fall outside component's own extent at legal interior positions",
+   "fix": "extent = union(weld-to-weld span, both cantilever tips)"
+  },
+  {
+   "id": "PIP-D3",
+   "status": "fixed",
+   "severity": "minor",
+   "fixedDate": "2026-08-30",
+   "summary": "B variant could mint 2 node ids at 1 coincident point",
+   "fix": "PIP-C03"
+  }
+ ],
+ "openQuestions": [
+  "GD-BOSS: free params (length free, OD/wall/radial position undetermined), naming — check COMPONENT_GEOMETRY_DEFINITIONS.md Sec.5 for existing 'Structural Boss Pipe' precedent before minting a code",
+  "no catalogue archetype for GD-PIP — needs one for an independent oracle",
+  "Func4 (moment-transferring attachment) belongs to GD-BOSS when it exists, not GD-PIP — not yet added to edes:shared"
+ ],
+ "requirements": [
+  {
+   "id": "GD-PIP.R1",
+   "appliesTo": "edes:Func2",
+   "quantity": "connector force transfer capacity (magnitude only)",
+   "unit": "N",
+   "value": null,
+   "status": "unpopulated"
+  },
+  {
+   "id": "GD-PIP.R2",
+   "appliesTo": "edes:Func4",
+   "blockedBy": "edes:GD-BOSS",
+   "quantity": "connector moment transfer capacity (Mz) — first moment-capacity requirement in the stack",
+   "unit": "N.m",
+   "value": null,
+   "status": "unpopulated"
+  }
+ ],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. ALSO read edes:GD-TT (which this subclasses) and edes:GD-TP beneath it -- t_comp/L_comp and constraints TP-C01..C04 are documented there. The outer sleeve is NOT optional: OD_outer is required and validate() rejects a build without it, because the outer pipe is a real structural member with its own contact surface and cannot be inferred from the inner.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": {
+    "OD_outer": "REQUIRED -- no default. m. no pipe-relative default — would guess a diameter into every contact result",
+    "t_outer": "REQUIRED -- no default. m"
+   },
+   "optional": {
+    "x_interior_R": "defaults to None. m",
+    "x_interior_L": "defaults to None. m"
+   }
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value. No archetype in the layout library contains this component, so there is NO worked precedent to take a value from -- query."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ },
+ "assemblyRef": "edas:shared -- assembly-level knowledge this file deliberately does not carry: build sequence, id convention, the chaining equation, ownership arbitration, section-vs-contact, association format and the emit format."
+}

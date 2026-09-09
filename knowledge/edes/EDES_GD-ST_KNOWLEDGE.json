@@ -1,0 +1,470 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-ST",
+ "type": "edes:ComponentType",
+ "label": "Top Structure",
+ "sourceRef": "component_spec.TopStructure",
+ "docRef": "COMPONENT_GEOMETRY_DEFINITIONS.md Sec.6",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "EA-ST"
+ ],
+ "iwEaNote": "shares the ExternalStructure base with edes:GD-SB (P_vt, P_c1, P_c2, P_gap) -- see subclassOf note. First component whose iwEaClass carries an EA-* value other than EA-O.",
+ "artifactType": {
+  "current": "Sub-Assembly",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "SETTLED 1Sep26 by project decision: SUB-ASSEMBLY, upgraded from Assembly. Verified live: 12 geometry/structural nodes, a real 12-member closed perimeter frame, and up to 5 real AssemblyFeatureAssociations via active_connectors(). The Sub-Assembly label resolves what this file previously carried as a caveat -- the FBS/OAM reconciliation CSV always read 'Sub-Assembly' rather than plain 'Assembly', and EDES now has a value for it. Note Sub-Assembly is EDES's own third value, not an OAM class; see edes:shared#/oam/partAssemblyRule.subAssemblyNote. The flat-vs-nested gap is NOT closed by this: ils_builder's Assembly.components is still a flat Sequence[Component], so the label is now asserted ahead of the code supporting it."
+ },
+ "subclassOf": null,
+ "note": "subclasses component_spec.ExternalStructure (not Component directly), which in turn subclasses Component -- same base edes:GD-SB will subclass. subclassOf is left null here rather than pointing at ExternalStructure, because ExternalStructure has no EDES knowledge node of its own (it carries no code, no iw_ea_class, and realises no Function by itself) and is not a buildable component_spec class in the sense the rest of this corpus uses subclassOf for (contrast edes:GD-PIP subclassing edes:GD-TT, both real, both buildable, both with real defaults). The shared base's rules (P_c1/P_c2/P_gap validation, section_at()=None) are instead documented inline in constraints/scope below, tagged by their real source (ExternalStructure.validate, ExternalStructure.section_at) rather than invented as a phantom parent node.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func7",
+   "note": "Func7 is a ProposedFunction, not yet in the authored edes:shared.nodes set -- names both the anchor role (connector slots for a branch) and the protection role (shields piping beneath it) as one function, matching Sec.6's own treatment"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func11",
+   "note": "strong-back role -- expressed through kT_ratio. Magnitude is FBS Be: query EDIKB."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-SH",
+   "note": "opposite extreme on the OAM spectrum: GD-SH owns contact and no connector; GD-ST owns connectors and no contact"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-VLV",
+   "note": "GD-VLV's :smid junction is the other place in the corpus where a real declared junction exists; GD-ST's connector slots are a different mechanism (AssemblyFeatureAssociation via active_connectors(), not a structural node shared with the pipeline)"
+  }
+ ],
+ "designCode": {
+  "status": "OPEN -- does not fit edes:shared.designCode rule",
+  "reason": "shared.designCode's rule is keyed on section_at (pipe-shaped vs non-pipe interface), realising Func1/Func2/Func3. GD-ST.section_at is unconditionally None -- it is not pipe-shaped at all, has no cross-section, and realises neither Func1 nor Func3. The rule's premise does not apply.",
+  "consequence": "no governing standard identified for an external attachment frame as a category -- likely a structural-steel code (e.g. AISC/Eurocode 3) rather than a pipeline code, but this is not yet stated anywhere in source and is recorded here as a gap, not a decision. Same open status as edes:GD-VLV and edes:GD-SH, for a third distinct reason: GD-VLV has a section but the wrong code family; GD-SH has no section at all; GD-ST has no section and is not pipeline-governed even in principle."
+ },
+ "scope": {
+  "neverOwnsContact": "Sec.6.3 -- sits ABOVE the pipe, so contact_at inherits Component's base None. Stated as a decision rather than left implicit, per the source docstring's own framing. Verified live: contact_at(0.0) returns None.",
+  "noSectionAtAll": "inherited from ExternalStructure.section_at, shared with edes:GD-SB -- EA components are not part of the pipe section, full stop, not just at this component's own extent.",
+  "closedFrame": "NOT a beam on a computed neutral axis -- a closed frame of members round the full perimeter (4 edges, each possibly subdivided by connector nodes). structural_nodes shares coordinates exactly with geometry_nodes, so the structural loop overlaps the geometry loop node-for-node.",
+  "stiffnessMechanism": "kT_ratio is a DIMENSIONLESS multiplier on a plain pipe element's full stiffness matrix (K_member(L) = kT_ratio * K_pipe(L)), not a Section and not a single stiffness number -- replaces an earlier scalar kT (a single N.m^2 term) that could only express one of the five terms a 2D beam stiffness matrix actually has (EA/L, 12EI/L^3, 6EI/L^2, 4EI/L, 2EI/L). Being dimensionless, kT_ratio needs no default_for() entry -- it does not scale with pipe size.",
+  "pVtSignUnification": "P_vt UNIFIED 23 Aug 2026 with edes:GD-SB -- previously a positive standoff DISTANCE on GD-ST (negated in y_near) and a signed POSITION on GD-SB, one symbol with two meanings across the shared base. The conflict was live: TopStructure.default_for() returned -1.5*OD, which the old P_vt>=0 rule rejected outright, so default_for() could not build its own default component. Both subclasses now treat P_vt as a signed position (negative = above centreline for GD-ST); the >=0 rule is gone from the shared base since it is not meaningful for a signed value, and each subclass states its own sign rule instead (see constraints ST-C03).",
+  "edgeNodesParametric": "top_connector_x / left_connector_y / right_connector_y all default to ONE node at the middle of that edge, built in __post_init__ (not a dataclass default) since they depend on L_top/H_top/P_vt. top_structure_for_branch() moves the relevant edge node to meet a branch's own connector exactly, so a branch ties to a real structural node rather than an arbitrary point on an edge.",
+  "sizingAgainstP_c1": "L_top MUST BE AT LEAST P_c1, and nothing enforces it. The two are independent free parameters, so a caller who sets P_c1 from a study and leaves L_top at its default gets connectors OUTSIDE the frame, silently -- the layout builds, plots and reports with zero findings. VERIFIED 5Sep26 reproducing the paper's F2 study on a 406.4 mm header: Case 1 (P_c1 = 10D = 4.064 m) fits inside the 16D default L_top = 6.502 m, but Case 2 (P_c1 = 20D = 8.128 m) does NOT -- the default frame is 1.6 m shorter than the span it is supposed to bridge. Setting L_top = P_c1 puts the frame legs exactly at the connectors, which is what the source figure shows. If the frame is meant to overhang past them, L_top must be given explicitly; it is not derivable from P_c1 alone.",
+  "structureNotes": {
+   "slotCountNotFixed": "FIVE CONNECTOR SLOTS IS A DEFAULT, NOT A PROPERTY. The count may be increased or decreased to suit a design. The named connection systems (F1/F1D/F2/F2D/PS/PSD) are patterns over a five-slot arrangement and are conveniences, not a constraint on the component: a layout needing three, or seven, connection points is legitimate. NOTE the current component_spec implementation emits exactly five candidate slots via connector_slot_xs(), so a different count is a SPECIFIED-but-unimplemented capability -- the schema permits it, the code does not yet.",
+   "matingIsNotRestrictedToThePipeline": "This component's AssemblyFeatures may mate to the pipeline OR to another external structure. A edes:GD-ST and a edes:GD-SB may be associated to EACH OTHER, not only to the pipe -- for example a base structure carrying roller load up into a top structure that spans it. Do not assume every connector runs down to the header.",
+   "atLeastOneToThePipeline": "CONSTRAINT ON THE ASSEMBLY, not on this component alone: at least one association in the structure group MUST reach the pipeline. A set of structures mated only to each other has no load path to the line, and is a free-floating assembly rather than an ILS. Not currently enforced by ils_builder -- see openQuestions.",
+   "everyAssociationMustBeSpecified": "For ANY planned association, the connection type AND the connector must be given -- see edas:shared#/connectorAttachment. A declared mate with no stated type is not a design; a stated type with no edes:GD-Con part is a declaration nothing models. This applies equally to a structure-to-structure association as to a structure-to-pipeline one."
+  }
+ },
+ "params": {
+  "free": [
+   {
+    "name": "P_vt",
+    "meaning": "SIGNED POSITION of the frame UNDERSIDE, in y-positive-down. NEGATIVE means above the pipe centreline, which is where a top structure sits.",
+    "unit": "m",
+    "default": "-1.5*OD_pipe",
+    "note": "SIGNED position of the frame UNDERSIDE in y-positive-down; NEGATIVE = above the pipe centreline (Sec.0.5, unified with GD-SB 23Aug26 -- see scope.pVtSignUnification). Declared on TopStructure itself, not on the shared ExternalStructure base, specifically so changing the base does not silently move GD-SB's own still-open default question."
+   },
+   {
+    "name": "L_top",
+    "meaning": "AXIAL LENGTH of the frame, along the pipeline.",
+    "unit": "m",
+    "default": "16.0*OD_pipe",
+    "note": "was 2.0*OD in an earlier revision; source flags the change without further explanation recorded here"
+   },
+   {
+    "name": "H_top",
+    "meaning": "OWN DEPTH of the frame -- underside to top, not a distance from the pipe.",
+    "unit": "m",
+    "default": "4.0*OD_pipe",
+    "note": "the body's OWN depth; was 0.60 (a fixed literal, not pipe-relative) in an earlier revision"
+   },
+   {
+    "name": "kT_ratio",
+    "meaning": "DIMENSIONLESS multiplier on a plain pipe element's full stiffness matrix. Not a stiffness and not a section: K_member = kT_ratio * K_pipe. Pipe-independent by construction.",
+    "unit": "dimensionless",
+    "default": 2.5,
+    "note": "pipe-independent by construction -- see scope.stiffnessMechanism"
+   },
+   {
+    "name": "P_c1",
+    "meaning": "AXIAL SPAN between the two interior connector slots (2 and 4). Slots sit at centre_x +/- P_c1/2.",
+    "unit": "m",
+    "default": "L_top/3.0",
+    "note": "span between interior connector slots 2 and 4. Inherited field (ExternalStructure), resolved against L_top specifically for GD-ST -- promoted from derived to free 24Aug26 (Table VIII lists it as an engineering parameter alongside kT/P_vt; deriving it from width could not reproduce the published F2 study's two cases, one of which needed L_top=60D against a stated practical range of 10-30D)."
+   },
+   {
+    "name": "P_c2",
+    "meaning": "AXIAL OFFSET from slot 2 out to slot 1 (and from 4 out to 5).",
+    "unit": "m",
+    "default": "L_top/6.0",
+    "note": "offset from slot 2 out to slot 1 (and 4 out to 5). Same promotion history as P_c1.",
+    "sourceNotationBySystem": "P_c2's MEANING IN THE SOURCE PAPER IS SYSTEM-DEPENDENT; this field's meaning is not. This field is ALWAYS the offset from slot 2 out to slot 1, applied after P_c1/2, so slot1 = centre_x - P_c1/2 - P_c2. The paper measures from whichever populated slot is inboard of the D, and that differs by connection system:\n  F1D (D,_,F,_,D) -- slots 2 and 4 are NOT populated, so the paper measures CENTRE -> slot 1. CONVERT: code P_c2 = paper P_c2 - P_c1/2.\n  F2D (D,F,_,F,D) and PSD (D,P,_,S,D) -- slots 2 and 4 ARE populated, so the paper measures slot 2 -> slot 1, which is this field directly. NO CONVERSION.\nSubstituting a paper value without checking the system silently misplaces the D connectors: the layout builds, plots and validates. VERIFIED 5Sep26 -- the F1D conversion reproduces both published EA-SB cases exactly (paper 5D and 7.5D). Note P_c1 is not given for F1D, since slots 2/4 carry nothing there; any positive P_c1 works provided P_c2 is set to compensate."
+   },
+   {
+    "name": "P_gap",
+    "meaning": "DEADBAND free travel a 'D' connector moves through before it closes and begins restraining. Meaningless for other types.",
+    "unit": "m",
+    "default": null,
+    "optional": true,
+    "note": "deadband free travel for a 'D' connector before it closes and begins restraining. Defaults to None (not a number) deliberately -- required only when the active connection system contains a D, meaningless otherwise, and the design knowledge base treats it as a CRITICAL tuning parameter since a deadband REDISTRIBUTES strain rather than removing it. Whether it is required for a given build is an ILS-level check (ils_builder.validate()), not something GD-ST can enforce on itself -- the connection system is supplied at query time, after construction."
+   },
+   {
+    "name": "top_connector_x",
+    "meaning": "AXIAL POSITION(S) of node(s) on the frame's TOP edge, as a list. Defaults to one node at the edge middle.",
+    "unit": "m, tuple",
+    "default": "(centre_x,)",
+    "note": "PARAMETRIC edge-node positions; None triggers a __post_init__ default of one node at the edge middle, not a dataclass literal, because the default depends on L_top/H_top/P_vt"
+   },
+   {
+    "name": "left_connector_y",
+    "meaning": "VERTICAL POSITION(S) of node(s) on the frame's LEFT edge, as a list.",
+    "unit": "m, tuple",
+    "default": "(P_vt - H_top/2,)"
+   },
+   {
+    "name": "right_connector_y",
+    "meaning": "VERTICAL POSITION(S) of node(s) on the frame's RIGHT edge, as a list. This is the edge an L-variant branch attaches to.",
+    "unit": "m, tuple",
+    "default": "(P_vt - H_top/2,)"
+   }
+  ],
+  "refused": [],
+  "derived": [
+   {
+    "name": "y_near",
+    "expr": "P_vt",
+    "note": "frame underside -- IS P_vt with no negation, since P_vt is now the signed position itself (post 23Aug26 unification)"
+   },
+   {
+    "name": "y_far",
+    "expr": "P_vt - H_top",
+    "note": "frame top -- more negative than y_near, since H_top is the body's own depth measured further from the centreline"
+   },
+   {
+    "name": "connector_xs",
+    "expr": "connector_slot_xs(centre_x, P_c1, P_c2)",
+    "note": "5 slot x-positions from 2 span parameters: slot 3 = centre_x by definition; slots 2/4 at centre_x -/+ P_c1/2; slots 1/5 at slot2/4 -/+ P_c2. Symmetry holds by construction, not by the caller entering 4 numbers that happen to match."
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_top/2",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 3.2512,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ],
+  "verifiedAt": {
+   "OD_pipe": 0.4064,
+   "computedLTop": 6.5024,
+   "computedHTop": 1.6256,
+   "computedPVt": -0.6096,
+   "computedPc1": 2.1674666666666664,
+   "computedPc2": 1.0837333333333332
+  },
+  "defaultForNote": "default_for(pipe) is the SINGLE place the 16D/4D/-1.5D ratios for L_top/H_top/P_vt are computed; kT_ratio is deliberately absent from default_for since it is dimensionless and pipe-independent. Dataclass literal defaults verified live to equal default_for(STD_PIPELINE) exactly."
+ },
+ "geometry": {
+  "nodes": 12,
+  "structuralNodes": 12,
+  "lines": 12,
+  "structuralLines": 12,
+  "junctions": [],
+  "verifiedLive": "geometry_nodes()=12 (4 corners cBL/cBR/cTR/cTL + 5 underside slots + 1 top + 1 left + 1 right, all NodePriority.PREFERRED -- never MANDATORY, since GD-ST owns no contact surface to force a pipeline mesh node at); structural_nodes()=12, one per geometry node at the same (x,y) via _s_id(), so structural and geometry loops overlap exactly; geometry_lines()=12 (a full perimeter CHAIN through every edge node, not corner-to-corner -- a node that isn't an element boundary carries no load, so each edge subdivides at every connector); structural_lines()=12, node-for-node with the geometry loop, each carrying stiffness_ratio=kT_ratio and section=None.",
+  "contact": "none anywhere on the component -- geometry_lines() reports owns_contact=False on all 12 segments (queryable, so nothing iterating for contact candidates needs to special-case GD-ST), and section_at/contact_at are both unconditionally None. Contrast edes:GD-SB, which shares this base but CAN own contact on its underside."
+ },
+ "constraints": [
+  {
+   "id": "ST-C01",
+   "expr": "P_c1 is None or P_c1>0",
+   "source": "ExternalStructure.validate",
+   "severity": "error",
+   "repair": "increase P_c1 above 0, or clear it to use the default",
+   "note": "shared rule, inherited from the ExternalStructure base GD-ST and GD-SB have in common -- a non-positive span would put slot 2 on or past slot 4"
+  },
+  {
+   "id": "ST-C02",
+   "expr": "P_c2 is None or P_c2>0",
+   "source": "ExternalStructure.validate",
+   "severity": "error",
+   "repair": "increase P_c2 above 0, or clear it to use the default",
+   "note": "shared rule, same base as ST-C01"
+  },
+  {
+   "id": "ST-C03",
+   "expr": "P_gap is None or P_gap>0",
+   "source": "ExternalStructure.validate",
+   "severity": "error",
+   "repair": "clear P_gap or supply a positive value",
+   "note": "shared rule, same base -- a zero gap is a FIXED connector (a different system, F), not a D that happens to shut immediately, per the source raise message"
+  },
+  {
+   "id": "ST-C04",
+   "expr": "L_top>0 and H_top>0",
+   "source": "TopStructure.validate",
+   "severity": "error",
+   "doc": "Sec.6",
+   "repair": "increase whichever of L_top/H_top is <=0"
+  },
+  {
+   "id": "ST-C05",
+   "expr": "P_vt<0",
+   "source": "TopStructure.validate",
+   "severity": "error",
+   "doc": "Sec.6.3",
+   "repair": "reduce P_vt below 0",
+   "note": "GD-ST's own rule, replacing the retired shared P_vt>=0 check (see scope.pVtSignUnification). GD-ST sits ABOVE the pipe, so its underside must be above the centreline -- a frame whose underside is at or below y=0 would intersect the pipe it straddles."
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate() (ExternalStructure.validate + TopStructure.validate, chained via super())",
+  "probes": 8000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no upper bound on L_top/H_top/P_vt magnitude -- geometric validity != evidence coverage, same convention as GD-TP/GD-SH",
+  "no check that P_c1/P_c2 keep all 5 slots within [xL,xR] of the frame's own extent -- a caller can place slot 1/5, OR slots 2/4, beyond the frame corners without complaint. This is not hypothetical: the paper's own F2 Case 2 (P_c1 = 20D) exceeds the default L_top (16D) and would build with its two active connectors floating outside the structure. See scope.sizingAgainstP_c1.",
+  "no check relating H_top to |P_vt| -- nothing stops H_top being large enough that y_far crosses back below the centreline on the far side of an unusually shallow P_vt",
+  "no check that provenance=DESIGN is appropriate given the fully open designCode status"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": true,
+    "dofStatus": "confirmed",
+    "status": "real",
+    "reason": "EA-side connector, not pipe-side DOF-restricted like GD-TP/GD-TT -- all four types real and buildable today via active_connectors(system). Which types populate which of the 5 candidate slots is chosen per NAMED_CONNECTION_SYSTEMS (F1/F2/F1D/F2D/PS/PSD), verified live for F1, F2 and PSD."
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "dofStatus": "confirmed",
+    "status": "real"
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "dofStatus": "confirmed",
+    "status": "real"
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "dofStatus": "confirmed",
+    "status": "real",
+    "requiresParam": "P_gap"
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "slot1",
+    "index": 1,
+    "position": "outer-left underside",
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ]
+   },
+   {
+    "id": "slot2",
+    "index": 2,
+    "position": "inner-left underside",
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ]
+   },
+   {
+    "id": "slot3",
+    "index": 3,
+    "position": "centre underside",
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ]
+   },
+   {
+    "id": "slot4",
+    "index": 4,
+    "position": "inner-right underside",
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ]
+   },
+   {
+    "id": "slot5",
+    "index": 5,
+    "position": "outer-right underside",
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ]
+   }
+  ],
+  "status": "5 candidate slots = 5 AssemblyFeatures (per the FBS/OAM reconciliation CSV); active_connectors(system) returns one AssemblyFeatureAssociation per POPULATED slot only, not all 5 candidates. Closest existing match in the codebase to a full OAM representation -- type + arm + gap recorded per slot, i.e. kinematic pair plus real parametric data, not just a type label.",
+  "activeConnectorsShape": "(slot_index, x, type, arm, gap) 5-tuple, WIDENED from 4 to 5 elements 28Aug26 so a consumer unpacking 4 raises deliberately rather than silently meshing a deadband as though it had none. arm is the MAGNITUDE |P_vt| (not the signed position) -- verified live at 0.6096 for the STD_PIPELINE default, i.e. the same convention edes:GD-SB will use (both report a positive arm for a structure on their own side of the pipe). gap is P_gap on a 'D' connector, None on every other type -- verified live: a PSD system with P_gap=0.05 returns gap=0.05 on slots 1 and 5 (the D slots) and None on slots 2/4 (P/S).",
+  "twoNodeElement": "PIPE-side node always Fixed; EA-side node carries the connector type. Connector STIFFNESS must be a preset stiff value, NEVER derived from |P_vt| -- P_vt=0 is legal and makes the connector genuinely zero-length, so deriving stiffness from that length would break at exactly that legal case.",
+  "idNote": "slot ids added 1Sep26. Previously these records carried only a numeric `index` and no `id`, while every inline component's features carried `id` -- so 'the feature named X on component Y' was not uniformly answerable across the corpus, and an AssemblyFeatureAssociation could not reference an EA-side feature without inventing an identifier first. ids are slot1..slot5, matching the existing index values exactly; nothing is renumbered."
+ },
+ "behaviourDerived": {
+  "mechanism": "per the FBS/OAM reconciliation CSV: strain effect on the pipeline and any attached branch pipe depends on connection type (F/P/S/D), not yet quantified -- behaviourExpected below is a placeholder per shared.behaviourExpected convention, not an evaluated result",
+  "referenceBase": "not established -- unlike GD-TP/GD-SH, no 'plain pipe at same stinger radius' baseline is meaningful here, since GD-ST never touches the roller/stinger system at all (contact_at is unconditionally None)",
+  "tier": "not evaluated (per CSV fbs_behaviour_expected: 'not evaluated')",
+  "rollerContact": {
+   "capable": false,
+   "reason": "sits above the pipe by definition (Sec.6.3) -- structurally cannot be a roller-contact surface, categorical not conditional, same class of fact as GD-VLV's can_pass_rollers=False but for the opposite reason (GD-VLV's shoulder snags; GD-ST simply never reaches the stinger at all)"
+  },
+  "massNotRepresented": "GD-ST CONTRIBUTES NO MASS to an assembly. It has no mass parameter at all: it carries geometry and a stiffness RATIO (kT_ratio), not a section, so there is nothing to integrate steel over. Every plot of a layout containing one carries the exclusion note 'st1/GD-ST: no mass parameter exists on this component, so its structural steel is NOT counted'. CONSEQUENCE: a reported assembly mass is pipe steel plus point masses only, and a layout with a large frame weighs the same as one with a small frame. Do not compare layouts by mass where a GD-ST is present, and do not read a mass figure as the installed weight. The same applies to edes:GD-SB."
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {
+   "ILS-EAST": {
+    "componentId": "ST",
+    "purpose": "A frame carried ABOVE the pipe on a set of connectors. It owns no contact and never meets a roller; it hangs mass and restraint off the pipe through the connectors, so what governs is the connector LA",
+    "paramsUsed": {
+     "centre_x": 0.0
+    },
+    "coComponents": [],
+    "anchors": [
+     "ILS-EAST-F1",
+     "ILS-EAST-F1D",
+     "ILS-EAST-F2",
+     "ILS-EAST-F2D",
+     "ILS-EAST-PS",
+     "ILS-EAST-PSD"
+    ]
+   },
+   "ILS-ILT": {
+    "componentId": "ST",
+    "purpose": "Branch piping teed off the header, rising to a support on the top structure. The branch adds a load path that leaves the header, travels through the structure and returns to the pipe at the structure ",
+    "paramsUsed": {
+     "centre_x": 1.2192000000000003,
+     "L_top": 5.6895999999999995,
+     "H_top": 1.2191999999999998,
+     "P_vt": -0.2032,
+     "P_c1": 3.2512,
+     "P_c2": 0.4064,
+     "right_connector_y": [
+      -0.8128
+     ]
+    },
+    "coComponents": [
+     "GD-B"
+    ],
+    "anchors": [
+     "ILT-L-FT-F1p",
+     "ILT-L-ST-F1p",
+     "ILT-L-FT-F2",
+     "ILT-L-FT-F2D",
+     "ILT-L-FT-PS",
+     "ILT-L-FT-PSD",
+     "ILT-Z-FT-F1p",
+     "ILT-Z-ST-F1p",
+     "ILT-Z-FT-F2",
+     "ILT-Z-FT-F2D",
+     "ILT-Z-FT-PS",
+     "ILT-Z-FT-PSD"
+    ]
+   }
+  },
+  "anchorCount": 18
+ },
+ "defects": [],
+ "regressionCase": {
+  "status": "none recorded yet -- no Foundation Sec.3 equivalent has been run for GD-ST"
+ },
+ "openQuestions": [
+  "Sub-Assembly is now asserted on this component (1Sep26 decision), but the flat-vs-nested gap it depends on is NOT closed: ils_builder's Assembly.components is a flat Sequence[Component] with no nested-Assembly container, so nothing in code distinguishes a sub-assembly from a top-level one. The label is ahead of the implementation. See edes:shared#/oam/partAssemblyRule.subAssemblyNote.",
+  "no Function in the authored set (Func1-5) fits GD-ST's mechanism, and Func6 (GD-SH's geometry-modifier function) does not fit either -- Func7 added to shared.proposedFunctions naming BOTH the anchor and protection roles as one function, since Sec.6 does not separate them; whether they should split into two Functions once a case exists that realises only one is unresolved",
+  "designCode left fully open, with no candidate even provisionally named (unlike GD-VLV, which at least names API 6D/ASME B16.34 as the likely family) -- likely a structural-steel code but this is not stated in source",
+  "no relationship checked between a populated connector slot and a co-located pipe-side component (e.g. a GD-TP or GD-VLV sitting directly beneath a GD-ST slot) -- whether the assembly-level ownership arbitration (section_at/contact_at STRICT/LOWEST policy) has anything meaningful to say about a connector-only, contact-free component like GD-ST is untested",
+  "P_c1/P_c2 default resolution timing (__post_init__, before validate()) fixed a real defect (a frozen field appearing to change value on first read) -- whether every other ExternalStructure-based future component needs the same fix-before-validate ordering, or whether this was specific to GD-ST's particular construction path, is not yet checked against GD-SB",
+  "GD-ST has no mass parameter, so its structural steel is absent from every assembly mass. Adding one would need either a section for its members (it deliberately has none -- stiffness is a ratio) or a lumped mass input. Until then, assembly mass is not a usable discriminator between layouts containing a structure. See behaviourDerived.massNotRepresented.",
+  "The 'at least one association reaches the pipeline' rule (scope.structureNotes) is stated but NOT enforced by ils_builder -- a set of structures mated only to each other would build. Also, a non-default connector slot count is permitted by this schema but connector_slot_xs() emits exactly five, so the capability is specified and unimplemented."
+ ],
+ "requirements": [],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. connection_system is an ILS-LEVEL field (ils.connection_system), NOT a component parameter -- it is supplied at query time to active_connectors(), not at construction. A layout containing this component must set it. P_gap is required only when the chosen system contains a D.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": "none beyond placement -- every free parameter has a usable default",
+   "optional": {
+    "P_vt": "defaults to -1.5*OD_pipe. m. SIGNED position of the frame UNDERSIDE in y-positive-down; NEGATIVE = above the pipe centreline (Sec.0.5, unified with GD-SB 23Aug26 -- see scope.pVtS",
+    "L_top": "defaults to 16.0*OD_pipe. m. was 2.0*OD in an earlier revision; source flags the change without further explanation recorded here",
+    "H_top": "defaults to 4.0*OD_pipe. m. the body's OWN depth; was 0.60 (a fixed literal, not pipe-relative) in an earlier revision",
+    "kT_ratio": "defaults to 2.5. dimensionless. pipe-independent by construction -- see scope.stiffnessMechanism",
+    "P_c1": "defaults to L_top/3.0. m. span between interior connector slots 2 and 4. Inherited field (ExternalStructure), resolved against L_top specifically for GD-ST -- promoted from der",
+    "P_c2": "defaults to L_top/6.0. m. offset from slot 2 out to slot 1 (and 4 out to 5). Same promotion history as P_c1",
+    "P_gap": "defaults to None. m. deadband free travel for a 'D' connector before it closes and begins restraining. Defaults to None (not a number) deliberately -- required only when t",
+    "top_connector_x": "defaults to (centre_x,). m, tuple. PARAMETRIC edge-node positions; None triggers a __post_init__ default of one node at the edge middle, not a dataclass literal, because the default dep",
+    "left_connector_y": "defaults to (P_vt - H_top/2,). m, tuple",
+    "right_connector_y": "defaults to (P_vt - H_top/2,). m, tuple"
+   }
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value. See usedInLayouts for worked precedents (ILS-EAST, ILS-ILT), or query."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ },
+ "applicability": {
+  "summary": "Select edes:GD-ST when the design intent is to protect piping beneath it from external loads, to provide anchor points above the pipeline for branch piping or connectors, and/or to stiffen the line or a branch against local deformation.",
+  "selectWhen": [
+   {
+    "intent": "piping must be protected from external loads (dropped object, impact, overtrawl)",
+    "realizes": "edes:Func7",
+    "condition": "the protected components lie within this component's span, beneath it"
+   },
+   {
+    "intent": "a branch or other external load path needs an anchor point above the line",
+    "realizes": "edes:Func7",
+    "condition": "a connector slot is positioned to meet the branch end -- note the structure must be aligned to it on BOTH axes, see edas:shared#/branchLayouts"
+   },
+   {
+    "intent": "local pipe OR branch deformation must be restrained (strong-back)",
+    "realizes": "edes:Func11",
+    "condition": "stiff connection to the pipeline and, where present, to the branch; effect scales with kT_ratio and acts between and near the connections"
+   }
+  ],
+  "doNotSelectWhen": [
+   "the intent is to take roller contact or to shield from it -- edes:GD-ST sits ABOVE the pipe and structurally cannot own contact; use edes:GD-SB",
+   "the intent is a local stiffness or elevation change in the LINE ITSELF -- use edes:GD-TP / edes:GD-TT / edes:GD-SH",
+   "no connection to the pipeline is intended anywhere in the structure group"
+  ],
+  "quantificationRef": "As for edes:GD-SB: this block gives applicability and mechanism only. Protection effectiveness, strain relief and restraint magnitude are FBS Be -- query EDIKB."
+ }
+}

@@ -1,0 +1,496 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:shared",
+ "type": "edes:SharedReference",
+ "label": "Cross-component rules: load path, design code, function ontology",
+ "nodes": [
+  {
+   "id": "edes:Func1",
+   "type": "edes:Function",
+   "label": "Thick pipe piece",
+   "iwEaClass": "IW-P",
+   "statement": "Represents a thick pipe piece standing in for something else; wall heavier than parent, carried by the pipe's own section.",
+   "requirementType": "none"
+  },
+  {
+   "id": "edes:Func2",
+   "type": "edes:Function",
+   "label": "Low-Mz connection point",
+   "iwEaClass": "IW-A",
+   "statement": "Pipe-side attachment for a connection that transfers LITTLE moment about z, not zero. Mz transfer is small enough to be neglected in the line's own check, but it is NOT a release and must not be modelled as a hinge.",
+   "governingCriterion": "permitted iff connector DOF table has Rz=allowed",
+   "excludes": [
+    "F"
+   ],
+   "excludeReason": "F is the only type with Rz restrained (transmits Mz). No lever arm in a plain/tapered wall to react a moment without local overstress.",
+   "forceByType": {
+    "P": "Tx,Ty,Tz",
+    "S": "Ty,Tz (no Tx)",
+    "D": "Tz always; Ty>=P_gap (no Tx)"
+   },
+   "alternativeFor_F": "edes:GD-PIP + edes:GD-BOSS (chain, GD-BOSS not implemented)",
+   "requirementRef": "<code>.R1, force magnitude only",
+   "correction": "Relabelled 5Sep26. Was 'Moment-free (Z) attachment point' with a zero-Mz statement. That overstated it: the connection is LOW-moment, not moment-free, and the difference matters because a genuine release and a stiff-but-small transfer behave differently once the connector carries load."
+  },
+  {
+   "id": "edes:Func3",
+   "type": "edes:Function",
+   "label": "Pipeline design requirement",
+   "iwEaClass": "UNRESOLVED — neither IW-A nor IW-P fits (taxonomy gap)",
+   "statement": "Wall set by the line's own design (buckle arrestor, pressure zone), not a free ILS parameter.",
+   "designFreedom": "t_comp externally fixed, not free",
+   "realisedBy": "edes:GD-TP, edes:GD-TT, edes:GD-HdPipe, edes:GD-BrPipe -- every component whose wall IS the line's own design wall. Extended 5Sep26 from TP/TT alone: the plain pipe segments carry the line's design wall by definition, so they realise this at least as directly as the thickened ones do."
+  },
+  {
+   "id": "edes:Func5",
+   "type": "edes:Function",
+   "label": "Inline piping component",
+   "iwEaClass": "IW-P",
+   "statement": "Literal piping item (valve/flange/tee) carried inline; imposes local section/mass change the line must survive.",
+   "designFreedom": "not free — vendor/piping-class determined; ILS designer chooses placement only",
+   "status": "one-off, added for GD-VLV. TRIGGER CONDITION MET 1Sep26: GD-B, GD-ST and GD-SB are all now classified in EDES (realising edes:Func9, edes:Func7, and edes:Func7+edes:Func8 respectively), so the function-set revisit this status has been deferring is now due. NOT YET PERFORMED here -- this file only records that four more proposed Functions (Func6-9) exist alongside the original five authored ones, not whether Func1-5's own boundaries still make sense in light of them. That comparison is real analytical work, not a status flip."
+  }
+ ],
+ "loadPath": {
+  "principle": "stiffness-proportional distribution: share_i = k_i,q / sum_j(k_j,q), per DOF q",
+  "basis": "exact for a solved FE model (K.u=F); stated for intuition/sanity-check, not manual calc",
+  "threeCases": {
+   "bodyLoad": "load on span -> component boundary nodes + EA branch if attached, by stiffness ratio",
+   "endNodeLoad": "load at one boundary node -> far boundary node + EA branch if attached, by stiffness ratio",
+   "connectorLoad": "load via connector -> component boundary nodes, by stiffness ratio"
+  },
+  "dofFilter": "connector DOF table sets k=0 for each allowed(free) DOF -> zero share on that DOF regardless of stiffness. F: full. P: Rz=0. S: Rz=0,Tx=0. D: Rz=0,Tx=0,Ty=0 below P_gap.",
+  "thirdCaseNeeded": "no LoadPath value fits a contact whose reaction lands on a component-owned member reaching the pipe via a JUNCTION (not a connector) — e.g. GD-PIP outer pipe. Open: extend LoadPath enum or show reduction to CONNECTOR."
+ },
+ "designCode": {
+  "rule": [
+   {
+    "if": "pipe-shaped, constant bore, no non-pipe interface",
+    "then": "DNV",
+    "realises": [
+     "edes:Func1",
+     "edes:Func3"
+    ]
+   },
+   {
+    "if": "non-pipe geometric interface present (e.g. bolt)",
+    "then": "ASME_VIII",
+    "realises": [
+     "edes:Func2"
+    ]
+   }
+  ],
+  "underivable": "no component yet represents a non-pipe interface; condition untestable. Interim: instance-level bool has_non_pipe_interface, default false, marked derived-pending.",
+  "doesNotCover": "GD-VLV — a valve is a mechanical pressure component (API 6D / ASME B16.34), not decided by this rule. See edes:GD-VLV.designCode."
+ },
+ "modelFidelity": {
+  "statement": "component_spec/ils_builder are a REDUCED-ORDER FE model. Detailed assembly hardware (bosses, brackets, weld details) is deliberate future scope.",
+  "scopeTest": "before recording a missing member as a defect: name the component that OWNS it. If it's the component under review, it is NOT scope — it's a defect.",
+  "lesson": "GD-PIP's own outer pipe was wrongly placed on the future-scope side in an earlier pass (confused with GD-BOSS, which genuinely is future scope) and a real defect was withdrawn in error, then reinstated. Test exists to prevent repeating that."
+ },
+ "futureComponents": [],
+ "frameworks": {
+  "purpose": "Grounding for the borrowed vocabulary used across every component file. Exists because keys like artifactType.current='Part' read as ordinary English but are terms of art with a stricter meaning fixed outside this project. A reader without this block will pattern-match 'Part'/'Assembly'/'Feature' to their everyday senses confidently and wrongly -- the risk is a wrong answer delivered with certainty, not visible confusion. Component files point here via their own vocabularyRef key rather than restating any of it.",
+  "FBS": {
+   "name": "Function-Behaviour-Structure ontology",
+   "source": "Gero 1990; Gero & Kannengiesser 2004, 2014",
+   "lineageNote": "separate lineage from OAM below -- Gero's FBS and NIST's OAM/CPM are independent frameworks, similar in spirit, deliberately kept distinct here. OAM's own CPM base has its own Function/Form/Behavior triad which is NOT what EDES's Function/Behaviour fields point to; those point to Gero.",
+   "elements": {
+    "Function": "teleology -- what the object is FOR. In EDES: edes:Function / edes:ProposedFunction, separate node types, authored, never derived from geometry. A component realises a Function via an edges[].rel='realizes' entry.",
+    "Behaviour": "the attributes derivable from the design object's structure. Gero splits this in two, and EDES already carries both halves as real fields though they were never named this way until 1Sep26: Be (expected behaviour, what Function implies the object SHOULD do) maps to shared.behaviourExpected, which its own consequence field describes as a reverse-query view into EDIKB, never hand-authored on a component -- i.e. it arrives from evidence, exactly as Gero's Be arrives from Function rather than from Structure. Bs (behaviour derived from structure, what the object ACTUALLY does) maps to each component's own behaviourDerived, always computed from that component's params/geometry and marked 'not evaluated' where unverified rather than left blank.",
+    "Structure": "the components of the design object and their relationships -- geometry, materials, interconnections. In EDES: params, geometry, constraints, assemblyFeatures."
+   },
+   "evaluationGap": "Gero's own Evaluation step is a Be <-> Bs comparison: expected against structurally-derived. EDES has both fields (shared.behaviourExpected and per-component behaviourDerived) but has never run that comparison as an explicit step anywhere. Having both halves is not the same as having performed the comparison.",
+   "knownDeparture": "Gero's ontology holds that there is NO direct connection between Function and Structure -- F connects to B, B connects to S, and any F<->S relationship runs THROUGH Behaviour. EDES's component.edges[].rel='realizes' points from a component (Structure) straight at a Function node with no explicit Behaviour node between them. The component's own behaviourDerived is the implicit mediator, so this is not unprincipled, but the EDGE ITSELF is a direct F-S link the ontology treats as not meaningful without B in between. Named so it is not mistaken for an unnoticed oversight.",
+   "notImplemented": "Gero's eight design PROCESSES (Formulation, Synthesis, Analysis, Evaluation, Documentation, and three Reformulation types) are not implemented or tracked anywhere. EDES uses FBS as a STATIC classification of what a component IS -- which category each field belongs to -- not as the dynamic design-activity model the processes describe. Relevant if EDPR later needs the process layer rather than just the ontology layer."
+  },
+  "OAM": {
+   "name": "Open Assembly Model",
+   "source": "Rachuri et al. 2006 (NIST); formalised in OWL by Fiorentini et al. 2007, NISTIR 7436. Class hierarchy below cross-checked 1Sep26 against NISTIR 7057, the Syracuse/SURFACE OAM extension thesis, and the NIST 'Analysis and Evaluation for STEP-Based Electro-Mechanical Assemblies' paper, all of which state it consistently.",
+   "readFrom": "EDES's OAM vocabulary is read from the NISTIR 7436 OWL translation specifically, whose own worked example (a planetary gear system, ~30 parts) is the reference EDES checks its usage against.",
+   "correctionNote": "This block was first written 1Sep26 with FOUR errors in the class hierarchy, all corrected the same day after the structure was checked against the primary literature rather than recalled: (1) AssemblyFeature was omitted entirely and OAMFeature was treated as the terminal feature class, when AssemblyFeature is a SUBCLASS of OAMFeature and is the class that actually represents a part's mating interface; (2) CompositeFeature, RelativeMotion, AssemblyAssociation and Tolerance were missing entirely; (3) FixedConnection/MovableConnection/IntermittentConnection were described as direct ArtifactAssociation subclasses, skipping the intermediate Connection class; (4) PositionOrientation was recorded as an open question when it has a clear definition. Recorded rather than silently fixed because the same failure mode -- writing framework structure from recall instead of from the source -- is exactly what this block exists to protect a reader against.",
+   "classHierarchy": {
+    "note": "the structural spine of OAM. Every term used elsewhere in this block sits somewhere in this tree; consult it before assuming two class names are siblings.",
+    "features": {
+     "CPM Feature": "the base class OAM specialises. A portion of an artifact's form with a specific function assigned to it; carries Function and Form attributes but no Behaviour of its own, because its Behaviour is defined in the containing Artifact.",
+     "OAMFeature": "subclass of CPM Feature. Carries tolerance information (class Tolerance). Has two subclasses of its own -- it is NOT the terminal feature class.",
+     "AssemblyFeature": "SUBCLASS OF OAMFeature. This is the class that represents a part's mating interface -- a collection of geometric entities of an artifact, possibly partial shape elements. The literature's canonical example is a shaft-bearing connection: the bearing's hole and the shaft's cylinder are the two assembly features describing the physical connection between them. EDES's own assemblyFeatures field maps onto THIS class, not onto OAMFeature generally.",
+     "CompositeFeature": "SUBCLASS OF OAMFeature, sibling of AssemblyFeature. A complex feature decomposable into multiple simple features. No EDES equivalent -- see namedButNotUsed.",
+     "Tolerance": "tolerance information attached to an OAMFeature. No EDES equivalent."
+    },
+    "associations": {
+     "AssemblyAssociation": "top-level: the component assembly relationship of an assembly, an aggregation of one or more ArtifactAssociations. No EDES equivalent.",
+     "ArtifactAssociation": "the assembly relationship between one or more artifacts. Aggregation of AssemblyFeatureAssociations. Specialises into exactly three subclasses, below.",
+     "PositionOrientation": "AA subclass. Relative position and orientation between artifacts that are NOT physically connected -- constraints on where things sit relative to each other, with no joint between them.",
+     "RelativeMotion": "AA subclass. No EDES equivalent.",
+     "Connection": "AA subclass, covering artifacts that ARE physically connected. This is the intermediate class the three connection types below belong to -- they are NOT direct ArtifactAssociation subclasses.",
+     "FixedConnection / MovableConnection / IntermittentConnection": "the three subclasses of Connection. EDES's oam.connectionClassMap maps F/P/S/D onto these.",
+     "AssemblyFeatureAssociation (AFA)": "the association between MATING ASSEMBLY FEATURES, through which the relevant artifacts are associated. One ArtifactAssociation aggregates one or more AFAs, because two associated artifacts can have several feature-level associations at once.",
+     "AssemblyFeatureAssociationRepresentation (AFAR)": "the assembly relationship between two or more assembly features -- an aggregation of ParametricAssemblyConstraints, a KinematicPair, and/or a KinematicPath."
+    }
+   },
+   "usedAndMatching": {
+    "Part / Assembly": "Artifact's two subclasses. Source: Part is an artifact WITHOUT subassemblies (cardinality 0 on artifactHasPart_direct); Assembly requires at least two artifacts connected through artifactHasPart_direct. EDES's own operational test is quoted verbatim at oam.partAssemblyRule.test so the two cannot drift apart.",
+    "AssemblyFeature": "EDES's assemblyFeatures field maps onto OAM's AssemblyFeature class (subclass of OAMFeature) -- the mating interface of a part. Used for edes:GD-TP/GD-TT/GD-VLV/GD-PIP/GD-HdPipe/GD-BrPipe's weld ends and for edes:GD-ST/GD-SB's connector slots. The field name is well-grounded rather than a loose coinage: it names the correct class.",
+    "FixedConnection / MovableConnection / IntermittentConnection": "the three subclasses of Connection (itself an ArtifactAssociation subclass -- see classHierarchy; an earlier version of this block wrongly called them direct AA subclasses). EDES's oam.connectionClassMap maps F/P/S/D onto them, confirmed against the primary source."
+   },
+   "usedButLooser": {
+    "AssemblyFeature candidacy": "EDES lists every CANDIDATE slot in assemblyFeatures.slots regardless of whether it is populated -- all 5 edes:GD-ST slots appear whether connected or not. NISTIR 7436's OWL translation restricts OAMFeature to a feature with at least one AssemblyFeatureAssociation, so an unpopulated candidate is arguably not yet participating as an assembly feature at all. VERIFIED 1Sep26 that nothing in the data distinguishes the two: GD-ST's five slot records are structurally identical whether populated or not, so the distinction currently exists ONLY in this prose and is not queryable. A schema gap, not merely a documentation one.",
+    "Part / Assembly assertion": "the source is explicit that Part vs Assembly should be INFERRED from evidence, not asserted -- not relating an artifact with subartifacts does not mean it has none, it means we do not know. EDES asserts artifactType.current directly on every component. A real, if minor, departure from the source's own epistemics."
+   },
+   "namedButNotUsed": {
+    "note": "real terms in the source with no current EDES representation. Listed so a reader does not assume coverage merely because neighbouring terms are used.",
+    "Artifact": "the base class both Part and Assembly subclass. EDES never writes this key; component files state artifactType.current directly.",
+    "CPM Feature": "the base OAMFeature specialises. EDES only ever writes AssemblyFeature-shaped data, never a plainer Feature that is not a mating interface.",
+    "CompositeFeature": "AssemblyFeature's sibling under OAMFeature -- a feature decomposable into simpler ones. Potentially relevant to edes:GD-VLV (whose :smid is where 3 members meet) and to any future multi-segment mate, but not used today.",
+    "Tolerance": "tolerance data on an OAMFeature. EDES records no tolerances anywhere.",
+    "AssemblyAssociation": "the top-level aggregation of ArtifactAssociations. No EDES equivalent -- EDES has no object representing 'the assembly relationship of this ILS as a whole'.",
+    "ArtifactAssociation / RelativeMotion / AFAR": "EDES uses the three Connection subclasses via connectionClassMap but never writes the parent ArtifactAssociation, its RelativeMotion sibling, or AFAR.",
+    "AssemblyFeatureAssociation (AFA)": "the association between mating assembly features. Appears in EDES ONLY in prose describing its own absence -- no live AFA record exists. Every component names its own features in isolation; nothing states which of edes:GD-TP's features mates to which of a neighbour's. See oam.assemblyFeatureConvention.doesNotResolve.",
+    "PositionOrientation": "relative position/orientation between artifacts that are NOT physically connected. Previously recorded here as an open question ('does any EDES connection behave like po?'); the definition answers it. Strong candidate for a real EDES gap rather than an irrelevant term: edes:GD-B's P_bc measures Tee-to-nearest-GD-ST-slot distance with no joint at that point, which is a positioning constraint, not a Connection. Not acted on -- flagged for a separate pass.",
+    "KinematicPair / PairFrame / PairRange / PairValue": "a kinematic pair needs two coordinate systems, one per feature, plus allowable bounds and a current value. EDES's `arm` is a bare scalar distance -- an acknowledged simplification of a full PairFrame, not an equivalent.",
+    "KinematicPath / PathElement / PathNode": "chain representation for composite multi-segment connections. No EDES equivalent; becomes relevant once a connection must span more than two components as one described path."
+   },
+   "narrowerOnPurpose": {
+    "note": "real EDES mechanisms that resemble an OAM concept closely enough to be confused with it, but are not the same shape. Deliberately NOT renamed to match OAM, because renaming would overstate what they do.",
+    "junction": "component_spec's own term (Component.junctions()), used in ALL 9 component files -- the most-used cross-cutting term in the corpus. Resembles ArtifactAssociation/FixedConnection in spirit, and shares OAM's declared-not-inferred stance: GD-VLV's own file states that 3 members meet at :smid and this must be DECLARED not inferred, because the mesher merges only where a junction is declared, never by coordinate coincidence. But a junction is DIRECTIONAL and NARROWER than an ArtifactAssociation -- it merges one specific node onto ANOTHER component's existing structural line, rather than expressing a general N-ary relationship between independent Artifacts. Calling it ArtifactAssociation would overstate its generality."
+   }
+  },
+  "edesOwn": {
+   "note": "not from FBS or OAM in any form; no resemblance intended. Listed so a reader does not assume NIST or Gero backing that does not exist.",
+   "iwEaClass": "EDES's own physical/mechanical taxonomy (IW-A, IW-P, IW-B, EA-O, EA-ST, EA-SB), informed by the two IJRASET source papers' own taxonomy. Neither framework has an equivalent at this granularity.",
+   "owns_contact / LoadPath / contact_at / section_at": "component_spec.py's own implementation vocabulary. Reported on by EDES because that IS the mechanism the code uses, but carries no standing in either framework."
+  },
+  "whyFourBuckets": "A reader needs to know not just whether a term comes from OAM, but how closely EDES's actual usage matches what OAM says it means. Collapsing usedAndMatching / usedButLooser / namedButNotUsed / narrowerOnPurpose into a binary would either overclaim NIST backing EDES does not have, or hide a deliberate design choice (junction) as though it were a missed alignment. EDES is not required to reuse OAM's exact names; where it does not, the meaning is genuinely narrower or different rather than merely relabelled, and this block exists to make that difference visible rather than to force alignment.",
+  "onFormalOntologies": "EDES is authored as JSON Schema, not OWL/RDF, deliberately. An owl:imports pointer to a NIST ontology would not function as a global context source for an LLM reader -- nothing dereferences it at read time, and OWL axioms encode logical constraints for a reasoner rather than the domain meaning a reader needs. Note also that the usedButLooser.AssemblyFeature candidacy gap above would survive an OWL migration unchanged, and a DL reasoner might infer all five candidate slots are OAMFeatures -- confidently and wrongly -- because the data does not say otherwise. Revisit if EDPR needs inference over many components rather than validation of authored ones."
+ },
+ "namingNote": "file/schema versioning replaced by stable ids + in-place updates, 30 Aug 2026 — removes the stale-internal-pointer defect class found by external review (multiple files pointed at superseded shared-reference versions).",
+ "oam": {
+  "framework": "Open Assembly Model (OAM)",
+  "connectionClassMap": [
+   {
+    "connType": "F",
+    "oamClass": "FixedConnection"
+   },
+   {
+    "connType": "P",
+    "oamClass": "MovableConnection",
+    "kinematicPair": "revolute"
+   },
+   {
+    "connType": "S",
+    "oamClass": "MovableConnection",
+    "kinematicPair": "prismatic"
+   },
+   {
+    "connType": "D",
+    "oamClass": "IntermittentConnection"
+   },
+   {
+    "connType": "W",
+    "oamClass": "FixedConnection",
+    "note": "girth weld. Maps to the SAME OAM class as F -- both are FixedConnection, both restrain all DOF including Rz -- but they are distinct EDES connection types because they are physically and code-wise different joints. F is a structural attachment fixed onto the pipe BODY; W is the butt weld joining two pipe ENDS. DNV prohibits the former on line pipe (see edes:GD-TP permittedConnections) while requiring the latter to make a pipeline at all, so a single type could not carry both permissions."
+   }
+  ],
+  "connectionClassNote": "deterministic function of connType alone — component files reference this map, they do not restate it per row. Restated per-row in an earlier draft; silently dropped in a later compaction pass, caught only when asked where OAM classification lives. Single-source now. W added 1Sep26. Note the map is no longer injective onto OAM classes: F and W both map to FixedConnection. That is correct -- OAM classifies by kinematic behaviour, EDES by joint type, and two different joints can share a DOF signature.",
+  "assemblyFeatureConvention": {
+   "rule": "a component's mate points (OAMFeatures, the features an adjacent component's chain join actually names) are its true structural extent boundaries — component.extent, node-for-node — never an internal profile station, however structurally significant that station is. Where a component's extent includes an undisturbed run (a NIB, a plain-pipe land, any zone between the girth weld and the component's own distinguishing geometry), the mate point sits at the FAR end of that run, not at the near end where the interesting geometry begins.",
+   "whyStated": "found live, 1Sep26, drafting edes:GD-TT's mate points: GD-TT's extent is x_weld (weldL/weldR), past L_NIB from the taper — a natural first guess (taperL/taperR, or even bodyL/bodyR) is wrong, and wrong by a real, non-trivial distance (L_NIB + L_taper, ~0.28m at STD_PIPELINE defaults) rather than by a rounding-sized amount. edes:GD-TP has no such offset at all (its weldL/weldR sit directly at the OD step) — so the two DNV-status siblings mate under the same syntax but different real geometry, and a reader/generator assuming one convention from the other will place a neighbour wrong. Stated here, once, rather than left to be independently rediscovered per component.",
+   "verifiedOn": [
+    "edes:GD-TT (weldL/weldR, NIB present)",
+    "edes:GD-TP (weldL/weldR, NIB absent — extent equals the body edge directly)"
+   ],
+   "notYetAppliedTo": "edes:GD-PIP, edes:GD-VLV, edes:GD-SH, edes:GD-B — none of these files have had their own assemblyFeatures checked against this rule yet; each has its own extent/geometry_nodes definition that would need the same live check GD-TT/GD-TP got before its mate points can be trusted rather than assumed",
+   "doesNotResolve": "this is a naming rule for a SINGLE component's own features — it does not create the cross-component record that says which feature mates to which, what equations follow from that pairing, or which side is solved-for vs given (e.g. edes:GD-ST's H_top being derived FROM a mated branch, seen in the ILS-ILT archetype). That is a separate, larger, still-open design question: whether mating becomes its own OAM AssemblyFeatureAssociation-shaped artifact type in EDES, a sibling metaschema, or something else — not decided, not drafted, tracked here only as a pointer so it isn't lost."
+  },
+  "endFeatureNaming": {
+   "rule": "every INLINE component (iwEaClass IW-A and/or IW-P) names its two welded end stations weldL and weldR. These are the component's chain mate points -- the features a neighbouring inline component ties to when components are stacked along the header.",
+   "appliesTo": [
+    "edes:GD-TP",
+    "edes:GD-TT",
+    "edes:GD-VLV",
+    "edes:GD-PIP",
+    "edes:GD-HdPipe",
+    "edes:GD-BrPipe"
+   ],
+   "arcLengthCaveat": "edes:GD-BrPipe conforms to this rule but 'L'/'R' are SPATIALLY MISLEADING there: a branch turns vertical, so a riser segment's ends are above and below each other, not left and right. On that component the names must be read as ordered along the branch's own ARC LENGTH (weldL nearer the root, weldR farther), matching the direction edes:GD-B builds its path. Every other component in appliesTo sits on the header, where L/R is literal. If a future component has ends that are neither left-right nor along a single monotonic arc, this convention needs revisiting rather than stretching further.",
+   "doesNotApplyTo": {
+    "edes:GD-B": "IW-B, the only branch class. Not inline -- it LEAVES the header rather than continuing it, so its two ends are asymmetric and differently typed (tee = welded junction onto the header; end = bolted/slotted connector onto an external structure). Applying weldL/weldR here would wrongly imply the ends are interchangeable welds and that the branch continues a line it actually departs from. See that file's assemblyFeatures.whyNotWeldLWeldR.",
+    "EA-class components": "edes:GD-ST, edes:GD-SB and edes:GD-SH are externally attached or geometry-only and have no welded inline ends at all. GD-ST/GD-SB use numbered connector slots (1-5); GD-SH has no connector of any kind."
+   },
+   "codeAlignment": "FULLY ALIGNED as of 4Sep26. Every inline component (TaperedThickBody, Valve, PipBulkhead, ThickPipeBody, HeaderPipeSegment, BranchPipeSegment) emits ':weldL'/':weldR'. ThickPipeBody was the last outlier, emitting ':lo'/':hi' until renamed; edes:GD-TP defect TP-D2 records that fix. EDES's canonical names and the code's node ids therefore now agree everywhere, and each slot's sourceNodeId is identical to its id.",
+   "whyItMatters": "without a uniform name, 'the welded end of an inline component' is not a queryable concept across the family -- a consumer building a chain would need per-component knowledge of which node id means 'my left end'. Naming it once makes an end-to-end mate expressible generically. Note this rule names the FEATURE only; it does not say which feature mates to which, which remains unrepresented (see assemblyFeatureConvention.doesNotResolve).",
+   "notAMatePointWarning": "several components carry end-looking stations that are NOT chain mate points: edes:GD-VLV's stemTip (free stem end, the only PREFERRED-priority node on that component), and edes:GD-PIP's outREnd (the outer sleeve's free end, not on the header line). A join naming either would attach a neighbour to the wrong place -- to a free stem tip, or to the annulus rather than the pipeline."
+  },
+  "partAssemblyRule": {
+   "status": "PROVISIONAL — not a firm decision (EDES plan Sec.3.2, still open)",
+   "test": "a single geometric/section modifier on the pipe run = Part; a component with its own sub-member(s) plus a declared junction, or a frame plus connector slots = Assembly",
+   "assignments": {
+    "Part": [
+     "edes:GD-TP",
+     "edes:GD-TT",
+     "edes:GD-SH",
+     "edes:GD-PIP",
+     "edes:GD-VLV",
+     "edes:GD-HdPipe",
+     "edes:GD-BrPipe",
+     "edes:GD-Con"
+    ],
+    "Sub-Assembly": [
+     "edes:GD-ST",
+     "edes:GD-SB",
+     "edes:GD-B"
+    ],
+    "ArguableUnderThisTest": []
+   },
+   "note": "SETTLED 1Sep26 by project decision, replacing the provisional/arguable state that had stood since 30Aug26. edes:GD-PIP and edes:GD-VLV are PARTS: each has a sub-member and a declared junction (outer pipe; stem), which had pushed them toward Assembly under the literal test, but the decision is that an internal sub-member does not make an artifact an assembly when it is not independently placeable -- neither a PiP outer sleeve nor a valve stem is positioned as a separate component. edes:GD-ST, edes:GD-SB and edes:GD-B are SUB-ASSEMBLIES: each owns real connector slots or a declared external tie, and each is subordinate to the ILS rather than standing alone. ArguableUnderThisTest is now empty; edes:GD-SH's separate third-category concern (a component with no structural line of its own) is unaffected by this decision and remains open on its own file.",
+   "subAssemblyNote": "Sub-Assembly is EDES's own third value, not an OAM class. OAM has exactly two Artifact subclasses, Part and Assembly; a subassembly there is an Assembly that is part-of another Assembly, i.e. a ROLE rather than a class. EDES records the role directly because in an ILS every structural component is subordinate to the ILS as a whole, so 'Assembly' alone would fail to distinguish the ILS container from the structures inside it. Two consequences: (1) an EDES Sub-Assembly should be read as OAM Assembly + partOf(ILS) if exporting to a strict OAM representation; (2) the flat-vs-nested gap remains -- Assembly.components in ils_builder is still a flat Sequence[Component] with no nested container, so Sub-Assembly is now asserted in EDES ahead of the code supporting it."
+  },
+  "featureScopedConnections": {
+   "rule": "Which connection types are permitted is a property of a FEATURE, not of a component. Each assemblyFeatures.slots entry carries candidateTypes listing the types that may attach at that specific point; the component-level permittedConnections rows state what the component permits ANYWHERE, which is the union of its features' candidateTypes and therefore always the looser statement.",
+   "whyStated": "Surfaced 1Sep26 when edes:GD-TP and edes:GD-TT gained a mid-body conMid feature accepting F while their weld ends accept only W. A single component-level row cannot say 'F here but not there'. The same split already existed unnoticed on edes:GD-B (tee accepts W, end accepts F or S, no feature accepts P or D) and on edes:GD-PIP (inner weld ends and outer sleeve ends are two separate weld chains).",
+   "readingOrder": "A consumer deciding whether a connection is legal must check the FEATURE's candidateTypes, not the component's rows. The rows remain useful for the categorical cases -- a type excluded at component level (e.g. F on plain line pipe, on DNV grounds) is excluded at every feature -- but a type permitted at component level is not thereby permitted at every feature.",
+   "scopedToFeatureField": "Where a component-level row applies only at particular features, it now carries scopedToFeature naming them. Present today on edes:GD-TP (F scoped to conMid, W scoped to weldL/weldR) and inherited by edes:GD-TT.",
+   "notYetEnforced": "The metaschema does not check that a feature's candidateTypes are a subset of the component's permitted rows, nor that the rows are the union of the features'. Both invariants hold today by authoring care alone."
+  }
+ },
+ "behaviourExpected": {
+  "appliesTo": "every edes:ComponentType",
+  "status": "no EDIKB rules attached to any component yet — EDIKB Phase 1 has not run",
+  "mechanism": "reverse-query view into EDIKB's graph, resolved by anchor/rule id — never hand-authored on a component node",
+  "consequence": "a component carries its own behaviourExpected key ONLY once a real EDIKB rule attaches to it. Its absence on a component means 'nothing attached yet', not 'not applicable' — query EDIKB directly rather than expect an empty placeholder per component."
+ },
+ "metaTypes": [
+  {
+   "id": "edes:SharedReference",
+   "label": "the single cross-component rules node"
+  },
+  {
+   "id": "edes:ComponentType",
+   "label": "a buildable component_spec class with an EDES knowledge node"
+  },
+  {
+   "id": "edes:Function",
+   "label": "an FBS teleology node, authored, never derived"
+  },
+  {
+   "id": "edes:FutureComponent",
+   "label": "named, referenced, not yet implemented in component_spec",
+   "note": "Since 1Sep26 this type serves two shapes: a short STUB inside shared.futureComponents (its original use), and a full standalone SPECIFICATION file validated against the metaschema's componentSpecificationDoc branch (edes:GD-HdPipe, edes:GD-BrPipe). A specification file carries every field a ComponentType does except constraintEquivalence, which is dropped because there is no class to probe, plus a mandatory implementationStatus stating that absence outright. Promotion to edes:ComponentType is additive -- write the class, probe it, add constraintEquivalence, change type -- not a restructure. As of 1Sep26 the three files that used the standalone specification shape (GD-HdPipe, GD-BrPipe, GD-Con) have all been promoted to edes:ComponentType, their classes written and probed. The componentSpecificationDoc branch remains in the metaschema, now unused -- kept because the promotion path it enabled (specify, then implement, then promote) worked and is worth repeating."
+  },
+  {
+   "id": "edes:ProposedFunction",
+   "label": "named, referenced, no realising component yet — not added to the authored Function set"
+  }
+ ],
+ "proposedFunctions": [
+  {
+   "id": "edes:Func4",
+   "type": "edes:ProposedFunction",
+   "label": "Moment-transferring (F-capable) attachment point",
+   "iwEaClass": "IW-A",
+   "statement": "pipe-side attachment for a connection that DOES transfer Mz (Rz restrained) — inverse criterion to edes:Func2",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes yet, but no longer unrealisable -- the objection that blocked it (no realising component) is gone.",
+   "realisedBy": "edes:GD-PIP and edes:GD-BOSS. Assigned 5Sep26 -- previously recorded as blocked on GD-BOSS and realised by nothing. GD-PIP's outer sleeve is a genuine structural member with its own junction to the inner pipe, which is the lever arm a moment-transferring attachment needs and that a plain or tapered wall lacks."
+  },
+  {
+   "id": "edes:Func6",
+   "type": "edes:ProposedFunction",
+   "label": "Local roller-contact elevation and curvature modifier",
+   "iwEaClass": "EA-O",
+   "statement": "Raises the header pipe on the rollers over a local region, presenting a base contact surface that transfers contact force to the part DIRECTLY ABOVE it while avoiding snag, and thereby modifies the pipeline's curvature on the stinger locally.",
+   "distinguishedFrom": "edes:Func1/edes:Func3 assume the realising component IS pipe-shaped and carries a real section; edes:Func2/edes:Func4 assume a connector; edes:Func5 assumes a literal piping item with its own pressure boundary. None of these fit a component whose section_at() is unconditionally None.",
+   "status": "not added to edes:shared.nodes (the authored Function set) — realised today by edes:GD-SH, but Func1/Func2/Func3/Func5 were each added only after multiple components or a settled real-design need existed. Holding this one back until a second EA-O-class component exists tests whether the statement above generalises or is really just a restatement of GD-SH's own behaviour.",
+   "threeEffects": {
+    "elevation": "lifts the line off its unmodified roller path by CL_lift = V - OD_pipe/2",
+    "contactTransfer": "the surface takes roller force and passes it to the component directly above -- through the pipe element, NOT through a connector. This is what distinguishes it from edes:Func8, which routes the same kind of force through connectors to discrete pipe nodes.",
+    "snagAvoidance": "the tapered ramps each side present no square shoulder to a roller, which is the reason for the taper rather than a step",
+    "curvature": "the local lift changes the curvature the line takes over the stinger in that region -- the design effect the component exists to produce"
+   },
+   "quantification": "Magnitudes -- how much curvature change, at what V, over what L1 -- are FBS Be. Query EDIKB."
+  },
+  {
+   "id": "edes:Func7",
+   "type": "edes:ProposedFunction",
+   "label": "External attachment structure (anchor + protection)",
+   "iwEaClass": "EA-ST",
+   "statement": "Provides connector slots above the pipe for an attached branch or other external load path (anchor role), and separately shields the piping components beneath it from direct external contact (protection role). Two distinct roles named together because the source paper (Sec.6) does not separate them into two functions and no evidence yet distinguishes a case realising one without the other.",
+   "distinguishedFrom": "edes:Func6 (GD-SH) is a geometry-only roller-contact modifier that owns no connector and no junction; edes:Func7 is the opposite in every respect that matters to FBS — a frame that owns real connector slots (AssemblyFeatures) and a real junction, and that never touches the roller contact surface at all (contact_at is unconditionally None, same reason GD-ST never appears in a passage sweep). edes:Func4 (proposed, moment-transferring pipe-side attachment) is pipe-side and blocked on GD-BOSS; edes:Func7 is EA-side and already realised.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) — realised today by edes:GD-ST AND edes:GD-SB (both share the anchor role via the ExternalStructure base's connector-slot mechanism). RESOLVED 1Sep26: GD-SB does NOT share this Function alone -- per the FBS/OAM reconciliation CSV, GD-SB needs its own separate Function for its contact-surface role, since GD-ST structurally cannot own contact (Sec.6.3) while GD-SB can and does. See edes:Func8."
+  },
+  {
+   "id": "edes:Func8",
+   "type": "edes:ProposedFunction",
+   "label": "Roller-contact base surface with isolation (structure-owned)",
+   "iwEaClass": "EA-SB",
+   "statement": "Provides a real bottom/sloped contact surface a roller can bear on, and by owning the LOWEST surface over its span ISOLATES every component above it from roller contact. The reaction is carried NOT through the pipe element beneath it but via structure member -> F/P/S/D connector -> pipe node (LoadPath.CONNECTOR), so contact load arrives at the pipeline at the DISCRETE CONNECTION POINTS rather than distributed along the contacted span.",
+   "distinguishedFrom": "edes:Func6 (GD-SH) also owns contact, but reacts directly through the pipe element beneath it (LoadPath.PIPE_ELEMENT) with no connector in the path at all, and owns no connector slots of its own. Func8's contact reaction is carried entirely through the SAME F/P/S/D connectors Func7 already provides -- the two roles interact rather than sitting side by side, since removing every active connector would leave the contact force with nowhere to go.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) — realised today by edes:GD-SB alone. Per the CSV's own note, GD-SB is 'the only EA component with two distinct Functions' (edes:Func7 + edes:Func8 together) -- recorded as two proposed Functions rather than one combined one, unlike edes:Func7 itself which deliberately keeps GD-ST's anchor+protection roles merged, because here the CSV explicitly asked for a separate Func id and because Func7 alone is independently realisable by GD-ST without Func8, which is the operational test for whether two roles are one Function or two.",
+   "isolationCondition": "The isolation holds only while this component owns the lowest surface at that station -- i.e. its bottom face is deeper than every other contact claimant there. Verifiable: Assembly.contact_at(x) returns owner = this component. If a shielded component protrudes below it at any x, isolation fails there and that component takes roller load directly.",
+   "loadPathConsequence": "Because the reaction routes through connectors, the number and position of connection points determines where contact load enters the pipeline. Fewer connectors concentrate it; the deadband on a D connector delays and then redistributes it. Magnitudes are NOT derivable from this Function -- query EDIKB."
+  },
+  {
+   "id": "edes:Func9",
+   "type": "edes:ProposedFunction",
+   "label": "Branch piping to an external support",
+   "iwEaClass": "IW-B",
+   "statement": "Piping teed off the header, running away from the pipe and the roller/stinger system entirely, terminating at a connector supported by an external attachment structure. Neither representational (edes:Func1, which stands in for a thick pipe piece on the header's OWN line) nor a line-design requirement (edes:Func3, which is about the header's OWN wall) -- the branch is a second, independent structural line that merely originates on the header.",
+   "distinguishedFrom": "edes:Func5 (GD-VLV) is also a literal piping item, but sits IN-LINE on the header itself and owns roller contact; edes:Func9 sits OFF the header (owns_contact=False on every segment, by design, since it rises away from the rollers) and its only connection back to the header is a single declared junction (the Tee), the same mechanism edes:GD-VLV's own stem uses internally -- but here the far end also ties to a SEPARATE component (an edes:GD-ST/edes:GD-SB connector slot), which no single-component Function in this set describes.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) — realised today by edes:GD-B. Per the CSV's own fbs_function_id_needed field: 'Func-TBD (third IW class -- evidence the Func taxonomy gap is real)'. The taxonomy gap is explicit in the CSV's own words, not inferred here -- Func1-5 were written before any IW-B-class component existed, and this is the first one."
+  },
+  {
+   "id": "edes:Func10",
+   "type": "edes:ProposedFunction",
+   "label": "Inline spacing and line continuity",
+   "iwEaClass": "IW-P",
+   "statement": "Occupies a length of the run between two other inline components without altering the line -- no section change, no stiffness step, no elevation, no attachment point. Its design purpose is the SEPARATION it creates, not any property of its own body.",
+   "distinguishedFrom": "edes:Func5 is the closest neighbour and now shares iwEaClass IW-P with this one, so the separation must be explicit: Func5 is a literal piping item that IMPOSES a local section/mass change the line must survive; Func10 imposes none at all. Same class, opposite mechanical effect -- both are genuinely piping, but one is a discontinuity and the other is the absence of one. edes:Func1 (representational span) stands IN FOR a real thick section and deliberately changes the local section; Func10 deliberately changes nothing. edes:Func3 is a requirement on the line's own design wall; Func10 imposes no requirement and simply IS the line wall. A component realising Func10 is the identity element of an inline chain -- the only Function in this set whose realisation is defined by absence of mechanical effect rather than presence of one.",
+   "evidenceBasis": "spacing between inline components is a real studied design variable, not an invented one: the EDIKB Action Plan's own pilot dataset lists 'A1 spacing' alongside taper ratio, wall thickness and length as Paper 1 case types to encode.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) — proposed by edes:GD-HdPipe and edes:GD-BrPipe, neither of which is implemented in component_spec. A ProposedFunction realised only by unimplemented components is weaker evidence than the earlier proposed functions (Func6 through Func9), each of which had at least one real buildable component behind it. Should not be promoted to the authored set before at least one realising component exists in code."
+  },
+  {
+   "id": "edes:Func11",
+   "type": "edes:ProposedFunction",
+   "label": "Strong-back: deformation restraint by stiff connection",
+   "iwEaClass": "EA-ST / EA-SB",
+   "statement": "Restrains local deformation of the pipeline (and, where connected, of branch piping) by providing a member of substantially higher bending stiffness connected to it at discrete points. The restraint acts through the connections, so it is effective only between and near them, and its magnitude scales with the stiffness ratio of the structure member to the pipe it restrains.",
+   "distinguishedFrom": "edes:Func7 is about providing an ATTACHMENT and a SHIELD; edes:Func8 is about presenting a CONTACT SURFACE and rerouting the reaction. Func11 is neither -- the structure here is neither anchoring anything nor being touched by a roller; it is stiffening the line it is attached to. A component may realise Func11 alone (a strong-back over a section with no attachment and no roller contact), which is the test for it being a separate Function.",
+   "realisedBy": "edes:GD-ST and edes:GD-SB both, via kT_ratio / kB_ratio -- the dimensionless multiplier on pipe stiffness IS the parameter this Function is expressed through.",
+   "quantification": "NOT quantified here. How much deformation is prevented, over what span, and at what stiffness ratio are empirical questions -- FBS Be, not Bs. Query EDIKB; edes:shared#/behaviourExpected is the reverse-query view. This Function states the MECHANISM and the fact that it is connection-mediated, nothing about magnitude.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) -- realised today by edes:GD-ST and edes:GD-SB, but no case in the corpus yet isolates the strong-back role from the anchor or contact roles, so the independent-realisability test that would justify promoting it has not been run."
+  },
+  {
+   "id": "edes:Func12",
+   "type": "edes:ProposedFunction",
+   "label": "Connect an external structure to a thickened inline section",
+   "iwEaClass": "EA-ST / EA-SB <-> IW-P",
+   "statement": "Joins a edes:GD-ST or edes:GD-SB to a edes:GD-TP or edes:GD-TT. This is the ORDINARY structure-to-pipeline path: a connector may not land on plain line pipe, so the header is split and a thickened section introduced at the connection point to receive it. The thickened section may be NEUTRAL (t_comp = t_pipe) when it exists only to carry the connection.",
+   "realisedBy": "edes:GD-Con -- the connector is the artifact through which the association is made; the two components it joins provide the AssemblyFeatures, not the Function.",
+   "note": "These three name WHICH PAIR a connector joins. They are distinguished from each other only by their endpoints, which is deliberate: the pairing determines what the connection is permitted to be and where it may land, and a single generic 'connects two things' Function would carry none of that.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) -- newly named 5Sep26."
+  },
+  {
+   "id": "edes:Func13",
+   "type": "edes:ProposedFunction",
+   "label": "Connect an external structure to a boss",
+   "iwEaClass": "EA-ST / EA-SB <-> IW-A",
+   "statement": "Joins a edes:GD-ST or edes:GD-SB to a edes:GD-BOSS. The alternative to edes:Func12 where the attachment is made to a purpose-built boss rather than to a thickened run of line pipe.",
+   "realisedBy": "edes:GD-Con -- the connector is the artifact through which the association is made; the two components it joins provide the AssemblyFeatures, not the Function.",
+   "note": "These three name WHICH PAIR a connector joins. They are distinguished from each other only by their endpoints, which is deliberate: the pairing determines what the connection is permitted to be and where it may land, and a single generic 'connects two things' Function would carry none of that.",
+   "blockedBy": "edes:GD-BOSS is a specification only (edes:FutureComponent) -- no component_spec class exists",
+   "status": "not added to edes:shared.nodes (the authored Function set) -- newly named 5Sep26."
+  },
+  {
+   "id": "edes:Func14",
+   "type": "edes:ProposedFunction",
+   "label": "Connect branch piping to an external structure",
+   "iwEaClass": "IW-B <-> EA-ST",
+   "statement": "Joins a edes:GD-B to a edes:GD-ST (or the reverse). The branch's far end terminates at a structure slot rather than in space; which structure edge it meets depends on the branch variant -- an L run ends horizontally and meets a side edge, a Z turns up and meets the top edge.",
+   "realisedBy": "edes:GD-Con -- the connector is the artifact through which the association is made; the two components it joins provide the AssemblyFeatures, not the Function.",
+   "note": "These three name WHICH PAIR a connector joins. They are distinguished from each other only by their endpoints, which is deliberate: the pairing determines what the connection is permitted to be and where it may land, and a single generic 'connects two things' Function would carry none of that.",
+   "blockedBy": null,
+   "status": "not added to edes:shared.nodes (the authored Function set) -- newly named 5Sep26."
+  }
+ ],
+ "refConventions": {
+  "objectPath": "a plain string 'edes:NODE#/path/to/key' -- everything after '#' is a real RFC 6901 JSON Pointer into that node's document. Used whenever the target is reached by walking object keys.",
+  "arrayElementById": "a structured object {\"node\":\"edes:NODE\",\"section\":\"sectionName\",\"id\":\"elementId\"} -- NOT a JSON Pointer. JSON Pointer (RFC 6901) cannot address an array element by a field value, only by ordinal index or '-'. Resolution: look up node, read node[section] as an array, return the element where item.id == id. Used for every reference into `constraints`, which stays an ARRAY (not an id-keyed object) because array order is JSON-spec-guaranteed and encodes real semantics here -- GD-VLV's rules fire first-match-wins in declaration order; an object's key order is conventional, not spec-guaranteed.",
+  "howToTellThemApart": "by JSON type alone: a ref that is a string is objectPath; a ref that is an object is arrayElementById. No naming convention needed to disambiguate."
+ },
+ "permittedConnectionStatus": {
+  "real": "permitted, buildable today",
+  "excluded": "not permitted, categorically -- by physics/DOF table, no dependency would change it",
+  "blocked": "permitted in principle, not buildable today -- waiting on an unimplemented dependency (see row.requires)"
+ },
+ "permittedConnectionFields": {
+  "requires": "list of edes: node ids this row depends on. Present only when status=blocked.",
+  "requiresParam": "string parameter name the caller must additionally supply for this type (e.g. P_gap for D). Not a dependency -- distinct field so a resolver never has to type-check one key for two meanings."
+ },
+ "defectVocab": {
+  "status": {
+   "open": "not yet fixed",
+   "fixed": "fixed in component_spec.py; fixedDate required"
+  },
+  "severity": {
+   "cosmetic": "no effect on any computed value",
+   "minor": "latent — real but not reachable under current usage",
+   "moderate": "affects advisory output (e.g. mesh-grading text), not a computed geometry/mass/constraint value",
+   "major": "affects a computed value, a silent wrong answer, or blocks a stated capability",
+   "critical": "not yet used — reserved for build-breaking defects"
+  }
+ },
+ "instanceEmission": {
+  "purpose": "What an LLM should PRODUCE after reading these knowledge files, and in what format. Every component file describes what its component IS and which parameters are free; none of them says what to emit. This is that missing half. Without it a reader can choose correct values and still not know what to write.",
+  "requiredReading": {
+   "rule": "edes:shared is REQUIRED reading alongside any component file, never optional. A component file alone is not self-contained.",
+   "whatOnlyLivesHere": [
+    "frameworks -- what Part/Assembly/AssemblyFeature/Connection actually mean, and where EDES's usage diverges from the published sources. Without it these read as ordinary English and will be misread confidently.",
+    "oam.connectionClassMap -- which connection types exist (F/P/S/D/W) and what each maps to. Component files reference this map; they never restate it.",
+    "oam.endFeatureNaming -- which components' end features are weldL/weldR and which are exceptions.",
+    "oam.featureScopedConnections -- that a permitted connection type is a property of a FEATURE, not of the whole component.",
+    "oam.partAssemblyRule -- the Part / Sub-Assembly assignments and the test behind them.",
+    "loadPath, designCode, behaviourExpected, defectVocab, metaTypes -- all single-sourced here.",
+    "this instanceEmission block."
+   ],
+   "consequenceOfSkipping": "A reader that loads only a component file will still produce plausible output, which is what makes the omission dangerous rather than obvious."
+  },
+  "targetFormat": {
+   "what": "an ils_builder DEFINITION object -- the JSON that build_ils() consumes and that every archetype in standard_ils_layouts.json is written in. This is the format that actually works today and is verifiable by running the builder.",
+   "notToBeConfusedWith": "edes-instance/1 (EDES_instance_*.json), named in the metaschema description as a separate and NOT-YET-FORMALISED schema. Nothing here defines that; if and when it exists it may differ. Emit the definition format below.",
+   "shape": {
+    "schema_version": "1",
+    "ils": "{name, frame:'local', ownership:'strict', connection_system?} -- connection_system is required only when the layout contains edes:GD-ST or edes:GD-SB.",
+    "pipeline": "{OD_pipe, t_pipe} in METRES. This is the HEADER pipeline and it is required: every component's parameters and constraints are relative to it.",
+    "components": "a list of entries, each {code, id, centre_x, ...that component's own free params}"
+   },
+   "workedExample": {
+    "schema_version": 1,
+    "ils": {
+     "name": "EXAMPLE",
+     "frame": "local",
+     "ownership": "strict"
+    },
+    "pipeline": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    },
+    "components": [
+     {
+      "code": "GD-TP",
+      "id": "TP",
+      "centre_x": 0.0,
+      "t_comp": 0.042,
+      "L_comp": 1.0
+     }
+    ]
+   },
+   "unitsAndTypes": "All lengths in metres, as plain numbers. Strings only where a component's own params are strings (variant, support_connector, conn_type, provenance). Sequence params (top_connector_x, left_connector_y, right_connector_y) are JSON lists."
+  },
+  "omissionRule": {
+   "rule": "OMITTING A PARAMETER AND WRITING ITS DEFAULT VALUE ARE DIFFERENT DESIGN STATES, and the difference is permanent. An omitted parameter tracks that component's default_for(pipe) forever -- change the pipeline and it follows. A parameter written explicitly is PINNED at that number and will not follow.",
+   "consequence": "Emit ONLY the values actually decided. Do not fill in defaults to make the output look complete: doing so silently converts every defaulted parameter into a pinned one, which is a different design and cannot be distinguished afterwards.",
+   "whyItIsEasyToGetWrong": "Filling every field is the natural instinct and produces output that looks more complete and more correct. It is neither. ils_builder's own defaults_for() carries an explicit warning against being called to fill unrequested values for this reason.",
+   "test": "If asked only for a wall thickness, emit code, id, centre_x and t_comp -- not L_comp."
+  },
+  "procedure": [
+   "1. Read edes:shared (this file) and the component's own knowledge file.",
+   "2. Collect the component's inputsRequired. Anything required, without a default, and not supplied must be QUERIED from the person -- never assumed, never invented.",
+   "3. Convert any input the constructor refuses into the parameter it does accept (e.g. a target OD_comp on edes:GD-TP becomes t_comp = (OD_comp - ID)/2). See that component's inputsRequired.",
+   "4. Check the component's constraints before emitting. They are cheap to evaluate and the builder will reject a violation anyway; catching it first gives a better message.",
+   "5. Emit the definition object above, honouring the omission rule.",
+   "6. Verify by running build_ils() on it and reading the findings. An LLM does not need to be right first time -- it needs to be correctable, and Finding objects are a machine-readable correction signal that already exists."
+  ],
+  "whatEdesDoesNotTell": [
+   "WHERE to place a component -- centre_x has no guidance in any component file. Use usedInLayouts for worked precedents, or query.",
+   "WHICH feature mates to which -- the AssemblyFeatureAssociation layer is unrepresented, so a multi-component layout's internal registration cannot be derived from EDES alone.",
+   "WHETHER a configuration is GOOD -- behaviourDerived is mechanism only; the evidence layer (EDIKB) is not built. EDES answers what is valid, not what is advisable."
+  ]
+ }
+}

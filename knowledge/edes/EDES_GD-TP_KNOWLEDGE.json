@@ -1,0 +1,384 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-TP",
+ "type": "edes:ComponentType",
+ "label": "Thick Pipe Body",
+ "sourceRef": "component_spec.ThickPipeBody",
+ "docRef": "COMPONENT_GEOMETRY_DEFINITIONS.md Sec.1",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-A",
+  "IW-P"
+ ],
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule"
+ },
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func1"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func2",
+   "note": "concept-stage only, no compliant real-design use"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func3",
+   "note": "concept-stage only — real design uses edes:GD-TT"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-TT",
+   "note": "DNV-compliant sibling for real design. Mate-point asymmetry: GD-TP's weldL/weldR sit directly at the body edge, no offset; GD-TT's weldL/weldR sit past a NIB offset from its own body. Same join syntax on either side of a chain, different real distance depending on which one you're touching."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared#/behaviourExpected"
+  }
+ ],
+ "designCode": {
+  "summary": "DNV (pipe-shaped, per edes:shared.designCode); ASME_VIII if Func2 attachment realised (unimplemented)"
+ },
+ "scope": {
+  "squareShoulder": "NOT DNV-compliant. No taper on either end. Concept-stage/simplified-FEA use only — modelling a taper needs a mesh gradient the square shoulder avoids.",
+  "weldingProhibited": "direct welding onto GD-TP prohibited by DNV (line pipe, not structural member) — why Func2 excludes F",
+  "realDesignUse": "use edes:GD-TT instead — same idea, taper + NIB per DNV",
+  "notPipelineSpecific": "pipe is a constructor argument, not a fixed identity. t_comp/L_comp defaults, OD_comp, V, I_ratio, wt_ratio all read from self.pipe.OD_pipe/t_pipe/ID, never a global or header-specific constant -- VERIFIED LIVE on a second BasePipeline built with GD-B's own OD_branch/t_branch (0.2731 m / 0.0159 m): default_for() re-derives to t_comp=0.03975 m / L_comp=0.68275 m (vs 0.0525/1.016 on STD_PIPELINE) and validate() passes. So a GD-TP sitting ON THE BRANCH LINE (inside a future GD-BrPipe chain, not yet an EDES node -- see edes:GD-B's own header pipe) is the same component, same equations, evaluated against the branch's own OD/t -- not a special case.",
+  "neutralSection": "t_comp == t_pipe is legal (since 5Sep26) and produces a NEUTRAL component: same OD, same wall, no elevation, no stiffness step. Its purpose is to provide the conMid attachment station where a connector meets the pipeline, without distorting a study that is about the connection rather than about a thick pipe. VERIFIED: an EA-ST F1 layout rebuilt with a neutral TP carries the same four associations with zero errors and is 345.6 kg lighter than the 2.5x version."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "t_comp",
+    "meaning": "WALL THICKNESS of the thickened section, measured radially. The design variable -- OD_comp follows from it via constant bore.",
+    "unit": "m",
+    "default": "2.5*t_pipe",
+    "verifiedOnBranchPipe": {
+     "OD_branch": 0.2731,
+     "t_branch": 0.0159,
+     "value": 0.03975,
+     "note": "default_for(branch_pipe) -- vs 0.0525 on STD_PIPELINE. Same 2.5x ratio, branch's own t_pipe."
+    }
+   },
+   {
+    "name": "L_comp",
+    "meaning": "AXIAL LENGTH of the thick body, measured ALONG the pipeline. The extent is centre_x +/- L_comp/2.",
+    "unit": "m",
+    "default": "2.5*OD_pipe",
+    "verifiedOnBranchPipe": {
+     "OD_branch": 0.2731,
+     "t_branch": 0.0159,
+     "value": 0.68275,
+     "note": "default_for(branch_pipe) -- vs 1.016 on STD_PIPELINE. Same 2.5x ratio, branch's own OD_pipe."
+    }
+   },
+   {
+    "name": "t_comp_min",
+    "meaning": "MINIMUM WALL FLOOR imposed by a code or spec, if one applies. Not a dimension of the part -- a lower bound checked against t_comp.",
+    "unit": "m",
+    "optional": true
+   }
+  ],
+  "refused": [
+   "OD_comp — derived, TypeError if passed"
+  ],
+  "derived": [
+   {
+    "name": "OD_comp",
+    "expr": "ID + 2*t_comp"
+   },
+   {
+    "name": "V",
+    "expr": "(OD_comp-OD_pipe)/2",
+    "note": "roller elevation rise; consequence here, FREE in GD-SH — same symbol opposite causality"
+   },
+   {
+    "name": "EI_comp",
+    "expr": "E*pi/64*(OD_comp^4-ID^4)",
+    "verifiedAt": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021,
+     "t_comp": 0.042
+    },
+    "value": 234965149.13,
+    "unit": "N.m2",
+    "note": "E=210GPa, settled 30Aug26"
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_comp/2",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 0.5,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 3,
+  "lines": 2,
+  "junctions": [],
+  "contact": "owns full extent, PIPE_ELEMENT, arm collinear (concentric)",
+  "structuralNodes": 3,
+  "structuralLines": 2
+ },
+ "constraints": [
+  {
+   "id": "TP-C01",
+   "expr": "t_comp>0",
+   "source": "ThickPipeBody.validate",
+   "severity": "error",
+   "repair": "increase t_comp above 0",
+   "note": "source combines this with TP-C02 in one raise (t_comp<=0 or L_comp<=0); split here so each id maps to one failing parameter"
+  },
+  {
+   "id": "TP-C02",
+   "expr": "L_comp>0",
+   "source": "ThickPipeBody.validate",
+   "severity": "error",
+   "repair": "increase L_comp above 0"
+  },
+  {
+   "id": "TP-C03",
+   "expr": "t_comp>=t_pipe",
+   "source": "ThickPipeBody.validate",
+   "severity": "error",
+   "doc": "Sec.1.3",
+   "repair": "raise t_comp to at least pipe.t_pipe",
+   "note": "RELAXED from > to >= on 5Sep26. EQUAL is now legal and means a NEUTRAL section: OD_comp == OD_pipe, V == 0, wt_ratio == 1 -- geometrically indistinguishable from the header, but still a distinct artifact owning the section over its span and carrying a conMid attachment station. WHY: a connector may not attach to plain line pipe, so the header must be split and a GD-TP introduced wherever one lands; under the strict rule that unavoidably added a stiffness step even when the section existed only to carry the attachment. A THINNER section is still rejected -- that is the opposite strain mechanism, not a variant of this one. Note edes:GD-TT does NOT inherit the relaxation, see its own constraints."
+  },
+  {
+   "id": "TP-C04",
+   "expr": "t_comp_min is None or t_comp>=t_comp_min",
+   "source": "ThickPipeBody.validate",
+   "severity": "error",
+   "doc": "Sec.1.4",
+   "repair": "increase t_comp to at least t_comp_min, or clear t_comp_min"
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate()",
+  "probes": 4000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no upper bound on t_comp/wall_ratio — geometric validity != evidence coverage (EDIKB/EDPR job)",
+  "no check that provenance=DESIGN is inappropriate for square-shoulder geometry"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": true,
+    "reason": "F REVERSED 1Sep26 from excluded to permitted, scoped to the conMid feature only. It had been excluded with reason 'Rz restrained (edes:Func2)' and alternative 'edes:GD-PIP + edes:GD-BOSS, unimplemented', resting on the argument recorded in edes:shared that there is 'no lever arm in a plain/tapered wall to react a moment without local overstress'. Two things changed. First, W was added as its own connection type the same day, so F no longer carries the welding-onto-line-pipe objection that was tangled up with the DOF one -- welding is now W's concern, and F is a fixed mechanical attachment. Second, and the substantive point: the lever-arm objection was about a PLAIN wall, and this component is a THICKENED body, which is what supplies the wall the objection said was absent. The exclusion is therefore not reversed in general -- it still holds for a connector attached anywhere on the plain run -- but at a dedicated mid-body station on a thick section it does not apply. NOTE this makes the component-level row a poor fit for the real rule, which is per-FEATURE: see edes:shared#/oam/featureScopedConnections.",
+    "status": "real",
+    "dofStatus": "provisional",
+    "scopedToFeature": "conMid"
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "dofStatus": "provisional",
+    "status": "real"
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "dofStatus": "provisional",
+    "status": "real"
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "dofStatus": "confirmed",
+    "status": "real",
+    "requiresParam": "P_gap"
+   },
+   {
+    "type": "W",
+    "permitted": true,
+    "status": "real",
+    "dofStatus": "confirmed",
+    "scopedToFeature": "weldL, weldR",
+    "reason": "girth welds at the two end stations -- the joins by which this component enters an inline chain. Added with the W type on 1Sep26; previously the weld joins had no connection type at all, since F was the only fixed type and it was excluded here."
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "left end, x = centre_x - L_comp/2",
+    "sourceNodeId": "weldL",
+    "note": "canonical EDES name and component_spec node id now AGREE. Until 4Sep26 the code emitted ':lo'/':hi' while EDES recorded weldL/weldR, and this field carried the divergence. The code was renamed; the divergence is gone.",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "right end, x = centre_x + L_comp/2",
+    "sourceNodeId": "weldR",
+    "note": "canonical EDES name and component_spec node id now AGREE. Until 4Sep26 the code emitted ':lo'/':hi' while EDES recorded weldL/weldR, and this field carried the divergence. The code was renamed; the divergence is gone.",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "conMid",
+    "position": "mid-body, x = centre_x",
+    "sourceNodeId": "conMid",
+    "candidateTypes": [
+     "F"
+    ],
+    "note": "IMPLEMENTED in component_spec 1Sep26 (was specification-only when first written the same day). VERIFIED LIVE: emitted at centre_x at MANDATORY priority, and both line sets subdivide at it so the connector attaches to an element boundary rather than an element interior. MANDATORY not because it is a section discontinuity -- it is not -- but because a connector node the mesher merged away would silently delete the connection it carries."
+   }
+  ],
+  "status": "the mate points an adjacent component ties to are weldL/weldR. NO NIB, NO TAPER on either end -- extent sits directly at the OD step (Sec.1: 'square shoulder'), so unlike edes:GD-TT there is no undisturbed run to account for when joining a neighbour: these ARE the body edge, not an offset from it. This absence is deliberate and load-bearing to state explicitly, since GD-TT (the DNV-compliant sibling) DOES have that offset (its weldL/weldR sit past L_NIB) -- a reader assuming the two components mate the same way would place a GD-TP-neighbour too close by exactly L_NIB if they mentally copied GD-TT's convention, or too far if they assumed GD-TP secretly had a NIB it does not.",
+  "namingDivergence": "RESOLVED 4Sep26. ThickPipeBody was the only inline component emitting ':lo'/':hi' rather than the ':weldL'/':weldR' its siblings (TaperedThickBody, Valve, PipBulkhead) already used -- generic min/max naming that carried no information about the joint being a girth weld, and that blocked treating 'the welded end of an inline component' as one queryable concept across the family. The code was renamed rather than EDES bending to it, because the code was the outlier. VERIFIED LIVE: GD-TP now emits weldL/conMid/weldR, and all 7 archetypes still reproduce their recorded mass, span and CoG exactly. sourceNodeId is retained on each slot but is now identical to id.",
+  "strictnessCaveat": "whether these are OAMFeatures in NISTIR 7436's strict sense (a feature with at least one actual AssemblyFeatureAssociation) or merely Features depends on whether the component is mated in a given layout -- see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy. Unlike edes:GD-ST's optional connector slots (F2 populates only 2 of 5), an inline component's weld ends are effectively always mated in any real chain; an unmated weld end is physically meaningful only at an ILS boundary.",
+  "connectorSlotGap": "SEPARATE, UNRELATED gap, not resolved by the above: Func2 (moment-restraining pipe-side attachment) needs a connector slot mechanism ALONG L_comp -- a place partway down the body where a connector could attach -- and ThickPipeBody has no such mechanism in source at all. This is not about the end-mate points; it is a currently-nonexistent third feature type this component would need to actually realise Func2.",
+  "featureScopedTypes": "candidateTypes differ BY FEATURE on this component, which the component-level permittedConnections rows cannot express: weldL/weldR accept W only (girth welds joining the line), conMid accepts F only (a fixed structural attachment onto the thick body). A reader consulting only permittedConnections would wrongly conclude any permitted type may attach anywhere. See edes:shared#/oam/featureScopedConnections."
+ },
+ "behaviourDerived": {
+  "mechanism": "local strain increment in ADJACENT pipe (not the component) from the stiffness step; curvature redistributes inversely with EI",
+  "referenceBase": "plain pipe at same stinger radius",
+  "tier": "mechanism=ILS-tier; magnitude=SLAY-tier",
+  "mass": "not a component property — assembly-computed; verified vs catalogue ILS-TP to 9 sig figs (12m header convention)",
+  "rollerContact": {
+   "capable": true,
+   "default": "yes",
+   "overrideScope": "instance, not type"
+  }
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {
+   "ILS-SHTP": {
+    "componentId": "TP",
+    "purpose": "A thick body sitting INSIDE the shroud deep section. Both mechanisms act at once: the shroud lifts the pipe off its catenary (Type B1) while the thick body puts a stiffness step inside that elevated z",
+    "paramsUsed": {
+     "centre_x": 0.0,
+     "t_comp": 0.053,
+     "L_comp": 1.016
+    },
+    "coComponents": [
+     "GD-SH"
+    ],
+    "anchors": [
+     "SHTP-L5D",
+     "SHTP-L10D",
+     "SHTP-X2",
+     "SHTP-X3",
+     "SHTP-X4"
+    ]
+   },
+   "ILS-TP": {
+    "componentId": "TP",
+    "purpose": "A local wall build-up with NO transition. Stiffens the pipe over its length and presents a step where it ends.",
+    "paramsUsed": {
+     "centre_x": 0.0,
+     "t_comp": 0.042,
+     "L_comp": 1.0
+    },
+    "coComponents": [],
+    "anchors": [
+     "TP-A1",
+     "TP-A2",
+     "TP-A3"
+    ]
+   }
+  },
+  "anchorCount": 8
+ },
+ "defects": [
+  {
+   "id": "TP-D1",
+   "status": "open",
+   "severity": "cosmetic",
+   "summary": "Component.contact_at defined twice, identical bodies — one dead"
+  },
+  {
+   "id": "TP-D2",
+   "status": "fixed",
+   "severity": "cosmetic",
+   "summary": "ThickPipeBody EMITTED node ids ':lo'/':hi' for its welded end stations, where every other IW-A/IW-P component emitted ':weldL'/':weldR' -- inconsistent vocabulary for the same physical feature. FIXED 4Sep26 by renaming the code.",
+   "history": "VERIFIED 1Sep26: TaperedThickBody, Valve and PipBulkhead all emitted :weldL/:weldR; ThickPipeBody was the only IW component emitting :lo/:hi. Never a functional defect -- nothing read those ids by name outside the component, and the stations were correct -- but ':lo'/':hi' is generic min/max naming carrying no information about the joint being a girth weld, and it blocked treating 'the welded end of an inline component' as one queryable concept across the family. Renamed 4Sep26 in ThickPipeBody._node_id_lo/_node_id_hi; the Python property names keep their _lo/_hi spelling, only the emitted string changed. Verified against the full archetype and anchor regression with no change in results. sourceNodeId on each slot is now identical to id.",
+   "fixedDate": "2026-09-04",
+   "fix": "renamed the emitted node ids in ThickPipeBody._node_id_lo/_node_id_hi to ':weldL'/':weldR'. The Python property names keep their _lo/_hi spelling so no internal reference changed -- only the emitted string. Contained to two literals; verified against the full archetype and anchor regression with no change in results."
+  }
+ ],
+ "regressionCase": {
+  "ref": "Foundation Sec.3 valve case (323x12.7 pipe, 700mm body)",
+  "finding": "GD-TP CANNOT represent it — constant bore forces OD_comp=0.4176 vs true 0.700",
+  "errorMagnitude": {
+   "proudOverD": {
+    "true": 0.584,
+    "gdTp": 0.146
+   },
+   "EIratio": {
+    "true": 41.75,
+    "gdTp": 7.42,
+    "understatedBy": 5.62
+   }
+  },
+  "failsSilently": true,
+  "correctComponent": "edes:GD-VLV (free OD_body)"
+ },
+ "openQuestions": [
+  "connector slot position/count on GD-TP body — Func2's gap, distinct from and unaffected by the weldL/weldR end-mate points now named",
+  "wall_ratio/wt_ratio/EI_ratio/I_ratio naming — 4 names, 2 quantities, needs single vocabulary",
+  "should provenance=DESIGN be refused given DNV non-compliance?",
+  "assemblyFeatures now correctly NAMES weldL/weldR as this component's own mate points, but does not yet create the cross-component record that says what they mate TO (e.g. a future GD-HdPipe end, not yet an EDES node, or another component's weldL/lo directly). That is a separate, larger schema question -- whether mating becomes its own OAM AssemblyFeatureAssociation-shaped artifact type, where it would live, and how direction/derived-vs-given is encoded -- not resolved by this update."
+ ],
+ "subclassOf": null,
+ "requirements": [
+  {
+   "id": "GD-TP.R1",
+   "appliesTo": "edes:Func2",
+   "quantity": "connector force transfer capacity (magnitude only — moment excluded categorically by DOF table, not by capacity)",
+   "unit": "N",
+   "value": null,
+   "status": "unpopulated"
+  }
+ ],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. This file references its connection class map, feature-scoping rule and framework vocabulary without restating any of them.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "Neither is optional and neither has a default. Every parameter, default and constraint on this component is pipe-relative: t_comp defaults to 2.5*t_pipe, L_comp to 2.5*OD_pipe, and the governing constant-bore rule derives OD_comp from ID = OD_pipe - 2*t_pipe. Without both, nothing here can be evaluated."
+  },
+  "sizing": {
+   "rule": "EXACTLY ONE of t_comp or OD_comp is needed. They are not independent: constant bore means OD_comp = ID + 2*t_comp, where ID = OD_pipe - 2*t_pipe comes from the header. Supplying one determines the other.",
+   "t_comp": "the EMITTABLE form. Pass it straight through to the definition.",
+   "OD_comp": "ACCEPTED AS DESIGN INTENT, NOT EMITTABLE. The constructor refuses it (TypeError). Convert first: t_comp = (OD_comp - ID) / 2, then emit t_comp. This inversion is the single most likely place to get an instance wrong, because asking for a component by its outside diameter is the natural way to ask.",
+   "ifBothSupplied": "check them against OD_comp = ID + 2*t_comp. If they disagree the person has over-specified: query rather than silently choosing one.",
+   "ifNeitherSupplied": "t_comp defaults to 2.5*t_pipe. Emitting nothing keeps that default LIVE and pipe-relative -- see the omission rule. Emitting the computed number pins it. These are different design states.",
+   "note": "t_comp must also exceed t_pipe (constraint TP-C03) -- the OD grows, it does not shrink. A requested OD_comp below the header OD is not a thin thick-pipe, it is a different component with the opposite strain mechanism, and should be queried rather than clamped."
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value -- see usedInLayouts for worked precedents (ILS-TP, ILS-SHTP), or query."
+  },
+  "optional": {
+   "L_comp": "defaults to 2.5*OD_pipe. Omit unless the length is a decision.",
+   "t_comp_min": "code floor; omit unless one applies."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

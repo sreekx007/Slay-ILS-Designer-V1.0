@@ -1,0 +1,236 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-HdPipe",
+ "type": "edes:ComponentType",
+ "label": "Header Pipe Segment",
+ "sourceRef": "component_spec.HeaderPipeSegment",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-P"
+ ],
+ "iwEaNote": "IW-P: a piping item carried inline. Uses the criterion edes:GD-SH's own file states -- 'not a piping item (no section of its own)' -- which a plain header pipe segment passes: it HAS a section of its own (the header's own OD/wall). NOT IW-A, because it provides no attachment or connection point, the same criterion that removed edes:GD-VLV from IW-A on 23Aug26. Single-class like GD-VLV, unlike edes:GD-TP/GD-TT which are both. HISTORY: a new class IW-N (neutral) was proposed for this component on 1Sep26 and REVERTED the same day. The proposal rested on reading IW-P as 'piping stand-in' (from edes:GD-PIP's note 'purely anchoring, not a piping stand-in') and arguing a plain segment stands in for nothing. That reading was wrong: GD-PIP's note contrasts anchoring against piping, it does not require an IW-P component to REPRESENT some other item. Plain line pipe is literally piping. No authoritative definition of IW-P exists anywhere in the corpus, which is what allowed a thin inference to look stronger than it was -- see openQuestions.",
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "The simplest possible Part under the Sec.3.2 test: a single uniform pipe run with no sub-member, no declared junction, no frame and no connector slots. Unlike edes:GD-PIP/GD-VLV there is no ArguableUnderThisTest tension, and unlike edes:GD-SH there is no third-category concern -- GD-HdPipe has a real structural line of its own, it simply has nothing else. Note this classification is one of the few claims in this file that does NOT depend on unwritten code: it follows from the specification itself. per edes:shared#/frameworks OAM.usedButLooser, the source holds Part/Assembly should be INFERRED rather than asserted. Asserted here like every other file in the corpus; the departure is recorded once in shared, not restated per file."
+ },
+ "subclassOf": null,
+ "note": "Would subclass component_spec.Component directly. Deliberately NOT a subclass of ThickPipeBody with t_comp = t_pipe: that would make a plain pipe a degenerate thick pipe, inverting the real relationship (a thick section is a modified plain pipe, not the reverse) and would inherit GD-TP's t_comp > t_pipe constraint, which a plain segment must violate by definition. PROMOTED from edes:FutureComponent to edes:ComponentType 1Sep26 once the class was written and probed. IMPLEMENTED 1Sep26. Class written, registered in ils_builder.CLS, and VERIFIED LIVE: builds through build_ils with zero findings, emits weldL/weldR at MANDATORY, carries the pipe's own Section, owns plain-pipe contact. The no-default-length decision is implemented faithfully -- L_pipe defaults to 0.0 and validate() rejects it with an explanation, and default_for() returns an empty dict, so a caller must supply a length rather than inherit a fabricated one.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func10",
+   "note": "Func10 is a ProposedFunction, not in the authored set. Spacing between adjacent inline components is a real, evidence-backed design variable -- the EDIKB pilot dataset lists 'A1 spacing' as a studied parameter alongside taper ratio, wall thickness and length."
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func3",
+   "note": "carries the line's own design wall by definition -- it IS the header pipe"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-BrPipe",
+   "note": "same component on the branch line instead of the header; identical mechanism, different pipe argument. See that file's own note on why weldL/weldR is spatially misleading there but not here."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-TP",
+   "note": "the degenerate-case boundary: a GD-HdPipe is what a GD-TP would be if t_comp equalled t_pipe -- which GD-TP's own constraint TP-C03 (t_comp > t_pipe) explicitly forbids. The two are adjacent in parameter space but disjoint by construction."
+  }
+ ],
+ "designCode": {
+  "status": "answerable, unlike every other open designCode in this corpus",
+  "reason": "GD-HdPipe IS the line pipe -- same OD, same wall, same material as the header it sits in. So the governing code is simply the pipeline's own line-pipe code (DNV-ST-F101 for the source papers' cases), with no component-specific addition. This is the only component so far where shared.designCode's rule resolves cleanly rather than hitting an open question: the component is pipe-shaped, has a real section, and presents no non-pipe interface.",
+  "caveat": "the girth welds at weldL/weldR are themselves code-governed (weld qualification, NDT), but that is a fabrication requirement on the JOINT, not a design code on this component's own body. Not represented here."
+ },
+ "scope": {
+  "purpose": "an explicitly-represented length of plain header pipe between two inline components, so that component SPACING becomes a first-class parameter of a layout rather than an emergent consequence of two centre_x values.",
+  "optional": "NOT compulsory. Two inline components may mate directly (edes:GD-TT.weldR = edes:GD-TP.weldL), and the girth weld exists at that point physically whether or not a GD-HdPipe is written between them. GD-HdPipe is for when a spacer is a design decision worth recording, not a structural requirement of every join.",
+  "noMechanicalDelta": "adds no section change, no stiffness step, no elevation, no mass beyond the pipe it replaces. Its EI, OD, wall and contact behaviour are the header's own throughout. This is the defining property, not an omission -- a GD-HdPipe that differed from the header in any of these would be a edes:GD-TP.",
+  "isTheReferenceBase": "every other inline component's behaviourDerived.referenceBase reads 'plain pipe at same stinger radius'. GD-HdPipe IS that plain pipe, made explicit. So its own behaviour is not merely 'small' -- it is the zero against which the others are measured.",
+  "notPipelineSpecific": "like edes:GD-TP and edes:GD-TT, would take `pipe` as a constructor argument, so OD/t follow whatever BasePipeline is supplied. On the header that is the header's own pipe; the branch-line equivalent is edes:GD-BrPipe.",
+  "headerModel": "RESOLVED 5Sep26 -- this component's role now depends on a DECLARED mode, ils.header_model. Under 'chain' the inline components ARE the header: the header extent comes from the chain and any uncovered span is an error, so a GD-HdPipe is load-bearing. Under 'continuous' (the default, and what all 7 archetypes use) the header is a separate object that backfills unowned spans, and a GD-HdPipe merely declares ownership of pipe that would be there anyway. Before the mode existed the second was always true, which made this component decorative: VERIFIED 5Sep26, two segments with a 2 m hole between them built with zero findings because the implicit header filled it. See edas:shared#/headerRule."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "L_pipe",
+    "meaning": "AXIAL LENGTH of the plain pipe segment. The only geometric parameter, and it has NO default -- a spacer's length is set by the layout, not the pipe diameter.",
+    "unit": "m",
+    "default": "no proposed default",
+    "note": "the segment's length, and the ONLY free geometric parameter. No default is proposed because, unlike every other component in this corpus, there is no natural pipe-relative ratio for it -- a spacer's length is set by the layout it sits in, not by the pipe diameter. default_for(pipe) would have nothing meaningful to return, which is itself a departure from the corpus-wide default_for convention and is flagged in openQuestions."
+   }
+  ],
+  "refused": [
+   "OD_pipe / t_pipe -- taken from the `pipe` argument, never overridden. A segment with its own OD or wall is not a header pipe segment; it is a edes:GD-TP (thicker) or an unrepresented thinner case."
+  ],
+  "derived": [
+   {
+    "name": "extent",
+    "expr": "(centre_x - L_pipe/2, centre_x + L_pipe/2)",
+    "note": "equals (weldL, weldR) by construction, same identity edes:GD-TP and edes:GD-TT have"
+   },
+   {
+    "name": "section",
+    "expr": "the header's own Section (OD_pipe, t_pipe)",
+    "note": "NOT None -- contrast edes:GD-ST/GD-SB, which have no section at all. GD-HdPipe is genuine pipe, so its stiffness is mesh-independent, same category as GD-TP/GD-TT/GD-PIP/GD-VLV."
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_pipe/2",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 1.0,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 2,
+  "structuralNodes": 2,
+  "lines": 1,
+  "structuralLines": 1,
+  "junctions": [],
+  "specified": "2 nodes (weldL, weldR) at the two girth welds, 1 line between them carrying the header's own Section. Node priority proposed as MANDATORY at both ends, matching every other inline component -- a girth weld is a real fabrication boundary and, if a neighbouring component's section differs, a section discontinuity the mesher must not smear. NOT VERIFIED: no class exists to emit these.",
+  "contact": "owns contact over its full extent, LoadPath.PIPE_ELEMENT, arm = OD_pipe/2, normal collinear with the offset -- i.e. exactly plain-pipe roller behaviour, because it is plain pipe. Specified, not verified."
+ },
+ "constraints": [
+  {
+   "id": "HP-C01",
+   "expr": "L_pipe > 0",
+   "source": "HeaderPipeSegment.validate",
+   "severity": "error",
+   "repair": "increase L_pipe above 0",
+   "note": "a zero-length segment is not a short spacer, it is the direct mate it was written to replace -- and would produce a zero-length element. Strict, not >=, for the same reason edes:GD-B's P_bv bounds are strict."
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate() -- 8000 random L_pipe values spanning negative, zero and positive",
+  "probes": 8000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no minimum practical length is proposed. Real pipelay has minimum pup-piece lengths driven by tensioner and station spacing, but no such figure appears in either source paper and none is invented here.",
+  "no upper bound on L_pipe -- geometric validity != evidence coverage, same convention as every other component in this corpus",
+  "no check that a GD-HdPipe is actually needed, i.e. nothing prevents writing a spacer of arbitrary length where two components could mate directly"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": false,
+    "status": "excluded",
+    "reason": "same categorical DNV exclusion as edes:GD-TP, and for the same reason applying more strongly: direct welding onto line pipe is prohibited because it is line pipe, not a structural member. GD-HdPipe is line pipe by definition, so this exclusion is not a judgement call here."
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "reason": "a clamp-type connector could in principle attach anywhere along plain pipe. Marked provisional, not confirmed: with no class and no active_connectors mechanism, nothing has been verified, and GD-HdPipe has no connector slot mechanism specified at all (same gap edes:GD-TP records as connectorSlotGap). Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable.",
+    "requires": [
+     "edes:GD-HdPipe"
+    ]
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-HdPipe"
+    ],
+    "reason": "Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable."
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-HdPipe"
+    ],
+    "reason": "Blocked on this component itself: no class exists and no connector-slot mechanism along the segment has been specified, so the row is permitted in principle but not buildable."
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "left girth-weld end, x = centre_x - L_pipe/2",
+    "sourceNodeId": "weldL (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "right girth-weld end, x = centre_x + L_pipe/2",
+    "sourceNodeId": "weldR (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   }
+  ],
+  "status": "conforms to edes:shared#/oam/endFeatureNaming -- the two welded end stations are weldL/weldR, matching edes:GD-TT, edes:GD-VLV and edes:GD-PIP. Unlike edes:GD-TP there is no naming divergence to record, because there is no code emitting a competing id yet; writing the spec first is the opportunity to get the name right from the start rather than rename later.",
+  "noOffset": "weldL/weldR sit directly at the extent boundary with no NIB and no taper, same as edes:GD-TP and unlike edes:GD-TT. A plain pipe segment has no internal profile at all, so there is no internal station a chain join could wrongly name -- this is the one inline component where the NIB-offset trap recorded in shared.oam.assemblyFeatureConvention cannot arise.",
+  "strictnessCaveat": "whether these are OAMFeatures in NISTIR 7436's strict sense or merely Features depends on whether the component is mated in a given layout -- see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy. A GD-HdPipe mated on neither end would be a free-floating pipe piece, which is not a meaningful layout element."
+ },
+ "behaviourDerived": {
+  "mechanism": "none by design -- introduces no stiffness step, no elevation, no local strain increment. Its presence in a layout changes the SPACING between the components either side of it, and the strain consequences belong to that spacing, not to this component's own body.",
+  "referenceBase": "not applicable in the usual sense -- GD-HdPipe IS the reference base other components are measured against (see scope.isTheReferenceBase). Comparing it to plain pipe at the same stinger radius would be comparing it to itself.",
+  "tier": "not evaluated. Spacing effects are studied in the source papers ('A1 spacing' in the EDIKB pilot set) but no result has been attached to this component, and none is invented here.",
+  "rollerContact": {
+   "capable": true,
+   "reason": "plain pipe on rollers -- the baseline case. Specified, not verified."
+  }
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {},
+  "anchorCount": 0,
+  "absent": "no archetype in standard_ils_layouts.json contains this component. That is not necessarily a gap in the library -- it may simply never have been the subject of a published study -- but it does mean there is no worked layout to copy parameter values or placement from, so an LLM configuring one has this component's own constraints and nothing else to go on."
+ },
+ "openQuestions": [
+  "No authoritative definition of IW-A / IW-P / IW-B exists anywhere in EDES -- the classes are used on every inline component but characterised only incidentally, in per-component notes (edes:GD-PIP's 'purely anchoring, not a piping stand-in', edes:GD-VLV's 'provides no connection point', edes:GD-SH's 'not a piping item (no section of its own)'). Those notes are consistent but were written to justify one component's classification, not to define the class. This directly caused a wrong call on 1Sep26: a new class IW-N was proposed for this component on the strength of one such note, then reverted once a different note supplied the better criterion. The taxonomy should be defined once in edes:shared, the way oam.connectionClassMap and oam.endFeatureNaming are.",
+  "no default_for(pipe) is proposed, breaking a corpus-wide convention every other component follows. A spacer's length is a layout decision, not a pipe-relative ratio -- but this means a caller cannot build a GD-HdPipe without supplying L_pipe, unlike every other component which has usable defaults.",
+  "no connector slot mechanism specified, so the P/S/D rows in permittedConnections are provisional in a stronger sense than usual -- there is no specified place ALONG the segment for a connector to attach, the same gap edes:GD-TP records as connectorSlotGap.",
+  "whether two adjacent GD-HdPipe segments should be permitted to mate to each other (weldR = weldL) is unspecified. Physically meaningless -- two collinear plain segments are one longer segment -- but nothing here forbids it."
+ ],
+ "defects": [],
+ "regressionCase": {
+  "status": "none recorded yet"
+ },
+ "requirements": [],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED, not optional. L_pipe has NO default and validate() rejects zero -- a spacer's length is set by the layout, not by the pipe diameter, so it must be supplied. This is the one component in the corpus where omitting the main parameter is not viable.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres -- the HEADER pipeline outside diameter",
+   "t_pipe": "REQUIRED, metres -- header wall thickness",
+   "why": "No default exists for either. This component's parameters, defaults and constraints are evaluated against the pipe it is built on; without both, none of them can be resolved."
+  },
+  "componentParams": {
+   "required": {
+    "L_pipe": "REQUIRED -- no default. m. the segment's length, and the ONLY free geometric parameter. No default is proposed because, unlike every other component in this corpus, there is no"
+   },
+   "optional": {}
+  },
+  "placement": {
+   "centre_x": "REQUIRED to place the component. EDES gives NO guidance on the value. No archetype in the layout library contains this component, so there is NO worked precedent to take a value from -- query."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

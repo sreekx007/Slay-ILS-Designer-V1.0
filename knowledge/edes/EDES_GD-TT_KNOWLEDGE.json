@@ -1,0 +1,352 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-TT",
+ "type": "edes:ComponentType",
+ "label": "Tapered Transition",
+ "sourceRef": "component_spec.TaperedThickBody",
+ "docRef": "COMPONENT_GEOMETRY_DEFINITIONS.md Sec.1+3",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "iwEaClass": [
+  "IW-A",
+  "IW-P"
+ ],
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule"
+ },
+ "subclassOf": "edes:GD-TP",
+ "inheritsUnchanged": [
+  "t_comp",
+  "L_comp",
+  "t_comp_min",
+  "ID_comp",
+  "wt_ratio",
+  "I_ratio",
+  "EI_comp",
+  "TP-C01, TP-C02, TP-C04 via super().validate(). TP-C03 is inherited but then OVERRIDDEN by the stricter TT-C05 -- see that constraint."
+ ],
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func1"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func2"
+  },
+  {
+   "rel": "realizes",
+   "to": "edes:Func3",
+   "note": "THIS is Func3's real-design realisation, unlike GD-TP"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-TP",
+   "note": "mate-point asymmetry: GD-TT's weldL/weldR sit past a NIB offset from its own body; GD-TP's weldL/weldR sit directly at the body edge, no offset. Same join syntax on either side of a chain, different real distance depending on which one you're touching."
+  },
+  {
+   "rel": "subclassedBy",
+   "to": "edes:GD-PIP",
+   "note": "inner pipe of PiP bulkhead IS a GD-TT"
+  }
+ ],
+ "designCode": {
+  "summary": "DNV — this component exists to satisfy DNV-ST-F101 Sec.5.6"
+ },
+ "scope": {
+  "complianceStatus": "DNV-compliant realisation of the GD-TP idea: taper (min slope 1:4) + NIB (Sec.5.6.1.7)",
+  "whenGdTpStillRight": "concept-stage screening, sweeps where taper isn't the variable, mesh-cost > fidelity-gain cases",
+  "notPipelineSpecific": "pipe is a constructor argument, not a fixed identity. Every equation here (dr, L_taper, NIB_dnv/NIB_min, OD_at) reads from self.pipe.OD_pipe/t_pipe, never a global or header-specific constant -- VERIFIED LIVE on a second BasePipeline built with GD-B's own OD_branch/t_branch (0.2731 m / 0.0159 m): default_for() re-derives correctly, L_NIB re-derives to 0.150 m (vs 0.200 m on STD_PIPELINE), extent (x_weld) becomes (-0.804, 0.804), and validate() passes. So a GD-TT sitting ON THE BRANCH LINE (inside a future GD-BrPipe chain, not yet an EDES node -- see edes:GD-B's own header pipe) is the same component, same equations, evaluated against the branch's own OD/t rather than the header's -- not a special case, not a different class. The `pipe` argument IS the mechanism that makes this true; no separate branch-variant of this file is needed."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "n",
+    "meaning": "TAPER SLOPE, expressed as 1:n -- one unit of radial rise per n units of axial run. Larger n means a LONGER, gentler taper. DNV's minimum is 4.",
+    "unit": "-",
+    "default": 4.0,
+    "note": "taper slope 1:n; default IS the DNV floor, fixed literal not pipe-relative"
+   },
+   {
+    "name": "L_NIB",
+    "meaning": "LENGTH OF THE UNDISTURBED LAND (the NIB) at each end, between the girth weld and the taper toe. Plain pipe at header OD, one at each end.",
+    "unit": "m",
+    "default": "NIB_min",
+    "resolvedIn": "__post_init__, not default_for() — inconsistent mechanism vs t_comp/L_comp"
+   }
+  ],
+  "refused": [
+   "OD_comp (inherited)",
+   "L_taper — derived as n*dr, TypeError if passed"
+  ],
+  "derived": [
+   {
+    "name": "NIB_dnv",
+    "expr": "4*l_e",
+    "doc": "DNV-ST-F101 Sec.5.6.1.7",
+    "verifiedAt": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    },
+    "value": 0.19795653
+   },
+   {
+    "name": "NIB_min",
+    "expr": "round(NIB_dnv,nearest 50mm)",
+    "settled": "30Aug26",
+    "value": 0.2,
+    "note": "NIB_min IS the enforced floor (not raw NIB_dnv) — round-to-nearest falls below raw DNV value in 8/9 common line sizes, largest shortfall 22.5mm at 20in. Floor moved with the rounding so the module's own default cannot self-violate."
+   },
+   {
+    "name": "NIB_default",
+    "expr": "= NIB_min"
+   },
+   {
+    "name": "L_taper",
+    "expr": "n*dr",
+    "verifiedAt": {
+     "t_comp": 0.042,
+     "n": 4
+    },
+    "value": 0.084,
+    "verifiedOnBranchPipe": {
+     "OD_branch": 0.2731,
+     "t_branch": 0.0159,
+     "note": "same equation, GD-B's own default branch-pipe properties -- L_NIB re-derives to 0.150 m (vs 0.200 m on STD_PIPELINE), extent (x_weld) becomes (-0.804, 0.804). Confirms L_taper/L_NIB/extent are all pipe-relative throughout, not header-specific."
+    }
+   },
+   {
+    "name": "dr",
+    "expr": "(OD_comp-OD_pipe)/2",
+    "note": "same quantity as GD-TP.V, different name"
+   },
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_comp/2 + L_taper + L_NIB, where L_taper = n*dr, dr = (OD_comp - OD_pipe)/2, OD_comp = ID + 2*t_comp, and L_NIB defaults to NIB_min = round(4*l_e to nearest 50 mm) with l_e = sqrt(r_mean*t_pipe)/(3*(1-nu^2))^0.25 -- a property of the PIPE, not of this component",
+    "meaning": "HALF the component's axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent). Needed to place this component adjacent to another -- see edas:shared#/chaining.",
+    "verifiedValue": 0.8272,
+    "verifiedAt": "the instance shown in verifiedWith below",
+    "verifiedWith": {
+     "OD_pipe": 0.4064,
+     "t_pipe": 0.021
+    }
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 7,
+  "lines": 6,
+  "junctions": [],
+  "zones": [
+   "NIB",
+   "taper",
+   "body",
+   "taper",
+   "NIB"
+  ],
+  "meshAdvice": "taper zones: min_elements=2, target=L_taper/2, grading ratio/run-up COMPUTED live from self.L_taper (fixed 30Aug26 — was hardcoded '~268:1'/'~0.88m', correct only at STD defaults, wrong by up to 175x elsewhere)",
+  "structuralNodes": 7,
+  "structuralLines": 6
+ },
+ "constraints": [
+  {
+   "id": "TP-C01",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C01"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C02",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C02"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C03",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C03"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TP-C04",
+   "ref": {
+    "node": "edes:GD-TP",
+    "section": "constraints",
+    "id": "TP-C04"
+   },
+   "inherited": true
+  },
+  {
+   "id": "TT-C01",
+   "expr": "n>=4",
+   "source": "TaperedThickBody.validate",
+   "severity": "error",
+   "doc": "DNV-ST-F101 Sec.5.6",
+   "repair": "increase n to at least 4 (1:4 minimum taper slope)"
+  },
+  {
+   "id": "TT-C02",
+   "expr": "L_NIB>=NIB_min",
+   "source": "TaperedThickBody.validate",
+   "severity": "error",
+   "doc": "DNV-ST-F101 Sec.5.6.1.7, nearest-50mm floor",
+   "repair": "increase L_NIB to at least NIB_min, or omit L_NIB to use the computed default"
+  },
+  {
+   "id": "TT-C05",
+   "expr": "t_comp>t_pipe   (STRICT -- not inherited from TP-C03)",
+   "source": "TaperedThickBody.validate",
+   "severity": "error",
+   "doc": "Sec.3.4",
+   "repair": "raise t_comp above t_pipe, or use edes:GD-TP if a neutral section is wanted",
+   "note": "edes:GD-TP relaxed TP-C03 to >= on 5Sep26 so a neutral section can carry a connector. That relaxation CANNOT extend here: taper length is n*dr with dr = (OD_comp - OD_pipe)/2, so an equal wall gives a ZERO-LENGTH taper. VERIFIED -- stations then coincide (taperL with bodyL, bodyR with taperR) producing two zero-length segments, the degenerate case guarded against everywhere else in this module. A tapered body with no taper is not a tapered body; it IS a edes:GD-TP, and the error message says so."
+  }
+ ],
+ "constraintEquivalence": {
+  "method": "probe vs live validate() incl. inherited chain",
+  "probes": 6000,
+  "mismatches": 0
+ },
+ "nonConstraints": [
+  "no upper bound on n or t_comp/wall_ratio",
+  "no check that L_comp is short enough for a resolvable midspan moment (min_elements=1 in body zone permits 1 element at L_comp/D~2.46)"
+ ],
+ "permittedConnections": {
+  "inheritsFrom": "edes:GD-TP#/permittedConnections",
+  "overrides": [],
+  "verified": "TaperedThickBody has no active_connectors of its own, so the inherited rows apply unchanged -- INCLUDING the 1Sep26 reversal of F from excluded to permitted, scoped to conMid, and the new W row scoped to the weld ends. This string previously read 'same Rz exclusion applies unchanged', which became stale the moment GD-TP's F row was reversed; corrected the same day. Inheritance means this file cannot drift from GD-TP on connection rows, but its own prose about them can, and did."
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "left girth-weld end, x_weld[0]",
+    "sourceNodeId": "weldL",
+    "note": "canonical EDES name and component_spec node id agree here. So do edes:GD-TP's, since its rename on 4Sep26 (defect TP-D2, fixed) -- the corpus is now uniform on :weldL/:weldR",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "right girth-weld end, x_weld[1]",
+    "sourceNodeId": "weldR",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "conMid",
+    "position": "mid-body, x = centre_x, between bodyL and bodyR",
+    "sourceNodeId": "conMid",
+    "candidateTypes": [
+     "F"
+    ],
+    "note": "IMPLEMENTED in component_spec 1Sep26 (was specification-only when first written the same day). VERIFIED LIVE: emitted at centre_x at MANDATORY priority, and both line sets subdivide at it so the connector attaches to an element boundary rather than an element interior. MANDATORY not because it is a section discontinuity -- it is not -- but because a connector node the mesher merged away would silently delete the connection it carries."
+   }
+  ],
+  "status": "the mate points an adjacent component ties to are weldL/weldR -- NOT taperL/taperR and NOT bodyL/bodyR. Those four are real, MANDATORY structural stations (section/slope discontinuities the mesher must not smear), but they sit INSIDE this component's own extent, not at its boundary. A chain join written as e.g. 'GD-TT.taperR = <neighbour>.weldL' would silently discard the outer NIB (L_NIB, the undisturbed run between the girth weld and the taper toe) and place the neighbouring component too close by exactly that length. extent = x_weld = (weldL, weldR) by construction (see Component.extent), so weldL/weldR are the only two stations that are simultaneously a real structural node AND the true edge of what this component owns.",
+  "strictnessCaveat": "whether these are OAMFeatures in NISTIR 7436's strict sense (a feature with at least one actual AssemblyFeatureAssociation) or merely Features depends on whether the component is mated in a given layout -- see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy. Unlike edes:GD-ST's optional connector slots, an inline component's weld ends are effectively always mated in any real chain; an unmated weld end is physically meaningful only at an ILS boundary.",
+  "note": "contrast edes:GD-TP, whose extent has no NIB at all -- its two mate points sit directly at the OD step, with no equivalent offset to get wrong.",
+  "featureScopedTypes": "candidateTypes differ BY FEATURE: weldL/weldR accept W only, conMid accepts F only. The component-level permittedConnections cannot express this -- see edes:shared#/oam/featureScopedConnections. Note also that taperL/taperR/bodyL/bodyR remain internal profile stations and are NOT features: nothing external mates at them."
+ },
+ "behaviourDerived": {
+  "mechanism": "same as GD-TP but SPREAD by the taper; peak strain location reported at taper toe (catalogue ILS-TT), MOVES WITH L_NIB — ASSUMED provenance, not FEA-confirmed",
+  "mass": "verified vs catalogue ILS-TT to 9 sig figs via numerical integration of the frustum taper (not closed-form)"
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts containing this component, generated mechanically from the layout library on 1Sep26 -- not hand-written, so they cannot drift from it by authoring error, though they WILL go stale if the library changes and this is not regenerated. Their purpose is placement guidance: this file describes what the component IS and what its own constraints are, but says nothing about where along a header to put one or what to put either side of it. A worked archetype answers that by example. paramsUsed are the archetype's own values verbatim; anchors are published table rows that override them.",
+  "archetypes": {
+   "ILS-TT": {
+    "componentId": "TT",
+    "purpose": "The same wall build-up as ILS-TP, but eased in and out by a taper at each end, with a straight land before the girth weld.",
+    "paramsUsed": {
+     "centre_x": 0.0,
+     "t_comp": 0.065,
+     "L_comp": 1.0,
+     "n": 16.0,
+     "L_NIB": 0.2
+    },
+    "coComponents": [],
+    "anchors": [
+     "TT-1to4",
+     "TT-1to16",
+     "TT-1to64"
+    ]
+   }
+  },
+  "anchorCount": 3
+ },
+ "defects": [
+  {
+   "id": "TT-D1",
+   "status": "fixed",
+   "severity": "moderate",
+   "fixedDate": "2026-08-30",
+   "summary": "mesh-grading note text was a hardcoded literal ('~268:1','~0.88m'), correct only at STD_PIPELINE defaults; wrong by up to 175x at the catalogue's own case",
+   "fix": "computed live from self.L_taper, self.pipe.OD_pipe"
+  }
+ ],
+ "regressionCase": {
+  "ref": "Foundation Sec.3 valve case",
+  "finding": "taper does NOT fix representability — constant bore inherited unchanged, valve-as-GD-TT still returns OD_comp=0.4176 vs true 0.700",
+  "note": "fixes CODE-COMPLIANCE half of Foundation Sec.3 failure#2, not the REPRESENTABILITY half"
+ },
+ "openQuestions": [
+  "L_NIB __post_init__ resolution vs t_comp/L_comp default_for() — unify mechanism?",
+  "min_elements floor for short body zones?",
+  "assemblyFeatures now correctly NAMES weldL/weldR as this component's own mate points, but does not yet create the cross-component record that says what they mate TO (e.g. a future GD-HdPipe end, not yet an EDES node, or another component's weldL/lo directly). That is a separate, larger schema question -- whether mating becomes its own OAM AssemblyFeatureAssociation-shaped artifact type, where it would live, and how direction/derived-vs-given is encoded -- not resolved by this update."
+ ],
+ "requirements": [
+  {
+   "id": "GD-TT.R1",
+   "appliesTo": "edes:Func2",
+   "quantity": "connector force transfer capacity (magnitude only)",
+   "unit": "N",
+   "value": null,
+   "status": "unpopulated"
+  }
+ ],
+ "inputsRequired": {
+  "emitFormat": "edes:shared#/instanceEmission",
+  "readAlso": "edes:shared -- REQUIRED. ALSO edes:GD-TP: this component subclasses it, and t_comp, L_comp, t_comp_min and constraints TP-C01..C04 are inherited unchanged and documented THERE, not here. A reader with only this file does not see the two most important sizing parameters.",
+  "headerPipeline": {
+   "OD_pipe": "REQUIRED, metres",
+   "t_pipe": "REQUIRED, metres",
+   "why": "as edes:GD-TP, plus the NIB length floor NIB_min = 4*sqrt(r*t)/(3(1-nu^2))^0.25 is computed from the header pipe's own radius and wall."
+  },
+  "sizing": {
+   "rule": "EXACTLY ONE of t_comp or OD_comp is needed. They are not independent: constant bore means OD_comp = ID + 2*t_comp, where ID = OD_pipe - 2*t_pipe comes from the header. Supplying one determines the other.",
+   "t_comp": "the EMITTABLE form. Pass it straight through to the definition.",
+   "OD_comp": "ACCEPTED AS DESIGN INTENT, NOT EMITTABLE. The constructor refuses it (TypeError). Convert first: t_comp = (OD_comp - ID) / 2, then emit t_comp. This inversion is the single most likely place to get an instance wrong, because asking for a component by its outside diameter is the natural way to ask.",
+   "ifBothSupplied": "check them against OD_comp = ID + 2*t_comp. If they disagree the person has over-specified: query rather than silently choosing one.",
+   "ifNeitherSupplied": "t_comp defaults to 2.5*t_pipe. Emitting nothing keeps that default LIVE and pipe-relative -- see the omission rule. Emitting the computed number pins it. These are different design states.",
+   "note": "Inherited from edes:GD-TP -- same rule, same inversion, same TP-C03 floor."
+  },
+  "placement": {
+   "centre_x": "REQUIRED. See usedInLayouts (ILS-TT) for a worked precedent, or query."
+  },
+  "optional": {
+   "n": "taper slope 1:n, defaults to 4.0 (the DNV minimum). Raising it lengthens the taper.",
+   "L_NIB": "undisturbed land each side, defaults to NIB_min. Do not go below it -- constraint.",
+   "L_comp": "body length, defaults to 2.5*OD_pipe."
+  },
+  "ifMissing": "Anything listed as required, having no default, and not supplied by the person must be QUERIED. Do not assume a value and do not carry one over from a worked example -- a precedent shows what was once chosen, not what this case needs."
+ }
+}

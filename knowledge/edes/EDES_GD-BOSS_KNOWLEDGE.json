@@ -1,0 +1,281 @@
+{
+ "schema": "edes-knowledge/1",
+ "id": "edes:GD-BOSS",
+ "type": "edes:FutureComponent",
+ "label": "Boss",
+ "sourceRef": "component_spec.Boss (INTENDED -- does not exist)",
+ "vocabularyRef": "edes:shared#/frameworks",
+ "assemblyRef": "edas:shared -- assembly-level knowledge this file does not carry: build sequence, id convention, chaining equation, ownership arbitration, association format and the emit format.",
+ "implementationStatus": {
+  "codeExists": false,
+  "verifiedLive": false,
+  "statement": "No component_spec class exists and it is absent from ils_builder.CLS. Every claim here is a SPECIFICATION. GD-BOSS has been referenced in this corpus since before 30Aug26 -- edes:Func4 was recorded as blockedBy GD-BOSS for that whole period -- but nothing was ever written down about what it IS. This file is the first statement of that, and it is deliberately short: the component is a straight pipe, and most of what is worth saying is which dimensions it takes from elsewhere.",
+  "blockers": [
+   "component_spec.Boss class not written",
+   "ils_builder.CLS registration not added",
+   "the source of its OD/wall is another component instance (a edes:GD-PIP), not the pipeline -- no existing component derives its dimensions from a SIBLING, so there is no established mechanism for expressing that. See openQuestions."
+  ]
+ },
+ "iwEaClass": [
+  "IW-A"
+ ],
+ "iwEaNote": "IW-A: it provides an attachment/connection point and nothing else. That is the exact criterion that removed edes:GD-VLV from IW-A (a valve provides no connection point) and the one edes:GD-PIP is classified under. NOT IW-P: it is not a piping item carrying process flow, it is a structural stub, so despite being pipe-shaped it stands in for no piping component. NOT EA-*: it is welded into/onto the line rather than externally attached across a connector.",
+ "artifactType": {
+  "current": "Part",
+  "candidate": null,
+  "status": "closed",
+  "rule": "edes:shared#/oam/partAssemblyRule",
+  "reason": "A single straight pipe with no sub-member, no declared junction, no frame and no connector slots of its own. The simplest Part in the corpus alongside edes:GD-HdPipe. Follows from the specification and does not depend on unwritten code. Asserted rather than inferred, per the corpus-wide departure recorded in edes:shared#/frameworks OAM.usedButLooser."
+ },
+ "subclassOf": null,
+ "note": "Would subclass component_spec.Component directly. Geometrically it is a plain pipe, so edes:GD-HdPipe is the closest existing shape -- but that component is IW-P, neutral by definition, and carries no attachment station, which is the whole point of this one. Sharing an implementation would obscure that.",
+ "edges": [
+  {
+   "rel": "realizes",
+   "to": "edes:Func4",
+   "note": "moment-transferring attachment point. A boss is a purpose-built stub with substantial section, which is the lever arm Func4 requires. NOTE edes:GD-PIP also realises Func4 as of 5Sep26, so the two are alternatives: GD-PIP anchors through its outer sleeve, GD-BOSS through a dedicated stub. Which is appropriate is a design decision this file does not make."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:shared"
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-PIP",
+   "note": "the dimension source: OD and wall match GD-PIP's OUTER pipe. Also the alternative realiser of edes:Func4."
+  },
+  {
+   "rel": "seeAlso",
+   "to": "edes:GD-Con",
+   "note": "a connector attaches here, realising edes:Func13 (structure to boss). Func13 is recorded as blockedBy this component."
+  }
+ ],
+ "designCode": {
+  "status": "OPEN",
+  "reason": "shared.designCode's rule keys on section_at and a pipe-shaped interface, both of which GD-BOSS has -- so the rule's premise holds, unlike edes:GD-ST/GD-SB/GD-SH. But a boss is a structural attachment rather than pressure-containing line pipe, so whether the line pipe code governs it is exactly the question, and no source in this project answers it.",
+  "consequence": "Not treated as line pipe here. If it were, the DNV prohibition on welding structural attachments to line pipe would apply to the boss itself, which would be circular."
+ },
+ "scope": {
+  "whatItIs": "A straight pipe stub providing a purpose-built attachment point on the line, as an alternative to thickening a run of the line itself.",
+  "dimensionsComeFromASibling": "OD and wall thickness MATCH edes:GD-PIP's OUTER pipe -- OD_outer and t_outer of the GD-PIP instance it serves. This is the only component in the corpus whose dimensions derive from another COMPONENT INSTANCE rather than from the pipeline or from its own parameters, and there is no existing mechanism for that (see openQuestions).",
+  "defaultLength": "3 x the GD-PIP OUTER diameter. AMBIGUITY FLAGGED: the instruction said '3 * gd-pip OD', and GD-PIP has two diameters -- the inner (which is the line's own OD) and OD_outer. Read as OD_outer, because the sentence immediately before it fixes OD and wall to the outer pipe, so the outer is the operative diameter in that context. On a 16 in line with the default sleeve this gives 3 x 508.0 = 1524.0 mm. If the inner was meant, it is 3 x 406.4 = 1219.2 mm.",
+  "notNeutral": "Unlike edes:GD-HdPipe this component is NOT section-neutral: it is a stub of heavier pipe, and its purpose is to be stiff enough to take an attachment. Whether it changes the LINE's section depends on how it is attached, which is unresolved -- see openQuestions."
+ },
+ "params": {
+  "free": [
+   {
+    "name": "L_boss",
+    "meaning": "AXIAL LENGTH of the boss stub.",
+    "unit": "m",
+    "default": "3 * OD_outer of the GD-PIP it serves",
+    "note": "the only free geometric parameter. See scope.defaultLength for the ambiguity in which diameter."
+   },
+   {
+    "name": "OD_boss",
+    "meaning": "OUTSIDE DIAMETER. Matches the served GD-PIP's OD_outer.",
+    "unit": "m",
+    "default": "the served GD-PIP's OD_outer",
+    "note": "supplied rather than derived until a sibling-reference mechanism exists."
+   },
+   {
+    "name": "t_boss",
+    "meaning": "WALL THICKNESS. Matches the served GD-PIP's t_outer.",
+    "unit": "m",
+    "default": "the served GD-PIP's t_outer"
+   }
+  ],
+  "refused": [],
+  "derived": [
+   {
+    "name": "halfExtent",
+    "expr": "halfExtent = L_boss/2",
+    "meaning": "HALF the axial footprint. extent = (centre_x - halfExtent, centre_x + halfExtent).",
+    "verifiedValue": "not verified -- no class exists"
+   },
+   {
+    "name": "section",
+    "expr": "Section(OD=OD_boss, t=t_boss)",
+    "meaning": "a real Section, so stiffness is mesh-independent."
+   }
+  ]
+ },
+ "geometry": {
+  "nodes": 2,
+  "structuralNodes": 2,
+  "lines": 1,
+  "structuralLines": 1,
+  "junctions": [],
+  "specified": "2 nodes at the ends, 1 line between them, plus a conMid attachment station -- SPECIFIED, not verified. Whether the end nodes are weld ends on the LINE (making the boss inline) or a transverse stub off it is the unresolved orientation question below.",
+  "contact": "unresolved -- depends on orientation. If inline, it owns contact like any pipe over its span; if a transverse stub, it owns none."
+ },
+ "sectionClaim": {
+  "claimsSection": true,
+  "claimsContact": true,
+  "verified": "SPECIFIED, not verified -- both conditional on the orientation question.",
+  "consequence": "If inline, GD-BOSS may not overlap another section-claiming component and an explicit header chain must be split around it, exactly as for edes:GD-VLV and edes:GD-PIP. See edas:shared#/sectionVersusContact."
+ },
+ "constraints": [
+  {
+   "id": "BO-C01",
+   "expr": "L_boss > 0",
+   "source": "INTENDED:Boss.validate",
+   "severity": "error",
+   "repair": "set L_boss above 0"
+  },
+  {
+   "id": "BO-C02",
+   "expr": "t_boss < OD_boss/2",
+   "source": "INTENDED:Boss.validate",
+   "severity": "error",
+   "repair": "reduce t_boss or increase OD_boss",
+   "note": "a wall of half the diameter or more is a solid bar, not a pipe. Same check edes:GD-PIP applies to its sleeve."
+  },
+  {
+   "id": "BO-C03",
+   "expr": "OD_boss > OD_pipe",
+   "source": "INTENDED:Boss.validate",
+   "severity": "error",
+   "repair": "raise OD_boss above the line OD",
+   "note": "a boss narrower than the line it attaches to provides no lever arm and would not realise edes:Func4. Follows from OD matching a GD-PIP sleeve, which is itself four nominal sizes above the line."
+  }
+ ],
+ "nonConstraints": [
+  "no check that OD_boss/t_boss actually MATCH the served GD-PIP -- the match is a stated rule with no mechanism to enforce it, since nothing links a component to a sibling instance",
+  "no check that a boss is present where edes:Func13 is claimed",
+  "no upper bound on L_boss"
+ ],
+ "permittedConnections": {
+  "oamClassRef": "edes:shared#/oam/connectionClassMap",
+  "rows": [
+   {
+    "type": "F",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BOSS"
+    ],
+    "reason": "F is the point of the component: a boss exists to take a moment-transferring attachment, which is why it realises edes:Func4 rather than edes:Func2. Contrast plain line pipe, where F is categorically excluded on DNV grounds -- the boss is a structural member, not line pipe, which is exactly what makes the attachment legitimate. Blocked only because no class exists."
+   },
+   {
+    "type": "P",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BOSS"
+    ]
+   },
+   {
+    "type": "S",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BOSS"
+    ]
+   },
+   {
+    "type": "D",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BOSS"
+    ]
+   },
+   {
+    "type": "W",
+    "permitted": true,
+    "status": "blocked",
+    "dofStatus": "provisional",
+    "requires": [
+     "edes:GD-BOSS"
+    ],
+    "reason": "girth welds at its ends if the boss is inline. Conditional on the orientation question."
+   }
+  ]
+ },
+ "assemblyFeatures": {
+  "slots": [
+   {
+    "id": "weldL",
+    "position": "left end, x = centre_x - L_boss/2",
+    "sourceNodeId": "weldL (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "weldR",
+    "position": "right end, x = centre_x + L_boss/2",
+    "sourceNodeId": "weldR (intended)",
+    "candidateTypes": [
+     "W"
+    ]
+   },
+   {
+    "id": "conMid",
+    "position": "mid-body, x = centre_x",
+    "sourceNodeId": null,
+    "candidateTypes": [
+     "F",
+     "P",
+     "S",
+     "D"
+    ],
+    "note": "the attachment station -- the feature the component exists for. Accepts F, unlike a plain run, because a boss is a structural member. A edes:GD-Con lands here, realising edes:Func13."
+   }
+  ],
+  "status": "conforms to edes:shared#/oam/endFeatureNaming for its ends, plus a conMid attachment station following the edes:GD-TP pattern. All SPECIFIED.",
+  "featureScopedTypes": "candidateTypes differ by feature: the ends accept W only, conMid accepts F/P/S/D. See edes:shared#/oam/featureScopedConnections.",
+  "strictnessCaveat": "see edes:shared#/frameworks OAM.usedButLooser.AssemblyFeature candidacy."
+ },
+ "behaviourDerived": {
+  "mechanism": "a local section increase over its span, so a stiffness step at each end -- the same Type A mechanism as edes:GD-TP, but produced by a stub rather than by thickening the line's own wall. Whether that step is in the LINE depends on orientation.",
+  "referenceBase": "plain pipe at the same stinger radius",
+  "tier": "not evaluated. No case in the corpus contains a boss.",
+  "rollerContact": {
+   "capable": "unresolved -- conditional on orientation"
+  }
+ },
+ "usedInLayouts": {
+  "source": "standard_ils_layouts.json (schema_version 2)",
+  "note": "Back-links to worked layouts, generated mechanically. Regenerate whenever the layout library changes.",
+  "archetypes": {},
+  "anchorCount": 0,
+  "absent": "no archetype contains this component, and none can until the class exists. There is therefore NO worked precedent for placement or parameter values."
+ },
+ "applicability": {
+  "summary": "Select edes:GD-BOSS when a moment-transferring attachment point is needed on the line and thickening a run of the line itself is not wanted.",
+  "selectWhen": [
+   {
+    "intent": "an attachment must transfer moment (Mz), not merely restrain force",
+    "realizes": "edes:Func4",
+    "condition": "the attachment lands on the boss's conMid, not on plain line pipe"
+   },
+   {
+    "intent": "an external structure must connect to the line via a purpose-built stub rather than a thickened section",
+    "realizes": "edes:Func13",
+    "condition": "a edes:GD-Con joins the boss to a edes:GD-ST or edes:GD-SB"
+   }
+  ],
+  "doNotSelectWhen": [
+   "a LOW-moment connection is sufficient -- edes:Func2 is realised more simply by a edes:GD-TP at the connection point, including a neutral one",
+   "the intent is a section or elevation change in the line for its own sake -- use edes:GD-TP / edes:GD-TT / edes:GD-SH",
+   "the attachment is to an external structure that is already served by a thickened section -- that is edes:Func12, and adding a boss as well duplicates the load path"
+  ],
+  "quantificationRef": "applicability and mechanism only. No magnitudes -- those are FBS Be, from EDIKB."
+ },
+ "defects": [],
+ "openQuestions": [
+  "ORIENTATION IS UNSPECIFIED, and it is the largest gap here. 'A straight pipe' does not say whether the boss lies ALONG the line (inline, welded into the run, splitting the header like a edes:GD-VLV) or stands TRANSVERSE to it (a stub off the wall, like a small branch root). Almost everything conditional in this file -- contact ownership, section claim, whether an explicit header chain must split around it, whether its end features are girth welds at all -- follows from that answer. Both readings are consistent with the description given.",
+  "DIMENSIONS DERIVE FROM A SIBLING INSTANCE, which no existing component does. OD and wall match a particular edes:GD-PIP's outer pipe, so a boss is meaningless without one -- but nothing in the schema or in component_spec lets a component reference another component instance. Today the values must be copied by the caller, and nothing checks the copy. Whether a real mechanism is wanted, or copying is accepted with a stated rule, is undecided.",
+  "'3 * gd-pip OD' for the default length is ambiguous between the inner and outer diameter -- read as OD_outer here, see scope.defaultLength. On a 16 in line that is 1524 mm versus 1219 mm, which is not a small difference.",
+  "edes:Func4 is now realised by BOTH this component and edes:GD-PIP. That is legitimate -- two ways of providing a moment-transferring attachment -- but nothing states when each is appropriate, and the applicability blocks on the two components do not yet distinguish them beyond restating their own mechanisms.",
+  "no relationship is recorded between a boss and the GD-PIP it serves. If a boss only ever exists alongside one, that is an assembly-level constraint nothing expresses.",
+  "No mechanism exists for a component to reference a sibling instance's parameters. Either one is added, or it is explicitly decided that the caller copies OD_outer/t_outer from the served edes:GD-PIP and nothing checks the copy.",
+  "The orientation question must be resolved BEFORE any class is written -- it determines the geometry accessors, not just the documentation."
+ ],
+ "requirements": []
+}
