@@ -1,0 +1,277 @@
+{
+ "schema": "edas-knowledge/1",
+ "id": "edas:shared",
+ "type": "edas:SharedReference",
+ "label": "ILS Assembly Fundamentals",
+ "task": {
+  "READ_THIS_FIRST": "YOUR DELIVERABLE IS A SINGLE JSON LAYOUT DEFINITION. Not a report, not a Word document, not a markdown write-up, not a drawing. When asked to create, produce, replicate, design or 'make' an ILS layout, emit the JSON object described in emitFormat and nothing else.",
+  "ifYouAreAboutToAskAboutFileFormat": "STOP -- you have misread the task. Observed 5Sep26: a model given photographs of ILS layouts from a paper and asked to create layouts read this file, correctly concluded it says nothing about page layout or figures, and then asked whether the output should be .docx, markdown or SVG. It had taken 'create layouts' to mean 'reproduce these pages'. The question was reasonable given what this file then said; the file is now explicit. A question about document format means the layout JSON has been mistaken for a document about layouts.",
+  "whenTheSourceIsAPaperFigureOrTable": "A figure, table, photograph or screenshot of an existing layout is INPUT, not a template to reproduce. Read the parameters out of it -- component codes, dimensions, positions, connection system -- and emit them as a layout definition. The deliverable is the JSON that would REBUILD what the figure shows, not a copy of the figure. If a study varies one parameter across several cases, that is several layouts: emit one definition per case, or one definition plus the varied values, and say which you have done. EXTRACT ONLY WHAT THE SOURCE STATES. A study usually specifies some parameters and is silent on the rest -- a thick-pipe case may give a LENGTH (2.5D) and a position and say nothing about wall thickness. For anything the source does not state, OMIT the parameter rather than writing the value its default would produce: an omitted parameter tracks default_for(pipe) and stays pipe-relative, while writing the same number pins it. Emitting a computed default makes the layout look more complete and quietly asserts a decision the source never made.",
+  "whenToAskVersusProceed": [
+   "ASK when a REQUIRED input has no default and was not supplied -- most often the header OD_pipe and t_pipe, which every component's parameters are relative to. See each component's inputsRequired.",
+   "ASK when a component's sizing is ambiguous, e.g. both a wall thickness and an outside diameter are given and they disagree.",
+   "DO NOT ASK about output format, file type, or presentation. That is settled: one JSON object.",
+   "DO NOT ASK whether to include reasoning. Do not include it -- see architecture.output.whyThatMatters.",
+   "DO NOT invent a value to avoid asking. A fabricated dimension that builds cleanly is worse than a question, because nothing downstream will flag it."
+  ],
+  "theShapeInOneLine": "{schema_version, ils{name,frame,ownership}, pipeline{OD_pipe,t_pipe}, components[{code,id,centre_x,...params}], associations[{type,connection,from,to}]}",
+  "afterYouEmit": "The layout is checked by ils_builder.build_ils(), which returns Findings, and by ils.unmated_gaps(). You do not need to be right first time -- you need to be correctable. If findings are available to you, read them and repair rather than defending the first answer. A drawing is produced separately by ils_plotter from the BUILT object, and only if asked."
+ },
+ "purpose": "What EDES does not answer. EDES describes what a COMPONENT is and which of its parameters are free; it says nothing about where to place one, what to put beside it, or how components relate to each other. This file is that layer, and together with EDES it is what a producer needs in order to emit a layout definition. ONE file, deliberately: the archetypes in standard_ils_layouts.json already carry their own purpose, constraints, variables and expected outputs, so restating them here would create the stale-internal-pointer class this project was already caught by once (see edes:shared#/namingNote).",
+ "architecture": {
+  "inputs": {
+   "edes:shared + every EDES_GD-*.json component file": "STRUCTURE and FUNCTION. What each component is, its free parameters, its constraints, its AssemblyFeatures, and the vocabulary the whole corpus uses.",
+   "EDIKB": "BEHAVIOUR -- specifically Gero's Be, expected behaviour arriving from evidence rather than derived from geometry (see edes:shared#/frameworks FBS.elements.Behaviour). This is what makes a layout ADVISABLE rather than merely valid. EDES answers what is legal; without EDIKB nothing answers what is good. Not yet built.",
+   "edas:shared": "ASSEMBLY BUILDING. This file: sequence, identity, topology, ownership, associations, emit format.",
+   "EDPR": "Engineering Design Problem Representation -- the problem statement, expressed in the ontology of EDES, EDAS and EDIKB rather than in free prose. Not yet built."
+  },
+  "decision": "an ILS layout",
+  "output": {
+   "count": "ONE document. Fewer is better: a layout split across per-part files and an assembly file has the same content plus a synchronisation problem, and per-part instance files would need edes-instance/1, which edes:shared's own metaschema still records as not-yet-formalised.",
+   "content": "STRUCTURE ONLY, expressed in OAM relations. VERIFIED 4Sep26 against a real emitted layout: components carry only code, id, centre_x and dimensional parameters; associations carry only type, connection, from, to. There is NO Function or Behaviour field anywhere in the output.",
+   "whyThatMatters": "Function and Behaviour are consumed to DECIDE and never appear in the artifact. The natural instinct is to emit the reasoning alongside the result -- a components list annotated with why each was chosen. Resist it: the emitted layout is a buildable geometric statement, and reasoning mixed into it cannot be validated, will drift from the EDES/EDIKB nodes it paraphrases, and makes the document ambiguous about what is asserted versus what is recalled. Reasoning belongs in the conversation, or in an EDPR record, not in the layout."
+  },
+  "verificationLoop": "NOT one-way. ils_builder.build_ils() is a CHECKER: it returns Findings, and ils.unmated_gaps() reports placement problems that raise nothing on their own. A producer does not need to be right first time -- it needs to be correctable, and Findings is a machine-readable correction signal that already exists. ils_plotter.plot_ils() and component_plotter consume the BUILT object (not the JSON) when a drawing is wanted.",
+  "diagram": "EDES + EDIKB + EDAS + EDPR -> decide -> emit ONE Structure/OAM JSON -> build_ils -> findings -> repair -> re-emit. Plotters hang off the built object."
+ },
+ "requiredReading": {
+  "edes:shared": "REQUIRED. Vocabulary (frameworks), oam.connectionClassMap, oam.endFeatureNaming, oam.featureScopedConnections, and instanceEmission -- the component-level emit format this file extends.",
+  "EDES_GD-*.json": "one per component the layout uses, for inputsRequired, params, constraints and assemblyFeatures.",
+  "standard_ils_layouts.json": "7 archetypes and 39 anchors, as worked precedent. The 39 anchors are each an archetype plus parameter overrides -- i.e. 39 worked examples of exactly the operation a producer is being asked to perform.",
+  "note": "A component file read alone is not self-contained, and neither is this one."
+ },
+ "buildSequence": {
+  "note": "Tested end to end 4Sep26. Parts first, names second, connections third: connections cannot be declared against parts that have no identity, and identity should not be invented before the arrangement is settled.",
+  "steps": [
+   "1. Identify the parts required.",
+   "2. Decide each part's parameters. Anything required, without a default, and not supplied must be QUERIED, never assumed -- see each component's inputsRequired.",
+   "3. Size the header: half = max(7.0, widest_reach + 3.0). See headerRule.",
+   "4. Place the IW components at their x, centreline on the pipeline axis. Check for overlap and report it rather than resolving it silently. IF THE HEADER IS MODELLED AS edes:GD-HdPipe SEGMENTS, split it so no segment spans an IW component -- see sectionVersusContact.consequenceForChainedHeaders.",
+   "5. Place edes:GD-SH if used. NOT a weld and NOT in the chain -- a PositionOrientation against the centreline (see positionConstraints). It claims contact but NO section, so it may overlap IW components freely; this is why a shroud nests over a thick pipe. Set ownership=lowest when it does.",
+   "6. Add branch piping if the layout has one. A BRANCH DOES NOT REQUIRE A SUPPORT STRUCTURE -- a standalone branch is a complete, valid layout. Only add a edes:GD-ST or edes:GD-SB if one was actually asked for. If a structure IS wanted, build it AFTER the branch: top_structure_for_branch() derives it FROM the branch, not the reverse. See branchLayouts.",
+   "7. Place the EA components (edes:GD-ST / edes:GD-SB) at their x and y.",
+   "8. For EACH populated connector slot on a edes:GD-ST or edes:GD-SB, in this order: (a) SPLIT the header at the slot's x and insert a edes:GD-TP centred there -- NEUTRAL, t_comp = t_pipe, unless the problem asks for a thick section in its own right; (b) place a edes:GD-Con at the same x; (c) declare BOTH associations, TP.conMid --F-- Con.pipeEnd and Con.structEnd --<slot type>-- <structure>.slotN. The GD-TP is NOT optional and is the step most often skipped: a connector may not attach to plain line pipe, and edes:GD-HdPipe has no conMid to attach to. ils_builder now reports a missing host as an ERROR. See connectorAttachment.",
+   "9. Verify. Build, read findings, AND call unmated_gaps() separately."
+  ],
+  "mostSkippedStep": "Step 8(a). OBSERVED twice, 5Sep26: a producer places the connector and declares its structure-side association but leaves the header intact underneath, so the connector welds to plain line pipe. It used to build silently -- the connector-count check was satisfied because the NUMBER of connectors matched the number of slots, and nothing looked at where they landed. Now checked: _check_connector_landing raises an error naming the connector and the x where no conMid was found."
+ },
+ "idConvention": {
+  "rule": "Derived from the component code, numbered left to right in x, so a parts list reads in the order the parts sit on the pipeline. Generated by ils_builder.assign_ids(); an id already present is left alone, so a deliberately named part keeps its name and only blanks are filled.",
+  "whyDerived": "Names typed by hand drift from the codes they name, and the drift is invisible -- nothing checks that a part called 'TP1' is actually a GD-TP.",
+  "stems": {
+   "edes:GD-HdPipe": "hdpipe",
+   "edes:GD-BrPipe": "brpipe",
+   "edes:GD-TP": "tp",
+   "edes:GD-TT": "tt",
+   "edes:GD-PIP": "pip",
+   "edes:GD-VLV": "vlv",
+   "edes:GD-SH": "sh",
+   "edes:GD-ST": "st",
+   "edes:GD-SB": "sb",
+   "edes:GD-B": "branch",
+   "edes:GD-Con": "con"
+  },
+  "example": "hdpipe1, tt1, hdpipe2, tp1, hdpipe3"
+ },
+ "chaining": {
+  "purpose": "How to compute WHERE to put a component so it abuts its neighbour. This was previously derivable only by inference -- feature positions were given as formulas and edes:shared#/oam/endFeatureNaming said weld ends are 'the features a neighbouring inline component ties to', but nothing stated that 'ties to' means the two x-coordinates are EQUAL. Stated explicitly here 4Sep26.",
+  "rule": "Two inline components A and B are adjacent when A.weldR and B.weldL are at the SAME x. That is what a declared Connection of type W asserts, and what the builder checks.",
+  "equation": "centre_x(B) = centre_x(A) + halfExtent(A) + halfExtent(B)",
+  "halfExtentIsPerComponent": "Every component file gives its own halfExtent formula in params.derived, verified numerically against the live class. Do NOT assume halfExtent is half the component's length parameter: for edes:GD-TT it is L_comp/2 + L_taper + L_NIB, so a 1.0 m body has a 1.654 m footprint. Using L_comp/2 there would overlap the neighbour by 0.654 m.",
+  "workedExample": {
+   "given": "OD_pipe=0.4064, t_pipe=0.021. A = GD-HdPipe L_pipe=4.0 at centre_x=-4.0. B = GD-TT with t_comp=0.0528, L_comp=1.0.",
+   "step1": "halfExtent(A) = L_pipe/2 = 2.0  -> A occupies -6.0 .. -2.0",
+   "step2": "halfExtent(B) = L_comp/2 + L_taper + L_NIB = 0.5 + 0.1272 + 0.2 = 0.8272",
+   "step3": "centre_x(B) = -4.0 + 2.0 + 0.8272 = -1.1728",
+   "check": "B occupies -2.0 .. -0.3456; B.weldL = -2.0 = A.weldR. Adjacent.",
+   "declare": {
+    "type": "Connection",
+    "connection": "W",
+    "from": {
+     "component": "hdpipe1",
+     "feature": "weldR"
+    },
+    "to": {
+     "component": "tt1",
+     "feature": "weldL"
+    }
+   }
+  },
+  "oneSidedComponents": "edes:GD-B is NOT symmetric about its centre_x -- its Tee sits AT centre_x and the branch runs away in +x, so it has an extent formula rather than a halfExtent. Check a component's params.derived before assuming symmetry.",
+  "doNotChain": "edes:GD-SH is not part of the weld chain (a PositionOrientation against the centreline -- see positionConstraints), and edes:GD-ST / edes:GD-SB / edes:GD-Con are off-line. Only IW-class components chain: GD-HdPipe, GD-TP, GD-TT, GD-PIP, GD-VLV.",
+  "generation": "ils_builder.weld_chain(ils) derives the W associations once the parts are placed, so the equation above is needed for PLACEMENT; the associations themselves need not be hand-written.",
+  "ifYouGetItWrong": "Too close raises ContactAmbiguityError -- loud. Too far raises NOTHING unless an association is declared, in which case the coincidence check reports the exact offset. This asymmetry is why declaring associations matters: without them, only half the failure is caught.",
+  "emissionPrecision": "Emit at least 6 decimal places on centre_x and every length. Adjacency is checked with a tolerance of 1e-6 m (ils_builder.ADJACENCY_TOL), and the same value is used by weld_chain, unmated_gaps and the association coincidence check so all three agree. FOUND 5Sep26: when they did NOT agree, a layout rounded to 6 dp landed in the gap between a 1e-9 weld tolerance and a 1e-6 gap tolerance -- the ~5e-7 discrepancies at each join were too large to count as adjacent, so weld_chain returned NO welds, and too small to report as a gap, so nothing flagged it. The layout passed every check while being silently association-free. Rounding more coarsely than 6 dp will reproduce that class of problem at a larger scale.",
+  "gapsAndOverlaps": "unmated_gaps() reports BOTH signs: a positive value is a gap, a negative one is a small overlap. It considers INLINE components only -- edes:GD-SH nests over the run by design and GD-ST/GD-SB/GD-Con/GD-B sit off the axis, so including them would report the shroud's whole span as an overlap.",
+  "computeExactRoundOnlyAtEmission": "Carry placements EXACTLY through the arithmetic and round ONLY the final emitted number. Do not compute from an already-rounded literal. Paper geometry is usually stated as exact multiples of the diameter -- L1=10D, thick pipe 2.5D, X2 = the catenary-side third of the deep section -- so a placement like -L1/2 + L1/6 is exact in D and stays exact if you keep it symbolic until the end. OBSERVED 5Sep26: hand-truncating centre_x to 4 decimal places left ~17-33 um residuals at the joins, which correctly tripped the weld-coincidence check. Rounding to 4 dp gives ~33 um against a 1 um tolerance; 6 dp gives 0.33 um and passes. Recomputing the placements as exact fractions rather than adding decimal places is the better fix, because it removes the error instead of hiding it under the tolerance.",
+  "whatTheCoincidenceCheckIsFor": "A sub-millimetre placement error is invisible to every other check -- it does not trip contact arbitration, section arbitration, or gap detection, and the layout builds and plots normally. The declared-coincidence test is the ONLY thing that catches it, which is the practical argument for declaring associations rather than treating them as optional metadata."
+ },
+ "topologyTypes": {
+  "warning": "AN ILS IS NOT A SEQUENCE. VERIFIED 4Sep26 from the real extents of all 7 archetypes: five are single-component, and BOTH multi-component ones are NESTED rather than chained -- ILS-SHTP has GD-TP entirely inside GD-SH's extent, ILS-ILT has GD-B overlapping GD-ST's span. ZERO archetypes are a linear chain of abutting parts.",
+  "kinds": {
+   "inline-chain": "parts abutting along the header, every join a shared point. The model the build sequence assumes, and the one no archetype currently demonstrates.",
+   "nested": "one part's extent entirely inside another's. Requires ownership=lowest -- see ownershipArbitration.",
+   "off-line": "EA structures above or below the pipe, tied by connectors, overlapping the header span without touching it.",
+   "branch": "a second line leaving the header through a declared junction."
+  },
+  "combining": "A layout may combine these; ILS-ILT is branch plus off-line.",
+  "whyStated": "Assuming a single chain is a KNOWN cross-cutting failure in this project -- the slay_overbend review traced it through strain recovery, sliding contact, plotting and EA-ST frame construction simultaneously. A topology model that cannot express nesting will silently mis-handle two of the seven existing archetypes."
+ },
+ "ownershipArbitration": {
+  "strict": "refuse to guess when two parts claim one station. The default, and correct for most layouts.",
+  "lowest": "the deepest surface wins. Required where parts genuinely nest: ILS-SHTP sets it because the shroud is deeper everywhere, so nothing is actually being guessed.",
+  "abutmentIsNotAmbiguity": "Two parts meeting at a POINT both own it, and that is a JOIN, not a conflict. Only extents overlapping over a LENGTH are a real double claim. At a shared boundary the thicker section governs (a step cannot be averaged away) and the deeper surface takes contact. Fixed 4Sep26 in Assembly.section_at and Assembly.contact_at; before that ~7% of CORRECT flush chains failed, depending purely on whether the 241-point sampler happened to land on a join.",
+  "geometryVsMesh": "Coincident boundary points are CORRECT GEOMETRY -- the boundary genuinely is shared, and extents are closed intervals because of it. Resolving coincidence into non-overlapping elements is the MESHER's job and happens later. Do not make extents half-open to quiet a sampling artefact: that would make the model describe a gap that does not exist, corrupting the representation to serve a downstream tool.",
+  "seeAlso": "sectionVersusContact -- 'lowest' resolves CONTACT claims only. A section conflict is not a preference to arbitrate but a contradiction, and no ownership setting fixes it."
+ },
+ "sectionVersusContact": {
+  "theRule": "A component claims SECTION, or CONTACT, or both. Two components may overlap freely if at most one of them claims SECTION at that station. Two SECTION claims at one x is unresolvable and must be prevented by construction, not by an ownership policy.",
+  "whoClaimsWhat": {
+   "section AND contact": "edes:GD-HdPipe, edes:GD-BrPipe, edes:GD-TP, edes:GD-TT, edes:GD-PIP, edes:GD-VLV -- every IW component. Each IS the pipe over its own span, with its own wall thickness.",
+   "contact only, NO section": "edes:GD-SH. It adds no material to the pipe cross-section: section_at is unconditionally None. This is why a shroud can sit OVER a thick pipe and nest cleanly.",
+   "neither": "edes:GD-ST, edes:GD-SB, edes:GD-Con -- off the pipeline axis entirely.",
+   "special": "edes:GD-B claims neither on the HEADER: it is teed off, owns no span of the header, and section_at returns None there."
+  },
+  "ownershipDoesNotFixSection": "ownership='lowest' arbitrates CONTACT only -- it picks the deepest claimed surface. There is NO equivalent policy for section, deliberately: two different wall thicknesses at one station is not a question of which to prefer, it is a contradiction. Setting lowest on a section conflict changes the error reported but not the fact.",
+  "consequenceForChainedHeaders": "THIS IS THE MAIN PRACTICAL RULE. If the header is modelled explicitly as edes:GD-HdPipe segments, a segment must NEVER span an IW component -- split the header into segments that ABUT each IW component instead. A GD-HdPipe running underneath a GD-TP is two components both defining the pipe cross-section at the same x, which is a real overlap, not a nesting. Chain: hdpipe1 | tp1 | hdpipe2, welded at each join.",
+  "whyTheShroudLooksLikeAnException": "It is not an exception, it is the rule working. edes:GD-SH may overlap anything because it claims no section. ILS-SHTP has GD-TP entirely inside GD-SH's extent and builds clean under ownership=lowest, because only ONE of them claims section. Reading that archetype as 'components may nest' and generalising it to a header segment is the mistake -- what nests is a contact-only component.",
+  "verified": "4Sep26. SH over TP with an implicit header: clean under lowest. A GD-HdPipe SPANNING a GD-TP: section conflict under lowest, contact conflict under strict -- an error either way. Header split around the thick pipe with the shroud nested over all three: clean.",
+  "howToTell": "Check each component's section_at in its EDES file. If it returns None unconditionally, the component can overlap. If it returns a Section over its extent, it cannot overlap another that does."
+ },
+ "headerRule": {
+  "formula": "half = max(7.0, widest_reach + 3.0)",
+  "meaning": "One 14 m pipe joint minimum, extended when a component needs it, with 3 m of plain pipe clear each side.",
+  "maxNotMin": "MAX, not min. A minimum would return a 14 m header for a 20 m assembly -- the opposite of the intent, and the kind of error a prose statement ('at least one joint, longer if required') and its formula can disagree on while both look right.",
+  "archetypesPinTheirOwn": "The 7 archetypes each declare header.half_length explicitly. Assembly mass INCLUDES header steel and is dominated by it, so their recorded expected masses were validated against a 12 m header; pinning keeps those figures meaningful and makes them immune to future changes of the default.",
+  "openDecision": "RESOLVED 5Sep26. Both models are supported and the layout DECLARES which it uses via ils.header_model, defaulting to 'continuous'.\n  continuous -- the header is a separate object components sit ON. It backfills any span no component owns, so a gap between components is plain pipe: valid, mass-bearing, silent. This is what all 7 archetypes use and what the 46 recorded results were validated against.\n  chain -- the inline components ARE the header. The header extent is taken from the chain rather than auto-sized, and any uncovered span between consecutive inline components is an ERROR, because in this model it is missing material rather than plain pipe.\nWHY IT WAS NOT ENOUGH TO JUST DECIDE: before this, declaring GD-HdPipe segments changed NOTHING. VERIFIED 5Sep26 -- two segments with a deliberate 2 m hole built with zero findings, and section_at returned owner='pipe' in the middle, because the implicit header backfilled it. Mass was identical whether the segments were modelled or not. GD-HdPipe was therefore decorative: it declared ownership of pipe that existed regardless, and the OAM 'cut and remove' argument was not actually honoured anywhere in the code. Declaring the mode is what makes the difference real.\nWHY NOT INFER IT from the presence of a GD-HdPipe: a layout using one segment as a SPACER between two components is not claiming to tile the whole run, and should not be forced to.",
+  "whichToUse": "Use 'chain' when the header is being modelled explicitly and completely -- then a hole in the run is caught. Use 'continuous' (or omit) when components are being placed on an assumed header, which is what every archetype in standard_ils_layouts.json does. Omitting the key preserves existing behaviour exactly."
+ },
+ "associationVocabulary": {
+  "Connection": {
+   "means": "two AssemblyFeatures at the SAME POINT",
+   "types": "F, P, S, D, W -- see edes:shared#/oam/connectionClassMap for what each maps to in OAM",
+   "W": "girth weld. Needs NO part: a weld has no length and no stiffness override, which are the two things edes:GD-Con exists to carry. Emit the association alone.",
+   "F/P/S/D at an EA structure": "DO need an edes:GD-Con part, placed at step 8, because a real connector has both a length and stiffness values."
+  },
+  "PositionOrientation": {
+   "means": "artifacts NOT physically connected, related only by relative position",
+   "use": "edes:GD-SH against the pipeline centreline -- see positionConstraints"
+  },
+  "format": [
+   {
+    "type": "Connection",
+    "connection": "W",
+    "from": {
+     "component": "hdpipe1",
+     "feature": "weldR"
+    },
+    "to": {
+     "component": "tt1",
+     "feature": "weldL"
+    }
+   },
+   {
+    "type": "PositionOrientation",
+    "from": {
+     "component": "sh1"
+    },
+    "to": {
+     "datum": "pipeline_centreline"
+    },
+    "constraint": "V",
+    "value": 0.4064
+   }
+  ],
+  "whatIsValidated": [
+   "both components exist, by id",
+   "both features exist on them -- resolved from LIVE structural nodes, so a plausible-but-absent name is caught and the error lists what the part actually exposes",
+   "declared Connections COINCIDE -- this is what converts an unintended gap from silence into an error",
+   "the connection type is one of the five"
+  ],
+  "datum": "coincidence is checked on STRUCTURAL nodes, not geometry nodes. Geometry nodes sit on each part's own outer surface, so a real weld between different ODs legitimately steps in y; the centreline is where the members actually meet.",
+  "generation": "ils_builder.weld_chain(ils) emits W associations for adjacent inline parts, built from the ASSEMBLED extents -- adjacency is a fact about geometry, not about the order someone listed the parts in. Non-adjacent parts get no weld: a gap is not a join, and asserting one would report as a coincidence failure for the wrong reason."
+ },
+ "positionConstraints": {
+  "edes:GD-SH": {
+   "note": "GD-SH has NO top edge to align. VERIFIED: 4 geometry nodes, all below the centreline, and ZERO structural nodes -- it is a surface, not a section.",
+   "datum": "pipeline centreline, y = 0",
+   "constraint": "V, the depth from the datum down to the shroud contact surface",
+   "consequence": "CL_lift = V - OD_pipe/2",
+   "asserted": "V is a free input, so this relation is asserted, not solved."
+  }
+ },
+ "emitFormat": {
+  "base": "edes:shared#/instanceEmission gives the component-level format: schema_version, ils{name,frame,ownership}, pipeline{OD_pipe,t_pipe}, components[].",
+  "assemblyAdds": "associations[] -- the OAM relation layer, in the format above.",
+  "omissionRule": "Honour it. Emit ONLY what was decided. An omitted parameter tracks its component's default_for(pipe) and follows the pipeline; a parameter written explicitly is pinned. These are different design states and cannot be told apart afterwards.",
+  "associationsAreOptional": "A definition without them builds exactly as before, so the 46 existing layouts are unaffected. But declaring them is what makes a gap detectable, so a generated layout SHOULD declare them.",
+  "oneDocument": "components[] is the per-part Structure; associations[] is the OAM assembly layer. Both in one file."
+ },
+ "verification": {
+  "steps": [
+   "1. build_ils(definition)",
+   "2. read findings -- errors and warnings",
+   "3. call ils.unmated_gaps() SEPARATELY",
+   "4. optionally plot -- ils_plotter.plot_ils(ils, ...) takes the BUILT object, not the JSON"
+  ],
+  "whyGapsNeedTheirOwnCheck": "A gap raises nothing on its own: it is just header pipe and no rule is broken. Crowding trips ownership arbitration and is LOUD; spacing trips nothing and is SILENT. Half a failure mode being caught reads as all of it being caught, which is why this is a separate step rather than something to expect in findings.",
+  "plotting": "ils_plotter.plot_ils draws the layout with a parameter panel that separates assembly-level values (span, mass, CoG, header extent) from per-component inputs. component_plotter supplies the per-part drawing primitives it calls."
+ },
+ "knownGaps": [
+  "NO 2D CLASH DETECTION. Ownership collisions along the pipeline axis are caught; geometric interference in y is not -- a frame passing through a riser produces no finding at all.",
+  "Header model undecided -- see headerRule.openDecision.",
+  "No archetype declares associations yet, so there is no worked precedent for the association layer, only for the components layer.",
+  "edes:GD-PIP and edes:GD-VLV appear in NO archetype, so neither has a worked layout to take placement or parameter values from.",
+  "Assembly mass includes header steel and is dominated by it, which makes it a poor discriminator between archetypes.",
+  "EDIKB and EDPR are not built, so nothing currently answers whether a valid layout is a GOOD one."
+ ],
+ "branchLayouts": {
+  "doNotAddASupportUnasked": "OBSERVED 5Sep26: asked for 'a 6in Z branch on a 24in header', a model produced the branch AND an unrequested edes:GD-ST, because every ILT case in the source paper pairs the two and a top_structure_for_branch() helper exists. The request said nothing about a structure. A branch alone builds cleanly and is a complete layout. Adding a component nobody asked for is the same error as inventing a dimension, one level up -- and it is harder to spot, because the result looks more complete.",
+  "variant": {
+   "values": "'L' or 'Z', a STRING, and there is no default that suits both -- ask if it is not stated.",
+   "L": "one elbow. The run ends HORIZONTALLY, so the far end meets a SIDE edge of a structure (right_connector_y). connector_axis reports 'horizontal'.",
+   "Z": "two elbows. The run turns UP at the far end, so it meets the TOP edge (top_connector_x). connector_axis reports 'vertical'. Z also takes P_b3, the elevation of its horizontal run, which L does not.",
+   "F1p exception": "under the F1p post arrangement the post's top face is the attachment for BOTH variants. This is why the ILT branch-to-structure association lives on the ANCHOR and not the archetype -- declaring one fixed association for all 12 anchors was tried and correctly rejected for 8 of them."
+  },
+  "structureAlignmentIsNotAutomatic": {
+   "rule": "top_structure_for_branch() does NOT fully align the structure to the branch, for EITHER variant, and the miss is silent. It gives a usable starting structure, not a registered one. Fix the remaining axis yourself, then DECLARE the association so the coincidence check confirms it.",
+   "Z": "the helper sets top_connector_x to the branch end's x but leaves H_top at its 4*OD default, so the TOP EDGE sits below the branch end. Fix: H_top = P_vt - end_y. VERIFIED on a 24in header, the miss was 101.6 mm.",
+   "L": "the helper sets right_connector_y to the branch end's y but leaves centre_x/L_top at their defaults, so the RIGHT EDGE overshoots the branch end in x. Fix: centre_x = end_x - L_top/2. VERIFIED on a 24in header, the miss was 203.2 mm.",
+   "bothAxesMatter": "A Connection asserts the two features are at the SAME POINT, so one axis matching is not enough. Each variant has a different axis pre-aligned by the helper, which makes the other easy to miss -- an initial write-up of this section wrongly recorded L as fully aligned, on the strength of its y matching.",
+   "thenDeclare": "After fixing, find the coincident structure feature and declare the association against it -- 'right1' for L, 'top1' for Z. Without the association nothing reports a 100-200 mm miss: it trips no contact, section or gap check."
+  },
+  "P_bc": {
+   "means": "axial distance from the Tee to the nearest ACTIVE structure connector -- active meaning populated under the layout's connection_system, not merely a candidate slot.",
+   "itIsValidated": "edes:GD-B's own file records that P_bc drives no geometry, which is true -- but ils_builder VALIDATES it against the real connector layout, so a wrong value is an ERROR even though nothing is built from it. Compute it from the structure's active_connectors(system) rather than accepting the pipe-relative default: OBSERVED 5Sep26 that the default gave 0.762 m where F2 actually put the nearest connector at 1.9643 m.",
+   "standaloneBranch": "with no edes:GD-ST or edes:GD-SB in the layout there is nothing to measure to, and the check correctly degrades to a WARNING rather than an error. P_bc is meaningless for a standalone branch and is better omitted than guessed."
+  },
+  "support_connector": "'F' (fixed) or 'S' (slotted) only -- a STRING, and validate() rejects anything else. It feeds the support_code label (L-FT, Z-ST and so on) and the connection type of the branch-to-structure association. It does NOT imply a structure exists.",
+  "geometryNotes": "edes:GD-B is ONE-SIDED: extent = (centre_x, centre_x + P_b1), with the Tee AT centre_x rather than straddling it -- the only component in the corpus like this. It is also NOT in the weld chain and NOT in gap checking: it leaves the header through a declared junction at the Tee rather than continuing the run, and claims neither section nor contact on the header. Its two masses (valve and end connector, 3 t each by default) are real and dominate a small branch's mass."
+ },
+ "connectorAttachment": {
+  "rule": "EVERY POPULATED CONNECTOR SLOT MUST BE MODELLED, on EITHER structure -- edes:GD-ST above the line and edes:GD-SB below it are treated identically here. Setting a connection_system is not enough; see twoModellingLevels. For each slot the system populates: split the header at that slot's x, introduce a edes:GD-TP (neutral, t_comp = t_pipe) centred there, place a edes:GD-Con at the same x, and declare BOTH associations -- TP.conMid --F-- Con.pipeEnd, and Con.structEnd --<slot type>-- <structure>.slotN, where <structure> is the GD-ST or GD-SB carrying that slot. A CONNECTOR NEVER ATTACHES DIRECTLY TO PLAIN HEADER PIPE, whichever side of the line the structure is on.",
+  "why": "DNV prohibits welding a structural attachment onto line pipe -- it is line pipe, not a structural member. This is exactly why F is excluded from a plain run and why edes:GD-TP carries a conMid station that accepts F: the thickened body is the wall the attachment needs. edes:GD-HdPipe has no conMid, deliberately.",
+  "chain": "hdpipe1 --W-- tp1 --W-- hdpipe2, with tp1.centre_x AT the connection point. Then tp1.conMid --F-- con1.pipeEnd, and con1.structEnd --F/S/D-- st1.slotN.",
+  "connectorIsVertical": "edes:GD-Con puts both its nodes at the same x -- extent is a single station. So the connection point, the GD-TP centre and the structure slot must all share one x. A structure offset from the thick pipe cannot be reached: the connector has no way to lean.",
+  "whichSlot": "follows the connection_system. F1 populates the CENTRE slot only, so under F1 the structure's own centre_x equals the connection point. F2/PS/PSD populate slots away from centre, so each connection point needs its OWN GD-TP at that slot's x -- a two-connector system needs two thickened sections, not one.",
+  "verified": "5Sep26, EA-ST Type F1 on a 406.4x21 header with the connection at x=+2.0: all four points coincide exactly (tp1.conMid and con1.pipeEnd at (2.0, 0.0); con1.structEnd and st1.slot3 at (2.0, -0.6096)), 4 associations, zero errors.",
+  "neutralSection": "RESOLVED 5Sep26 -- the gap previously recorded here is closed. Unless the problem statement asks for a thick pipe in its own right, a edes:GD-TP introduced ONLY to carry a connector should have t_comp = t_pipe: same OD, same wall, no elevation, no stiffness step. TP-C03 was relaxed from > to >= to permit exactly this. The section is then mechanically indistinguishable from the header while still owning the span and providing the conMid attachment station. A THINNER section remains rejected -- that is the opposite strain mechanism.",
+  "doNotUseGD_TT_forThis": "edes:GD-TT did NOT get the relaxation and rejects an equal wall (TT-C05). Its taper length is n*dr, so an equal wall gives a zero-length taper and two zero-length segments. Use edes:GD-TP for a connection-only section; use GD-TT only when a real tapered transition is wanted.",
+  "twoModellingLevels": {
+   "theProblem": "Setting ils.connection_system DECLARES which slots are populated. It does NOT create the connection. A GD-ST with connection_system='F2' and nothing else reports two active connectors that touch NOTHING -- they hang in space above a continuous header, and the layout builds, plots and validates with zero findings.",
+   "implicit": "connection_system only, no edes:GD-Con parts. SIMPLIFIED. This is what all 7 archetypes in standard_ils_layouts.json do, because they mirror the source papers' analysis models where the connector is a beam element rather than a modelled part. Legitimate for reproducing those studies; NOT a complete layout.",
+   "explicit": "each populated slot modelled as a real edes:GD-Con part landing on a edes:GD-TP, with associations declared at both ends. COMPLETE. Required whenever the layout is meant to be a buildable assembly rather than a reproduction of a published case, because only this form says WHERE on the pipe the connection lands -- and a connection cannot land on plain header pipe.",
+   "default": "USE THE EXPLICIT FORM unless the task is explicitly to reproduce a published case in its original simplified form. A structure whose connectors attach to nothing is not a layout, it is a structure drawn near a pipe.",
+   "observed": "5Sep26: asked for EA-ST layouts with F1/F2/F2D/PS/PSD, a model produced structures with connection_system set and NO connectors, reporting 'no connector-to-header attachment was requested, so these are structures only, standalone over a continuous header pipe'. That reading was reasonable given what this file then said -- the rule above was conditional, and the archetype library demonstrates the implicit form. It is now explicit which to use."
+  },
+  "paperNotationForP_c2": "When taking connector spans from a published case, CHECK WHICH SLOTS THE SYSTEM POPULATES before using P_c2. edes:GD-ST and edes:GD-SB both define P_c2 as the slot2->slot1 offset applied after P_c1/2. The source papers measure from the inboard POPULATED slot, which differs by system: under F1D slots 2/4 are empty so they measure centre->slot1 (convert: code P_c2 = paper P_c2 - P_c1/2), while under F2D and PSD slots 2/4 are populated so their P_c2 is this field directly. P_c1 is unconstrained under F1D because slots 2/4 carry nothing. Getting this wrong misplaces the D connectors and nothing reports it.",
+  "appliesToBothStructures": {
+   "rule": "Read every mention of edes:GD-ST in this section as 'GD-ST or GD-SB'. Nothing in the connector chain differs between them: both expose numbered slots, both need a thickened section at each connection point, both need a edes:GD-Con and two associations per slot.",
+   "observed": "5Sep26 -- a GD-SB layout was assembled without any GD-Con parts, on the reading that this section was a GD-ST recipe. It was: the worked chain ended at 'ST.slotN' and named GD-ST twice against GD-SB once. The rule was always meant to be structure-agnostic and the builder's check always was; only the prose was not.",
+   "theOneRealDifference": "SIGN, and it follows from the geometry rather than being a separate rule. GD-ST sits ABOVE the line, so its P_vt is negative and a connector runs upward from the pipe. GD-SB hangs BELOW, so its P_vt is the structure TOP and may be zero or positive, and the connector runs downward. In both cases edes:GD-Con takes y_struct = the structure's P_vt, so the sign is carried automatically -- do not negate it by hand.",
+   "noteOnZeroLength": "A GD-SB with P_vt = 0 puts its top on the pipe centreline, making every connector ZERO-LENGTH. That is legal and is why GD-Con's stiffness must never be derived from its length -- but such a connector draws as nothing, so only its label and the parameter panel show it exists.",
+   "ownership": "A GD-SB whose bottom is deeper than the pipe claims contact over its whole span and the layout needs ownership='lowest'. A GD-ST claims no contact at all and does not. This is unrelated to the connector chain but bites in the same layouts."
+  },
+  "enforcement": "Two independent checks, because the two failure modes are different. (1) _check_connectors_modelled -- WARNING when a connection_system populates slots but no GD-Con parts exist at all (the simplified form, legitimate for reproducing published cases). (2) _check_connector_landing -- ERROR when a GD-Con exists but its pipe end is not at the conMid of a edes:GD-TP / GD-TT / GD-PIP / GD-BOSS. An error rather than a warning because no reading makes a structural attachment on bare line pipe correct. Note check (1) passing does NOT imply check (2) passes: a layout with the right number of connectors in the wrong places satisfies the first and fails the second, which is exactly the case that used to slip through."
+ }
+}
