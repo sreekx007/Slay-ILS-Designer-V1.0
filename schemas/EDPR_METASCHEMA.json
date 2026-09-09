@@ -1,0 +1,1270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/edpr-problem-map/0.3-draft",
+  "title": "EDPR Problem Map Metaschema",
+  "description": "Prototype metaschema for Engineering Design Problem Representation (EDPR). EDPR converts natural-language design intent into a P-map/APF-aligned problem map that can drive EDES, EDAS, standard layout, EDIKB, dataset, FEA, and ML retrieval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "parserMetadata",
+    "sourceRequest",
+    "problemIdentity",
+    "pMap",
+    "designContext",
+    "knownInputs",
+    "unknownInputs",
+    "requirements",
+    "constraints",
+    "requirementFormalization",
+    "evaluationVariables",
+    "candidateComponents",
+    "candidateAssemblies",
+    "standardLayoutCandidates",
+    "behaviourConcerns",
+    "retrievalPlan",
+    "numericComparisonPlan",
+    "interactionEffectPlan",
+    "solverPlan",
+    "rankingCriteria",
+    "openQuestions",
+    "assumptions",
+    "evidenceTrace",
+    "parserWarnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "edpr-problem-map/0.3-draft"
+    },
+    "id": {
+      "$ref": "#/$defs/edprId"
+    },
+    "parserMetadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "parserName",
+        "parserVersion",
+        "basis",
+        "parseConfidence"
+      ],
+      "properties": {
+        "parserName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parserVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "P-Maps",
+              "APF via LLM",
+              "FBS",
+              "Knowloop",
+              "FBS-OAM"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "parseConfidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "sourceRequest": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "rawText",
+        "language"
+      ],
+      "properties": {
+        "rawText": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2
+        }
+      }
+    },
+    "problemIdentity": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "title",
+        "problemClass",
+        "domain",
+        "solverMode"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "problemClass": {
+          "type": "string",
+          "enum": [
+            "conceptual_design",
+            "option_comparison",
+            "assembly_generation",
+            "behaviour_screening",
+            "numeric_comparison",
+            "fea_plan",
+            "ml_feature_plan",
+            "evidence_summary",
+            "clarification"
+          ]
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "solverMode": {
+          "$ref": "#/$defs/solverMode"
+        }
+      }
+    },
+    "pMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirements",
+        "functions",
+        "artifacts",
+        "behaviours",
+        "issues",
+        "links"
+      ],
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapNode"
+          }
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapNode"
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapNode"
+          }
+        },
+        "behaviours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapNode"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapNode"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pMapLink"
+          }
+        }
+      }
+    },
+    "designContext": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "installationMethod": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "installationRegion": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "analysisStage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "codeBasis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "knownInputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/knownInput"
+      }
+    },
+    "unknownInputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unknownInput"
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/constraint"
+      }
+    },
+    "requirementFormalization": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "basis",
+        "objectiveRequirements",
+        "constraintRequirements",
+        "preferenceRequirements",
+        "comparisonRequirements",
+        "verificationRequirements",
+        "formalizedChecks"
+      ],
+      "properties": {
+        "basis": {
+          "type": "string",
+          "const": "APF-inspired requirement tuple r = (Z, M, C)"
+        },
+        "objectiveRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apfRequirement"
+          }
+        },
+        "constraintRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apfRequirement"
+          }
+        },
+        "preferenceRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apfRequirement"
+          }
+        },
+        "comparisonRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apfRequirement"
+          }
+        },
+        "verificationRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apfRequirement"
+          }
+        },
+        "formalizedChecks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/formalizedCheck"
+          }
+        }
+      }
+    },
+    "evaluationVariables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evaluationVariable"
+      }
+    },
+    "candidateComponents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/candidateComponent"
+      }
+    },
+    "candidateAssemblies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/candidateAssembly"
+      }
+    },
+    "standardLayoutCandidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/standardLayoutCandidate"
+      }
+    },
+    "behaviourConcerns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/behaviourConcern"
+      }
+    },
+    "retrievalPlan": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/retrievalQuery"
+      }
+    },
+    "numericComparisonPlan": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/numericComparisonQuery"
+      }
+    },
+    "interactionEffectPlan": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/interactionEffectPlan"
+      }
+    },
+    "solverPlan": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "solverMode",
+        "recommendedNextAction",
+        "steps",
+        "verificationNeeds",
+        "doNotDo"
+      ],
+      "properties": {
+        "solverMode": {
+          "$ref": "#/$defs/solverMode"
+        },
+        "recommendedNextAction": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verificationNeeds": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/noteNode"
+              }
+            ]
+          }
+        },
+        "doNotDo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rankingCriteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rankingCriterion"
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/openQuestion"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/noteNode"
+      }
+    },
+    "evidenceTrace": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceTrace"
+      }
+    },
+    "parserWarnings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/parserWarning"
+      }
+    }
+  },
+  "$defs": {
+    "edprId": {
+      "type": "string",
+      "pattern": "^edpr:[A-Za-z0-9_\\-:]+$"
+    },
+    "ontologyId": {
+      "type": "string",
+      "pattern": "^(edes:|edas:|edikb:|ILS-|ILT-|paper[0-9]+:|EDIKB_|EDES_|EDAS_|standard_ils_layout_archetype|local:|edpr:)[A-Za-z0-9_#:\\/\\.\\-]+$"
+    },
+    "ontologyLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ontologyId"
+      },
+      "uniqueItems": true
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scalarValue": {
+      "type": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "null"
+      ]
+    },
+    "valueOrArray": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/scalarValue"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scalarValue"
+          }
+        }
+      ]
+    },
+    "solverMode": {
+      "type": "string",
+      "enum": [
+        "clarification",
+        "concept_screening",
+        "option_comparison",
+        "assembly_generation",
+        "evidence_summary",
+        "fea_plan",
+        "ml_feature_plan",
+        ""
+      ]
+    },
+    "ontologyStatus": {
+      "type": "string",
+      "enum": [
+        "resolved",
+        "unresolved",
+        "partially_resolved",
+        "unresolved_if_EDAS_id_absent",
+        "not_applicable"
+      ]
+    },
+    "pMapNode": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "type",
+        "label",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "requirement",
+            "function",
+            "artifact",
+            "behaviour",
+            "issue"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "pMapLink": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "source",
+        "target",
+        "relation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "source": {
+          "$ref": "#/$defs/edprId"
+        },
+        "target": {
+          "$ref": "#/$defs/edprId"
+        },
+        "relation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "knownInput": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "parameter",
+        "value",
+        "sourcePhrase",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "parameter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "$ref": "#/$defs/valueOrArray"
+        },
+        "unit": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "unknownInput": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "parameter",
+        "importance",
+        "reasonNeeded",
+        "askUser"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "parameter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "importance": {
+          "type": "string",
+          "enum": [
+            "blocking",
+            "important_but_assumable",
+            "noncritical_at_concept_stage",
+            "outside_current_evidence"
+          ]
+        },
+        "reasonNeeded": {
+          "type": "string",
+          "minLength": 1
+        },
+        "suggestedDefault": {
+          "$ref": "#/$defs/valueOrArray"
+        },
+        "askUser": {
+          "type": "boolean"
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "requirementType",
+        "statement",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "requirementType": {
+          "type": "string"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "constraintType",
+        "statement",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "constraintType": {
+          "type": "string"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "apfRequirement": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "sourcePhrase",
+        "requirementType",
+        "Z",
+        "M",
+        "C",
+        "formalExpression",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "requirementType": {
+          "type": "string",
+          "enum": [
+            "objective",
+            "constraint",
+            "preference",
+            "comparison",
+            "verification_need",
+            "hard_constraint"
+          ]
+        },
+        "Z": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "M": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "C": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "formalExpression": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "formalizedCheck": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "checkType",
+        "statement",
+        "ontologyLinks"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "checkType": {
+          "type": "string",
+          "enum": [
+            "objective",
+            "threshold_constraint",
+            "assembly_validity",
+            "behaviour_applicability",
+            "ranking",
+            "verification",
+            "numeric_evidence",
+            "dataset_filter"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        }
+      }
+    },
+    "evaluationVariable": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "name",
+        "allowedValues",
+        "reason",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowedValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scalarValue"
+          }
+        },
+        "reason": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "candidateComponent": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "componentId",
+        "componentLabel",
+        "selectionReason",
+        "sourcePhrase",
+        "confidence",
+        "ontologyStatus"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "componentId": {
+          "$ref": "#/$defs/ontologyId"
+        },
+        "componentLabel": {
+          "type": "string"
+        },
+        "selectionReason": {
+          "type": "string"
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "ontologyStatus": {
+          "$ref": "#/$defs/ontologyStatus"
+        }
+      }
+    },
+    "candidateAssembly": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "assemblyPatternId",
+        "assemblyLabel",
+        "status",
+        "reason",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "assemblyPatternId": {
+          "type": "string"
+        },
+        "assemblyLabel": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "ontologyStatus": {
+          "$ref": "#/$defs/ontologyStatus"
+        }
+      }
+    },
+    "standardLayoutCandidate": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "layoutId",
+        "layoutFamily",
+        "selectionReason",
+        "status",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "layoutId": {
+          "type": "string",
+          "pattern": "^(ILS|ILT)-[A-Za-z0-9_\\-]+$"
+        },
+        "layoutFamily": {
+          "type": "string",
+          "pattern": "^ILS-[A-Za-z0-9_\\-]+$"
+        },
+        "selectionReason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "behaviourConcern": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "responseMetric",
+        "priority",
+        "reason",
+        "ontologyLinks",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "responseMetric": {
+          "type": "string"
+        },
+        "responseTarget": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "sourcePhrase": {
+          "type": "string"
+        },
+        "ontologyLinks": {
+          "$ref": "#/$defs/ontologyLinks"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "retrievalQuery": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "queryType",
+        "targets",
+        "reason",
+        "priority"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "queryType": {
+          "type": "string",
+          "enum": [
+            "component_definition",
+            "assembly_rule",
+            "behaviour_rule",
+            "design_guidance",
+            "derived_feature",
+            "numeric_evidence",
+            "missing_case_check",
+            "crosswalk_lookup",
+            "standard_layout_archetype"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "reason": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        }
+      }
+    },
+    "numericComparisonQuery": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "dataset",
+        "filters",
+        "purpose",
+        "expectedOutput"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "dataset": {
+          "type": "string",
+          "minLength": 1
+        },
+        "filters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "expectedOutput": {
+          "type": "string"
+        }
+      }
+    },
+    "interactionEffectPlan": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "type",
+        "componentSet",
+        "assemblyPattern",
+        "isolatedEffectRules",
+        "combinedEffectRules",
+        "interactionCandidateRules",
+        "superpositionPolicy",
+        "simpleSuperpositionAllowed",
+        "candidateEquationForms",
+        "requiredDatasetQueries",
+        "verificationNeed"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "feature_interaction_check",
+            "superposition_check",
+            "non_additive_effect_check"
+          ]
+        },
+        "componentSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ontologyId"
+          }
+        },
+        "assemblyPattern": {
+          "type": "string"
+        },
+        "isolatedEffectRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ontologyId"
+          }
+        },
+        "combinedEffectRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ontologyId"
+          }
+        },
+        "interactionCandidateRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ontologyId"
+          }
+        },
+        "superpositionPolicy": {
+          "type": "string"
+        },
+        "simpleSuperpositionAllowed": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "assumption_only"
+          ]
+        },
+        "candidateEquationForms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requiredDatasetQueries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edprId"
+          }
+        },
+        "verificationNeed": {
+          "type": "string",
+          "enum": [
+            "none",
+            "dataset_lookup",
+            "future_fea_ml_study"
+          ]
+        }
+      }
+    },
+    "rankingCriterion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "method",
+        "candidateSet",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "method": {
+          "type": "string"
+        },
+        "candidateSet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openQuestion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "question",
+        "importance"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "importance": {
+          "type": "string",
+          "enum": [
+            "blocking",
+            "important_but_assumable",
+            "noncritical_at_concept_stage",
+            "outside_current_evidence"
+          ]
+        }
+      }
+    },
+    "noteNode": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "statement"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "evidenceTrace": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "source",
+        "relevance"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceAnchor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "relevance": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "parserWarning": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "severity",
+        "message"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/edprId"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

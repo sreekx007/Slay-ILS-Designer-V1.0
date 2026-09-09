@@ -1,0 +1,861 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schema/edikb-full-knowledge-graph/0.3",
+  "title": "EDIKB full knowledge-graph metaschema v0.3",
+  "description": "Metaschema for consolidated EDIKB graphs, including feature-interaction candidates, guarded superposition policy, candidate equation forms, and EDES/EDAS/EDPR cross-layer references.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "label",
+    "description",
+    "source_graphs",
+    "ontology_layers",
+    "nodes",
+    "edges"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "enum": [
+        "edikb/full-knowledge-graph/0.3",
+        "edikb/full-knowledge-graph/0.2",
+        "edikb/full-knowledge-graph/0.1",
+        "edikb-knowledge-graph/0.1-draft"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^edikb:"
+    },
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "sourceMarkdown": {
+      "type": "string"
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "globalContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "source_graphs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SourceGraphSummary"
+      }
+    },
+    "ontology_layers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "properties": {
+        "EDES": {
+          "type": "string"
+        },
+        "EDAS": {
+          "type": "string"
+        },
+        "EDIKB": {
+          "type": "string"
+        },
+        "EDPR": {
+          "type": "string"
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/Node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Edge"
+      }
+    },
+    "conversion_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conversionNotes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "SourceGraphSummary": {
+      "type": "object",
+      "required": [
+        "source_family",
+        "file",
+        "graph_id"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "source_family": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "graph_id": {
+          "type": "string"
+        },
+        "node_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edge_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_case_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "Node": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/SourceDocument"
+        },
+        {
+          "$ref": "#/$defs/SourceGraph"
+        },
+        {
+          "$ref": "#/$defs/EDESComponent"
+        },
+        {
+          "$ref": "#/$defs/EDASTopologyPattern"
+        },
+        {
+          "$ref": "#/$defs/ExternalReference"
+        },
+        {
+          "$ref": "#/$defs/EvidenceAnchor"
+        },
+        {
+          "$ref": "#/$defs/EvidenceSource"
+        },
+        {
+          "$ref": "#/$defs/EvidenceCase"
+        },
+        {
+          "$ref": "#/$defs/EvidenceDataRow"
+        },
+        {
+          "$ref": "#/$defs/BehaviourFamily"
+        },
+        {
+          "$ref": "#/$defs/BehaviourRule"
+        },
+        {
+          "$ref": "#/$defs/DesignGuidance"
+        },
+        {
+          "$ref": "#/$defs/DerivedFeature"
+        },
+        {
+          "$ref": "#/$defs/BehaviourCorrelationCandidate"
+        },
+        {
+          "$ref": "#/$defs/MLStudyCandidate"
+        },
+        {
+          "$ref": "#/$defs/OntologyIntegrationCandidate"
+        },
+        {
+          "$ref": "#/$defs/SpatialRegion"
+        },
+        {
+          "$ref": "#/$defs/SpatialInfluencePattern"
+        }
+      ]
+    },
+    "BaseNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SourceDocument",
+            "SourceGraph",
+            "EDESComponent",
+            "EDASTopologyPattern",
+            "ExternalReference",
+            "EvidenceAnchor",
+            "EvidenceSource",
+            "EvidenceCase",
+            "EvidenceDataRow",
+            "BehaviourFamily",
+            "BehaviourRule",
+            "DesignGuidance",
+            "DerivedFeature",
+            "BehaviourCorrelationCandidate",
+            "MLStudyCandidate",
+            "OntologyIntegrationCandidate",
+            "SpatialRegion",
+            "SpatialInfluencePattern"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "source_graph": {
+          "type": "string"
+        },
+        "source_family": {
+          "type": "string"
+        },
+        "source_families": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SourceDocument": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "SourceDocument"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "SourceGraph": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "SourceGraph"
+            },
+            "file": {
+              "type": "string"
+            },
+            "original_graph_id": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EDESComponent": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EDESComponent"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EDASTopologyPattern": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EDASTopologyPattern"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "ExternalReference": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "ExternalReference"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EvidenceAnchor": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EvidenceAnchor"
+            },
+            "source": {
+              "type": "string"
+            },
+            "paperLocation": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EvidenceSource": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EvidenceSource"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EvidenceCase": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EvidenceCase"
+            },
+            "sourceAnchor": {
+              "type": "string"
+            },
+            "connectionSystem": {
+              "type": "string"
+            },
+            "responseRowsCsv": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      ]
+    },
+    "EvidenceDataRow": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "EvidenceDataRow"
+            },
+            "case_id": {
+              "type": "string"
+            },
+            "source_paper": {
+              "type": "string"
+            },
+            "source_anchor": {
+              "type": "string"
+            },
+            "response_metric": {
+              "type": "string"
+            },
+            "response_value": {
+              "type": [
+                "number",
+                "string",
+                "null"
+              ]
+            },
+            "response_unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BehaviourFamily": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "BehaviourFamily"
+            },
+            "summary": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EvidenceStatus": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "sampleCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "regionLevelRows": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "generalization": {
+          "type": "string"
+        },
+        "uncertaintyNote": {
+          "type": "string"
+        }
+      }
+    },
+    "BehaviourRule": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "BehaviourRule"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            },
+            "appliesTo": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "usesAssemblyKnowledge": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "behaviourType": {
+              "type": "string"
+            },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "parameterDependence": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "responses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "trend": {
+              "type": [
+                "string",
+                "object",
+                "array"
+              ]
+            },
+            "supportedBy": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidenceStatus": {
+              "$ref": "#/$defs/EvidenceStatus"
+            },
+            "evidence_status": {
+              "type": "string"
+            },
+            "candidate_subtype": {
+              "type": "string"
+            },
+            "allowSuperposition": {
+              "type": [
+                "boolean",
+                "string",
+                "null"
+              ]
+            },
+            "superpositionPolicy": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DesignGuidance": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "DesignGuidance"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "designUse": {
+              "type": "string"
+            },
+            "caution": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DerivedFeature": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "DerivedFeature"
+            },
+            "formula": {
+              "type": "string"
+            },
+            "definition": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "BehaviourCorrelationCandidate": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "BehaviourCorrelationCandidate"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "inputFeatures": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "outputMetric": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "MLStudyCandidate": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "MLStudyCandidate"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "candidate_variables": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "missing_cases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "designUse": {
+              "type": "string"
+            },
+            "candidate_subtype": {
+              "type": "string"
+            },
+            "candidate_equation_forms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "OntologyIntegrationCandidate": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "OntologyIntegrationCandidate"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "SpatialRegion": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "SpatialRegion"
+            },
+            "definition": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            },
+            "halfWidth_D": {
+              "type": [
+                "number",
+                "string",
+                "null"
+              ]
+            },
+            "halfWidth_m": {
+              "type": [
+                "number",
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "SpatialInfluencePattern": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseNode"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "SpatialInfluencePattern"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "sourceRegion": {
+              "type": "string"
+            },
+            "responseRegion": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Edge": {
+      "type": "object",
+      "required": [
+        "source",
+        "predicate",
+        "target"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "predicate": {
+          "type": "string",
+          "enum": [
+            "includedInSourceGraph",
+            "supportsRule",
+            "supportedBy",
+            "appliesTo",
+            "extractedFrom",
+            "isAnchorIn",
+            "hasDatasetRow",
+            "sourceAnchor",
+            "producesGuidance",
+            "candidateFor",
+            "yieldsGuidance",
+            "usesAssemblyRule",
+            "memberOf",
+            "hasFutureStudy",
+            "hasDerivedFeature",
+            "relatedFutureStudy",
+            "usesStructure",
+            "concerns",
+            "usesConnector",
+            "extends",
+            "realisesBehaviourOf",
+            "usesPolicy",
+            "overridesSuperposition",
+            "hasInteractionCandidate",
+            "requiresEvidenceCheck"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_family": {
+          "type": "string"
+        },
+        "source_graph": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}
