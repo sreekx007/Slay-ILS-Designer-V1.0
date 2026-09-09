@@ -132,6 +132,30 @@
         "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:requirement:nested_shroud_thick_pipe",
         "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:peak_pipeline_strain",
         "relation": "affects"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:link:gdsh_gdtp_min_strain:requirement_requires_artifact",
+        "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:requirement:nested_shroud_thick_pipe",
+        "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:artifact:gd_sh",
+        "relation": "requires_artifact"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:link:gdsh_gdtp_min_strain:artifact_provides_function",
+        "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:artifact:gd_sh",
+        "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:function:contact_control",
+        "relation": "provides_function"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:link:gdsh_gdtp_min_strain:function_drives_behaviour",
+        "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:function:contact_control",
+        "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:peak_pipeline_strain",
+        "relation": "drives_behaviour_check"
+      },
+      {
+        "id": "edpr:p_gdsh_gdtp_min_strain_001:link:gdsh_gdtp_min_strain:behaviour_has_issue",
+        "source": "edpr:p_gdsh_gdtp_min_strain_001:pmap:behaviour:peak_pipeline_strain",
+        "target": "edpr:p_gdsh_gdtp_min_strain_001:pmap:issue:nonadditive_response",
+        "relation": "has_issue"
       }
     ]
   },

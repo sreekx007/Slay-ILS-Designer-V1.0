@@ -159,6 +159,30 @@
         "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:compare_branch_support",
         "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:branch_strain",
         "relation": "affects"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:ilt_l_branch_min_strain:requirement_requires_artifact",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:requirement:ilt_layout",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:artifact:inline_tee",
+        "relation": "requires_artifact"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:ilt_l_branch_min_strain:artifact_provides_function",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:artifact:inline_tee",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:function:provide_branch_connection",
+        "relation": "provides_function"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:ilt_l_branch_min_strain:function_drives_behaviour",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:function:provide_branch_connection",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:header_strain",
+        "relation": "drives_behaviour_check"
+      },
+      {
+        "id": "edpr:p_ilt_l_branch_min_strain_001:link:ilt_l_branch_min_strain:behaviour_has_issue",
+        "source": "edpr:p_ilt_l_branch_min_strain_001:pmap:behaviour:header_strain",
+        "target": "edpr:p_ilt_l_branch_min_strain_001:pmap:issue:top_frame_system_unspecified",
+        "relation": "has_issue"
       }
     ]
   },

@@ -126,6 +126,30 @@
         "source": "edpr:p_east_easb_connection_compare_001:pmap:requirement:connector_systems",
         "target": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:high_strain_penalty",
         "relation": "affects"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:link:east_easb_connection_comparison:requirement_requires_artifact",
+        "source": "edpr:p_east_easb_connection_compare_001:pmap:requirement:compare_external_attachments",
+        "target": "edpr:p_east_easb_connection_compare_001:pmap:artifact:gd_st",
+        "relation": "requires_artifact"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:link:east_easb_connection_comparison:artifact_provides_function",
+        "source": "edpr:p_east_easb_connection_compare_001:pmap:artifact:gd_st",
+        "target": "edpr:p_east_easb_connection_compare_001:pmap:function:attach_external_structure",
+        "relation": "provides_function"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:link:east_easb_connection_comparison:function_drives_behaviour",
+        "source": "edpr:p_east_easb_connection_compare_001:pmap:function:attach_external_structure",
+        "target": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:low_strain_pocket",
+        "relation": "drives_behaviour_check"
+      },
+      {
+        "id": "edpr:p_east_easb_connection_compare_001:link:east_easb_connection_comparison:behaviour_has_issue",
+        "source": "edpr:p_east_easb_connection_compare_001:pmap:behaviour:low_strain_pocket",
+        "target": "edpr:p_east_easb_connection_compare_001:pmap:issue:easb_contact_ownership",
+        "relation": "has_issue"
       }
     ]
   },

@@ -145,6 +145,30 @@
         "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:no_roller_contact",
         "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:installation_feasibility",
         "relation": "constrains"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:gdvlv_no_roller_contact:requirement_requires_artifact",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:requirement:inline_valve",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:artifact:gd_vlv",
+        "relation": "requires_artifact"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:gdvlv_no_roller_contact:artifact_provides_function",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:artifact:gd_vlv",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:function:provide_inline_valve",
+        "relation": "provides_function"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:gdvlv_no_roller_contact:function_drives_behaviour",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:function:provide_inline_valve",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:roller_contact",
+        "relation": "drives_behaviour_check"
+      },
+      {
+        "id": "edpr:p_gdvlv_no_roller_contact_001:link:gdvlv_no_roller_contact:behaviour_has_issue",
+        "source": "edpr:p_gdvlv_no_roller_contact_001:pmap:behaviour:roller_contact",
+        "target": "edpr:p_gdvlv_no_roller_contact_001:pmap:issue:valve_cannot_pass_rollers",
+        "relation": "has_issue"
       }
     ]
   },

@@ -1,0 +1,62 @@
+{
+  "schema": "knowloop-feedback/0.1",
+  "id": "kl:candidate:template",
+  "candidate_type": "confirmation",
+  "status": "generated",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "source_query": {
+    "query_id": null,
+    "raw_text": null,
+    "problem_title": null
+  },
+  "pipeline_trace": {
+    "edpr_file": null,
+    "context_file": null,
+    "solution_file": null,
+    "tools_used": [
+      "EDPR_VALIDATOR.py",
+      "check_pmap_apf.py",
+      "retrieve_context.py",
+      "solve_problem.py",
+      "generate_knowloop_candidate.py"
+    ]
+  },
+  "outcome_summary": {
+    "design_outcome_status": "not_run",
+    "summary": "Template only.",
+    "recommended_candidate": null,
+    "known_limitations": []
+  },
+  "llm_self_rating": {
+    "parse_quality": 3,
+    "pmap_apf_quality": 3,
+    "retrieval_quality": 3,
+    "solution_quality": 3,
+    "evidence_strength": 3,
+    "confidence": "medium",
+    "rationale": "Template placeholder."
+  },
+  "human_feedback_rating": {
+    "rating": null,
+    "scale": "1_to_5",
+    "comment": null,
+    "reviewer": null,
+    "reviewed_utc": null
+  },
+  "expert_review_decision": {
+    "status": "pending_review",
+    "decision": null,
+    "target_layer": null,
+    "reviewer": null,
+    "reviewed_utc": null,
+    "implementation_reference": null
+  },
+  "suggested_updates": [],
+  "evidence_trace": [],
+  "promotion_policy": {
+    "official_kb_update_allowed": false,
+    "requires_human_review": true,
+    "requires_evidence_for_behavior_rules": true,
+    "candidate_kb_only_until_accepted": true
+  }
+}

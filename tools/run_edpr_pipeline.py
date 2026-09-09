@@ -5,8 +5,10 @@ prompt when only a natural-language problem statement is available.
 
 Pipeline for existing EDPR JSON:
 1. Validate EDPR JSON.
-2. Retrieve EDES/EDAS/EDIKB context.
-3. Produce a first-pass solution summary.
+2. Check P-map/APF semantic completeness.
+3. Retrieve EDES/EDAS/EDIKB context.
+4. Produce a first-pass solution summary.
+5. Emit a Knowloop candidate JSON.
 
 Natural-language parsing remains an LLM task. This script packages the runtime
 parser prompt plus the user problem so the LLM can emit EDPR JSON.
@@ -86,24 +88,44 @@ def run_existing_edpr(edpr_json: Path, output_dir: Path, solution_format: str) -
     context_json = output_dir / f"{edpr_json.stem}.retrieval_context.json"
     solution_ext = "json" if solution_format == "json" else "md"
     solution_path = output_dir / f"{edpr_json.stem}.solution.{solution_ext}"
+    knowloop_path = output_dir / f"{edpr_json.stem}.knowloop_candidate.json"
 
     validator = TOOLS_DIR / "EDPR_VALIDATOR.py"
+    pmap_checker = TOOLS_DIR / "check_pmap_apf.py"
     schema = REPO_ROOT / "schemas" / "EDPR_METASCHEMA.json"
     retrieve = TOOLS_DIR / "retrieve_context.py"
     solve = TOOLS_DIR / "solve_problem.py"
+    knowloop = TOOLS_DIR / "generate_knowloop_candidate.py"
 
-    for required in (validator, schema, retrieve, solve):
+    for required in (validator, pmap_checker, schema, retrieve, solve, knowloop):
         if not required.exists():
             raise SystemExit(f"Missing required pipeline file: {required}")
 
     run_command([sys.executable, str(validator), "--schema", str(schema), str(edpr_json)])
+    run_command([sys.executable, str(pmap_checker), "--strict", str(edpr_json)])
     run_command([sys.executable, str(retrieve), str(edpr_json), "--output", str(context_json)])
     run_command([sys.executable, str(solve), str(context_json), "--format", solution_format, "--output", str(solution_path)])
+    knowloop_args = [
+        sys.executable,
+        str(knowloop),
+        "--edpr-json",
+        str(edpr_json),
+        "--context-json",
+        str(context_json),
+        "--output",
+        str(knowloop_path),
+    ]
+    if solution_format == "json":
+        knowloop_args.extend(["--solution-json", str(solution_path)])
+    else:
+        knowloop_args.extend(["--solution-md", str(solution_path)])
+    run_command(knowloop_args)
 
     print("")
     print("Pipeline complete.")
     print(f"Context package: {context_json}")
     print(f"Solution summary: {solution_path}")
+    print(f"Knowloop candidate: {knowloop_path}")
 
 
 def main() -> int:
