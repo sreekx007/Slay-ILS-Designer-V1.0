@@ -1,0 +1,495 @@
+{
+  "manifest_schema_version": "0.2",
+  "framework": {
+    "name": "Slay-ILS-Designer",
+    "title": "Ontology-grounded RAG-enabled expert design framework for subsea inline structures",
+    "version": "0.2",
+    "status": "prototype-working-batch",
+    "description": "Repository manifest for EDPR, EDES, EDAS, EDIKB, standard ILS layouts, validators, documents, and planned runtime pipeline tools.",
+    "classification": [
+      "neuro-symbolic engineering design assistant",
+      "RAG-enabled expert system",
+      "ontology-grounded design knowledge base",
+      "Knowloop-expandable FEA/ML workflow",
+      "human-in-the-loop engineering knowledge framework"
+    ]
+  },
+  "repository": {
+    "provider": "github",
+    "url": "https://github.com/sreekx007/Slay-ILS-Designer-V1.0",
+    "default_branch": "main",
+    "checked_commit": "4623d8e4e9b40f0b35908ef00cbec16e54489907",
+    "checked_utc": "2026-09-09",
+    "repo_access_status": "readable"
+  },
+  "canonical_layers": {
+    "EDPR": {
+      "name": "Engineering Design Problem Representation",
+      "role": "Converts a natural-language design request into APF/problem-map JSON with objectives, constraints, candidate solution families, retrieval needs, and evidence requirements.",
+      "primary_paths": [
+        "schemas/EDPR_METASCHEMA.json",
+        "knowledge/edpr/EDPR_APF_PARSER_PROMPT.md",
+        "knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+        "docs/EDPR_Problem_Map_Spec.md"
+      ]
+    },
+    "EDES": {
+      "name": "Engineering Design Equipment Schema",
+      "role": "Stores individual equipment and OAM part knowledge under the FBS-OAM framework.",
+      "primary_paths": [
+        "schemas/EDES_METASCHEMA.json",
+        "knowledge/edes/"
+      ]
+    },
+    "EDAS": {
+      "name": "Engineering Design Assembly Schema",
+      "role": "Stores assembly-building knowledge, valid topology rules, interface logic, standard layout anchors, and FBS-OAM assembly structure guidance.",
+      "primary_paths": [
+        "schemas/EDAS_METASCHEMA.json",
+        "knowledge/edas/EDAS_SHARED_KNOWLEDGE.json",
+        "knowledge/edas/standard_ils_layouts.json"
+      ]
+    },
+    "EDIKB": {
+      "name": "Engineering Design Intelligence Knowledge Base",
+      "role": "Stores behavior knowledge graph nodes, numeric evidence rows, guidance nodes, uncertainty notes, feature-interaction candidates, and ML study candidates.",
+      "primary_paths": [
+        "schemas/EDIKB_METASCHEMA.json",
+        "knowledge/edikb/EDIKB_FULL_KNOWLEDGE_GRAPH.json",
+        "knowledge/edikb/EDIKB_FULL_DATASET.csv"
+      ]
+    }
+  },
+  "recommended_repo_structure": {
+    "schemas": "schemas/",
+    "knowledge_edes": "knowledge/edes/",
+    "knowledge_edas": "knowledge/edas/",
+    "knowledge_edikb": "knowledge/edikb/",
+    "knowledge_edpr": "knowledge/edpr/",
+    "knowledge_edpr_examples": "knowledge/edpr/examples/",
+    "tools": "tools/",
+    "docs": "docs/",
+    "reference_papers": "Reference Papers/",
+    "plotters_and_builders": "plotters and builders/"
+  },
+  "repo_review": {
+    "summary": "Core knowledge folders, schemas, validators, EDIKB graph, EDIKB dataset, EDPR prompts/specs, reference papers, and plotter/builder files are present. Pending items are EDPR examples and the three runtime pipeline scripts.",
+    "json_parse_status": "All discovered JSON files in schemas/, knowledge/edes/, knowledge/edas/, knowledge/edikb/, and framework_manifest.json parsed successfully during review.",
+    "naming_notes": [
+      "Repository currently uses stable filenames without version suffixes, for example schemas/EDPR_METASCHEMA.json. Versioning should be carried inside the JSON metadata and this manifest.",
+      "Use EDPR consistently in filenames and code. The phrase EPDR appears to be a typo and should not be used for new files.",
+      "The existing folder name 'plotters and builders' is readable but less script-friendly than 'plotters_and_builders'. It can remain if scripts quote paths correctly."
+    ]
+  },
+  "artifacts": {
+    "schemas": [
+      {
+        "id": "schema:edpr",
+        "role": "EDPR metaschema",
+        "repo_path": "schemas/EDPR_METASCHEMA.json",
+        "status": "present",
+        "required": true,
+        "size_bytes": 27694
+      },
+      {
+        "id": "schema:edikb",
+        "role": "EDIKB metaschema",
+        "repo_path": "schemas/EDIKB_METASCHEMA.json",
+        "status": "present",
+        "required": true,
+        "size_bytes": 18734
+      },
+      {
+        "id": "schema:edes",
+        "role": "EDES metaschema",
+        "repo_path": "schemas/EDES_METASCHEMA.json",
+        "status": "present",
+        "required": true,
+        "size_bytes": 41347
+      },
+      {
+        "id": "schema:edas",
+        "role": "EDAS metaschema",
+        "repo_path": "schemas/EDAS_METASCHEMA.json",
+        "status": "present",
+        "required": true,
+        "size_bytes": 5341
+      }
+    ],
+    "edpr": [
+      {
+        "id": "edpr:apf_parser_prompt",
+        "role": "EDPR APF parser prompt",
+        "repo_path": "knowledge/edpr/EDPR_APF_PARSER_PROMPT.md",
+        "status": "present",
+        "required": true,
+        "size_bytes": 38936
+      },
+      {
+        "id": "edpr:runtime_parser_prompt",
+        "role": "EDPR runtime parser prompt",
+        "repo_path": "knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+        "status": "present",
+        "required": true,
+        "size_bytes": 10746
+      },
+      {
+        "id": "edpr:problem_map_spec",
+        "role": "EDPR problem-map specification",
+        "repo_path": "docs/EDPR_Problem_Map_Spec.md",
+        "status": "present",
+        "required": true,
+        "size_bytes": 51513
+      },
+      {
+        "id": "edpr:examples",
+        "role": "Validated EDPR example problem JSON files",
+        "repo_path": "knowledge/edpr/examples/",
+        "status": "pending",
+        "required": true,
+        "description": "Place example EDPR JSON files here, including ILT L-branch strain minimization and inline valve no-roller-contact examples."
+      }
+    ],
+    "edes": [
+      {
+        "id": "edes:shared",
+        "repo_path": "knowledge/edes/EDES_SHARED_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "size_bytes": 58705
+      },
+      {
+        "id": "edes:GD-B",
+        "repo_path": "knowledge/edes/EDES_GD-B_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Branch layout/subassembly knowledge.",
+        "size_bytes": 32069
+      },
+      {
+        "id": "edes:GD-BOSS",
+        "repo_path": "knowledge/edes/EDES_GD-BOSS_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Boss/pad/interface component knowledge.",
+        "size_bytes": 15384
+      },
+      {
+        "id": "edes:GD-BrPipe",
+        "repo_path": "knowledge/edes/EDES_GD-BrPipe_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Branch-pipe part knowledge.",
+        "size_bytes": 16442
+      },
+      {
+        "id": "edes:GD-Con",
+        "repo_path": "knowledge/edes/EDES_GD-Con_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Connector component/system knowledge.",
+        "size_bytes": 23782
+      },
+      {
+        "id": "edes:GD-HdPipe",
+        "repo_path": "knowledge/edes/EDES_GD-HdPipe_KNOWLEDGE.json",
+        "status": "present",
+        "required": false,
+        "description": "Heavy-duty pipe component knowledge.",
+        "size_bytes": 18978
+      },
+      {
+        "id": "edes:GD-PIP",
+        "repo_path": "knowledge/edes/EDES_GD-PIP_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Pipe-in-pipe component knowledge.",
+        "size_bytes": 19606
+      },
+      {
+        "id": "edes:GD-SB",
+        "repo_path": "knowledge/edes/EDES_GD-SB_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "External base/strong-back structure knowledge.",
+        "size_bytes": 33336
+      },
+      {
+        "id": "edes:GD-SH",
+        "repo_path": "knowledge/edes/EDES_GD-SH_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Guide shroud/contact shroud component knowledge.",
+        "size_bytes": 17597
+      },
+      {
+        "id": "edes:GD-ST",
+        "repo_path": "knowledge/edes/EDES_GD-ST_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "External top structure knowledge.",
+        "size_bytes": 33431
+      },
+      {
+        "id": "edes:GD-TP",
+        "repo_path": "knowledge/edes/EDES_GD-TP_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Thick pipe component knowledge.",
+        "size_bytes": 21373
+      },
+      {
+        "id": "edes:GD-TT",
+        "repo_path": "knowledge/edes/EDES_GD-TT_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Taper/thick transition component knowledge.",
+        "size_bytes": 16846
+      },
+      {
+        "id": "edes:GD-VLV",
+        "repo_path": "knowledge/edes/EDES_GD-VLV_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Inline valve component knowledge.",
+        "size_bytes": 6886
+      }
+    ],
+    "edas": [
+      {
+        "id": "edas:shared",
+        "repo_path": "knowledge/edas/EDAS_SHARED_KNOWLEDGE.json",
+        "status": "present",
+        "required": true,
+        "description": "Assembly-building shared knowledge.",
+        "size_bytes": 40993
+      },
+      {
+        "id": "edas:standard_layouts",
+        "repo_path": "knowledge/edas/standard_ils_layouts.json",
+        "status": "present",
+        "required": true,
+        "description": "Reusable ILS layout archetypes and anchors.",
+        "size_bytes": 79419
+      }
+    ],
+    "edikb": [
+      {
+        "id": "edikb:full_knowledge_graph",
+        "repo_path": "knowledge/edikb/EDIKB_FULL_KNOWLEDGE_GRAPH.json",
+        "status": "present",
+        "required": true,
+        "description": "Consolidated semantic behavior knowledge graph.",
+        "size_bytes": 612101
+      },
+      {
+        "id": "edikb:full_dataset",
+        "repo_path": "knowledge/edikb/EDIKB_FULL_DATASET.csv",
+        "status": "present",
+        "required": true,
+        "description": "Consolidated numeric evidence dataset for quantitative comparison and ML-ready feature extraction.",
+        "size_bytes": 123627
+      }
+    ],
+    "tools": [
+      {
+        "id": "tool:edes_validator",
+        "repo_path": "tools/EDES_VALIDATOR.py",
+        "status": "present",
+        "required": true,
+        "size_bytes": 9570
+      },
+      {
+        "id": "tool:edas_validator",
+        "repo_path": "tools/EDAS_VALIDATOR.py",
+        "status": "present",
+        "required": true,
+        "size_bytes": 4429
+      },
+      {
+        "id": "tool:edpr_validator",
+        "repo_path": "tools/EDPR_VALIDATOR.py",
+        "status": "present",
+        "required": true,
+        "size_bytes": 7956
+      },
+      {
+        "id": "tool:retrieve_context",
+        "repo_path": "tools/retrieve_context.py",
+        "status": "pending",
+        "required": true,
+        "description": "Planned retrieval helper. Given EDPR JSON, should load relevant EDES, EDAS, standard layout, EDIKB graph, and numeric dataset context."
+      },
+      {
+        "id": "tool:run_edpr_pipeline",
+        "repo_path": "tools/run_edpr_pipeline.py",
+        "status": "pending",
+        "required": true,
+        "description": "Planned pipeline runner. Should parse natural-language problem text to EDPR JSON, validate it, and call retrieval."
+      },
+      {
+        "id": "tool:solve_problem",
+        "repo_path": "tools/solve_problem.py",
+        "status": "pending",
+        "required": true,
+        "description": "Planned solution helper. Should use retrieved context to compare candidate ILS designs and produce an evidence-traceable recommendation."
+      }
+    ],
+    "docs": [
+      {
+        "id": "doc:ontology_crosswalk",
+        "repo_path": "docs/ONTOLOGY_CROSSWALK.md",
+        "status": "present",
+        "required": true,
+        "size_bytes": 27546
+      },
+      {
+        "id": "doc:edpr_problem_map_spec",
+        "repo_path": "docs/EDPR_Problem_Map_Spec.md",
+        "status": "present",
+        "required": true,
+        "size_bytes": 51513
+      }
+    ],
+    "reference_papers": [
+      {
+        "repo_path": "Reference Papers/Apf via llm.pdf",
+        "status": "present"
+      },
+      {
+        "repo_path": "Reference Papers/Problem_Map_An_ontological_framework_for.pdf",
+        "status": "present"
+      },
+      {
+        "repo_path": "Reference Papers/Challenges in developing ontology for pf.pdf",
+        "status": "present"
+      },
+      {
+        "repo_path": "Reference Papers/Human in loop cdf with llm.pdf",
+        "status": "present"
+      },
+      {
+        "repo_path": "Reference Papers/Nist capturing product ontology.pdf",
+        "status": "present"
+      },
+      {
+        "repo_path": "Reference Papers/nistir 7173.pdf",
+        "status": "present"
+      }
+    ],
+    "plotters_and_builders": [
+      {
+        "repo_path": "plotters and builders/component_spec.py",
+        "status": "present"
+      },
+      {
+        "repo_path": "plotters and builders/component_plotter.py",
+        "status": "present"
+      },
+      {
+        "repo_path": "plotters and builders/ils_builder.py",
+        "status": "present"
+      },
+      {
+        "repo_path": "plotters and builders/ils_plotter.py",
+        "status": "present"
+      },
+      {
+        "repo_path": "plotters and builders/config.py",
+        "status": "present"
+      },
+      {
+        "repo_path": "plotters and builders/slay_config.yaml.txt",
+        "status": "present"
+      }
+    ]
+  },
+  "pending_artifacts": [
+    {
+      "id": "pending:edpr_examples",
+      "repo_path": "knowledge/edpr/examples/",
+      "recommended_files": [
+        "EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json",
+        "EDPR_EXAMPLE_GDVLV_NO_ROLLER_CONTACT.json",
+        "EDPR_EXAMPLE_GDSH_GDTP_MIN_STRAIN.json",
+        "EDPR_EXAMPLE_EAST_EASB_CONNECTION_COMPARISON.json"
+      ],
+      "next_action": "Create folder and add validated EDPR problem JSON examples."
+    },
+    {
+      "id": "pending:retrieve_context",
+      "repo_path": "tools/retrieve_context.py",
+      "next_action": "Implement deterministic context retrieval from EDPR fields to EDES, EDAS, standard layouts, EDIKB graph, and EDIKB dataset."
+    },
+    {
+      "id": "pending:run_edpr_pipeline",
+      "repo_path": "tools/run_edpr_pipeline.py",
+      "next_action": "Implement command-line runner for problem text to EDPR JSON to validated retrieval package."
+    },
+    {
+      "id": "pending:solve_problem",
+      "repo_path": "tools/solve_problem.py",
+      "next_action": "Implement solver orchestration that accepts EDPR plus retrieved context and outputs ranked design recommendations with evidence references."
+    }
+  ],
+  "runtime_sequence": [
+    {
+      "step": 1,
+      "name": "read_manifest",
+      "action": "Load framework_manifest.json first to discover schemas, prompts, knowledge sources, validators, examples, and pending tools."
+    },
+    {
+      "step": 2,
+      "name": "parse_problem_to_edpr",
+      "action": "Use knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md with user problem text and relevant framework context to emit EDPR JSON."
+    },
+    {
+      "step": 3,
+      "name": "validate_edpr",
+      "action": "Run tools/EDPR_VALIDATOR.py against schemas/EDPR_METASCHEMA.json."
+    },
+    {
+      "step": 4,
+      "name": "retrieve_context",
+      "action": "Use tools/retrieve_context.py once available. Until then, manually load candidate EDES files, EDAS_SHARED_KNOWLEDGE.json, standard_ils_layouts.json, EDIKB_FULL_KNOWLEDGE_GRAPH.json, and EDIKB_FULL_DATASET.csv according to EDPR retrieval targets."
+    },
+    {
+      "step": 5,
+      "name": "reason_over_design_candidates",
+      "action": "Use EDAS to check constructability/topology, EDES to understand component roles and constraints, EDIKB graph to reason over behavior, and EDIKB dataset for numeric evidence where available."
+    },
+    {
+      "step": 6,
+      "name": "handle_feature_interactions",
+      "action": "When a layout combines multiple components or subassemblies, check EDIKB for interaction nodes, numeric evidence rows, and ML candidates. Do not assume simple superposition unless evidence supports it."
+    },
+    {
+      "step": 7,
+      "name": "solve_and_explain",
+      "action": "Rank options against EDPR objectives and constraints, cite graph/dataset evidence, identify assumptions, and mark weakly supported conclusions as future study candidates."
+    }
+  ],
+  "validator_commands": {
+    "validate_edpr_examples": "python tools/EDPR_VALIDATOR.py --schema schemas/EDPR_METASCHEMA.json knowledge/edpr/examples/*.json",
+    "validate_edes": "python tools/EDES_VALIDATOR.py --schema schemas/EDES_METASCHEMA.json knowledge/edes/*.json",
+    "validate_edas": "python tools/EDAS_VALIDATOR.py --schema schemas/EDAS_METASCHEMA.json knowledge/edas/EDAS_SHARED_KNOWLEDGE.json"
+  },
+  "llm_bootstrap_instructions": [
+    "Read this manifest first.",
+    "Use repository paths exactly as listed.",
+    "For problem solving, do not rely on EDPR alone. EDPR tells the system what the problem is and what to retrieve.",
+    "Use EDES for individual component knowledge.",
+    "Use EDAS for assembly construction, interfaces, layout anchors, and valid structural composition.",
+    "Use EDIKB graph for semantic behavior rules, guidance, uncertainty, and feature-interaction candidates.",
+    "Use EDIKB dataset for quantitative comparison when numeric evidence is needed.",
+    "If no reliable dataset supports a proposed comparison, state that the behavior is a future ML/FEA study candidate."
+  ],
+  "known_gaps_and_next_updates": [
+    "Add knowledge/edpr/examples/ with validated example EDPR JSON files.",
+    "Add tools/retrieve_context.py.",
+    "Add tools/run_edpr_pipeline.py.",
+    "Add tools/solve_problem.py.",
+    "Consider renaming 'plotters and builders' to 'plotters_and_builders' when convenient for easier command-line scripting.",
+    "Consider replacing extensionless placeholder files such as knowledge/edpr/edpr files and tools/tools with README.md files."
+  ]
+}
