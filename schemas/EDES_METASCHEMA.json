@@ -1,0 +1,1058 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "edes:metaschema",
+ "title": "EDES knowledge-schema metaschema",
+ "description": "Validates every EDES_SHARED.json / EDES_GD-*.json knowledge node. THREE node kinds share one file format, discriminated by top-level `type`:\n  edes:SharedReference   -- exactly one file, id=edes:shared. Cross-component rules, framework grounding, and the instance emit format.\n  edes:ComponentType     -- one file per BUILDABLE component_spec class, carrying live-probe evidence (constraintEquivalence).\n  edes:FutureComponent   -- a component SPECIFIED but not yet implemented. Same shape minus constraintEquivalence (nothing to probe) plus a mandatory implementationStatus. Promotion to ComponentType is additive: write the class, probe it, add the field, change the type. All three files that used this branch (GD-HdPipe, GD-BrPipe, GD-Con) have since been promoted, so it is currently unused -- kept because the specify-then-implement-then-promote path worked and is worth repeating.\nDoes NOT validate edes-instance/1 files (EDES_instance_*.json) -- a separate, still not-formalised schema. What a reader should EMIT is documented in edes:shared#/instanceEmission, which describes the ils_builder definition format that works today.\nAssembly-level knowledge is NOT here: it lives in edas:shared with its own metaschema and validator, deliberately separate so a field cannot drift between the two layers with neither rejecting it.",
+ "strictnessPhase": "Mixed, by design, and the mix is the point. HELD STRICT (additionalProperties:false, fixed enums) where a shape has stopped moving and a wrong value would be silently wrong: artifactType, permittedConnections, connectionRow, constraint, constraintEquivalence, defectItem, and the iwEaClass / connection-type / artifact-kind enums. LEFT LOOSE (looseObject) where the internal shape is still settling and premature strictness would cost more than it catches: scope, params, geometry, assemblyFeatures, sectionClaim, inputsRequired, usedInLayouts, frameworks, instanceEmission.\nTighten a section once it stops changing, not before -- artifactType and permittedConnections were both loose first and were tightened only after their shapes settled. Note the strict ones bite: adding a freeform key to artifactType or permittedConnections is rejected, which has caught real authoring errors rather than merely being pedantic.",
+ "strictnessPolicy": {
+  "strict": [
+   "edge",
+   "constraint",
+   "constraintEquivalence",
+   "connectionRow",
+   "permittedConnections",
+   "artifactType",
+   "requirementItem",
+   "defectItem",
+   "sharedReferenceDoc",
+   "componentTypeDoc"
+  ],
+  "loose": [
+   "looseObject (params, geometry, scope, designCode, assemblyFeatures, behaviourDerived, regressionCase on components; loadPath, oam, modelFidelity, behaviourExpected, refConventions, defectVocab, permittedConnectionStatus/Fields on shared)"
+  ],
+  "rationale": "strict = EDPR queries this field's shape directly to make a decision (a constraint id, a connection permission, a defect severity). loose = engineering content that legitimately varies per component and would force either an artificial superset of fields or a schema edit on every new note. Final-system tightening narrows the loose set further, not a blanket flip -- see constraintEquivalence, promoted out of looseObject once it was noticed every component's copy was identical in shape."
+ },
+ "required": [
+  "schema",
+  "id",
+  "type",
+  "label"
+ ],
+ "oneOf": [
+  {
+   "$ref": "#/$defs/sharedReferenceDoc"
+  },
+  {
+   "$ref": "#/$defs/componentTypeDoc"
+  },
+  {
+   "$ref": "#/$defs/componentSpecificationDoc"
+  }
+ ],
+ "$defs": {
+  "edesId": {
+   "type": "string",
+   "pattern": "^edes:[A-Za-z0-9_-]+$",
+   "description": "a CURIE id, e.g. edes:GD-TP"
+  },
+  "schemaTag": {
+   "type": "string",
+   "enum": [
+    "edes-knowledge/1"
+   ]
+  },
+  "edge": {
+   "type": "object",
+   "properties": {
+    "rel": {
+     "type": "string",
+     "enum": [
+      "realizes",
+      "subclassOf",
+      "subclassedBy",
+      "seeAlso",
+      "chainsWith",
+      "alternativeFor"
+     ]
+    },
+    "to": {
+     "description": "either a bare node id (edge points at a whole node) or edes:NODE#/fragment (points at part of one)",
+     "oneOf": [
+      {
+       "$ref": "#/$defs/edesId"
+      },
+      {
+       "type": "string",
+       "pattern": "^edes:[A-Za-z][A-Za-z0-9_-]*#/[A-Za-z0-9_/-]*$"
+      }
+     ]
+    },
+    "note": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rel",
+    "to"
+   ],
+   "additionalProperties": false
+  },
+  "requirementItem": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "appliesTo": {
+     "$ref": "#/$defs/edesId"
+    },
+    "quantity": {
+     "type": "string"
+    },
+    "unit": {
+     "type": "string"
+    },
+    "value": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "unpopulated",
+      "populated"
+     ]
+    },
+    "blockedBy": {
+     "$ref": "#/$defs/edesId",
+     "description": "present only when the requirement cannot yet be populated because a referenced component doesn't exist"
+    }
+   },
+   "required": [
+    "id",
+    "appliesTo",
+    "quantity",
+    "unit",
+    "value",
+    "status"
+   ],
+   "additionalProperties": false
+  },
+  "connectionRow": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string",
+     "enum": [
+      "F",
+      "P",
+      "S",
+      "D",
+      "W"
+     ]
+    },
+    "permitted": {
+     "type": "boolean"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "real",
+      "excluded",
+      "blocked"
+     ]
+    },
+    "reason": {
+     "type": "string"
+    },
+    "alternative": {
+     "type": "string"
+    },
+    "dofStatus": {
+     "type": "string",
+     "enum": [
+      "provisional",
+      "confirmed"
+     ]
+    },
+    "requires": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/edesId"
+     }
+    },
+    "requiresParam": {
+     "type": "string"
+    },
+    "scopedToFeature": {
+     "type": "string",
+     "description": "Names the assemblyFeatures.slots entry (or comma-separated entries) this row applies at, when the permission is not component-wide. Added 1Sep26: connection permission is really a property of a feature, not of a component -- see edes:shared#/oam/featureScopedConnections. Absent means the row applies at every feature of the component."
+    }
+   },
+   "required": [
+    "type",
+    "permitted",
+    "status"
+   ],
+   "additionalProperties": false
+  },
+  "permittedConnections": {
+   "oneOf": [
+    {
+     "type": "object",
+     "properties": {
+      "oamClassRef": {
+       "$ref": "#/$defs/edesRef"
+      },
+      "chain": {
+       "type": "string"
+      },
+      "rows": {
+       "type": "array",
+       "items": {
+        "$ref": "#/$defs/connectionRow"
+       }
+      }
+     },
+     "required": [
+      "oamClassRef",
+      "rows"
+     ],
+     "additionalProperties": false
+    },
+    {
+     "type": "object",
+     "properties": {
+      "inheritsFrom": {
+       "$ref": "#/$defs/edesRef"
+      },
+      "overrides": {
+       "type": "array"
+      },
+      "verified": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "inheritsFrom",
+      "overrides"
+     ],
+     "additionalProperties": false
+    }
+   ]
+  },
+  "artifactType": {
+   "type": "object",
+   "properties": {
+    "current": {
+     "type": "string",
+     "enum": [
+      "Part",
+      "Assembly",
+      "Sub-Assembly"
+     ],
+     "description": "EDES's artifact classification. Part and Assembly are OAM's own two Artifact subclasses. Sub-Assembly is EDES's addition, made 1Sep26 on the project's own decision: in OAM proper a subassembly is not a distinct class but an Assembly that is part-of another Assembly, so the same object is Assembly by class and subassembly by role. EDES records the role directly because every structural component in an ILS is subordinate to the ILS itself, making the distinction load-bearing here in a way the bare Assembly label does not capture. See edes:shared#/oam/partAssemblyRule.subAssemblyNote."
+    },
+    "candidate": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "enum": [
+      "Part",
+      "Assembly",
+      "Sub-Assembly",
+      null
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "open",
+      "closed"
+     ]
+    },
+    "reason": {
+     "type": "string"
+    },
+    "rule": {
+     "$ref": "#/$defs/edesRef"
+    }
+   },
+   "required": [
+    "current",
+    "candidate",
+    "status",
+    "rule"
+   ],
+   "if": {
+    "properties": {
+     "status": {
+      "const": "open"
+     }
+    }
+   },
+   "then": {
+    "required": [
+     "reason"
+    ]
+   },
+   "additionalProperties": false
+  },
+  "defectItem": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[A-Z]+-D[0-9]+$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "open",
+      "fixed"
+     ]
+    },
+    "severity": {
+     "type": "string",
+     "enum": [
+      "cosmetic",
+      "minor",
+      "moderate",
+      "major",
+      "critical"
+     ]
+    },
+    "fixedDate": {
+     "type": "string",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "summary": {
+     "type": "string"
+    },
+    "fix": {
+     "type": "string"
+    },
+    "history": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "status",
+    "severity",
+    "summary"
+   ],
+   "if": {
+    "properties": {
+     "status": {
+      "const": "fixed"
+     }
+    }
+   },
+   "then": {
+    "required": [
+     "fixedDate"
+    ]
+   },
+   "additionalProperties": false
+  },
+  "looseObject": {
+   "type": "object"
+  },
+  "looseArray": {
+   "type": "array"
+  },
+  "sharedReferenceDoc": {
+   "type": "object",
+   "properties": {
+    "schema": {
+     "$ref": "#/$defs/schemaTag"
+    },
+    "id": {
+     "const": "edes:shared"
+    },
+    "type": {
+     "const": "edes:SharedReference"
+    },
+    "label": {
+     "type": "string"
+    },
+    "nodes": {
+     "type": "array",
+     "description": "The AUTHORED Function set. A Function here is citable by any component; one that cannot be realised should stay in proposedFunctions instead."
+    },
+    "metaTypes": {
+     "type": "array",
+     "description": "The node kinds this corpus uses and what each means."
+    },
+    "futureComponents": {
+     "type": "array",
+     "description": "Components named and referenced but not implemented, so a reference to one resolves rather than dangling."
+    },
+    "proposedFunctions": {
+     "type": "array",
+     "description": "Functions named but NOT added to the authored set -- usually because only one component realises them, or none does yet."
+    },
+    "loadPath": {
+     "$ref": "#/$defs/looseObject",
+     "description": "How a component's reaction reaches the pipeline: through the pipe element beneath it, or through a connector."
+    },
+    "designCode": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The rule mapping a component to its governing standard, keyed on section_at."
+    },
+    "modelFidelity": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What this corpus is for and what it is not: concept screening, not detailed analysis."
+    },
+    "oam": {
+     "$ref": "#/$defs/looseObject",
+     "description": "OAM-derived assembly rules single-sourced here: connection class map, Part/Assembly assignments, end-feature naming, feature-scoped connections, assembly-feature convention."
+    },
+    "behaviourExpected": {
+     "$ref": "#/$defs/looseObject",
+     "description": "FBS Be -- a reverse-query view into EDIKB, never hand-authored on a component. Its ABSENCE on a component means nothing is attached yet, not that none applies."
+    },
+    "refConventions": {
+     "$ref": "#/$defs/looseObject",
+     "description": "How references between nodes are written."
+    },
+    "permittedConnectionStatus": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What real / excluded / blocked mean in a connection row."
+    },
+    "permittedConnectionFields": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What each field in a connection row means."
+    },
+    "defectVocab": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Severity and status vocabulary for defect entries."
+    },
+    "namingNote": {
+     "type": "string",
+     "description": "Why file versioning was dropped in favour of stable ids and in-place updates."
+    },
+    "frameworks": {
+     "$ref": "#/$defs/looseObject",
+     "description": "grounding for the borrowed vocabulary used across every component file (FBS, OAM) plus the terms that are EDES's own. Exists because keys like artifactType.current='Part' read as ordinary English but are terms of art with a stricter meaning fixed outside this project -- a reader without this block will pattern-match to the everyday sense confidently and wrongly. Component files point here via vocabularyRef rather than restating it."
+    },
+    "instanceEmission": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The output half of EDES: what a reader should PRODUCE, in what format, and the omission rule governing it. Component files say which parameters are free; none says what to emit. Single-sourced here, referenced by every component's inputsRequired."
+    }
+   },
+   "required": [
+    "schema",
+    "id",
+    "type",
+    "label",
+    "nodes",
+    "loadPath",
+    "designCode",
+    "oam",
+    "modelFidelity",
+    "metaTypes"
+   ],
+   "additionalProperties": false
+  },
+  "componentTypeDoc": {
+   "type": "object",
+   "properties": {
+    "schema": {
+     "$ref": "#/$defs/schemaTag"
+    },
+    "id": {
+     "$ref": "#/$defs/edesId"
+    },
+    "type": {
+     "const": "edes:ComponentType"
+    },
+    "label": {
+     "type": "string"
+    },
+    "sourceRef": {
+     "type": "string",
+     "description": "The component_spec class this file describes. Every factual claim here should be checkable against it by RUNNING it, not by reading it."
+    },
+    "docRef": {
+     "type": "string",
+     "description": "Section of COMPONENT_GEOMETRY_DEFINITIONS.md this component is defined in."
+    },
+    "vocabularyRef": {
+     "$ref": "#/$defs/edesRef",
+     "description": "pointer to edes:shared#/frameworks, where the borrowed FBS/OAM vocabulary this file uses is defined. Present on every component file because a reader retrieving ONE file in isolation would otherwise see keys like artifactType.current='Part' or assemblyFeatures with no signal that these are terms of art rather than ordinary English -- the grounding is single-sourced in shared, but the pointer to it must be local or it is not reachable from where the terms are actually read."
+    },
+    "iwEaClass": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "IW-A",
+       "IW-P",
+       "IW-B",
+       "EA-O",
+       "EA-ST",
+       "EA-SB"
+      ]
+     },
+     "description": "EDES's OWN physical/mechanical taxonomy -- not from OAM or FBS. IW-* are inline (A: provides an attachment point; P: a piping item with its own section; B: a branch leaving the header). EA-* are externally attached. See edes:shared#/frameworks."
+    },
+    "iwEaNote": {
+     "type": "string",
+     "description": "Why this component carries the classes it does, especially where a class was added, dropped or corrected."
+    },
+    "artifactType": {
+     "$ref": "#/$defs/artifactType",
+     "description": "OAM Part / Assembly / Sub-Assembly. status='open' means the classification is provisional and `reason` is then required. Sub-Assembly is EDES's own third value, not an OAM class -- see edes:shared#/oam/partAssemblyRule.subAssemblyNote."
+    },
+    "subclassOf": {
+     "oneOf": [
+      {
+       "$ref": "#/$defs/edesId"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "The EDES component this one subclasses, or null. Null does NOT mean 'no parent in code' -- a shared base with no knowledge node of its own is documented inline instead, tagged by its real source."
+    },
+    "variants": {
+     "type": "array",
+     "description": "Named configurations a single component can take (e.g. GD-B's L and Z), where the variant changes geometry rather than just parameter values."
+    },
+    "variantWarning": {
+     "type": "string",
+     "description": "What goes wrong if a variant-dependent fact is treated as variant-independent."
+    },
+    "inheritsUnchanged": {
+     "type": "array",
+     "description": "Parameters and constraints that pass through from subclassOf UNMODIFIED, so a reader knows to look in the parent for them. A constraint that is inherited then OVERRIDDEN must not be listed here."
+    },
+    "edges": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/edge"
+     },
+     "description": "Typed relationships to other EDES nodes: realizes (to a Function), seeAlso, subclassedBy. Note realizes goes Structure->Function directly, skipping Behaviour, which is a recorded departure from FBS -- see edes:shared#/frameworks FBS.knownDeparture."
+    },
+    "designCode": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The governing standard, or an explicit statement that shared.designCode's rule does not apply and why. 'Open' with a stated reason is more useful than a guess."
+    },
+    "scope": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What this component does and does not cover, including deliberate exclusions. Where a claim is verifiable, it should say what was run to verify it."
+    },
+    "params": {
+     "$ref": "#/$defs/looseObject",
+     "description": "free (caller supplies), refused (constructor rejects), derived (computed). Each free param should carry a `meaning` -- a name and a unit do not tell a reader what a symbol IS, and abbreviations like L_comp or P_vt are not self-explanatory."
+    },
+    "geometry": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Node and line counts, junctions, and what was VERIFIED LIVE rather than asserted."
+    },
+    "constraints": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/constraint"
+     },
+     "description": "Rules validate() actually enforces, each traceable to a source method. Not design guidance -- if the code does not check it, it is not a constraint."
+    },
+    "constraintEquivalence": {
+     "$ref": "#/$defs/constraintEquivalence",
+     "description": "Evidence that the constraints listed here match what validate() really does: a probe count and a mismatch count from running it. This is what separates a ComponentType from a specification -- a claim nobody probed is not evidence."
+    },
+    "nonConstraints": {
+     "type": "array",
+     "description": "What is deliberately NOT checked. Easily the most useful field for a consumer, because a missing check is invisible: a reader cannot tell from a constraint list what the list omits."
+    },
+    "permittedConnections": {
+     "$ref": "#/$defs/permittedConnections",
+     "description": "Which connection types may attach, per edes:shared#/oam/connectionClassMap. Note permission is really a property of a FEATURE, not of the component -- a row may be scoped with scopedToFeature. See edes:shared#/oam/featureScopedConnections."
+    },
+    "requirements": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/requirementItem"
+     },
+     "description": "Quantities this component's Function imposes that are not yet expressible as constraints."
+    },
+    "assemblyFeatures": {
+     "$ref": "#/$defs/looseObject",
+     "description": "This component's own OAM AssemblyFeatures: the named points a neighbour mates to, with their positions as FORMULAS so a placement can be computed. Does NOT record what they mate to -- that is the unbuilt AssemblyFeatureAssociation layer."
+    },
+    "behaviourDerived": {
+     "$ref": "#/$defs/looseObject",
+     "description": "FBS Bs: behaviour computed from this component's own structure. Distinct from Be (expected, from evidence), which lives in EDIKB and is surfaced via edes:shared#/behaviourExpected."
+    },
+    "defects": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/defectItem"
+     },
+     "description": "Known faults in the component_spec implementation, open or fixed. A fixed defect keeps its history: the reasoning is usually still partly valid."
+    },
+    "regressionCase": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The case that pins this component's behaviour, or an explicit statement that none has been run."
+    },
+    "openQuestions": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Unresolved design questions. Required, and an empty list is a claim -- a component with no open questions is either finished or unexamined."
+    },
+    "note": {
+     "type": "string",
+     "description": "Anything that does not belong to a named section, typically the reasoning behind a structural choice."
+    },
+    "usedInLayouts": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Back-links to worked layouts in standard_ils_layouts.json that contain this component. GENERATED, not authored: regenerate whenever the layout library changes. Exists because an EDES component file describes what a component IS and what its own constraints are, but nothing about WHERE to place one, what to place beside it, or what a layout definition looks like -- a worked archetype answers all three by example. coComponents in particular records which components actually appear alongside this one, which is otherwise undiscoverable from EDES alone."
+    },
+    "inputsRequired": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What an LLM must have in hand before it can emit an instance of this component, and what to do when something is missing (query, never assume). Distinguishes the HEADER pipeline properties -- required for every component, since all parameters and constraints are pipe-relative -- from the component's own params, and flags inputs that are accepted as design intent but REFUSED by the constructor and must be converted first (e.g. a target OD_comp becoming t_comp). Points at edes:shared#/instanceEmission for the output format."
+    },
+    "sectionClaim": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Whether this component claims the pipe SECTION, the CONTACT surface, or both, and what follows for overlap. Two components claiming SECTION at one station is a contradiction that no ownership policy resolves; two claiming CONTACT is arbitrable. This is the distinction that decides whether a component may nest inside another or must have the header chain split around it -- see edas:shared#/sectionVersusContact."
+    },
+    "assemblyRef": {
+     "type": "string",
+     "description": "Pointer to edas:shared, which carries the assembly-level knowledge no component file holds: build sequence, id convention, chaining equation, ownership arbitration, association format, emit format. Local pointer because a reader retrieving one component file in isolation would otherwise never reach it."
+    },
+    "applicability": {
+     "$ref": "#/$defs/looseObject",
+     "description": "SELECTION CRITERIA: when this component is the right choice, expressed as design intents each mapped to the Function it realises and the condition under which that Function actually holds. Exists so a consumer can go from a stated design intent to a component, rather than only from a component to its description. States applicability and MECHANISM (FBS Function and Bs) and deliberately no magnitudes -- those are FBS Be and come from EDIKB. Includes doNotSelectWhen, because the components most often confused are the ones whose intents sound similar."
+    }
+   },
+   "required": [
+    "schema",
+    "id",
+    "type",
+    "label",
+    "sourceRef",
+    "iwEaClass",
+    "artifactType",
+    "subclassOf",
+    "edges",
+    "designCode",
+    "scope",
+    "params",
+    "geometry",
+    "constraints",
+    "constraintEquivalence",
+    "nonConstraints",
+    "permittedConnections",
+    "requirements",
+    "behaviourDerived",
+    "defects",
+    "openQuestions"
+   ],
+   "additionalProperties": false
+  },
+  "constraint": {
+   "description": "one constraint row. Two valid shapes, discriminated by oneOf: AUTHORED (expr+source+severity+repair, this component's own rule) or INHERITED (ref+inherited:true, a pointer to another component's own rule -- never a copy of it, so the two can't drift apart).",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[A-Z]+-C[0-9]+$"
+    },
+    "expr": {
+     "type": "string"
+    },
+    "source": {
+     "type": "string",
+     "pattern": "^[A-Za-z][A-Za-z0-9]*\\.[a-z][a-z_]*$"
+    },
+    "severity": {
+     "type": "string",
+     "enum": [
+      "info",
+      "warning",
+      "error"
+     ]
+    },
+    "doc": {
+     "type": "string"
+    },
+    "repair": {
+     "type": "string"
+    },
+    "added": {
+     "type": "string",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "note": {
+     "type": "string"
+    },
+    "ref": {
+     "$ref": "#/$defs/edesRef",
+     "description": "for a constraint row specifically, only the OBJECT branch of edesRef is meaningful -- section will always be \"constraints\". Not narrowed further here to avoid a second near-duplicate def; enforced by convention (see edes:shared#/refConventions), checked live by check_dangling_refs.py."
+    },
+    "inherited": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "expr",
+      "source",
+      "severity",
+      "repair"
+     ]
+    },
+    {
+     "required": [
+      "ref",
+      "inherited"
+     ]
+    }
+   ]
+  },
+  "edesRef": {
+   "description": "General-purpose reference. STRING branch: a real RFC 6901 JSON Pointer fragment after '#', for pointing INTO an object's keys (e.g. edes:shared#/oam/connectionClassMap). OBJECT branch: {node,section,id} -- REQUIRED, not just node -- for pointing AT one element of an array matched by id (e.g. a row inside another node's constraints[]), which RFC 6901 cannot express. A node-only object with no section/id is NOT accepted: it names a document but not a location inside it, so nothing can resolve it. Proven live against EDES_GD-TT.json's real inherited-constraint ref: {node,section,id} all three resolve correctly; {node} alone does not, and is rejected here rather than passing validation and failing only at resolution time.",
+   "oneOf": [
+    {
+     "type": "string",
+     "pattern": "^edes:[A-Za-z0-9_-]+#/[A-Za-z0-9_/-]*$"
+    },
+    {
+     "type": "object",
+     "properties": {
+      "node": {
+       "type": "string",
+       "pattern": "^edes:[A-Za-z0-9_-]+$"
+      },
+      "section": {
+       "type": "string"
+      },
+      "id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "node",
+      "section",
+      "id"
+     ],
+     "additionalProperties": false
+    }
+   ]
+  },
+  "constraintEquivalence": {
+   "description": "identical shape across every component that has one -- unlike params/geometry/scope, there is no legitimate per-component variation here, so this is held strict rather than left in looseObject. `mismatches` is the field an EDPR gate would actually branch on.",
+   "type": "object",
+   "properties": {
+    "method": {
+     "type": "string"
+    },
+    "probes": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "mismatches": {
+     "type": "integer",
+     "minimum": 0
+    }
+   },
+   "required": [
+    "method",
+    "probes",
+    "mismatches"
+   ],
+   "additionalProperties": false
+  },
+  "componentSpecificationDoc": {
+   "description": "A component that is SPECIFIED but NOT YET IMPLEMENTED in component_spec. Distinct from componentTypeDoc, whose own metaType is defined in shared.metaTypes as 'a buildable component_spec class' -- these are not buildable, so labelling them edes:ComponentType would contradict that definition. Drops constraintEquivalence (nothing to probe) and adds a mandatory implementationStatus. Every other field keeps componentTypeDoc's shape, so a specification doc can be promoted to a component doc by adding evidence rather than by restructuring.",
+   "type": "object",
+   "properties": {
+    "schema": {
+     "$ref": "#/$defs/schemaTag"
+    },
+    "id": {
+     "$ref": "#/$defs/edesId"
+    },
+    "type": {
+     "const": "edes:FutureComponent"
+    },
+    "label": {
+     "type": "string"
+    },
+    "sourceRef": {
+     "type": "string",
+     "description": "INTENDED component_spec path, not an existing one. Unlike componentTypeDoc's sourceRef this cannot be verified against live code, because no such class exists yet -- see implementationStatus."
+    },
+    "docRef": {
+     "type": "string",
+     "description": "Section of COMPONENT_GEOMETRY_DEFINITIONS.md this component is defined in."
+    },
+    "vocabularyRef": {
+     "$ref": "#/$defs/edesRef",
+     "description": "pointer to edes:shared#/frameworks, where the borrowed FBS/OAM vocabulary this file uses is defined. Present on every component file because a reader retrieving ONE file in isolation would otherwise see keys like artifactType.current='Part' or assemblyFeatures with no signal that these are terms of art rather than ordinary English -- the grounding is single-sourced in shared, but the pointer to it must be local or it is not reachable from where the terms are actually read."
+    },
+    "iwEaClass": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "IW-A",
+       "IW-P",
+       "IW-B",
+       "EA-O",
+       "EA-ST",
+       "EA-SB"
+      ]
+     },
+     "description": "EDES's OWN physical/mechanical taxonomy -- not from OAM or FBS. IW-* are inline (A: provides an attachment point; P: a piping item with its own section; B: a branch leaving the header). EA-* are externally attached. See edes:shared#/frameworks."
+    },
+    "iwEaNote": {
+     "type": "string",
+     "description": "Why this component carries the classes it does, especially where a class was added, dropped or corrected."
+    },
+    "artifactType": {
+     "$ref": "#/$defs/artifactType",
+     "description": "OAM Part / Assembly / Sub-Assembly. status='open' means the classification is provisional and `reason` is then required. Sub-Assembly is EDES's own third value, not an OAM class -- see edes:shared#/oam/partAssemblyRule.subAssemblyNote."
+    },
+    "subclassOf": {
+     "oneOf": [
+      {
+       "$ref": "#/$defs/edesId"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "The EDES component this one subclasses, or null. Null does NOT mean 'no parent in code' -- a shared base with no knowledge node of its own is documented inline instead, tagged by its real source."
+    },
+    "variants": {
+     "type": "array",
+     "description": "Named configurations a single component can take (e.g. GD-B's L and Z), where the variant changes geometry rather than just parameter values."
+    },
+    "variantWarning": {
+     "type": "string",
+     "description": "What goes wrong if a variant-dependent fact is treated as variant-independent."
+    },
+    "inheritsUnchanged": {
+     "type": "array",
+     "description": "Parameters and constraints that pass through from subclassOf UNMODIFIED, so a reader knows to look in the parent for them. A constraint that is inherited then OVERRIDDEN must not be listed here."
+    },
+    "edges": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/edge"
+     },
+     "description": "Typed relationships to other EDES nodes: realizes (to a Function), seeAlso, subclassedBy. Note realizes goes Structure->Function directly, skipping Behaviour, which is a recorded departure from FBS -- see edes:shared#/frameworks FBS.knownDeparture."
+    },
+    "designCode": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The governing standard, or an explicit statement that shared.designCode's rule does not apply and why. 'Open' with a stated reason is more useful than a guess."
+    },
+    "scope": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What this component does and does not cover, including deliberate exclusions. Where a claim is verifiable, it should say what was run to verify it."
+    },
+    "params": {
+     "$ref": "#/$defs/looseObject",
+     "description": "free (caller supplies), refused (constructor rejects), derived (computed). Each free param should carry a `meaning` -- a name and a unit do not tell a reader what a symbol IS, and abbreviations like L_comp or P_vt are not self-explanatory."
+    },
+    "geometry": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Node and line counts, junctions, and what was VERIFIED LIVE rather than asserted."
+    },
+    "constraints": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/constraintSpecified"
+     },
+     "description": "Rules validate() actually enforces, each traceable to a source method. Not design guidance -- if the code does not check it, it is not a constraint."
+    },
+    "nonConstraints": {
+     "type": "array",
+     "description": "What is deliberately NOT checked. Easily the most useful field for a consumer, because a missing check is invisible: a reader cannot tell from a constraint list what the list omits."
+    },
+    "permittedConnections": {
+     "$ref": "#/$defs/permittedConnections",
+     "description": "Which connection types may attach, per edes:shared#/oam/connectionClassMap. Note permission is really a property of a FEATURE, not of the component -- a row may be scoped with scopedToFeature. See edes:shared#/oam/featureScopedConnections."
+    },
+    "requirements": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/requirementItem"
+     },
+     "description": "Quantities this component's Function imposes that are not yet expressible as constraints."
+    },
+    "assemblyFeatures": {
+     "$ref": "#/$defs/looseObject",
+     "description": "This component's own OAM AssemblyFeatures: the named points a neighbour mates to, with their positions as FORMULAS so a placement can be computed. Does NOT record what they mate to -- that is the unbuilt AssemblyFeatureAssociation layer."
+    },
+    "behaviourDerived": {
+     "$ref": "#/$defs/looseObject",
+     "description": "FBS Bs: behaviour computed from this component's own structure. Distinct from Be (expected, from evidence), which lives in EDIKB and is surfaced via edes:shared#/behaviourExpected."
+    },
+    "defects": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/defectItem"
+     },
+     "description": "Known faults in the component_spec implementation, open or fixed. A fixed defect keeps its history: the reasoning is usually still partly valid."
+    },
+    "regressionCase": {
+     "$ref": "#/$defs/looseObject",
+     "description": "The case that pins this component's behaviour, or an explicit statement that none has been run."
+    },
+    "openQuestions": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Unresolved design questions. Required, and an empty list is a claim -- a component with no open questions is either finished or unexamined."
+    },
+    "note": {
+     "type": "string",
+     "description": "Anything that does not belong to a named section, typically the reasoning behind a structural choice."
+    },
+    "implementationStatus": {
+     "type": "object",
+     "properties": {
+      "codeExists": {
+       "const": false
+      },
+      "verifiedLive": {
+       "const": false
+      },
+      "statement": {
+       "type": "string"
+      },
+      "blockers": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "codeExists",
+      "verifiedLive",
+      "statement"
+     ],
+     "additionalProperties": false,
+     "description": "Mandatory on every specification doc. Exists so a reader cannot mistake a specified-but-unbuilt component for a verified one: every edes:ComponentType file in this corpus carries live-probe evidence (constraintEquivalence, verifiedLive strings), and a specification doc carries none. Stating that absence explicitly is the point of this node kind."
+    },
+    "usedInLayouts": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Back-links to worked layouts in standard_ils_layouts.json that contain this component. GENERATED, not authored: regenerate whenever the layout library changes. Exists because an EDES component file describes what a component IS and what its own constraints are, but nothing about WHERE to place one, what to place beside it, or what a layout definition looks like -- a worked archetype answers all three by example. coComponents in particular records which components actually appear alongside this one, which is otherwise undiscoverable from EDES alone."
+    },
+    "inputsRequired": {
+     "$ref": "#/$defs/looseObject",
+     "description": "What an LLM must have in hand before it can emit an instance of this component, and what to do when something is missing (query, never assume). Distinguishes the HEADER pipeline properties -- required for every component, since all parameters and constraints are pipe-relative -- from the component's own params, and flags inputs that are accepted as design intent but REFUSED by the constructor and must be converted first (e.g. a target OD_comp becoming t_comp). Points at edes:shared#/instanceEmission for the output format."
+    },
+    "sectionClaim": {
+     "$ref": "#/$defs/looseObject",
+     "description": "Whether this component claims the pipe SECTION, the CONTACT surface, or both, and what follows for overlap. Two components claiming SECTION at one station is a contradiction that no ownership policy resolves; two claiming CONTACT is arbitrable. This is the distinction that decides whether a component may nest inside another or must have the header chain split around it -- see edas:shared#/sectionVersusContact."
+    },
+    "assemblyRef": {
+     "type": "string",
+     "description": "Pointer to edas:shared, which carries the assembly-level knowledge no component file holds: build sequence, id convention, chaining equation, ownership arbitration, association format, emit format. Local pointer because a reader retrieving one component file in isolation would otherwise never reach it."
+    },
+    "applicability": {
+     "$ref": "#/$defs/looseObject",
+     "description": "SELECTION CRITERIA: when this component is the right choice, expressed as design intents each mapped to the Function it realises and the condition under which that Function actually holds. Exists so a consumer can go from a stated design intent to a component, rather than only from a component to its description. States applicability and MECHANISM (FBS Function and Bs) and deliberately no magnitudes -- those are FBS Be and come from EDIKB. Includes doNotSelectWhen, because the components most often confused are the ones whose intents sound similar."
+    }
+   },
+   "required": [
+    "schema",
+    "id",
+    "type",
+    "label",
+    "iwEaClass",
+    "artifactType",
+    "subclassOf",
+    "edges",
+    "designCode",
+    "scope",
+    "params",
+    "geometry",
+    "constraints",
+    "nonConstraints",
+    "permittedConnections",
+    "assemblyFeatures",
+    "behaviourDerived",
+    "openQuestions",
+    "implementationStatus"
+   ],
+   "additionalProperties": false
+  },
+  "constraintSpecified": {
+   "description": "one constraint row. Two valid shapes, discriminated by oneOf: AUTHORED (expr+source+severity+repair, this component's own rule) or INHERITED (ref+inherited:true, a pointer to another component's own rule -- never a copy of it, so the two can't drift apart).",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[A-Z]+-C[0-9]+$"
+    },
+    "expr": {
+     "type": "string"
+    },
+    "source": {
+     "type": "string",
+     "pattern": "^(INTENDED:[A-Za-z][A-Za-z0-9]*\\.[a-z][a-z_]*)$",
+     "description": "On a specification doc the constraint has no implemented validate() to point at, so source must name the INTENDED one, prefixed 'INTENDED:'. The prefix is mandatory so a specification constraint can never be mistaken for a probed one -- componentTypeDoc keeps the strict Class.method pattern with no such escape."
+    },
+    "severity": {
+     "type": "string",
+     "enum": [
+      "info",
+      "warning",
+      "error"
+     ]
+    },
+    "doc": {
+     "type": "string"
+    },
+    "repair": {
+     "type": "string"
+    },
+    "added": {
+     "type": "string",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "note": {
+     "type": "string"
+    },
+    "ref": {
+     "$ref": "#/$defs/edesRef",
+     "description": "for a constraint row specifically, only the OBJECT branch of edesRef is meaningful -- section will always be \"constraints\". Not narrowed further here to avoid a second near-duplicate def; enforced by convention (see edes:shared#/refConventions), checked live by check_dangling_refs.py."
+    },
+    "inherited": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "expr",
+      "source",
+      "severity",
+      "repair"
+     ]
+    },
+    {
+     "required": [
+      "ref",
+      "inherited"
+     ]
+    }
+   ]
+  }
+ }
+}

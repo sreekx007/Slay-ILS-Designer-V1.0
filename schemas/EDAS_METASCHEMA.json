@@ -1,0 +1,121 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://edas/metaschema/1",
+ "title": "EDAS assembly-knowledge metaschema",
+ "description": "Validates edas-knowledge/1 documents. SEPARATE from the EDES metaschema on purpose: EDAS owns assembly-level knowledge (build sequence, chaining, ownership arbitration, section-vs-contact, associations, emit format) and EDES owns component-level knowledge, and a single schema covering both would let a field drift between the two layers without either rejecting it. Currently one document kind, edas:SharedReference; per-archetype documents are deliberately NOT modelled, because the archetypes in standard_ils_layouts.json already carry their own purpose, constraints, variables and expected outputs, and restating them here would create the stale-pointer class this project has been caught by before.",
+ "strictnessPhase": "EDAS is younger than EDES and its sections are still moving. Section BODIES are therefore looseObject -- their internal shape is not fixed. What IS enforced: the document kind, the identifier, and the PRESENCE of every section, so a section cannot be silently dropped in an edit. Tighten individual bodies as they settle, the way EDES tightened artifactType and permittedConnections once their shapes stopped changing.",
+ "type": "object",
+ "properties": {
+  "schema": {
+   "const": "edas-knowledge/1"
+  },
+  "id": {
+   "const": "edas:shared"
+  },
+  "type": {
+   "const": "edas:SharedReference"
+  },
+  "label": {
+   "type": "string"
+  },
+  "task": {
+   "$ref": "#/$defs/looseObject",
+   "description": "The DIRECTIVE block, and the reason it must be first: a reader that does not meet the deliverable immediately will infer one. Observed 5Sep26 -- a model given photographs of layouts read EDAS, correctly found nothing about page layout, and asked whether to emit .docx or markdown, because the deliverable was then buried four sections deep."
+  },
+  "purpose": {
+   "type": "string"
+  },
+  "architecture": {
+   "$ref": "#/$defs/looseObject",
+   "description": "The four inputs (EDES, EDIKB, EDAS, EDPR), the single output, and the verification loop back through build_ils."
+  },
+  "requiredReading": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "buildSequence": {
+   "$ref": "#/$defs/looseObject",
+   "description": "Parts, then names, then connections. Connections cannot be declared against parts with no identity."
+  },
+  "idConvention": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "chaining": {
+   "$ref": "#/$defs/looseObject",
+   "description": "The adjacency equation and everything that governs whether two parts actually meet: halfExtent per component, emission precision, exact arithmetic, and what the coincidence check is for."
+  },
+  "topologyTypes": {
+   "$ref": "#/$defs/looseObject",
+   "description": "chain / nested / off-line / branch. An ILS is not a sequence -- verified against all 7 archetypes."
+  },
+  "ownershipArbitration": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "sectionVersusContact": {
+   "$ref": "#/$defs/looseObject",
+   "description": "Which components claim the pipe section, which claim only contact, and why ownership='lowest' cannot resolve a section conflict. The distinction that decides whether a component may nest or the header must be split around it."
+  },
+  "headerRule": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "associationVocabulary": {
+   "$ref": "#/$defs/looseObject",
+   "description": "Connection (F/P/S/D/W) and PositionOrientation: format, what is validated, the datum, and how weld associations are generated."
+  },
+  "positionConstraints": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "emitFormat": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "verification": {
+   "$ref": "#/$defs/looseObject"
+  },
+  "knownGaps": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   },
+   "description": "REQUIRED and required to be non-empty. A knowledge layer that claims no gaps is not complete, it is unexamined -- and this one has real ones (no 2D clash detection, header model undecided, EDIKB and EDPR unbuilt).",
+   "minItems": 1
+  },
+  "branchLayouts": {
+   "$ref": "#/$defs/looseObject",
+   "description": "Everything specific to a edes:GD-B layout: L vs Z variant and which structure edge each meets, that a branch needs no support structure, P_bc semantics and its degradation to a warning when standalone, support_connector values, and the one-sided extent."
+  },
+  "connectorAttachment": {
+   "$ref": "#/$defs/looseObject",
+   "description": "How a connector reaches the pipeline: never directly onto plain header pipe, but via a thickened section introduced at the connection point. Includes the vertical-connector constraint and which slot each connection system populates."
+  }
+ },
+ "required": [
+  "schema",
+  "id",
+  "type",
+  "label",
+  "task",
+  "purpose",
+  "architecture",
+  "requiredReading",
+  "buildSequence",
+  "idConvention",
+  "chaining",
+  "topologyTypes",
+  "ownershipArbitration",
+  "sectionVersusContact",
+  "headerRule",
+  "associationVocabulary",
+  "positionConstraints",
+  "emitFormat",
+  "verification",
+  "knownGaps",
+  "branchLayouts",
+  "connectorAttachment"
+ ],
+ "additionalProperties": false,
+ "$defs": {
+  "looseObject": {
+   "type": "object",
+   "description": "Any object. Used where a section's internal shape is still settling -- see strictnessPhase."
+  }
+ }
+}
