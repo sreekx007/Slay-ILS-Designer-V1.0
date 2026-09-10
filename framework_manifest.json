@@ -81,8 +81,9 @@
     "tools": "tools/",
     "docs": "docs/",
     "reference_papers": "Reference Papers/",
-    "plotters_and_builders": "plotters and builders/",
-    "knowledge_knowloop": "knowledge/knowloop/"
+    "plotters_and_builders": "plotters/",
+    "knowledge_knowloop": "knowledge/knowloop/",
+    "superseded": "superseded/"
   },
   "repo_review": {
     "summary": "Core knowledge folders, schemas, validators, EDIKB graph, EDIKB dataset, EDPR prompts/specs, EDPR examples, reference papers, plotter/builder files, and first-pass runtime pipeline scripts are present after applying this batch.",
@@ -90,7 +91,7 @@
     "naming_notes": [
       "Repository currently uses stable filenames without version suffixes, for example schemas/EDPR_METASCHEMA.json. Versioning should be carried inside the JSON metadata and this manifest.",
       "Use EDPR consistently in filenames and code. The phrase EPDR appears to be a typo and should not be used for new files.",
-      "The existing folder name 'plotters and builders' is readable but less script-friendly than 'plotters_and_builders'. It can remain if scripts quote paths correctly."
+      "Plotter and builder modules are in plotters/. See plotters/README.md for repository-root execution."
     ]
   },
   "artifacts": {
@@ -360,6 +361,34 @@
         "status": "present_after_batch_upload",
         "required": true,
         "description": "Generates Knowloop candidate JSON after every design query."
+      },
+      {
+        "id": "tool:plot_design",
+        "repo_path": "tools/plot_design.py",
+        "status": "present",
+        "required": false,
+        "description": "Render an ILS definition or selected archetype and write an execution report"
+      },
+      {
+        "id": "tool:plot_component",
+        "repo_path": "tools/plot_component.py",
+        "status": "present",
+        "required": false,
+        "description": "Render a component with parameter overrides and write an execution report"
+      },
+      {
+        "id": "tool:_plot_cli",
+        "repo_path": "tools/_plot_cli.py",
+        "status": "present",
+        "required": false,
+        "description": "Shared plotting CLI input validation, headless setup, default reporting, and export"
+      },
+      {
+        "id": "tool:test_plot_cli",
+        "repo_path": "tools/test_plot_cli.py",
+        "status": "present",
+        "required": false,
+        "description": "CLI integration tests for exports, validation failures, reports, and input protection"
       }
     ],
     "docs": [
@@ -388,6 +417,20 @@
         "repo_path": "docs/KNOWLOOP_FEEDBACK_WORKFLOW.md",
         "status": "present_after_batch_upload",
         "required": true
+      },
+      {
+        "id": "doc:upload_map",
+        "repo_path": "UPLOAD_MAP.md",
+        "status": "present",
+        "required": false,
+        "role": "Pending local changes and manual upload instructions"
+      },
+      {
+        "id": "doc:plotter_restructure_plan",
+        "repo_path": "docs/PLOTTER_RESTRUCTURE_PLAN.md",
+        "status": "present",
+        "required": false,
+        "role": "Plotter migration phases and acceptance criteria"
       }
     ],
     "reference_papers": [
@@ -418,28 +461,48 @@
     ],
     "plotters_and_builders": [
       {
-        "repo_path": "plotters and builders/component_spec.py",
+        "repo_path": "plotters/component_spec.py",
         "status": "present"
       },
       {
-        "repo_path": "plotters and builders/component_plotter.py",
+        "repo_path": "plotters/component_plotter.py",
         "status": "present"
       },
       {
-        "repo_path": "plotters and builders/ils_builder.py",
+        "repo_path": "plotters/ils_builder.py",
         "status": "present"
       },
       {
-        "repo_path": "plotters and builders/ils_plotter.py",
+        "repo_path": "plotters/ils_plotter.py",
         "status": "present"
       },
       {
-        "repo_path": "plotters and builders/config.py",
+        "repo_path": "plotters/config.py",
         "status": "present"
       },
       {
-        "repo_path": "plotters and builders/slay_config.yaml.txt",
+        "repo_path": "plotters/slay_config.yaml",
         "status": "present"
+      },
+      {
+        "repo_path": "plotters/README.md",
+        "status": "present",
+        "role": "Plotter setup and repository-root usage instructions"
+      },
+      {
+        "repo_path": "plotters/requirements.txt",
+        "status": "present",
+        "role": "Python plotting dependencies"
+      },
+      {
+        "repo_path": "plotters/examples/example_ilt_layout.json",
+        "status": "present",
+        "role": "Direct layout input example for tools/plot_design.py"
+      },
+      {
+        "repo_path": "plotters/examples/example_valve_layout.json",
+        "status": "present",
+        "role": "Direct layout input example for tools/plot_design.py"
       }
     ],
     "knowloop": [
@@ -533,7 +596,8 @@
     "validate_edes": "python tools/EDES_VALIDATOR.py --schema schemas/EDES_METASCHEMA.json knowledge/edes/*.json",
     "validate_edas": "python tools/EDAS_VALIDATOR.py --schema schemas/EDAS_METASCHEMA.json knowledge/edas/EDAS_SHARED_KNOWLEDGE.json",
     "check_pmap_apf_examples": "python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json",
-    "run_pipeline_with_knowloop": "python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_ilt --solution-format md"
+    "run_pipeline_with_knowloop": "python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_ilt --solution-format md",
+    "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py"
   },
   "llm_bootstrap_instructions": [
     "Read this manifest first.",
@@ -551,7 +615,36 @@
     "Connect tools/run_edpr_pipeline.py to an LLM API or manual LLM step for natural-language to EDPR conversion.",
     "Extend tools/solve_problem.py with objective-specific scoring policies from EDPR rankingCriteria.",
     "Add review-log tooling for promoting accepted Knowloop candidates into official EDPR/EDES/EDAS/EDIKB updates.",
-    "Consider renaming 'plotters and builders' to 'plotters_and_builders' when convenient for easier command-line scripting.",
+    "Complete the remaining phases in docs/PLOTTER_RESTRUCTURE_PLAN.md.",
     "Consider replacing extensionless placeholder files such as knowledge/edpr/edpr files and tools/tools with README.md files."
-  ]
+  ],
+  "manifest_policy": {
+    "active_manifest": "framework_manifest.json",
+    "archive_directory": "superseded/",
+    "description": "Only the root framework_manifest.json is active. Archived manifests are historical snapshots; their paths and status claims are not current.",
+    "archived_manifests": [
+      "superseded/framework_manifest.json",
+      "superseded/framework_manifest_v0_1.json",
+      "superseded/framework_manifest_v0_2.json",
+      "superseded/framework_manifest_v0_3.json",
+      "superseded/framework_manifest_v0_4.json"
+    ]
+  },
+  "local_update": {
+    "date": "2026-09-10",
+    "status": "local changes pending manual upload",
+    "upload_map": "UPLOAD_MAP.md",
+    "summary": "Plotter Phases 1 and 2 completed locally; older root manifests archived in superseded/.",
+    "verification": [
+      "Repository-root imports passed with PYTHONPATH=plotters.",
+      "ILS-TP built without validation findings; assembly and component PNG exports verified.",
+      "Five CLI integration tests passed, including six invalid-request cases; PNG/SVG exports and warning propagation verified without PYTHONPATH."
+    ],
+    "known_plot_issue": "Existing assembly annotation overlap near the x-axis remains for the label-correction phase."
+  },
+  "plotter_commands": {
+    "assembly": "python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png --report runs/ilt.report.json",
+    "component": "python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output runs/gd_tp.png",
+    "report_scope": "Build findings, resolved defaults and export status only. Automated visual QA is not yet implemented."
+  }
 }

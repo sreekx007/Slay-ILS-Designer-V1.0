@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "ils": {
+    "name": "Illustrative valve",
+    "frame": "local",
+    "ownership": "strict"
+  },
+  "pipeline": {
+    "OD_pipe": 0.4064,
+    "t_pipe": 0.021,
+    "provenance": "ILLUSTRATIVE"
+  },
+  "components": [
+    {
+      "id": "valve1",
+      "code": "GD-VLV",
+      "centre_x": 0.0,
+      "provenance": "ILLUSTRATIVE"
+    }
+  ],
+  "associations": []
+}

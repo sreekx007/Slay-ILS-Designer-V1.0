@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "ils": {
+    "name": "ILS-ILT",
+    "frame": "local",
+    "ownership": "strict",
+    "connection_system": "F2"
+  },
+  "pipeline": {
+    "OD_pipe": 0.4064,
+    "t_pipe": 0.021,
+    "provenance": "PAPER"
+  },
+  "header": {
+    "half_length": 6.164,
+    "provenance": "DERIVED",
+    "note": "Pinned 4Sep26. These archetypes' recorded expected.mass_kg were computed against a 12 m header, and assembly mass INCLUDES header pipe steel -- for ILS-TP that steel is the large majority of the 2616.5 kg. When the builder default changed to a 14 m joint, every recorded mass moved by the weight of the extra 2 m (+399.2 kg) while span and CoG were untouched. Pinning the header each archetype was validated against keeps those figures meaningful and makes them immune to any future change of the default."
+  },
+  "components": [
+    {
+      "code": "GD-ST",
+      "id": "ST",
+      "centre_x": 1.2192000000000003,
+      "L_top": 5.6895999999999995,
+      "H_top": 1.2191999999999998,
+      "P_vt": -0.2032,
+      "P_c1": 3.2512,
+      "P_c2": 0.4064,
+      "right_connector_y": [
+        -0.8128
+      ],
+      "provenance": "PAPER"
+    },
+    {
+      "code": "GD-B",
+      "id": "B",
+      "centre_x": 0.0,
+      "variant": "L",
+      "support_connector": "F",
+      "P_b1": 4.064,
+      "P_b2": 0.8128,
+      "P_bc": 0.40639999999999965,
+      "provenance": "PAPER"
+    }
+  ],
+  "associations": [],
+  "associationsNote": "EMPTY DELIBERATELY, and this is a real piece of assembly knowledge rather than an omission. The branch-to-structure tie in an ILT is VARIANT-DEPENDENT and therefore belongs on the ANCHOR, not on the archetype: an L branch ends horizontally and meets a SIDE edge (right1), a Z turns up and meets the TOP edge (top1), and under the F1p post arrangement the post's top face is the attachment for both. Declaring one fixed association here was tried on 4Sep26 and the coincidence check correctly rejected 8 of the 12 anchors -- the archetype is the TYPE, and this relation is not a property of the type. Each anchor below carries its own where the tie is determinate."
+}
