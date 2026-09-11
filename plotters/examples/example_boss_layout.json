@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "ils": {
+    "name": "Boss sleeve over thick header",
+    "frame": "local",
+    "ownership": "lowest"
+  },
+  "pipeline": {
+    "OD_pipe": 0.4064,
+    "t_pipe": 0.021,
+    "provenance": "ILLUSTRATIVE"
+  },
+  "components": [
+    {
+      "id": "TP",
+      "code": "GD-TP",
+      "centre_x": 0,
+      "t_comp": 0.042,
+      "L_comp": 2.0
+    },
+    {
+      "id": "Boss",
+      "code": "GD-BOSS",
+      "centre_x": 0,
+      "OD_boss": 0.6,
+      "t_boss": 0.025,
+      "L_boss": 1.5
+    }
+  ],
+  "associations": []
+}

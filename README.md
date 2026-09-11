@@ -110,7 +110,7 @@ See `docs/EDPR_PMAP_APF_IMPLEMENTATION.md` for the full P-map node/link vocabula
 
 ```
 framework_manifest.json          Active manifest (v0.4). READ THIS FIRST.
-framework_manifest_v0_*.json     Version history.
+superseded/                      Archived manifests; root manifest is the only active one.
 
 schemas/                         Metaschemas: EDPR, EDES, EDAS, EDIKB.
 
@@ -119,7 +119,7 @@ knowledge/
     EDPR_PARSER_PROMPT_RUNTIME.md    Runtime parser prompt (APF/P-map mandatory).
     EDPR_APF_PARSER_PROMPT.md        Full APF parser prompt.
     examples/                        Validated worked EDPR problem maps.
-  edes/                          14 component knowledge files + EDES_SHARED.
+  edes/                          12 component knowledge files + EDES_SHARED.
   edas/                          EDAS_SHARED_KNOWLEDGE.json + standard_ils_layouts.json.
   edikb/                         EDIKB_FULL_KNOWLEDGE_GRAPH.json + EDIKB_FULL_DATASET.csv.
   knowloop/
@@ -141,7 +141,7 @@ plotters/                        ILS geometry plotters (component_spec, ils_buil
 docs/                            EDPR_Problem_Map_Spec, ONTOLOGY_CROSSWALK,
                                  EDPR_PMAP_APF_IMPLEMENTATION, KNOWLOOP_FEEDBACK_WORKFLOW.
 
-Reference Papers/                Source papers (APF-via-LLM, Problem-Map, ontology, NIST).
+Source-paper files are not included in the current checkout.
 ```
 
 ---
@@ -170,13 +170,14 @@ on Windows PowerShell, expand the file list yourself or use `Get-ChildItem`.
 ```bash
 python tools/EDPR_VALIDATOR.py --schema schemas/EDPR_METASCHEMA.json knowledge/edpr/examples/*.json
 python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json
-python tools/EDES_VALIDATOR.py tools/          # metaschema + EDES_*_KNOWLEDGE.json in one dir
-python tools/EDAS_VALIDATOR.py tools/          # metaschema + EDAS_SHARED + EDES files in one dir
 ```
 
-> The EDES/EDAS validators expect the metaschema and knowledge files to sit in one
-> directory (default: the script's own `tools/`); pass a directory argument to point
-> elsewhere.
+> The legacy EDES/EDAS validators require schemas and knowledge files together
+> in one directory. The repository stores them separately, so `tools/` is not
+> a valid data directory. To run these validators, first copy the relevant schemas
+> from `schemas/`, EDES JSON files from `knowledge/edes/`, and the EDAS shared JSON
+> from `knowledge/edas/` into a temporary directory under `runs/`, then pass that
+> directory to each validator.
 
 ### Run the full pipeline on an example
 
@@ -241,3 +242,23 @@ exploratory until expert acceptance.
   selection; a project outside that domain needs its own FEA/ML verification case.
 - No vector-index retrieval yet — retrieval is structured lookup driven by the EDPR
   retrieval plan (planned enhancement once P-map/APF and Knowloop behaviour are stable).
+
+
+## Plotting CLI and presentation configuration
+
+```bash
+python -m pip install -r plotters/requirements.txt
+python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png
+python tools/plot_component.py --component GD-TP --output runs/gd_tp.png
+```
+
+Both commands write JSON execution reports. Basic export, content, bounds, clipping and scale QA is enabled. Rendered label/legend
+correction is enabled; passing basic QA does not certify engineering validity.
+Edit `plotters/config/plot_style.yaml` for presentation and
+`plotters/config/component_catalog.json` for names, style mappings and plot support.
+See [plotter instructions](plotters/README.md) and [upload status](UPLOAD_MAP.md).
+
+
+## Phase 7 solver plotting
+
+Use the pipeline --plot option. See [workflow](docs/PHASE7_SOLVER_PLOTTING.md).

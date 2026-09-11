@@ -1322,8 +1322,8 @@ class PipBulkhead(TaperedThickBody):
     `section_at` still answers only for the inner pipe -- the two spans
     are deliberately different questions.
 
-    STILL OUT OF SCOPE: the Boss (a structural pipe welded to an end node,
-    carrying the connector element). See the notes on that in EDES.
+    Boss is now a separate coaxial sleeve component. A weld to a sleeve end
+    is not inferred automatically; declare actual assembly connections explicitly.
     """
     x_interior_R: Optional[float] = None    # m, from body centre (Sec.5.3)
     x_interior_L: Optional[float] = None
@@ -3759,3 +3759,92 @@ class Connector(Component):
     def contact_at(self, x: float) -> Optional['Contact']:
         """None always: never a contact surface."""
         return None
+
+@dataclass(frozen=True)
+class Boss(Component):
+    """GD-BOSS: coaxial sleeve, not a replacement header segment.
+
+    User clarification 11 Sep 2026: bore strictly clears the thick header OD.
+    source_pip is resolved by the builder; standalone callers supply OD/wall.
+    End features are sleeve ends, never automatic header-chain welds.
+    Attachment/load transfer to the header is not specified by this geometry.
+    """
+    OD_boss: float = 0.0
+    t_boss: float = 0.0
+    L_boss: Optional[float] = None
+    source_pip: str = ''
+    code: str = field(init=False, default='GD-BOSS')
+    iw_ea_class: tuple = field(init=False, default=('IW-A',))
+
+    def __post_init__(self):
+        if self.L_boss is None:
+            object.__setattr__(self, 'L_boss', 3*self.OD_boss)
+        self.validate()
+
+    @classmethod
+    def default_for(cls, pipe):
+        return {}
+
+    def validate(self):
+        values = (self.centre_x, self.OD_boss, self.t_boss, self.L_boss)
+        if not all(math.isfinite(v) for v in values):
+            raise GeometryRuleError('GD-BOSS dimensions must be finite')
+        if min(self.OD_boss, self.t_boss, self.L_boss) <= 0:
+            raise GeometryRuleError('GD-BOSS requires positive OD_boss, t_boss and L_boss')
+        if self.ID_boss <= self.pipe.OD_pipe:
+            raise GeometryRuleError('GD-BOSS bore must strictly exceed header OD; assembly also checks the thick section')
+
+    @property
+    def ID_boss(self):
+        return self.OD_boss - 2*self.t_boss
+
+    @property
+    def extent(self):
+        return self.centre_x-self.L_boss/2, self.centre_x+self.L_boss/2
+
+    @property
+    def sleeve_section(self):
+        return Section(self.OD_boss, self.t_boss, self.code)
+
+    @property
+    def steel_mass(self):
+        return pi/4*(self.OD_boss**2-self.ID_boss**2)*self.L_boss*config.RHO_STEEL
+
+    @property
+    def _tag(self):
+        return f'{self.code}@{self.centre_x:+.4f}'
+
+    def geometry_faces(self):
+        """Two wall strips in longitudinal section; the bore stays transparent."""
+        lo, hi = self.extent
+        outer, inner = self.OD_boss/2, self.ID_boss/2
+        return [[(lo,-outer),(hi,-outer),(hi,-inner),(lo,-inner)],
+                [(lo,inner),(hi,inner),(hi,outer),(lo,outer)]]
+
+    def geometry_nodes(self):
+        return [GeometryNode(f'{self._tag}:g{i}_{j}',x,y)
+                for i,face in enumerate(self.geometry_faces()) for j,(x,y) in enumerate(face)]
+
+    def geometry_lines(self):
+        return [GeometryLine(f'{self._tag}:face{i}_{j}',
+                    (f'{self._tag}:g{i}_{j}',f'{self._tag}:g{i}_{(j+1)%4}'),
+                    f'{self._tag}:sleeve', i==1 and j==2)
+                for i in range(2) for j in range(4)]
+
+    def structural_nodes(self):
+        lo,hi=self.extent
+        return [StructuralNode(f'{self._tag}:{name}',x,0.0,NodePriority.MANDATORY)
+                for name,x in [('endL',lo),('conMid',self.centre_x),('endR',hi)]]
+
+    def structural_lines(self):
+        return [StructuralLine(f'{self._tag}:sleeve',
+                    (f'{self._tag}:{a}',f'{self._tag}:{b}'),section=self.sleeve_section)
+                for a,b in [('endL','conMid'),('conMid','endR')]]
+
+    def section_at(self,x):
+        return None
+
+    def contact_at(self,x):
+        if not self.owns(x):
+            return None
+        return Contact(self.OD_boss/2,self.code,LoadPath.CONNECTOR,self.OD_boss/2)

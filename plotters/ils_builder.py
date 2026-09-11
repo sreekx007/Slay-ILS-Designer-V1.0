@@ -45,7 +45,7 @@ import component_spec as cs
 
 SCHEMA_VERSION = 1
 
-CLS = {'GD-TP': cs.ThickPipeBody, 'GD-TT': cs.TaperedThickBody,
+CLS = {'GD-BOSS': cs.Boss, 'GD-TP': cs.ThickPipeBody, 'GD-TT': cs.TaperedThickBody,
        'GD-SH': cs.OffsetShroud, 'GD-ST': cs.TopStructure,
        'GD-SB': cs.BaseStructure, 'GD-VLV': cs.Valve,
        'GD-B': cs.BranchPiping,
@@ -59,7 +59,7 @@ CLS = {'GD-TP': cs.ThickPipeBody, 'GD-TT': cs.TaperedThickBody,
        'GD-Con': cs.Connector}
 
 # Fields whose value is a name, not a number.
-STR_FIELDS = {'variant', 'support_connector', 'provenance',
+STR_FIELDS = {'source_pip', 'variant', 'support_connector', 'provenance',
               # Added 1 Sep 2026 with GD-Con. Without it the float() coercion
               # below turns conn_type='F' into a ValueError, making the
               # connector unbuildable from a definition -- the same failure
@@ -324,6 +324,25 @@ class ILS:
                 f'that component\'s structural nodes -- it would be '
                 f'excluded from mass and CoG'))
 
+        for cid, boss in zip(self.ids, self.components):
+            if boss.code != 'GD-BOSS':
+                continue
+            a, b = boss.extent
+            # Existing sections are constant or piecewise linear. Sample each
+            # boundary from both sides plus midpoints, including short bodies.
+            stations = sorted({a, b, *[x for x in self._section_stations() if a < x < b]})
+            maximum = self.pipe.OD_pipe
+            for left, right in zip(stations[:-1], stations[1:]):
+                for x in (math.nextafter(left, right), (left+right)/2, math.nextafter(right, left)):
+                    for other in self.components:
+                        if other is boss:
+                            continue
+                        section = other.section_at(x)
+                        if section is not None:
+                            maximum = max(maximum, section.OD)
+            if boss.ID_boss <= maximum:
+                out.append(Finding('error', cid, f'GD-BOSS bore {boss.ID_boss:g} must strictly exceed enclosed thick-section OD {maximum:g}'))
+            out.append(Finding('warning', cid, 'Boss sleeve-to-header attachment/load transfer is not specified; outer contact is a geometric envelope, not a verified load path.'))
         out.extend(self._check_associations())
         out.extend(self._check_header_chain())
         out.extend(self._check_connectors_modelled())
@@ -770,13 +789,14 @@ class ILS:
         it: several components carry no mass parameter at all, so this is a
         floor, not the structure's real weight."""
         d, _ = self._distributed_steel()
-        return d + self.lumped_mass
+        return d + self.lumped_mass + sum(c.steel_mass for c in self.components if c.code == 'GD-BOSS')
 
     @property
     def mass_breakdown(self) -> dict:
         d, _ = self._distributed_steel()
-        return {'pipe_steel_kg': d, 'point_masses_kg': self.lumped_mass,
-                'total_kg': d + self.lumped_mass}
+        sleeve = sum(c.steel_mass for c in self.components if c.code == 'GD-BOSS')
+        return {'pipe_steel_kg': d, 'sleeve_steel_kg': sleeve, 'point_masses_kg': self.lumped_mass,
+                'total_kg': d + sleeve + self.lumped_mass}
 
     @property
     def cog(self) -> tuple:
@@ -788,6 +808,10 @@ class ILS:
         the PIPEWORK, not of the assembly -- which is why this must be read
         with `mass_exclusions()`."""
         d_m, d_mx = self._distributed_steel()
+        for c in self.components:
+            if c.code == 'GD-BOSS':
+                d_m += c.steel_mass
+                d_mx += c.steel_mass*c.centre_x
         located, _ = self.located_point_masses()
         m = d_m + sum(p[1] for p in located)
         if m <= 0:
@@ -989,6 +1013,16 @@ def build_ils(spec: dict) -> ILS:
             kw['variant'] = variant
         if 'provenance' in params:
             kw['provenance'] = cs.Provenance[params.pop('provenance')]
+        if code == 'GD-BOSS' and params.get('source_pip'):
+            matches = [e for e in definition.get('components', []) if e.get('id') == params['source_pip']]
+            if len(matches) != 1 or matches[0]['code'] != 'GD-PIP':
+                raise ILSDefinitionError('GD-BOSS source_pip must reference exactly one GD-PIP')
+            source = build_ils({'pipeline': dict(definition['pipeline']),
+                                'components': [matches[0]]}).components[0]
+            for key, value in [('OD_boss', source.OD_outer), ('t_boss', source.t_outer)]:
+                if key in params and not math.isclose(float(params[key]), value, rel_tol=1e-10):
+                    raise ILSDefinitionError(f'GD-BOSS {key} must match source_pip')
+                params[key] = value
         base = defaults_for(code, pipe, variant or 'L')
         for k, v in params.items():
             if k in STR_FIELDS:
@@ -1026,7 +1060,7 @@ def build_ils(spec: dict) -> ILS:
 # missed exactly where a chain is longest.
 
 ID_STEM = {
-    'GD-HdPipe': 'hdpipe', 'GD-BrPipe': 'brpipe',
+    'GD-BOSS': 'boss', 'GD-HdPipe': 'hdpipe', 'GD-BrPipe': 'brpipe',
     'GD-TP': 'tp', 'GD-TT': 'tt', 'GD-PIP': 'pip', 'GD-VLV': 'vlv',
     'GD-SH': 'sh', 'GD-ST': 'st', 'GD-SB': 'sb',
     'GD-B': 'branch', 'GD-Con': 'con',

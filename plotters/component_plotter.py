@@ -58,22 +58,21 @@ import numpy as np
 import matplotlib.patches as mpatches
 
 from component_spec import NodePriority, LoadPath
+from plot_settings import STYLE, body_color, component_label, connector_symbol, require_renderer
 
 # --- palette ---------------------------------------------------------------
-GEOM_CONTACT = '#C2185B'     # geometry line that OWNS contact
-GEOM_SHAPE = '#8D8D8D'       # geometry line that is shape-only
-STRUCT = '#1A237E'           # structural line
-CONTACT_ENV = '#C1272D'      # sampled contact envelope
-CONN = '#00695C'             # connector tie lines
-CONN_BLUE = '#1565C0'        # ring/border on P, S and D symbols
-CONTACT_VIA_CONN = '#6A1B9A' # contact whose reaction runs through a connector
-PIPE = '#455A64'             # pipe centreline and surfaces
-MASS = '#6A1B9A'             # point masses
-DIM = '0.25'                 # dimension arrows
+GEOM_CONTACT = STYLE['colors']['GEOM_CONTACT']     # geometry line that OWNS contact
+GEOM_SHAPE = STYLE['colors']['GEOM_SHAPE']       # geometry line that is shape-only
+STRUCT = STYLE['colors']['STRUCT']           # structural line
+CONTACT_ENV = STYLE['colors']['CONTACT_ENV']      # sampled contact envelope
+CONN = STYLE['colors']['CONN']             # connector tie lines
+CONN_BLUE = STYLE['colors']['CONN_BLUE']        # ring/border on P, S and D symbols
+CONTACT_VIA_CONN = STYLE['colors']['CONTACT_VIA_CONN'] # contact whose reaction runs through a connector
+PIPE = STYLE['colors']['PIPE']             # pipe centreline and surfaces
+MASS = STYLE['colors']['MASS']             # point masses
+DIM = STYLE['colors']['DIM']                 # dimension arrows
 
-BODY_FILL = {'GD-ST': '#1C7FD6', 'GD-SB': '#8A9A2B', 'GD-TP': '#B0641E',
-             'GD-TT': '#7FA8C9', 'GD-SH': '#3E8E7E', 'GD-VLV': '#8E6C3E',
-             'GD-B': '#5D6D7E'}
+BODY_FILL = STYLE['component_colors']
 
 
 def _node_map(nodes):
@@ -97,10 +96,10 @@ def draw_pipe_reference(ax, pipe, lo, hi, band=True, label=True):
     the component's own business.
     """
     r = pipe.OD_pipe / 2.0
-    ax.plot([lo, hi], [0.0, 0.0], color=PIPE, lw=1.0, ls='-.', zorder=1,
+    ax.plot([lo, hi], [0.0, 0.0], color=PIPE, lw=STYLE['line_widths']['stroke_1_0'], ls='-.', zorder=1,
             label='pipe centreline' if label else None)
     for y in (r, -r):
-        ax.plot([lo, hi], [y, y], color=PIPE, lw=1.0, alpha=0.55, zorder=1)
+        ax.plot([lo, hi], [y, y], color=PIPE, lw=STYLE['line_widths']['stroke_1_0'], alpha=0.55, zorder=1)
     if band:
         ax.fill_between([lo, hi], [-r, -r], [r, r], color=PIPE, alpha=0.07,
                         zorder=0)
@@ -128,7 +127,7 @@ def draw_section_band(ax, owner, lo=None, hi=None, label=True):
     if not xs:
         return False
     ax.fill_between(xs, lo_y, hi_y, color=PIPE, alpha=0.30, zorder=2,
-                    lw=0, label='pipe section (section_at)' if label else None)
+                    lw=STYLE['line_widths']['stroke_0'], label='pipe section (section_at)' if label else None)
     return True
 
 
@@ -153,7 +152,7 @@ def draw_geometry(ax, comp, label=True):
             lab = ('geometry line -- owns contact' if gl.owns_contact
                    else 'geometry line -- shape only')
             seen.add(gl.owns_contact)
-        ax.plot([a.x, b.x], [a.y, b.y], ls='--', lw=1.9, color=col,
+        ax.plot([a.x, b.x], [a.y, b.y], ls='--', lw=STYLE['line_widths']['stroke_1_9'], color=col,
                 zorder=8, label=lab)
     for n in nm.values():
         mand = n.priority is NodePriority.MANDATORY
@@ -177,7 +176,7 @@ def draw_structural(ax, comp, label=True):
     sn = comp.structural_nodes()
     if not sn:
         x0, x1 = comp.extent
-        ax.plot([x0, x1], [0.0, 0.0], ls=':', lw=2.4, color=STRUCT, zorder=6,
+        ax.plot([x0, x1], [0.0, 0.0], ls=':', lw=STYLE['line_widths']['stroke_2_4'], color=STRUCT, zorder=6,
                 label="structural line -- none of its own, uses pipeline's"
                 if label else None)
         return False
@@ -185,7 +184,7 @@ def draw_structural(ax, comp, label=True):
     first = True
     for sl in comp.structural_lines():
         a, b = nm[sl.node_ids[0]], nm[sl.node_ids[1]]
-        ax.plot([a.x, b.x], [a.y, b.y], ls='-', lw=5.0, color=STRUCT,
+        ax.plot([a.x, b.x], [a.y, b.y], ls='-', lw=STYLE['line_widths']['stroke_5_0'], color=STRUCT,
                 alpha=0.30, solid_capstyle='round', zorder=6,
                 label='structural line' if (label and first) else None)
         first = False
@@ -197,7 +196,7 @@ def draw_structural(ax, comp, label=True):
     return True
 
 
-def draw_contact_envelope(ax, comp, n=241, label=True, lw=3.0):
+def draw_contact_envelope(ax, comp, n=241, label=True, lw=STYLE['line_widths']['stroke_3_0']):
     """The surface a roller sees, SAMPLED from `contact_at`, and DRAWN BY
     LOAD PATH.
 
@@ -252,7 +251,7 @@ def draw_contact_envelope(ax, comp, n=241, label=True, lw=3.0):
             c = comp.contact_at(float(xs[i]))
             ax.annotate(f'arm {c.arm:.3f} m', (xs[i], ys[i]),
                         textcoords='offset points', xytext=(0, 12),
-                        ha='center', fontsize=8, color=CONTACT_VIA_CONN,
+                        ha='center', fontsize=STYLE['fonts']['annotation'], color=CONTACT_VIA_CONN,
                         weight='bold', zorder=12)
     return bool(runs)
 
@@ -282,18 +281,18 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
 
     if ctype == 'F':
         ax.add_patch(mpatches.Rectangle((x - size/2, ym - size/2), size, size,
-                                        facecolor='black', edgecolor='black',
+                                        facecolor=STYLE['connector']['foreground'], edgecolor=STYLE['connector']['foreground'],
                                         zorder=13))
-        ax.annotate('F', (x, ym), fontsize=fs, color='white', ha='center',
+        ax.annotate(connector_symbol('F'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
                     va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'P':
         ax.add_patch(mpatches.Circle((x, ym), size * 0.50, facecolor='none',
                                      edgecolor=CONN_BLUE, lw=size * 16,
                                      zorder=12))
-        ax.add_patch(mpatches.Circle((x, ym), size * 0.34, facecolor='black',
+        ax.add_patch(mpatches.Circle((x, ym), size * 0.34, facecolor=STYLE['connector']['foreground'],
                                      edgecolor='none', zorder=13))
-        ax.annotate('P', (x, ym), fontsize=fs, color='white', ha='center',
+        ax.annotate(connector_symbol('P'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
                     va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'S':
@@ -305,23 +304,23 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
         wi, hi = w * 0.72, h * 0.68
         ax.add_patch(mpatches.FancyBboxPatch(
             (x - wi/2, ym - hi/2), wi, hi,
-            boxstyle=f'round,pad=0,rounding_size={hi/2}', facecolor='black',
+            boxstyle=f'round,pad=0,rounding_size={hi/2}', facecolor=STYLE['connector']['foreground'],
             edgecolor='none', zorder=13))
-        ax.annotate('S', (x, ym), fontsize=fs, color='white', ha='center',
+        ax.annotate(connector_symbol('S'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
                     va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'D':
         b = size
         ax.add_patch(mpatches.Rectangle((x - b/2, ym - b/2), b, b,
-                                        facecolor='white',
+                                        facecolor=STYLE['connector']['background'],
                                         edgecolor=CONN_BLUE, lw=size * 13,
                                         zorder=12))
         bh = b / 3.0
         for y0 in (ym + bh/2, ym - 1.5*bh):
             ax.add_patch(mpatches.Rectangle((x - b/2, y0), b, bh,
-                                            facecolor='black',
+                                            facecolor=STYLE['connector']['foreground'],
                                             edgecolor='none', zorder=13))
-        ax.annotate('D', (x, ym), fontsize=fs*0.9, color='black', ha='center',
+        ax.annotate(connector_symbol('D'), (x, ym), fontsize=fs*0.9, color=STYLE['connector']['foreground'], ha='center',
                     va='center', zorder=14, fontweight='bold')
 
 
@@ -332,17 +331,17 @@ def connector_legend_handles(kinds):
         if k not in kinds:
             continue
         if k == 'F':
-            out.append(mpatches.Patch(facecolor='black', edgecolor='black',
+            out.append(mpatches.Patch(facecolor=STYLE['connector']['foreground'], edgecolor=STYLE['connector']['foreground'],
                                       label='F -- fixed, all DOF'))
         elif k == 'P':
-            out.append(mpatches.Patch(facecolor='black', edgecolor=CONN_BLUE,
-                                      lw=2, label='P -- pin'))
+            out.append(mpatches.Patch(facecolor=STYLE['connector']['foreground'], edgecolor=CONN_BLUE,
+                                      lw=STYLE['line_widths']['stroke_2'], label='P -- pin'))
         elif k == 'S':
-            out.append(mpatches.Patch(facecolor='black', edgecolor=CONN_BLUE,
-                                      lw=2, label='S -- slot (releases axial)'))
+            out.append(mpatches.Patch(facecolor=STYLE['connector']['foreground'], edgecolor=CONN_BLUE,
+                                      lw=STYLE['line_widths']['stroke_2'], label='S -- slot (releases axial)'))
         else:
-            out.append(mpatches.Patch(facecolor='white', edgecolor=CONN_BLUE,
-                                      lw=2, label='D -- deadband (gap)'))
+            out.append(mpatches.Patch(facecolor=STYLE['connector']['background'], edgecolor=CONN_BLUE,
+                                      lw=STYLE['line_widths']['stroke_2'], label='D -- deadband (gap)'))
     return out
 
 
@@ -378,14 +377,14 @@ def draw_connectors(ax, comp, system=None, label=True):
     # future widening fails here rather than drawing something wrong.
     for slot, x, ctype, arm, gap in conns:
         if not zero_len:
-            ax.plot([x, x], [0.0, y_face], lw=2.0, color=CONN, zorder=11,
+            ax.plot([x, x], [0.0, y_face], lw=STYLE['line_widths']['stroke_2_0'], color=CONN, zorder=11,
                     label='connector element (2-node)'
                     if (label and first) else None)
             ax.plot([x], [0.0], 'o', ms=5, mfc='white', mec=CONN, mew=1.6,
                     zorder=12)
         draw_connector_symbol(ax, x, 0.0, y_face, ctype, size=size)
         ax.annotate(f'{slot}', (x, y_face), textcoords='offset points',
-                    xytext=(0, 15), ha='center', fontsize=7.5, color='0.35',
+                    xytext=(0, 15), ha='center', fontsize=STYLE['fonts']['small'], color='0.35',
                     zorder=12)
         first = False
     if label and conns:
@@ -420,7 +419,7 @@ def draw_branch_support(ax, comp, label=True):
     draw_connector_symbol(ax, e.x, e.y, e.y, ctype,
                           size=max(0.09, min(0.20, span * 0.028)))
     ax.annotate('support', (e.x, e.y), textcoords='offset points',
-                xytext=(0, 15), ha='center', fontsize=7.5, color='0.35',
+                xytext=(0, 15), ha='center', fontsize=STYLE['fonts']['small'], color='0.35',
                 zorder=14)
     if label:
         prev = getattr(ax, '_connector_handles', [])
@@ -451,7 +450,7 @@ def draw_point_masses(ax, comp, label=True):
         ax.plot([x], [y], '*', ms=15, mfc=MASS, mec='white', mew=1.0,
                 zorder=13, label='point mass' if (label and first) else None)
         ax.annotate(f'{m/1000:.1f} t', (x, y), textcoords='offset points',
-                    xytext=(9, 6), fontsize=8, color=MASS, weight='bold',
+                    xytext=(9, 6), fontsize=STYLE['fonts']['annotation'], color=MASS, weight='bold',
                     zorder=13)
         drawn.append((nid, m, x, y))
         first = False
@@ -522,12 +521,17 @@ def outline_polygon(comp, require_closed=True):
 
 def fill_outline(ax, comp, color=None, alpha=0.20, zorder=4):
     """Shade the body, but ONLY where the spec describes a closed face."""
+    if hasattr(comp, 'geometry_faces'):
+        for face in comp.geometry_faces():
+            ax.fill(*zip(*face), color=color or body_color(comp.code, '0.5'),
+                    alpha=alpha, zorder=zorder, lw=0)
+        return True
     poly = outline_polygon(comp, require_closed=True)
     if poly is None or len(poly) < 3:
         return False
-    col = color or BODY_FILL.get(comp.code, '0.5')
+    col = color or body_color(comp.code, '0.5')
     ax.fill([p[0] for p in poly], [p[1] for p in poly],
-            color=col, alpha=alpha, zorder=zorder, lw=0)
+            color=col, alpha=alpha, zorder=zorder, lw=STYLE['line_widths']['stroke_0'])
     return True
 
 
@@ -535,7 +539,7 @@ def fill_outline(ax, comp, color=None, alpha=0.20, zorder=4):
 # Dimensions -- endpoints from accessors ONLY
 # ---------------------------------------------------------------------------
 
-def dim_arrow(ax, x0, x1, y, text, color=DIM, fs=8.5):
+def dim_arrow(ax, x0, x1, y, text, color=DIM, fs=STYLE['fonts']['dimension']):
     """A dimension between two x that were RETURNED BY AN ACCESSOR.
 
     Never between two x this module computed. That restriction is what
@@ -544,7 +548,7 @@ def dim_arrow(ax, x0, x1, y, text, color=DIM, fs=8.5):
     if abs(x1 - x0) < 1e-9:
         return
     ax.annotate('', xy=(x1, y), xytext=(x0, y),
-                arrowprops=dict(arrowstyle='<->', color=color, lw=1.1))
+                arrowprops=dict(arrowstyle='<->', color=color, lw=STYLE['line_widths']['stroke_1_1']))
     ax.annotate(text, ((x0 + x1) / 2.0, y), textcoords='offset points',
                 xytext=(0, 3), ha='center', fontsize=fs, color=color)
 
@@ -607,7 +611,7 @@ def _param_table(ax, comp):
                  cellLoc='left', colWidths=[0.55, 0.45],
                  bbox=[0.0, 1.0 - hh, 1.0, hh])
     t.auto_set_font_size(False)
-    t.set_fontsize(8)
+    t.set_fontsize(STYLE['fonts']['annotation'])
     for (row, _), cell in t.get_celld().items():
         cell.set_edgecolor('0.85')
         if row == 0:
@@ -641,7 +645,7 @@ def data_bounds(comp, lo, hi, system=None):
 
 
 def plot_component(comp, system=None, title=None, path=None, table=True,
-                   dimensions=True, pad_frac=0.12, width=13.0):
+                   dimensions=True, pad_frac=0.12, width=STYLE['figure']['component_width']):
     """Detail view of ONE component on its pipe.
 
     `system` is the ILS-level connection system. Omitted, the component
@@ -650,6 +654,7 @@ def plot_component(comp, system=None, title=None, path=None, table=True,
     """
     import matplotlib.pyplot as plt
 
+    require_renderer(comp.code)
     x0, x1 = comp.extent
     pad = max(0.35, (x1 - x0) * pad_frac)
     lo, hi = x0 - pad, x1 + pad
@@ -703,22 +708,22 @@ def plot_component(comp, system=None, title=None, path=None, table=True,
     ax.set_ylabel('y (m, positive DOWN)')
     ax.spines[['top', 'right']].set_visible(False)
     sysline = f'   [{system}]' if system else ''
-    ax.set_title(title or f'{comp.code}  --  detail{sysline}',
-                 fontsize=11, weight='bold')
+    ax.set_title(title or f'{component_label(comp.code)}  --  detail{sysline}',
+                 fontsize=STYLE['fonts']['title'], weight='bold')
     h, l = ax.get_legend_handles_labels()
     for ph in getattr(ax, '_connector_handles', []):
         h.append(ph); l.append(ph.get_label())
     ax.legend(h, l, loc='upper center', bbox_to_anchor=(0.5, -0.26), ncol=3,
-              fontsize=7.5, framealpha=0.92)
+              fontsize=STYLE['fonts']['small'], framealpha=0.92)
 
     if missing:
         ax.annotate('UNRESOLVED point mass node(s): ' + ', '.join(missing),
-                    xy=(0.01, 0.02), xycoords='axes fraction', fontsize=8,
-                    color='#B71C1C', weight='bold')
+                    xy=(0.01, 0.02), xycoords='axes fraction', fontsize=STYLE['fonts']['annotation'],
+                    color=STYLE['colors']['WARNING'], weight='bold')
     if ax_t is not None:
         _param_table(ax_t, comp)
     else:
         fig.tight_layout()
     if path:
-        fig.savefig(path, dpi=150, bbox_inches='tight')
+        fig.savefig(path, dpi=STYLE['figure']['export_dpi'], bbox_inches='tight')
     return fig

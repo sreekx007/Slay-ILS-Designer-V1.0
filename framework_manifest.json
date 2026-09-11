@@ -19,8 +19,8 @@
     "provider": "github",
     "url": "https://github.com/sreekx007/Slay-ILS-Designer-V1.0",
     "default_branch": "main",
-    "checked_commit": "4623d8e4e9b40f0b35908ef00cbec16e54489907",
-    "checked_utc": "2026-09-09",
+    "checked_commit": "20e1c07abe98bb42881d03e205fcec86b5275575",
+    "checked_utc": "2026-09-11",
     "repo_access_status": "readable"
   },
   "canonical_layers": {
@@ -80,13 +80,12 @@
     "knowledge_edpr_examples": "knowledge/edpr/examples/",
     "tools": "tools/",
     "docs": "docs/",
-    "reference_papers": "Reference Papers/",
     "plotters_and_builders": "plotters/",
     "knowledge_knowloop": "knowledge/knowloop/",
     "superseded": "superseded/"
   },
   "repo_review": {
-    "summary": "Core knowledge folders, schemas, validators, EDIKB graph, EDIKB dataset, EDPR prompts/specs, EDPR examples, reference papers, plotter/builder files, and first-pass runtime pipeline scripts are present after applying this batch.",
+    "summary": "Core knowledge, schemas, runtime tools, plotters and archived manifests are present. Source-paper files are not included in the current checkout.",
     "json_parse_status": "All discovered JSON files in schemas/, knowledge/edes/, knowledge/edas/, knowledge/edikb/, and framework_manifest.json parsed successfully during review.",
     "naming_notes": [
       "Repository currently uses stable filenames without version suffixes, for example schemas/EDPR_METASCHEMA.json. Versioning should be carried inside the JSON metadata and this manifest.",
@@ -185,8 +184,8 @@
         "repo_path": "knowledge/edes/EDES_GD-BOSS_KNOWLEDGE.json",
         "status": "present",
         "required": true,
-        "description": "Boss/pad/interface component knowledge.",
-        "size_bytes": 15384
+        "description": "Implemented coaxial sleeve with bore clearance and optional GD-PIP dimension reference; header is not replaced.",
+        "size_bytes": 12090
       },
       {
         "id": "edes:GD-BrPipe",
@@ -389,6 +388,30 @@
         "status": "present",
         "required": false,
         "description": "CLI integration tests for exports, validation failures, reports, and input protection"
+      },
+      {
+        "id": "tool:test_plot_settings",
+        "repo_path": "tools/test_plot_settings.py",
+        "status": "present",
+        "description": "Presentation configuration and geometry preservation checks"
+      },
+      {
+        "id": "tool:test_plot_checker",
+        "repo_path": "tools/test_plot_checker.py",
+        "status": "present",
+        "description": "Adversarial tests for missing, corrupt, blank, clipped and distorted plots"
+      },
+      {
+        "id": "tool:test_plot_labels",
+        "repo_path": "tools/test_plot_labels.py",
+        "status": "present",
+        "description": "Collision repair, unresolved-case reporting, wrapping and geometry preservation tests"
+      },
+      {
+        "id": "tool:test_plot_components",
+        "repo_path": "tools/test_plot_components.py",
+        "status": "present",
+        "description": "All twelve EDES component builds/renders plus Boss clearance, mass, source-reference and header-preservation tests"
       }
     ],
     "docs": [
@@ -436,27 +459,27 @@
     "reference_papers": [
       {
         "repo_path": "Reference Papers/Apf via llm.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       },
       {
         "repo_path": "Reference Papers/Problem_Map_An_ontological_framework_for.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       },
       {
         "repo_path": "Reference Papers/Challenges in developing ontology for pf.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       },
       {
         "repo_path": "Reference Papers/Human in loop cdf with llm.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       },
       {
         "repo_path": "Reference Papers/Nist capturing product ontology.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       },
       {
         "repo_path": "Reference Papers/nistir 7173.pdf",
-        "status": "present"
+        "status": "not_in_current_checkout"
       }
     ],
     "plotters_and_builders": [
@@ -503,6 +526,41 @@
         "repo_path": "plotters/examples/example_valve_layout.json",
         "status": "present",
         "role": "Direct layout input example for tools/plot_design.py"
+      },
+      {
+        "repo_path": "plotters/config/plot_style.yaml",
+        "status": "present",
+        "role": "Editable presentation settings"
+      },
+      {
+        "repo_path": "plotters/config/component_catalog.json",
+        "status": "present",
+        "role": "Component display metadata and plot support"
+      },
+      {
+        "repo_path": "plotters/plot_settings.py",
+        "status": "present",
+        "role": "Validated style and catalog loader"
+      },
+      {
+        "repo_path": "plotters/_plot_defaults.py",
+        "status": "present",
+        "role": "Legacy presentation fallbacks"
+      },
+      {
+        "repo_path": "plotters/checkers/plot_checker.py",
+        "status": "present",
+        "role": "Basic export, content, geometry bounds, clipping and scale QA"
+      },
+      {
+        "repo_path": "plotters/checkers/label_overlap_checker.py",
+        "status": "present",
+        "role": "Rendered layout detection and bounded presentation correction"
+      },
+      {
+        "repo_path": "plotters/examples/example_boss_layout.json",
+        "status": "present",
+        "role": "Illustrative coaxial Boss sleeve over an intact thick header"
       }
     ],
     "knowloop": [
@@ -597,7 +655,8 @@
     "validate_edas": "python tools/EDAS_VALIDATOR.py --schema schemas/EDAS_METASCHEMA.json knowledge/edas/EDAS_SHARED_KNOWLEDGE.json",
     "check_pmap_apf_examples": "python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json",
     "run_pipeline_with_knowloop": "python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_ilt --solution-format md",
-    "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py"
+    "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py",
+    "test_plotters": "python -m unittest discover -s tools -p 'test_plot*.py'"
   },
   "llm_bootstrap_instructions": [
     "Read this manifest first.",
@@ -631,20 +690,29 @@
     ]
   },
   "local_update": {
-    "date": "2026-09-10",
-    "status": "local changes pending manual upload",
+    "date": "2026-09-11",
+    "status": "Phases 3 through 7 pending manual upload",
     "upload_map": "UPLOAD_MAP.md",
-    "summary": "Plotter Phases 1 and 2 completed locally; older root manifests archived in superseded/.",
+    "summary": "Plot configuration, QA, corrections and coaxial Boss sleeve implementation complete locally.",
     "verification": [
-      "Repository-root imports passed with PYTHONPATH=plotters.",
-      "ILS-TP built without validation findings; assembly and component PNG exports verified.",
-      "Five CLI integration tests passed, including six invalid-request cases; PNG/SVG exports and warning propagation verified without PYTHONPATH."
+      "Component and ILT default PNGs pixel-identical to Phase 2 baselines.",
+      "Nine CLI/configuration tests passed: exports, invalid input, fallback, override loading, catalog coverage and geometry preservation.",
+      "Phase 4: all 14 plotter tests passed, including corrupt/missing/blank exports, clipping, scale warnings and geometry preservation. Component/ILT sample exports produced no errors.",
+      "Phase 5: 18 plotter tests passed; explicit ILT passed_with_corrections with no remaining detected collisions.",
+      "Phase 6: 24 plotter tests passed; all 12 EDES components built and rendered in component and assembly views.",
+      "Phase 7: 29 distinct tests passed; EDPR-to-plot and Knowloop schema verified."
     ],
-    "known_plot_issue": "Existing assembly annotation overlap near the x-axis remains for the label-correction phase."
+    "known_plot_issue": "Boss sleeve attachment/load transfer remains unspecified and emits a warning. Large tables can require tall figures; leader crossings are not checked."
   },
   "plotter_commands": {
     "assembly": "python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png --report runs/ilt.report.json",
     "component": "python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output runs/gd_tp.png",
-    "report_scope": "Build findings, resolved defaults and export status only. Automated visual QA is not yet implemented."
+    "report_scope": "Build, export, basic QA and rendered layout correction audit; bounded correction and vector export limitations are documented."
+  },
+  "solver_plotting": {
+    "bridge": "tools/solution_to_layout.py",
+    "documentation": "docs/PHASE7_SOLVER_PLOTTING.md",
+    "example": "plotters/examples/example_edpr_ilt_layout.json",
+    "scope": "EDAS study reconstruction; expert review required."
   }
 }

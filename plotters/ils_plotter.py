@@ -60,9 +60,10 @@ import numpy as np
 
 import component_plotter as cp
 from component_spec import LoadPath
+from plot_settings import STYLE, body_color, component_label, label_priority, require_renderer
 
-DEEPEST = '#B71C1C'
-AMBIG = '#F9A825'
+DEEPEST = STYLE['colors']['DEEPEST']
+AMBIG = STYLE['colors']['AMBIG']
 
 
 def _codes_of(ils):
@@ -131,7 +132,7 @@ def draw_contact_envelope(ax, ils, n=800, lo=None, hi=None, label=True,
                 lab = ('contact envelope -- via CONNECTOR (moment arm)'
                        if via else 'contact envelope -- into PIPE WALL')
                 seen.add(lp)
-            ax.plot(xs[i:j], ys[i:j], lw=3.4,
+            ax.plot(xs[i:j], ys[i:j], lw=STYLE['line_widths']['stroke_3_4'],
                     color=cp.CONTACT_VIA_CONN if via else cp.CONTACT_ENV,
                     ls=(0, (6, 2)) if via else '-',
                     zorder=8, solid_capstyle='butt', label=lab)
@@ -141,7 +142,7 @@ def draw_contact_envelope(ax, ils, n=800, lo=None, hi=None, label=True,
                 # above it and the two collided.
                 ax.annotate(f'arm {arms[k]:.3f} m', (xs[k], ys[k]),
                             textcoords='offset points', xytext=(0, -15),
-                            ha='center', fontsize=8,
+                            ha='center', fontsize=STYLE['fonts']['annotation'],
                             color=cp.CONTACT_VIA_CONN, weight='bold',
                             zorder=13)
         i = j
@@ -167,7 +168,7 @@ def draw_contact_envelope(ax, ils, n=800, lo=None, hi=None, label=True,
             # printed over each other.
             ax.annotate(f'deepest {yd:.4f} m' + (f'  ({own})' if own else ''),
                         xy=(xd, yd), textcoords='offset points',
-                        xytext=(8, -14), fontsize=8.5, color=DEEPEST,
+                        xytext=(8, -14), fontsize=STYLE['fonts']['dimension'], color=DEEPEST,
                         weight='bold', zorder=13, va='top')
     return xs, ys, owners, paths, arms, ambiguous, deepest
 
@@ -216,6 +217,8 @@ def assembly_parameters(ils, deepest=None, ambiguous=None, paths=None):
         bd = ils.mass_breakdown
         rows.append(('mass (FLOOR)', f'{bd["total_kg"]:,.0f} kg'))
         rows.append(('  pipe steel', f'{bd["pipe_steel_kg"]:,.0f} kg'))
+        if bd.get('sleeve_steel_kg', 0):
+            rows.append(('  sleeve steel', '{:,.0f} kg'.format(bd['sleeve_steel_kg'])))
         rows.append(('  point masses', f'{bd["point_masses_kg"]:,.0f} kg'))
         cx, cy = ils.cog
         rows.append(('CoG x', f'{cx:+.4f} m'))
@@ -262,6 +265,9 @@ def assembly_parameters(ils, deepest=None, ambiguous=None, paths=None):
                     for v in val)))
             elif val is not None:
                 rows.append((f'  {nm}', str(val)))
+        if c.code == 'GD-BOSS':
+            rows.append(('  ID_boss', f'{c.ID_boss:.4f} m'))
+            rows.append(('  attachment', 'UNSPECIFIED'))
         # connector layout, from the ILS-level system
         if hasattr(c, 'active_connectors'):
             try:
@@ -300,7 +306,7 @@ def _param_panel(ax, rows):
                  cellLoc='left', colWidths=[0.44, 0.56],
                  bbox=[0.0, 0.0, 1.0, 1.0])
     t.auto_set_font_size(False)
-    t.set_fontsize(7.4)
+    t.set_fontsize(STYLE['fonts']['assembly_table'])
     for (row, _), cell in t.get_celld().items():
         cell.set_edgecolor('0.85')
         if row == 0:
@@ -326,14 +332,14 @@ def _exclusion_note(ax, exclusions):
                                subsequent_indent='   ')
     ax.annotate('MASS EXCLUDES\n' + '\n'.join(lines),
                 xy=(0.0, 1.0), xycoords='axes fraction',
-                va='top', ha='left', fontsize=6.2, color='#B71C1C')
+                va='top', ha='left', fontsize=STYLE['fonts']['exclusions'], color=STYLE['colors']['WARNING'])
 
 
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 
-def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
+def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['assembly_width'], n=800,
              label_components=True, panel=True, show_exclusions=True,
              xlim=None):
     """An ILS on its header, with the contact envelope and the
@@ -344,6 +350,8 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
     import matplotlib.pyplot as plt
 
     comps = list(ils.components)
+    for comp in comps:
+        require_renderer(comp.code, assembly=True)
     codes = _codes_of(ils)
     sysname = system or getattr(ils, 'connection_system', None)
     lo, hi = ils.header
@@ -436,7 +444,7 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
     if label_components:
         used = []
         x_tol = 0.06 * (hi - lo)
-        for comp, code in zip(comps, codes):
+        for comp, code in sorted(zip(comps, codes), key=lambda item: label_priority(item[1])):
             ys_n = [nd.y for nd in comp.geometry_nodes()]
             y_anchor = (sum(ys_n) / len(ys_n)) if ys_n else 0.0
             # Collision is a 2-D test. Checking y alone pushed two GD-TP
@@ -466,12 +474,12 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
                           abs(comp.centre_x - ux) < x_tol for ux, uy in used):
                     y_anchor -= 0.26
                 used.append((comp.centre_x, y_anchor))
-            ax.annotate(code, xy=(comp.centre_x, y_anchor),
-                        fontsize=9, ha='center', va='center', zorder=15,
-                        color=cp.BODY_FILL.get(code, '0.25'), weight='bold',
+            ax.annotate(component_label(code), xy=(comp.centre_x, y_anchor),
+                        fontsize=STYLE['fonts']['component_label'], ha='center', va='center', zorder=15,
+                        color=body_color(code, '0.25'), weight='bold',
                         bbox=dict(boxstyle='round,pad=0.22', fc='white',
-                                  ec=cp.BODY_FILL.get(code, '0.6'),
-                                  lw=0.9, alpha=0.90))
+                                  ec=body_color(code, '0.6'),
+                                  lw=STYLE['line_widths']['stroke_0_9'], alpha=0.90))
 
     ax.set_xlim(lo, hi)
     ax.set_ylim(y_lo, y_hi)
@@ -482,7 +490,7 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
         ax.annotate(f'VIEW CLIPPED to {lo:+.2f}..{hi:+.2f} m -- '
                     f'header is {clipped[0]:+.3f}..{clipped[1]:+.3f} m',
                     xy=(0.5, 1.005), xycoords='axes fraction', ha='center',
-                    fontsize=7.5, color='#B3261E', weight='bold')
+                    fontsize=STYLE['fonts']['small'], color=STYLE['colors']['CLIPPED'], weight='bold')
     ax.set_ylabel('y (m, positive DOWN)')
     ax.spines[['top', 'right']].set_visible(False)
 
@@ -490,7 +498,7 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
     head = title or ('ILS' + (f' "{name}"' if name else '') + '  --  '
                      + ' + '.join(codes))
     ax.set_title(head + (f'   [{sysname}]' if sysname else ''),
-                 fontsize=11, weight='bold')
+                 fontsize=STYLE['fonts']['title'], weight='bold')
     # Legend offset in AXES fractions must be converted from a physical
     # clearance, or it collapses onto the drawing whenever the axes is
     # short: -0.20 of a 0.9 in strip is 2 mm, not the ~15 mm intended.
@@ -499,7 +507,7 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
     for ph in getattr(ax, '_connector_handles', []):
         h.append(ph); l.append(ph.get_label())
     ax.legend(h, l, loc='upper center', bbox_to_anchor=(0.5, leg_off), ncol=3,
-              fontsize=7.5, framealpha=0.92)
+              fontsize=STYLE['fonts']['small'], framealpha=0.92)
 
     if ax_p is not None:
         exc = None
@@ -516,5 +524,5 @@ def plot_ils(ils, system=None, title=None, path=None, width=15.0, n=800,
         fig.tight_layout()
 
     if path:
-        fig.savefig(path, dpi=150, bbox_inches='tight')
+        fig.savefig(path, dpi=STYLE['figure']['export_dpi'], bbox_inches='tight')
     return fig

@@ -107,19 +107,31 @@ def execute(args, make_spec, component=False):
             raise ValueError('Output extension must be .png, .svg, or .pdf')
         output.parent.mkdir(parents=True, exist_ok=True)
         import matplotlib.pyplot as plt
+        from plot_settings import STYLE
         try:
             fig = ils.plot_component(0, title=args.title) if component else ils.plot(title=args.title)
-            fig.savefig(output, dpi=150, bbox_inches='tight')
+            from checkers.label_overlap_checker import correct_layout
+            report['plot_qa_status'] = 'failed'
+            correct_layout(fig)
+            fig.savefig(output, dpi=STYLE['figure']['export_dpi'], bbox_inches='tight')
+            from checkers.plot_checker import check_plot
+            report['plot_qa_status'] = 'failed'
+            qa = check_plot(fig, ils.components, output)
+            report['plot_qa_status'] = qa['plot_qa_status']
+            report['layout_qa'] = getattr(fig, '_layout_qa', {})
+            for key in ('checks', 'errors', 'warnings', 'corrections'):
+                report[key].extend(qa[key])
         finally:
             plt.close('all')
         if not output.is_file() or output.stat().st_size == 0:
             raise ValueError('Image export did not produce a nonempty file')
         report['output_image'] = str(output)
         report['checks'].append({'id': 'image_export', 'status': 'passed'})
-        report['plot_status'] = 'warning' if report['warnings'] else 'passed'
+        report['plot_status'] = 'failed' if report['errors'] else 'warning' if report['warnings'] else 'passed_with_corrections' if report['corrections'] else 'passed'
     except Exception as exc:
         report['errors'].append(f'{type(exc).__name__}: {exc}')
-    report['checks'].append({'id': 'visual_plot_qa', 'status': 'not_applicable', 'message': 'Automated visual QA is not implemented in Phase 2.'})
+    if report['plot_qa_status'] == 'not_applicable':
+        report['checks'].append({'id': 'plot_qa', 'status': 'not_applicable', 'message': 'Build or export did not reach plot QA.'})
     try:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')

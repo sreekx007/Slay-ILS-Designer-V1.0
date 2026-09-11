@@ -46,7 +46,7 @@ def read_text_argument(value: str | None, path: str | None) -> str:
 
 def prepare_parser_prompt(problem_text: str, output_dir: Path) -> Path:
     runtime_prompt_path = REPO_ROOT / "knowledge" / "edpr" / "EDPR_PARSER_PROMPT_RUNTIME.md"
-    manifest_path = REPO_ROOT / "framework_manifest_v0_2.json"
+    manifest_path = REPO_ROOT / "framework_manifest.json"
     if not runtime_prompt_path.exists():
         raise SystemExit(f"Missing runtime prompt: {runtime_prompt_path}")
 
@@ -83,7 +83,7 @@ def prepare_parser_prompt(problem_text: str, output_dir: Path) -> Path:
     return out
 
 
-def run_existing_edpr(edpr_json: Path, output_dir: Path, solution_format: str) -> None:
+def run_existing_edpr(edpr_json: Path, output_dir: Path, solution_format: str, plot: bool = False) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     context_json = output_dir / f"{edpr_json.stem}.retrieval_context.json"
     solution_ext = "json" if solution_format == "json" else "md"
@@ -119,7 +119,31 @@ def run_existing_edpr(edpr_json: Path, output_dir: Path, solution_format: str) -
         knowloop_args.extend(["--solution-json", str(solution_path)])
     else:
         knowloop_args.extend(["--solution-md", str(solution_path)])
+    plot_failed = False
+    if plot:
+        structured = output_dir / f"{edpr_json.stem}.solution.json"
+        if solution_format != "json":
+            run_command([sys.executable, str(solve), str(context_json), "--format", "json", "--output", str(structured)])
+        layout = output_dir / f"{edpr_json.stem}.layout.json"
+        layout_report = output_dir / f"{edpr_json.stem}.layout.report.json"
+        plot_report = output_dir / f"{edpr_json.stem}.plot.report.json"
+        image = output_dir / f"{edpr_json.stem}.png"
+        result = subprocess.run([sys.executable, str(TOOLS_DIR / "solution_to_layout.py"),
+                                 "--solution", str(structured), "--output", str(layout),
+                                 "--report", str(layout_report)], cwd=str(REPO_ROOT))
+        knowloop_args.extend(["--layout-report", str(layout_report)])
+        plot_failed = result.returncode != 0
+        if not plot_failed:
+            result = subprocess.run([sys.executable, str(TOOLS_DIR / "plot_design.py"),
+                                     "--input", str(layout), "--output", str(image),
+                                     "--report", str(plot_report)], cwd=str(REPO_ROOT))
+            knowloop_args.extend(["--plot-report", str(plot_report)])
+            plot_failed = result.returncode != 0
+        if plot_failed:
+            knowloop_args.extend(["--outcome-status", "failed"])
     run_command(knowloop_args)
+    if plot_failed:
+        raise SystemExit(1)
 
     print("")
     print("Pipeline complete.")
@@ -135,11 +159,12 @@ def main() -> int:
     parser.add_argument("--problem-file", default=None, help="Text file containing natural-language problem text.")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Directory for pipeline outputs.")
     parser.add_argument("--solution-format", choices=("md", "json"), default="md")
+    parser.add_argument("--plot", action="store_true", help="Emit an EDAS study layout, plot QA and Knowloop visual feedback.")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
     if args.edpr_json:
-        run_existing_edpr(Path(args.edpr_json).resolve(), output_dir.resolve(), args.solution_format)
+        run_existing_edpr(Path(args.edpr_json).resolve(), output_dir.resolve(), args.solution_format, args.plot)
         return 0
 
     problem_text = read_text_argument(args.problem_text, args.problem_file)

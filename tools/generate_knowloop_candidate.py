@@ -358,6 +358,36 @@ def build_candidate(args: argparse.Namespace) -> dict[str, Any]:
             "candidate_kb_only_until_accepted": True,
         },
     }
+    for field in ("layout_report", "plot_report"):
+        report_path = getattr(args, field, None)
+        if not report_path:
+            continue
+        report = load_json(Path(report_path))
+        candidate["pipeline_trace"][field] = report_path
+        candidate["evidence_trace"].append({
+            "source_type": field.upper(), "source_id": report.get("candidate"),
+            "repo_path": report_path, "note": "Automated visual feedback; expert review pending.",
+            "report": report,
+        })
+        errors = report.get("errors", [])
+        warnings = report.get("warnings", [])
+        needs_review = report.get("expert_review_required", False)
+        if errors or warnings or needs_review or report.get("plot_status") == "failed" or report.get("status") == "failed":
+            failed = errors or report.get("plot_status") == "failed" or report.get("status") == "failed"
+            if failed or candidate["outcome_summary"]["design_outcome_status"] != "failed":
+                candidate["outcome_summary"]["design_outcome_status"] = "failed" if failed else "partial"
+            candidate["candidate_type"] = "failure_record" if candidate["outcome_summary"]["design_outcome_status"] == "failed" else "improvement"
+            candidate["llm_self_rating"]["confidence"] = "low"
+            candidate["suggested_updates"].append({
+                "update_id": "kl:update:" + field, "target_layer": "Tools",
+                "update_type": "improvement", "priority": "high" if failed else "medium",
+                "issue": str(errors or warnings or "Layout requires expert review."),
+                "suggested_change": "Review layout provenance and visual findings, then record an expert decision.",
+                "evidence_requirement": "Reviewed layout and passing plot report.",
+                "status": "proposed",
+            })
+            candidate["outcome_summary"]["known_limitations"].append(
+                field + ": automated findings require expert review; see evidence_trace.")
     return candidate
 
 
@@ -367,6 +397,8 @@ def main() -> int:
     parser.add_argument("--context-json", default=None)
     parser.add_argument("--solution-json", default=None)
     parser.add_argument("--solution-md", default=None)
+    parser.add_argument("--layout-report", default=None)
+    parser.add_argument("--plot-report", default=None)
     parser.add_argument("--output", "-o", required=True)
     parser.add_argument("--candidate-id", default=None)
     parser.add_argument("--outcome-status", choices=("auto", "successful", "partial", "failed", "not_run"), default="auto")

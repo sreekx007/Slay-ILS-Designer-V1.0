@@ -1,3 +1,5 @@
 numpy
 matplotlib
 PyYAML
+
+jsonschema>=4.18

@@ -1,0 +1,58 @@
+colors:
+  GEOM_CONTACT: '#C2185B'
+  GEOM_SHAPE: '#8D8D8D'
+  STRUCT: '#1A237E'
+  CONTACT_ENV: '#C1272D'
+  CONN: '#00695C'
+  CONN_BLUE: '#1565C0'
+  CONTACT_VIA_CONN: '#6A1B9A'
+  PIPE: '#455A64'
+  MASS: '#6A1B9A'
+  DIM: '0.25'
+  DEEPEST: '#B71C1C'
+  AMBIG: '#F9A825'
+  WARNING: '#B71C1C'
+  CLIPPED: '#B3261E'
+component_colors:
+  GD-ST: '#1C7FD6'
+  GD-SB: '#8A9A2B'
+  GD-TP: '#B0641E'
+  GD-TT: '#7FA8C9'
+  GD-SH: '#3E8E7E'
+  GD-VLV: '#8E6C3E'
+  GD-B: '#5D6D7E'
+  GD-BOSS: '#A05A92'
+fonts:
+  annotation: 8
+  small: 7.5
+  dimension: 8.5
+  component_label: 9
+  title: 11
+  assembly_table: 7.4
+  exclusions: 6.2
+line_widths:
+  stroke_0: 0.0
+  stroke_0_9: 0.9
+  stroke_1_0: 1.0
+  stroke_1_1: 1.1
+  stroke_1_9: 1.9
+  stroke_2_0: 2.0
+  stroke_2: 2.0
+  stroke_2_4: 2.4
+  stroke_3_0: 3.0
+  stroke_3_4: 3.4
+  stroke_5_0: 5.0
+figure:
+  component_width: 13.0
+  assembly_width: 15.0
+  export_dpi: 150
+labels:
+  format: code
+connector:
+  foreground: black
+  background: white
+  symbols:
+    F: F
+    P: P
+    S: S
+    D: D

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "components": [
+    {
+      "component_code": "GD-HdPipe",
+      "display_name": "Header Pipe",
+      "ontology_source": "knowledge/edes/EDES_GD-HdPipe_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-HdPipe",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-BrPipe",
+      "display_name": "Branch Pipe",
+      "ontology_source": "knowledge/edes/EDES_GD-BrPipe_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-BrPipe",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-TP",
+      "display_name": "Thick Pipe",
+      "ontology_source": "knowledge/edes/EDES_GD-TP_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-TP",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-TT",
+      "display_name": "Tapered Thick Pipe",
+      "ontology_source": "knowledge/edes/EDES_GD-TT_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-TT",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-SH",
+      "display_name": "Shroud",
+      "ontology_source": "knowledge/edes/EDES_GD-SH_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-SH",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-PIP",
+      "display_name": "Pipe-in-Pipe Bulkhead",
+      "ontology_source": "knowledge/edes/EDES_GD-PIP_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-PIP",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-VLV",
+      "display_name": "Valve",
+      "ontology_source": "knowledge/edes/EDES_GD-VLV_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-VLV",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-ST",
+      "display_name": "Top Structure",
+      "ontology_source": "knowledge/edes/EDES_GD-ST_KNOWLEDGE.json",
+      "component_family": "external_structure",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-ST",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-SB",
+      "display_name": "Base Structure",
+      "ontology_source": "knowledge/edes/EDES_GD-SB_KNOWLEDGE.json",
+      "component_family": "external_structure",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-SB",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-B",
+      "display_name": "Branch Piping Assembly",
+      "ontology_source": "knowledge/edes/EDES_GD-B_KNOWLEDGE.json",
+      "component_family": "branch_assembly",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-B",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-Con",
+      "display_name": "Connector",
+      "ontology_source": "knowledge/edes/EDES_GD-Con_KNOWLEDGE.json",
+      "component_family": "component",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-Con",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    },
+    {
+      "component_code": "GD-BOSS",
+      "display_name": "Boss",
+      "ontology_source": "knowledge/edes/EDES_GD-BOSS_KNOWLEDGE.json",
+      "component_family": "coaxial_sleeve",
+      "renderer": "accessor_renderer",
+      "label_priority": "medium",
+      "default_style_key": "GD-BOSS",
+      "supports_component_plot": true,
+      "supports_assembly_plot": true
+    }
+  ]
+}
