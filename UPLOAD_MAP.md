@@ -4,14 +4,14 @@ Updated: 2026-09-11
 Repository: sreekx007/Slay-ILS-Designer-V1.0
 Target branch: main
 Latest GitHub review: 2026-09-11
-Previous remote commit reviewed: `20e1c07abe98bb42881d03e205fcec86b5275575`
-Phases 3 through 7 pushed: `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`
+Phase 1 and 2 baseline: `20e1c07abe98bb42881d03e205fcec86b5275575`
+Phases 3 through 7 implementation: `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`
+Push-status record: `07f12357affa17d90458cbb2ee6311a62b780211`
+Pending manual uploads: none.
 
-The fetched `origin/main` is unchanged from the previous review. It contains
-Phase 1 packaging, Phase 2, and the archived manifests. These local files still
-match GitHub and need no upload: `.gitignore`, `plotters/slay_config.yaml`,
-both original layout examples, `tools/plot_component.py`,
-`tools/plot_design.py`, and the four versioned manifests under `superseded/`.
+GitHub `main` contains Phases 1 through 7. This update refreshes the root
+README for the current toolchain and workflow principles. Local environments,
+generated `runs/` artifacts, Python caches, and `.git/` remain excluded.
 
 ## Consolidated Phase 3 through 7 upload   confirmed
 
@@ -138,7 +138,7 @@ Upload the latest local versions shared with earlier batches. No deletions.
 The explicit ILT example now exports with leader labels and wrapped title/table,
 and records before/after corrections and remaining issues. All 18 plotter tests passed after the final whitespace diagnostic; git diff
 whitespace checks also passed.
-Keep runs/phase5 local. No Phase 5 changes have been pushed.
+Keep runs/phase5 local. Phase 5 was pushed in commit `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`.
 
 
 ## Phase 6 coaxial Boss and component coverage   confirmed

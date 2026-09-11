@@ -1,264 +1,229 @@
 # Slay-ILS-Designer
 
-**Ontology-grounded, RAG-enabled expert design framework for subsea inline structures (ILS).**
+Ontology-grounded engineering design support for subsea pipeline inline structures (ILS).
 
-Slay-ILS-Designer turns a natural-language design request about a subsea pipeline inline
-structure — a branch/tee, an inline valve, a thick-wall section, a tapered transition, a
-guide shroud, an external top or base structure — into a **traceable, evidence-cited
-design recommendation**. It does this by forcing every request through a fixed pipeline
-that makes the problem structure explicit *before* any retrieval or solving happens, grounds
-the reasoning in a curated engineering knowledge base, and records a feedback candidate
-after every run.
+Slay-ILS-Designer turns a structured engineering problem into traceable retrieval, evidence-ranked study recommendations, inspectable EDAS layouts, plot-quality reports, and a Knowloop feedback candidate. It combines typed engineering knowledge with deterministic Python tools and defined LLM reasoning stages.
 
-It is a **neuro-symbolic / compound AI system**: a curated symbolic knowledge base
-(ontology + typed behaviour rules + numeric evidence) with LLM stages for parsing and
-reasoning, wired together by an orchestrator with schema validators, a retriever, a
-first-pass numeric solver, and a human-in-the-loop feedback loop.
+The current repository supports a complete run from an existing EDPR JSON file. Natural-language-to-EDPR parsing is specified by prompts and schemas, but still requires a manual or external LLM step.
 
----
+## What the toolchain does
 
-## The five knowledge layers
+- Represents objectives, constraints, candidate families, evidence needs, and solver intent in EDPR.
+- Validates EDPR schema structure and P-map/APF semantic completeness.
+- Retrieves component knowledge from EDES, assembly rules and anchors from EDAS, and behavioral/numeric evidence from EDIKB.
+- Produces a first-pass evidence ranking for retrieved study candidates.
+- Maps a reviewed solver candidate to a known EDAS study layout without guessing unknown mappings.
+- Builds and plots complete assemblies or individual components.
+- Corrects bounded presentation issues such as label placement while preserving engineering geometry.
+- Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
+- Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
 
-| Layer | Name | Role |
-|---|---|---|
-| **EDPR** | Engineering Design **Problem** Representation | Converts the NL request into an APF / P-map JSON: objectives, constraints, candidate solution families, retrieval plan, evidence requirements. |
-| **EDES** | Engineering Design **Equipment** Schema | Per-component / OAM part knowledge under the FBS-OAM framework (GD-B, GD-TP, GD-TT, GD-SH, GD-ST, GD-Con, …). |
-| **EDAS** | Engineering Design **Assembly** Schema | Assembly-build rules, valid topology, interface logic, standard layout anchors. |
-| **EDIKB** | Engineering Design **Intelligence** Knowledge Base | Behaviour knowledge graph (rules, guidance, uncertainty, interaction candidates) + a numeric evidence dataset for quantitative comparison. |
-| **Knowloop** | **Feedback** Candidate Knowledge Base | Captures one feedback candidate after every query. Candidate knowledge is exploratory; official KB updates require human/expert review. |
+The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 
----
+## Workflow principles
 
-## The process
+1. **Represent the problem before retrieving.** EDPR must express APF intent, P-map nodes and links, formal requirements, retrieval targets, and the solver plan before knowledge is selected.
+2. **Keep knowledge responsibilities separate.** EDPR defines the problem; EDES defines components; EDAS defines assemblies and layouts; EDIKB provides behavioral and numeric evidence; Knowloop records review candidates.
+3. **Bound every conclusion by its evidence.** Study rankings apply only to the retrieved rows and stated domain. Missing or weak evidence becomes a limitation or future-study candidate.
+4. **Do not invent layout mappings.** Solver-to-layout conversion uses exact EDAS anchors and explicit reviewed derivations. Unknown candidates fail with a machine-readable report.
+5. **Keep engineering geometry immutable during plot QA.** The checker may move labels, leaders, legends, margins, or table presentation. It must not move components or change dimensions to make a plot look valid.
+6. **Make every stage inspectable.** Runtime stages produce JSON or Markdown artifacts, explicit findings, exit codes, provenance, assumptions, and residual risks.
+7. **Require review before knowledge promotion.** Knowloop candidates never modify official EDPR, EDES, EDAS, EDIKB, layouts, or tools automatically.
+8. **Preserve source meaning and omissions.** Derived/default values are reported, while omitted design inputs remain omitted unless the model contract explicitly resolves them.
 
-Every design query runs through this nine-step sequence
-(`framework_manifest.json` → `runtime_sequence`, orchestrated by
-`tools/run_edpr_pipeline.py`):
+## Runtime workflow
 
-```
-1. read_manifest            Load framework_manifest.json — discover schemas, prompts,
-                            knowledge sources, tools, examples, Knowloop policy.
-
-2. parse_problem_to_edpr    NL request -> EDPR problem-map JSON, using
-   (LLM step)               knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md.
-                            The parse MUST express APF and P-map before retrieval:
-                              request -> APF interpretation (Action / Product / Function)
-                                      -> P-map nodes + links
-                                      -> APF requirement tuples  r = (Z, M, C)
-                                      -> retrieval plan
-                                      -> solver plan
-
-3. validate_edpr            tools/EDPR_VALIDATOR.py against schemas/EDPR_METASCHEMA.json.
-   (gate)                   Full JSON-Schema Draft 2020-12 + EDPR-specific checks
-                            (ID format, ontology links, retrieval-plan coverage).
-
-4. check_pmap_apf           tools/check_pmap_apf.py --strict.
-   (gate)                   Verifies the parse is not merely schema-valid but
-                            structurally useful: enough P-map nodes, links, and
-                            formalised requirement tuples to drive retrieval.
-
-5. retrieve_context         tools/retrieve_context.py.
-                            Loads the relevant EDES components, EDAS assembly rules,
-                            standard layout anchors, EDIKB graph nodes/edges, and
-                            EDIKB numeric rows named by the EDPR retrieval &
-                            numericComparison plans.
-
-6. reason_over_candidates   EDAS for topology/interface validity, EDES for component
-   (LLM step)               constraints (roller contact, envelope, connections),
-                            EDIKB graph for behaviour rules and guidance,
-                            EDIKB dataset for quantitative evidence.
-
-7. handle_feature_          Check EDIKB interaction nodes and combined-case rows.
-   interactions             Do NOT assume simple superposition of isolated component
-                            effects unless direct combined evidence supports it.
-
-8. solve_and_explain        Rank options against the EDPR objectives / rankingCriteria,
-                            cite graph + dataset evidence, state assumptions, and mark
-                            weakly-supported conclusions as future FEA/ML study needs.
-                            (tools/solve_problem.py is a first-pass numeric ranker;
-                            objective-specific scoring from rankingCriteria is on the
-                            roadmap.)
-
-9. emit_knowloop_candidate  tools/generate_knowloop_candidate.py — ALWAYS, whether the
-                            outcome was successful, partial, or failed. The candidate
-                            goes to human/expert review; accepted ones are promoted
-                            into the official KB.
+```mermaid
+flowchart LR
+    A[Natural-language request] -. manual or external LLM .-> B[EDPR JSON]
+    B --> C[Schema validation]
+    C --> D[P-map and APF gate]
+    D --> E[EDES / EDAS / EDIKB retrieval]
+    E --> F[Evidence ranking]
+    F --> G[EDAS study layout]
+    G --> H[Build and render]
+    H --> I[Layout correction and plot QA]
+    F --> J[Knowloop candidate]
+    G --> J
+    I --> J
+    J --> K[Human / expert review]
+    K --> L[Accepted official update]
 ```
 
-**Why the two gates (steps 3–4) matter:** they stop a weak parse — where the LLM jumps
-straight from user text to candidate components without making the problem structure
-visible — from reaching retrieval. If a design answer is later found weak, the failure can
-be localised to APF interpretation, P-map construction, retrieval, numeric ranking, or
-solver judgement rather than being lost in an opaque prompt.
+The deterministic orchestrator is `tools/run_edpr_pipeline.py`. For an existing EDPR it runs validation, P-map/APF checking, retrieval, solving, optional layout/plot generation, and Knowloop emission.
 
-### APF requirement tuple
+Natural-language parsing remains outside the orchestrator. To prepare the parser input:
 
-Requirements are formalised as `r = (Z, M, C)`:
-
-| Item | Meaning | Example |
-|---|---|---|
-| **Z** | Zone / domain / option set / evaluation region / condition | L-shaped ILT candidate layouts, S-lay overbend |
-| **M** | Metric / response / feature / validity measure | Peak nominal strain in the header pipeline |
-| **C** | Constraint / comparison / objective / preference / verification | `minimize`, listwise rank; or `== 2.0`; or `>= 4` |
-
-See `docs/EDPR_PMAP_APF_IMPLEMENTATION.md` for the full P-map node/link vocabulary and
-`docs/EDPR_Problem_Map_Spec.md` for the problem-map specification.
-
----
-
-## Repository layout
-
-```
-framework_manifest.json          Active manifest (v0.4). READ THIS FIRST.
-superseded/                      Archived manifests; root manifest is the only active one.
-
-schemas/                         Metaschemas: EDPR, EDES, EDAS, EDIKB.
-
-knowledge/
-  edpr/
-    EDPR_PARSER_PROMPT_RUNTIME.md    Runtime parser prompt (APF/P-map mandatory).
-    EDPR_APF_PARSER_PROMPT.md        Full APF parser prompt.
-    examples/                        Validated worked EDPR problem maps.
-  edes/                          12 component knowledge files + EDES_SHARED.
-  edas/                          EDAS_SHARED_KNOWLEDGE.json + standard_ils_layouts.json.
-  edikb/                         EDIKB_FULL_KNOWLEDGE_GRAPH.json + EDIKB_FULL_DATASET.csv.
-  knowloop/
-    KNOWLOOP_FEEDBACK_SCHEMA.json
-    templates/  candidates/  accepted/  rejected/
-
-tools/
-  EDPR_VALIDATOR.py  EDES_VALIDATOR.py  EDAS_VALIDATOR.py
-  check_pmap_apf.py                  P-map/APF semantic completeness checker.
-  retrieve_context.py               Context package builder.
-  solve_problem.py                  First-pass numeric ranker.
-  generate_knowloop_candidate.py    Feedback candidate emitter.
-  run_edpr_pipeline.py              Orchestrator for steps 3-9.
-
-plotters/                        ILS geometry plotters (component_spec, ils_builder,
-                                 ils_plotter, …). Draw an ILS on its header with the
-                                 roller-contact envelope; ILS-tier only (no stinger/rollers).
-
-docs/                            EDPR_Problem_Map_Spec, ONTOLOGY_CROSSWALK,
-                                 EDPR_PMAP_APF_IMPLEMENTATION, KNOWLOOP_FEEDBACK_WORKFLOW.
-
-Source-paper files are not included in the current checkout.
+```bash
+python tools/run_edpr_pipeline.py --problem-file problem.txt --output-dir runs/problem
 ```
 
----
+This writes `edpr_parser_input.prompt.md`. Give that prompt to an LLM, validate the returned EDPR JSON, then run the deterministic pipeline.
+
+## Knowledge layers
+
+| Layer | Responsibility | Primary content |
+| --- | --- | --- |
+| EDPR | Problem representation and retrieval/solver intent | `schemas/EDPR_METASCHEMA.json`, parser prompts, examples |
+| EDES | Component meaning, parameters, constraints, and behavior | `knowledge/edes/` |
+| EDAS | Assembly topology, interfaces, rules, and layout anchors | `knowledge/edas/` |
+| EDIKB | Behavior graph, uncertainty, guidance, and numeric evidence | `knowledge/edikb/` |
+| Knowloop | Reviewable feedback candidates and promotion policy | `knowledge/knowloop/` |
+
+APF-style requirements use `r = (Z, M, C)`:
+
+| Field | Meaning |
+| --- | --- |
+| Z | Zone, domain, candidate set, condition, or evaluation region |
+| M | Metric, response, feature, or validity measure |
+| C | Constraint, comparison, objective, preference, or verification rule |
+
+See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [problem-map specification](docs/EDPR_Problem_Map_Spec.md), and [ontology crosswalk](docs/ONTOLOGY_CROSSWALK.md).
+
+## Toolchain reference
+
+| Tool | Application |
+| --- | --- |
+| `tools/EDPR_VALIDATOR.py` | JSON Schema and EDPR-specific validation |
+| `tools/check_pmap_apf.py` | Semantic gate for usable P-map/APF content |
+| `tools/retrieve_context.py` | Builds a traceable EDES/EDAS/EDIKB context package |
+| `tools/solve_problem.py` | First-pass ranking of retrieved numeric study candidates |
+| `tools/solution_to_layout.py` | Materializes a known solver candidate from EDAS anchors |
+| `tools/plot_design.py` | Builds, renders, corrects, checks, and reports an assembly |
+| `tools/plot_component.py` | Builds and reports an individual EDES component |
+| `plotters/checkers/label_overlap_checker.py` | Bounded label, legend, margin, title, and table corrections |
+| `plotters/checkers/plot_checker.py` | Export, content, bounds, clipping, and scale checks |
+| `tools/generate_knowloop_candidate.py` | Records solution/layout/plot evidence for review |
+| `tools/run_edpr_pipeline.py` | Orchestrates the deterministic workflow |
 
 ## Setup
 
-Requires Python 3.10+.
+Python 3.10 or newer is required.
 
 ```bash
-pip install jsonschema            # required for full validation in the validators
-pip install matplotlib numpy pyyaml   # only for the plotters/ tools
-```
-
-The validators still run without `jsonschema` (they fall back to their own structural
-checks and skip full JSON-Schema validation).
-
----
-
-## Running it
-
-All commands are run from the repository root. Globs (`*.json`) assume a POSIX shell;
-on Windows PowerShell, expand the file list yourself or use `Get-ChildItem`.
-
-### Validate the knowledge base
-
-```bash
-python tools/EDPR_VALIDATOR.py --schema schemas/EDPR_METASCHEMA.json knowledge/edpr/examples/*.json
-python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json
-```
-
-> The legacy EDES/EDAS validators require schemas and knowledge files together
-> in one directory. The repository stores them separately, so `tools/` is not
-> a valid data directory. To run these validators, first copy the relevant schemas
-> from `schemas/`, EDES JSON files from `knowledge/edes/`, and the EDAS shared JSON
-> from `knowledge/edas/` into a temporary directory under `runs/`, then pass that
-> directory to each validator.
-
-### Run the full pipeline on an example
-
-```bash
-python tools/run_edpr_pipeline.py \
-  --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json \
-  --output-dir runs/test_ilt \
-  --solution-format md
-```
-
-Expected:
-
-- EDPR validation passes.
-- P-map/APF check passes.
-- The ILT L-branch solution recommends **`L-ST-PS`** (L-shaped branch, slotted support,
-  PS top-frame connection system).
-- `runs/test_ilt/` contains the retrieval context, the solution summary, and a Knowloop
-  candidate JSON.
-
-`runs/` is git-ignored.
-
----
-
-## Knowloop feedback loop
-
-```
-design query -> EDPR parse -> retrieval -> solution
-             -> Knowloop candidate JSON  (tools/generate_knowloop_candidate.py)
-             -> human / expert review
-             -> accepted updates promoted to the official KB
-```
-
-Candidate types: `confirmation`, `improvement`, `correction`, `new_knowledge_candidate`,
-`future_study_candidate`, `failure_record`.
-Status flow: `generated` → `human_reviewed` / `needs_evidence` → `expert_accepted` /
-`expert_rejected` → `implemented` / `superseded`.
-
-An accepted candidate is promoted to a specific target: a wrong parse → EDPR prompt/schema/
-examples; missing component info → EDES; missing assembly logic → EDAS; missing behaviour
-rule → EDIKB graph; missing numbers → EDIKB dataset or the FEA/ML study queue; missing
-archetype → standard layouts; tool failure → runtime tools. See
-`docs/KNOWLOOP_FEEDBACK_WORKFLOW.md`.
-
-The Knowloop KB never modifies EDPR/EDES/EDAS/EDIKB directly. Candidate knowledge is
-exploratory until expert acceptance.
-
----
-
-## Status & limitations
-
-- **Prototype / working-batch.** Manifest schema v0.4.
-- `solve_problem.py` is a **first-pass numeric ranker** — it treats lower strain / moment
-  values as better and does not yet apply objective-specific weighting from the EDPR
-  `rankingCriteria`, so its raw output can mix response types. Treat its ranking as a
-  retrieval-sanity check, not the final answer; the reasoning (step 6–8) is where options
-  are actually weighed.
-- The LLM steps (parse, reason) are **specified but not wired into the orchestrator** —
-  `run_edpr_pipeline.py` runs the deterministic tools; NL→EDPR conversion is a manual or
-  external-LLM step. Connecting an LLM API is on the roadmap.
-- All EDIKB numeric evidence is from a **bounded parametric study domain** (S-lay overbend,
-  one pipe geometry, fixed roller spacing). Use it for relative concept ranking and feature
-  selection; a project outside that domain needs its own FEA/ML verification case.
-- No vector-index retrieval yet — retrieval is structured lookup driven by the EDPR
-  retrieval plan (planned enhancement once P-map/APF and Knowloop behaviour are stable).
-
-
-## Plotting CLI and presentation configuration
-
-```bash
+python -m venv .venv
 python -m pip install -r plotters/requirements.txt
-python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png
-python tools/plot_component.py --component GD-TP --output runs/gd_tp.png
 ```
 
-Both commands write JSON execution reports. Basic export, content, bounds, clipping and scale QA is enabled. Rendered label/legend
-correction is enabled; passing basic QA does not certify engineering validity.
-Edit `plotters/config/plot_style.yaml` for presentation and
-`plotters/config/component_catalog.json` for names, style mappings and plot support.
-See [plotter instructions](plotters/README.md) and [upload status](UPLOAD_MAP.md).
+On Windows, use `\.venv\Scripts\python.exe` instead of `python` if the environment is not activated. The requirements include NumPy, Matplotlib, PyYAML, and `jsonschema`. Validators can perform limited structural checks without `jsonschema`, but full schema validation requires it.
 
+All commands below run from the repository root. Generated files under `runs/` are ignored by Git.
 
-## Phase 7 solver plotting
+## Run the complete EDPR-to-plot workflow
 
-Use the pipeline --plot option. See [workflow](docs/PHASE7_SOLVER_PLOTTING.md).
+```bash
+python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/ilt --solution-format json --plot
+```
+
+For the supplied example, the retrieved numeric evidence recommends `L-ST-PS`. The bridge reconstructs it from the reviewed `ILT-L-FT-PS` EDAS anchor and changes the branch support and association from fixed (`F`) to slotted (`S`) according to the stored FT/ST taxonomy.
+
+The run writes artifacts using the EDPR filename stem:
+
+| Artifact | Purpose |
+| --- | --- |
+| `*.retrieval_context.json` | Retrieved knowledge and evidence trace |
+| `*.solution.json` or `*.solution.md` | Recommendation, basis, ranking, notes, and residual risk |
+| `*.layout.json` | Materialized EDAS study definition |
+| `*.layout.report.json` | Source anchor, derivation, warnings, and review requirement |
+| `*.png` | Rendered assembly |
+| `*.plot.report.json` | Build, correction, export, and visual QA findings |
+| `*.knowloop_candidate.json` | Combined feedback candidate for review |
+
+Using `--solution-format md --plot` also creates a structured JSON solution sidecar because layout generation consumes the solver JSON contract. Omit `--plot` to run validation, retrieval, solving, and Knowloop without layout rendering.
+
+## Plot assemblies and components directly
+
+```bash
+python tools/plot_design.py --input plotters/examples/example_valve_layout.json --output runs/valve.png --report runs/valve.report.json
+python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png --report runs/ilt.report.json
+python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output runs/gd_tp.png
+python tools/plot_design.py --input plotters/examples/example_boss_layout.json --output runs/boss.png
+```
+
+PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, and output paths. Input definitions are never rewritten.
+
+Presentation lives in:
+
+- `plotters/config/plot_style.yaml` for colors, fonts, line widths, figure sizes, and export DPI.
+- `plotters/config/component_catalog.json` for component names, families, style mappings, renderer declarations, and plot support.
+- `plotters/slay_config.yaml` for engineering defaults used by the existing geometry modules.
+
+Presentation configuration must not contain engineering dimensions or redefine component meaning.
+
+## Plot QA and status semantics
+
+The CLI first builds the immutable engineering model, then applies bounded presentation correction, saves the figure, and runs basic QA.
+
+- `passed`: implemented checks passed with no correction.
+- `passed_with_corrections`: presentation changes resolved detected issues.
+- `warning`: an image was produced, but findings or unresolved limitations remain.
+- `failed`: construction, export, or QA failed.
+- `not_applicable`: a check could not run for that output or execution stage.
+
+The checker samples component nodes, extents, and contact envelopes; it is not an exhaustive geometry proof. PNG output is decoded and checked for visible variation. SVG is parsed as XML. PDF receives header/EOF checks but is not independently rasterized. Large parameter tables can produce tall figures, and leader-line crossings are not currently checked.
+
+CLI exit codes are 0 for a produced image, including warnings; 1 for validation, execution, or QA failure; and 2 for command-line syntax errors.
+
+## Knowloop feedback
+
+Plot and layout reports can be passed to `tools/generate_knowloop_candidate.py` with `--layout-report` and `--plot-report`. Automated warnings or expert-review requirements make the design outcome partial; errors make it failed. The full report is retained in the evidence trace.
+
+Human rating fields remain empty until a person supplies them. Promotion to an official knowledge layer requires expert acceptance and supporting evidence. See [Knowloop feedback workflow](docs/KNOWLOOP_FEEDBACK_WORKFLOW.md).
+
+The orchestrated plotting path emits Knowloop feedback before returning a nonzero code for layout-mapping or plotting failures. Failures in earlier validation, retrieval, or solver stages remain fail-fast and are a current workflow gap.
+
+## Engineering model notes
+
+All 12 current EDES component codes have component and assembly rendering coverage. `GD-BrPipe` is a branch pipe part; `GD-B` is the multi-member branch subassembly.
+
+`GD-BOSS` is modeled as a coaxial sleeve around the header. It does not replace the header. Its bore must be larger than the maximum enclosed header/thick-section OD across its full span. Boss steel contributes separately to mass and center of gravity. Sleeve-to-header attachment and load transfer remain unspecified, so every Boss assembly reports that limitation.
+
+Solver-generated layouts are study reconstructions from EDAS anchors. They do not apply EDPR constraints to size a new design, create fabrication detail, or rerun structural analysis. Unknown candidate identifiers are rejected rather than matched heuristically.
+
+## Repository layout
+
+```text
+framework_manifest.json                 Active manifest; read this first
+superseded/                             Historical manifests only
+schemas/                                EDPR, EDES, EDAS, and EDIKB metaschemas
+knowledge/
+  edpr/                                 Parser prompts and validated examples
+  edes/                                 Component knowledge
+  edas/                                 Assembly knowledge and standard layouts
+  edikb/                                Behavior graph and numeric dataset
+  knowloop/                             Candidate schema, templates, and review folders
+plotters/
+  config/                               Editable presentation catalog and style
+  checkers/                             Layout correction and plot QA
+  examples/                             Direct and solver-generated layout examples
+  component_spec.py                     Geometry and engineering rules
+  ils_builder.py                        Definition-to-assembly construction
+  component_plotter.py                  Component rendering
+  ils_plotter.py                        Assembly rendering
+tools/                                  Validators, retrieval, solver, bridge, CLIs, tests
+docs/                                   Framework and workflow documentation
+runs/                                   Local generated artifacts; Git-ignored
+```
+
+Only the root [framework manifest](framework_manifest.json) is active. Files under `superseded/` are historical snapshots and must not be used as current runtime manifests.
+
+## Verification
+
+Run the plotter and solver integration suite:
+
+```bash
+python -m unittest discover -s tools -p "test_plot*.py"
+```
+
+The Phase 7 baseline is 29 tests. It covers CLI validation, configuration fallbacks, all 12 component renderers, Boss/header preservation, export checks, label correction, immutable geometry, solver-to-layout mapping, unknown-candidate failure, Knowloop schema validation, and the end-to-end EDPR plotting example.
+
+The current framework release is manifest schema/version 0.4 with plotter migration Phases 1 through 7 implemented on `main`.
+
+## Current limitations
+
+- Natural-language parsing and the main reasoning step require an external/manual LLM integration.
+- The first-pass solver groups retrieved rows by candidate and treats lower strain, moment, bending, or curvature responses as better. It does not yet apply full objective-specific weighting from EDPR `rankingCriteria`, and heterogeneous response values must not be treated as directly comparable without engineering review.
+- EDIKB numeric evidence covers a bounded study domain. Recommendations outside that domain require project-specific evidence.
+- Structured retrieval is implemented; vector-index retrieval is a future enhancement.
+- Plot QA supports inspection and catches obvious presentation/export problems, but does not certify physical validity.
+- Source-paper files referenced by knowledge provenance are not included in the current checkout.
