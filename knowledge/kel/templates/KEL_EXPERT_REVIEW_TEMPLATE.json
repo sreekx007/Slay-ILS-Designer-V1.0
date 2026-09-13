@@ -1,0 +1,13 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:template",
+  "linked_change_request_id": "kel:change:template",
+  "status": "draft",
+  "decision": null,
+  "reviewer": null,
+  "reviewed_utc": null,
+  "decision_reason": null,
+  "required_evidence": [],
+  "implementation_target": null,
+  "implementation_reference": null
+}

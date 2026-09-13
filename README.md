@@ -2,7 +2,7 @@
 
 Ontology-grounded engineering design support for subsea pipeline inline structures (ILS).
 
-Slay-ILS-Designer turns a structured engineering problem into traceable retrieval, evidence-ranked study recommendations, inspectable EDAS layouts, plot-quality reports, and a Knowloop feedback candidate. It combines typed engineering knowledge with deterministic Python tools and defined LLM reasoning stages.
+Slay-ILS-Designer turns a structured engineering problem into traceable retrieval, evidence-ranked study recommendations, inspectable EDAS layouts, plot-quality reports, a Knowloop feedback candidate, and optional KEL governance records. It combines typed engineering knowledge with deterministic Python tools and defined LLM reasoning stages.
 
 The current repository supports a complete run from an existing EDPR JSON file. Natural-language-to-EDPR parsing is specified by prompts and schemas, but still requires a manual or external LLM step.
 
@@ -17,18 +17,19 @@ The current repository supports a complete run from an existing EDPR JSON file. 
 - Corrects bounded presentation issues such as label placement while preserving engineering geometry.
 - Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
 - Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
+- Packages the completed run as a KEL experience and can turn supplied human feedback into a governed graph-change request.
 
 The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 
 ## Workflow principles
 
 1. **Represent the problem before retrieving.** EDPR must express APF intent, P-map nodes and links, formal requirements, retrieval targets, and the solver plan before knowledge is selected.
-2. **Keep knowledge responsibilities separate.** EDPR defines the problem; EDES defines components; EDAS defines assemblies and layouts; EDIKB provides behavioral and numeric evidence; Knowloop records review candidates.
+2. **Keep knowledge responsibilities separate.** EDPR defines the problem; EDES defines components; EDAS defines assemblies and layouts; EDIKB provides behavioral and numeric evidence; Knowloop records front-end review candidates; KEL governs experience, feedback, expert decisions, and promotion.
 3. **Bound every conclusion by its evidence.** Study rankings apply only to the retrieved rows and stated domain. Missing or weak evidence becomes a limitation or future-study candidate.
 4. **Do not invent layout mappings.** Solver-to-layout conversion uses exact EDAS anchors and explicit reviewed derivations. Unknown candidates fail with a machine-readable report.
 5. **Keep engineering geometry immutable during plot QA.** The checker may move labels, leaders, legends, margins, or table presentation. It must not move components or change dimensions to make a plot look valid.
 6. **Make every stage inspectable.** Runtime stages produce JSON or Markdown artifacts, explicit findings, exit codes, provenance, assumptions, and residual risks.
-7. **Require review before knowledge promotion.** Knowloop candidates never modify official EDPR, EDES, EDAS, EDIKB, layouts, or tools automatically.
+7. **Require review before knowledge promotion.** Knowloop and generated KEL records never modify official EDPR, EDES, EDAS, EDIKB, layouts, or tools automatically. KEL promotion requires a complete final expert review.
 8. **Preserve source meaning and omissions.** Derived/default values are reported, while omitted design inputs remain omitted unless the model contract explicitly resolves them.
 
 ## Runtime workflow
@@ -46,11 +47,18 @@ flowchart LR
     F --> J[Knowloop candidate]
     G --> J
     I --> J
-    J --> K[Human / expert review]
-    K --> L[Accepted official update]
+    J --> K
+    F --> M[KEL experience record]
+    G --> M
+    I --> M
+    M --> N{Human feedback supplied?}
+    N -- No --> O[Downloadable JSON record]
+    N -- Yes --> P[Structured feedback and change request]
+    P --> K[Expert review]
+    K --> L[Accepted or implemented update]
 ```
 
-The deterministic orchestrator is `tools/run_edpr_pipeline.py`. For an existing EDPR it runs validation, P-map/APF checking, retrieval, solving, optional layout/plot generation, and Knowloop emission.
+The deterministic orchestrator is `tools/run_edpr_pipeline.py`. For an existing EDPR it runs validation, P-map/APF checking, retrieval, solving, optional layout/plot generation, and Knowloop emission. The separate `tools/kel/run_kel_cycle.py` wrapper packages those artifacts as downloadable JSON and only creates feedback, review, or promotion records when the corresponding human input is supplied.
 
 Natural-language parsing remains outside the orchestrator. To prepare the parser input:
 
@@ -68,7 +76,8 @@ This writes `edpr_parser_input.prompt.md`. Give that prompt to an LLM, validate 
 | EDES | Component meaning, parameters, constraints, and behavior | `knowledge/edes/` |
 | EDAS | Assembly topology, interfaces, rules, and layout anchors | `knowledge/edas/` |
 | EDIKB | Behavior graph, uncertainty, guidance, and numeric evidence | `knowledge/edikb/` |
-| Knowloop | Reviewable feedback candidates and promotion policy | `knowledge/knowloop/` |
+| Knowloop | Front-end reviewable feedback candidates | `knowledge/knowloop/` |
+| KEL | Closed-loop experience, feedback, expert-review, and promotion governance | `knowledge/kel/` |
 
 APF-style requirements use `r = (Z, M, C)`:
 
@@ -95,6 +104,10 @@ See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [prob
 | `plotters/checkers/plot_checker.py` | Export, content, bounds, clipping, and scale checks |
 | `tools/generate_knowloop_candidate.py` | Records solution/layout/plot evidence for review |
 | `tools/run_edpr_pipeline.py` | Orchestrates the deterministic workflow |
+| `tools/kel/run_kel_cycle.py` | Packages run artifacts and optional human feedback through the KEL lifecycle |
+| `tools/kel/validate_kel_record.py` | Validates KEL schemas and governance rules |
+| `tools/kel/create_expert_review_record.py` | Records a named expert decision and rationale |
+| `tools/kel/promote_accepted_kel_change.py` | Promotes a change only when its review decision and implementation evidence permit it |
 
 ## Setup
 
@@ -102,10 +115,10 @@ Python 3.10 or newer is required.
 
 ```bash
 python -m venv .venv
-python -m pip install -r plotters/requirements.txt
+python -m pip install -r requirements-dev.txt
 ```
 
-On Windows, use `\.venv\Scripts\python.exe` instead of `python` if the environment is not activated. The requirements include NumPy, Matplotlib, PyYAML, and `jsonschema`. Validators can perform limited structural checks without `jsonschema`, but full schema validation requires it.
+On Windows, use `\.venv\Scripts\python.exe` instead of `python` if the environment is not activated. The development requirements include NumPy, Matplotlib, PyYAML, `jsonschema`, and pytest. Validators can perform limited structural checks without `jsonschema`, but full schema validation requires it.
 
 All commands below run from the repository root. Generated files under `runs/` are ignored by Git.
 
@@ -172,6 +185,25 @@ Human rating fields remain empty until a person supplies them. Promotion to an o
 
 The orchestrated plotting path emits Knowloop feedback before returning a nonzero code for layout-mapping or plotting failures. Failures in earlier validation, retrieval, or solver stages remain fail-fast and are a current workflow gap.
 
+## KEL governance and human feedback
+
+KEL is optional after a design run. Without feedback, it emits an experience record and knowledge-sufficiency report that can be downloaded as JSON. When the user supplies feedback, it also creates structured feedback and a pending graph-change request for expert review.
+
+```bash
+python tools/kel/run_kel_cycle.py --label ilt-review --output-dir runs/kel/ilt-review --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --solution-json runs/ilt/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.solution.json --layout-report runs/ilt/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.layout.report.json --plot-report runs/ilt/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.plot.report.json --feedback-file reviewer_feedback.txt
+```
+
+Omit `--feedback-text` and `--feedback-file` when no human response exists. KEL never invents feedback, expert decisions, or implementation evidence. The resulting JSON can be sent to an external expert, or stored in another repository as an integration choice. Generated files should remain outside the official lifecycle folders until reviewed.
+
+Create a final review and promote the matching request with:
+
+```bash
+python tools/kel/create_expert_review_record.py --change-request path/to/change.json --reviewer "Expert name" --decision accepted --decision-reason "Evidence reviewed" --output path/to/review.json
+python tools/kel/promote_accepted_kel_change.py --change-request path/to/change.json --review path/to/review.json --status accepted
+```
+
+`implemented` promotion additionally requires `--implementation-reference` on the expert-review record. See [KEL workflow](knowledge/kel/README.md), [LLM workflow instructions](knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md), and [v0.2 recommendations](knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md).
+
 ## Engineering model notes
 
 All 12 current EDES component codes have component and assembly rendering coverage. `GD-BrPipe` is a branch pipe part; `GD-B` is the multi-member branch subassembly.
@@ -192,6 +224,7 @@ knowledge/
   edas/                                 Assembly knowledge and standard layouts
   edikb/                                Behavior graph and numeric dataset
   knowloop/                             Candidate schema, templates, and review folders
+  kel/                                  Experience, feedback, review, and change lifecycles
 plotters/
   config/                               Editable presentation catalog and style
   checkers/                             Layout correction and plot QA
@@ -201,6 +234,8 @@ plotters/
   component_plotter.py                  Component rendering
   ils_plotter.py                        Assembly rendering
 tools/                                  Validators, retrieval, solver, bridge, CLIs, tests
+  kel/                                  KEL record, review, promotion, and cycle tools
+tests/kel/                              KEL governance and workflow tests
 docs/                                   Framework and workflow documentation
 runs/                                   Local generated artifacts; Git-ignored
 ```
@@ -215,13 +250,20 @@ Run the plotter and solver integration suite:
 python -m unittest discover -s tools -p "test_plot*.py"
 ```
 
-The Phase 7 baseline is 29 tests. It covers CLI validation, configuration fallbacks, all 12 component renderers, Boss/header preservation, export checks, label correction, immutable geometry, solver-to-layout mapping, unknown-candidate failure, Knowloop schema validation, and the end-to-end EDPR plotting example.
+The Phase 7 plotter baseline is 29 tests. It covers CLI validation, configuration fallbacks, all 12 component renderers, Boss/header preservation, export checks, label correction, immutable geometry, solver-to-layout mapping, unknown-candidate failure, Knowloop schema validation, and the end-to-end EDPR plotting example.
 
-The current framework release is manifest schema/version 0.4 with plotter migration Phases 1 through 7 implemented on `main`.
+Run the KEL suite:
+
+```bash
+python -m pytest -q tests/kel
+```
+
+The current framework release is manifest schema/version 0.4 with plotter migration Phases 1 through 7 and KEL v0.1 integrated on `main`.
 
 ## Current limitations
 
 - Natural-language parsing and the main reasoning step require an external/manual LLM integration.
+- KEL cannot complete feedback or expert-review stages until a human provides those inputs.
 - The first-pass solver groups retrieved rows by candidate and treats lower strain, moment, bending, or curvature responses as better. It does not yet apply full objective-specific weighting from EDPR `rankingCriteria`, and heterogeneous response values must not be treated as directly comparable without engineering review.
 - EDIKB numeric evidence covers a bounded study domain. Recommendations outside that domain require project-specific evidence.
 - Structured retrieval is implemented; vector-index retrieval is a future enhancement.

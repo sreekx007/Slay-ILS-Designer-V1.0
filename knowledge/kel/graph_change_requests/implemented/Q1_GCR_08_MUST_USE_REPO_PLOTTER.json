@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+  "status": "implemented",
+  "created_utc": "2026-09-13T09:20:15Z",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "linked_feedback_id": "kel:feedback:q1_ilt_layout:must_use_repo_plotter",
+  "target_layer": "KEL",
+  "change_type": "new_workflow_gate",
+  "problem_observed": "The previous plot was a custom sketch and did not use the ILS plotter in the plotters folder. Future KEL layout plots must use the repository plotter/EDES/EDAS geometry when available, and any fallback sketch must be marked non-authoritative.",
+  "proposed_change": "Add a KEL/LLM gate requiring EDPR/P-map/APF, EDES/EDAS/EDIKB retrieval, buildable EDAS layout JSON, builder findings, and repository plotter use before presenting design geometry.",
+  "evidence_requirement": "Demonstrate one design query executed through EDPR/P-map/APF, retrieval, EDAS layout build, builder findings, and repository plotter output or explicit representability gap.",
+  "priority": "medium",
+  "expert_review_ref": {
+    "id": "kel:review:q1_ilt_layout:must_use_repo_plotter",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q1_REVIEW_08_MUST_USE_REPO_PLOTTER.json"
+  },
+  "implementation_ref": {
+    "target": "knowledge/kel/",
+    "repo_path": "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+    "notes": "Accept as a KEL workflow gate: framework-backed design geometry must use EDPR/P-map/APF retrieval and repository plotter/build checks before presentation."
+  }
+}

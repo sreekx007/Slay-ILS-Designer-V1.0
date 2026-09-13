@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-expert-review/0.1",
+  "title": "KEL Expert Review Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "review_id",
+    "linked_change_request_id",
+    "status",
+    "decision",
+    "reviewer",
+    "reviewed_utc",
+    "decision_reason",
+    "implementation_target",
+    "implementation_reference"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kel-expert-review/0.1"
+    },
+    "review_id": {
+      "type": "string",
+      "pattern": "^kel:review:[A-Za-z0-9_\\-:.]+$"
+    },
+    "linked_change_request_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "final"
+      ]
+    },
+    "decision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        null,
+        "accepted",
+        "rejected",
+        "needs_evidence",
+        "needs_revision",
+        "implemented",
+        "superseded"
+      ]
+    },
+    "reviewer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decision_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "implementation_target": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "implementation_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "final"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "rejected",
+              "needs_evidence",
+              "needs_revision",
+              "implemented",
+              "superseded"
+            ]
+          },
+          "reviewer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewed_utc": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

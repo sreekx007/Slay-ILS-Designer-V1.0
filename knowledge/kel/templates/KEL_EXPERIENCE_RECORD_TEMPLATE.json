@@ -1,0 +1,41 @@
+{
+  "schema": "kel-experience-record/0.1",
+  "experience_id": "kel:experience:template",
+  "status": "generated",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "source_query": {
+    "query_id": null,
+    "raw_text": "Template query text.",
+    "problem_title": "Template problem"
+  },
+  "edpr_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "EDPR/P-map/APF artifact not yet linked."
+  },
+  "retrieval_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Retrieval context not yet linked."
+  },
+  "solution_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Solution artifact not yet linked."
+  },
+  "plot_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Plot artifact not yet linked."
+  },
+  "ratings": {
+    "llm_confidence": "medium",
+    "knowledge_sufficiency": "unknown",
+    "evidence_strength": 3,
+    "rationale": "Template placeholder."
+  },
+  "limitations": [],
+  "feedback_refs": [],
+  "graph_change_request_refs": [],
+  "expert_review_refs": []
+}

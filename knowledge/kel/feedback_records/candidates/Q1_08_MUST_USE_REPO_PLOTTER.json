@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:must_use_repo_plotter",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T09:08:08Z",
+  "raw_feedback_text": "The previous plot was a custom sketch and did not use the ILS plotter in the plotters folder. Future KEL layout plots must use the repository plotter/EDES/EDAS geometry when available, and any fallback sketch must be marked non-authoritative.",
+  "feedback_type": "poor_plot",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:ilt_structure",
+    "affected_function": "edpr:q1:pmap:function:provide_header_flow",
+    "affected_behavior": "edpr:q1:pmap:behaviour:valve_roller_contact",
+    "affected_structure": "edpr:q1:pmap:artifact:header_pipe",
+    "affected_constraint": null,
+    "pmap_issue": "The previous plot was a custom sketch and did not use the ILS plotter in the plotters folder. Future KEL layout plots must use the repository plotter/EDES/EDAS geometry when available, and any fallback sketch must be marked non-authorita...",
+    "apf_action": "review_plotter_output_and_add_plot_validation_rule",
+    "priority": "medium"
+  }
+}

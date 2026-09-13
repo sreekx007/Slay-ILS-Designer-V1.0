@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:plot_scale",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T08:55:39Z",
+  "raw_feedback_text": "Plot scale is too small or the picture cannot be zoomed in.",
+  "feedback_type": "plot_correction",
+  "structured_feedback": {
+    "affected_requirement": null,
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": null,
+    "affected_constraint": null,
+    "pmap_issue": "Plot scale is too small or the picture cannot be zoomed in.",
+    "apf_action": "correct_plot_geometry_labels_or_scale_and_add_regression_case",
+    "priority": "high"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-graph-change-request/0.1",
+  "title": "KEL Graph Change Request Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "change_request_id",
+    "status",
+    "created_utc",
+    "linked_experience_id",
+    "target_layer",
+    "change_type",
+    "problem_observed",
+    "proposed_change",
+    "evidence_requirement",
+    "priority",
+    "expert_review_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kel-graph-change-request/0.1"
+    },
+    "change_request_id": {
+      "type": "string",
+      "pattern": "^kel:change:[A-Za-z0-9_\\-:.]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected",
+        "needs_evidence",
+        "needs_revision",
+        "implemented",
+        "superseded"
+      ]
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "linked_experience_id": {
+      "type": "string"
+    },
+    "linked_feedback_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_layer": {
+      "type": "string",
+      "enum": [
+        "EDPR",
+        "EDES",
+        "EDAS",
+        "EDIKB",
+        "KEL",
+        "Dataset",
+        "Plotters",
+        "Tools",
+        "Docs",
+        "StandardLayouts"
+      ]
+    },
+    "change_type": {
+      "type": "string",
+      "enum": [
+        "new_behavior_rule",
+        "revise_behavior_rule",
+        "new_design_guidance",
+        "revise_design_guidance",
+        "new_component_property",
+        "new_assembly_constraint",
+        "new_dataset_row",
+        "new_example",
+        "new_parser_rule",
+        "new_plotting_rule",
+        "new_workflow_gate",
+        "new_output_policy",
+        "new_tool_capability",
+        "future_fea_study",
+        "future_ml_study"
+      ]
+    },
+    "problem_observed": {
+      "type": "string"
+    },
+    "proposed_change": {
+      "type": "string"
+    },
+    "evidence_requirement": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "expert_review_ref": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "repo_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "implementation_ref": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "repo_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

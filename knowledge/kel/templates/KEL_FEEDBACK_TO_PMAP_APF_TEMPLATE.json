@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:template",
+  "linked_experience_id": "kel:experience:template",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "raw_feedback_text": "Template feedback text.",
+  "feedback_type": "answer_format_requirement",
+  "structured_feedback": {
+    "affected_requirement": null,
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": null,
+    "affected_constraint": null,
+    "pmap_issue": "Template issue.",
+    "apf_action": "add_or_update_kel_output_presentation_policy",
+    "priority": "medium"
+  }
+}

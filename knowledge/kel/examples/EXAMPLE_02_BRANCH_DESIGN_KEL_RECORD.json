@@ -1,0 +1,44 @@
+{
+  "schema": "kel-experience-record/0.1",
+  "experience_id": "kel:experience:example_02_l_branch_min_strain",
+  "status": "generated",
+  "created_utc": "2026-09-13T00:00:00Z",
+  "source_query": {
+    "query_id": "example_02",
+    "raw_text": "ILT layout with L-shaped branch, horizontal connector, branch fixed to top frame or free to slide, objective to minimize header and branch strains.",
+    "problem_title": "L-shaped branch minimum strain"
+  },
+  "edpr_trace": {
+    "artifact_id": "edpr:example:ilt_l_branch_min_strain",
+    "repo_path": "knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json",
+    "summary": "Existing EDPR example captures branch layout, connector, fixed/sliding options, and strain minimization objective."
+  },
+  "retrieval_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Expected retrieval should include GD-B, GD-BrPipe, GD-BOSS, GD-Con, EA-ST/EA-SB/EA-SH, connector stiffness, and pocket-region behavior."
+  },
+  "solution_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Solution should compare fixed and sliding branch support and explain header/branch strain trade-offs."
+  },
+  "plot_trace": {
+    "artifact_id": null,
+    "repo_path": "plotters/examples/example_ilt_layout.json",
+    "summary": "Existing ILT plot example can be adapted for L-shaped branch visualization."
+  },
+  "ratings": {
+    "llm_confidence": "medium",
+    "knowledge_sufficiency": "partially_sufficient",
+    "evidence_strength": 3,
+    "rationale": "Branch component knowledge exists, but interaction between connector stiffness, fixed/sliding support, and branch strain should be tracked as a KEL future-study candidate when evidence is weak."
+  },
+  "limitations": [
+    "Feature interaction between branch restraint, connector stiffness, and strong-back frame may require FEA confirmation.",
+    "Free-to-slide support needs clear modelling assumptions before promotion into guidance."
+  ],
+  "feedback_refs": [],
+  "graph_change_request_refs": [],
+  "expert_review_refs": []
+}

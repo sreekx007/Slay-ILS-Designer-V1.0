@@ -1,9 +1,9 @@
 # Manual Upload Map
 
-Updated: 2026-09-11
+Updated: 2026-09-13
 Repository: sreekx007/Slay-ILS-Designer-V1.0
 Target branch: main
-Latest GitHub review: 2026-09-11
+Latest GitHub review: 2026-09-13
 Phase 1 and 2 baseline: `20e1c07abe98bb42881d03e205fcec86b5275575`
 Phases 3 through 7 implementation: `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`
 Push-status record: `07f12357affa17d90458cbb2ee6311a62b780211`
@@ -13,7 +13,96 @@ GitHub `main` contains Phases 1 through 7. This update refreshes the root
 README for the current toolchain and workflow principles. Local environments,
 generated `runs/` artifacts, Python caches, and `.git/` remain excluded.
 
-## Consolidated Phase 3 through 7 upload   confirmed
+## KEL v0.1 governance toolchain - confirmed
+
+Source package commit: `7d1d380 Add KEL governance toolchain`
+Source ZIP SHA-256: `e43dca776b696728d05f5ce174f8458194e0a76bd65fe9c610ddd1acd6123bad`
+GitHub integration commit: `PENDING_KEL_INTEGRATION_COMMIT`
+
+The reviewed package contributes 73 mapped files. This integration also updates the root README and upload map, and adds the development requirements file. The manual upload set is 76 repository paths:
+
+| Action | Repository path |
+| --- | --- |
+| Update | `framework_manifest.json` |
+| Update | `README.md` |
+| Add | `requirements-dev.txt` |
+| Update | `UPLOAD_MAP.md` |
+| Add | `knowledge/kel/examples/EXAMPLE_01_VALVE_DESIGN_KEL_RECORD.json` |
+| Add | `knowledge/kel/examples/EXAMPLE_02_BRANCH_DESIGN_KEL_RECORD.json` |
+| Add | `knowledge/kel/experience_records/accepted/README.md` |
+| Add | `knowledge/kel/experience_records/candidates/README.md` |
+| Add | `knowledge/kel/experience_records/implemented/README.md` |
+| Add | `knowledge/kel/experience_records/rejected/README.md` |
+| Add | `knowledge/kel/expert_reviews/draft/README.md` |
+| Add | `knowledge/kel/expert_reviews/final/Q1_REVIEW_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/expert_reviews/final/README.md` |
+| Add | `knowledge/kel/feedback_records/accepted/README.md` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_01_BRANCH_DIRECTION.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_02_VALVE_EASB_DEFAULT.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_04_PLOT_SCALE.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_05_EAST_CONNECTIONS_LABELLED.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_10_EASB_SHAPE_FROM_EDES.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q1_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Add | `knowledge/kel/feedback_records/candidates/README.md` |
+| Add | `knowledge/kel/feedback_records/implemented/README.md` |
+| Add | `knowledge/kel/feedback_records/rejected/README.md` |
+| Add | `knowledge/kel/graph_change_requests/accepted/README.md` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/README.md` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_01_BRANCH_DIRECTION.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_02_VALVE_EASB_DEFAULT.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_04_PLOT_SCALE.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Add | `knowledge/kel/graph_change_requests/pending/README.md` |
+| Add | `knowledge/kel/graph_change_requests/rejected/README.md` |
+| Add | `knowledge/kel/KEL_ARCHITECTURE.md` |
+| Add | `knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md` |
+| Add | `knowledge/kel/KEL_TERMINOLOGY.md` |
+| Add | `knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md` |
+| Add | `knowledge/kel/KEL_WORKFLOW.md` |
+| Add | `knowledge/kel/README.md` |
+| Add | `knowledge/kel/schemas/KEL_EXPERIENCE_RECORD_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_EXPERT_REVIEW_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_FEEDBACK_TO_PMAP_APF_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_GRAPH_CHANGE_REQUEST_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_KG_SUFFICIENCY_REPORT_SCHEMA.json` |
+| Add | `knowledge/kel/templates/KEL_EXPERIENCE_RECORD_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_EXPERT_REVIEW_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_FEEDBACK_TO_PMAP_APF_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_GRAPH_CHANGE_REQUEST_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_KG_SUFFICIENCY_REPORT_TEMPLATE.json` |
+| Add | `tests/kel/test_convert_feedback_to_pmap_apf.py` |
+| Add | `tests/kel/test_create_expert_review_record.py` |
+| Add | `tests/kel/test_create_kel_experience_record.py` |
+| Add | `tests/kel/test_evaluate_kg_sufficiency.py` |
+| Add | `tests/kel/test_generate_graph_change_request.py` |
+| Add | `tests/kel/test_kel_examples_validate.py` |
+| Add | `tests/kel/test_promote_accepted_kel_change.py` |
+| Add | `tests/kel/test_run_kel_cycle.py` |
+| Add | `tools/kel/convert_feedback_to_pmap_apf.py` |
+| Add | `tools/kel/create_expert_review_record.py` |
+| Add | `tools/kel/create_kel_experience_record.py` |
+| Add | `tools/kel/evaluate_kg_sufficiency.py` |
+| Add | `tools/kel/generate_graph_change_request.py` |
+| Add | `tools/kel/promote_accepted_kel_change.py` |
+| Add | `tools/kel/run_kel_cycle.py` |
+| Add | `tools/kel/validate_kel_record.py` |
+
+No deletions are required. Exclude the source ZIP, `.venv/`, `runs/`, Python caches, staging folders, and `.git/`.
+
+## Consolidated Phase 3 through 7 upload  - confirmed
 
 This combines Phases 3 through 7 so each path appears once.
 
@@ -62,7 +151,7 @@ at review time. Claude's expanded root README is included in that remote commit.
 The four old versioned manifests are under superseded/; the obsolete YAML filename
 and placeholder were removed. These earlier batches are no longer pending.
 
-## Phase 3 and documentation cleanup   confirmed
+## Phase 3 and documentation cleanup  - confirmed
 
 All paths are relative to the repository root. Upload the latest local versions.
 
@@ -95,7 +184,7 @@ manifest. Basic QA is added in Phase 4 below; existing label overlaps remain def
 Phase 3 was pushed in commit `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`.
 
 
-## Phase 4 basic plot QA   confirmed
+## Phase 4 basic plot QA  - confirmed
 
 | Action | Path |
 | --- | --- |
@@ -121,7 +210,7 @@ Phase 4 verification: 14 plotter tests passed. Component and ILT sample exports
 completed without errors; ILT retained its existing builder warning.
 
 
-## Phase 5 rendered layout correction   confirmed
+## Phase 5 rendered layout correction  - confirmed
 
 | Action | Repository path |
 | --- | --- |
@@ -141,7 +230,7 @@ whitespace checks also passed.
 Keep runs/phase5 local. Phase 5 was pushed in commit `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`.
 
 
-## Phase 6 coaxial Boss and component coverage   confirmed
+## Phase 6 coaxial Boss and component coverage  - confirmed
 
 | Action | Repository path |
 | --- | --- |
@@ -174,7 +263,7 @@ No remote deletions. Keep runs/phase6 and temporary run scripts local.
 Phase 6 was pushed in commit `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`.
 
 
-## Phase 7   confirmed
+## Phase 7  - confirmed
 
 These paths were pushed in commit `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`.
 No new deletions were required.

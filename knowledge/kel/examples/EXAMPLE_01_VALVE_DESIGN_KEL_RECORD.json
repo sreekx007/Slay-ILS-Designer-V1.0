@@ -1,0 +1,44 @@
+{
+  "schema": "kel-experience-record/0.1",
+  "experience_id": "kel:experience:example_01_valve_no_roller_contact",
+  "status": "generated",
+  "created_utc": "2026-09-13T00:00:00Z",
+  "source_query": {
+    "query_id": "example_01",
+    "raw_text": "Inline valve design with pipeline OD 323 mm, WT 12.7 mm, valve OD 700 mm, valve WT 60 mm, valve body length 1000 mm, stinger radius 90 m, valve cannot contact rollers, allowable valve bending moment is 80% of pipeline bending capacity.",
+    "problem_title": "Inline valve no roller contact"
+  },
+  "edpr_trace": {
+    "artifact_id": "edpr:example:gdvlv_no_roller_contact",
+    "repo_path": "knowledge/edpr/examples/EDPR_EXAMPLE_GDVLV_NO_ROLLER_CONTACT.json",
+    "summary": "Existing EDPR example captures the valve no-roller-contact design problem."
+  },
+  "retrieval_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Expected retrieval should include GD-VLV, GD-TT/GD-TP transition knowledge, roller contact constraints, and bending moment evidence."
+  },
+  "solution_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "Solution should propose a valve support and transition layout that avoids roller contact and controls local bending."
+  },
+  "plot_trace": {
+    "artifact_id": null,
+    "repo_path": "plotters/examples/example_valve_layout.json",
+    "summary": "Existing valve plot example can be used as a starting layout artifact."
+  },
+  "ratings": {
+    "llm_confidence": "medium",
+    "knowledge_sufficiency": "partially_sufficient",
+    "evidence_strength": 3,
+    "rationale": "Component and parser knowledge exists, but KEL should record whether numeric evidence directly supports valve bending limits and roller-clearance decisions."
+  },
+  "limitations": [
+    "Allowable valve bending moment depends on a verified pipeline bending capacity calculation.",
+    "Roller contact avoidance needs geometric plot checking."
+  ],
+  "feedback_refs": [],
+  "graph_change_request_refs": [],
+  "expert_review_refs": []
+}

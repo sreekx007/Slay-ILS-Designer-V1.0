@@ -5,22 +5,23 @@
     "title": "Ontology-grounded RAG-enabled expert design framework for subsea inline structures",
     "version": "0.4",
     "status": "prototype-working-batch",
-    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, Knowloop feedback candidates, standard ILS layouts, validators, documents, examples, and runtime pipeline tools.",
+    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, Knowloop feedback candidates, KEL knowledge evolution records, standard ILS layouts, validators, documents, examples, and runtime pipeline tools.",
     "classification": [
       "neuro-symbolic engineering design assistant",
       "RAG-enabled expert system",
       "ontology-grounded design knowledge base",
       "Knowloop-expandable FEA/ML workflow",
       "human-in-the-loop engineering knowledge framework",
-      "Knowloop feedback candidate KB"
+      "Knowloop feedback candidate KB",
+      "KEL knowledge evolution loop"
     ]
   },
   "repository": {
     "provider": "github",
     "url": "https://github.com/sreekx007/Slay-ILS-Designer-V1.0",
     "default_branch": "main",
-    "checked_commit": "07f12357affa17d90458cbb2ee6311a62b780211",
-    "checked_utc": "2026-09-11",
+    "checked_commit": "8ef0bd80620885636dc51f87eb32aa3c691cd2fc",
+    "checked_utc": "2026-09-13",
     "repo_access_status": "readable"
   },
   "canonical_layers": {
@@ -69,6 +70,28 @@
         "docs/KNOWLOOP_FEEDBACK_WORKFLOW.md",
         "tools/generate_knowloop_candidate.py"
       ]
+    },
+    "KEL": {
+      "name": "Knowledge Evolution Loop",
+      "role": "Closed-loop experience and governance layer that records design-query experience, querier feedback, knowledge sufficiency, graph change requests, expert review, and promotion into EDPR, EDES, EDAS, EDIKB, datasets, tools, plotters, or documentation.",
+      "primary_paths": [
+        "knowledge/kel/README.md",
+        "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+        "knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md",
+        "knowledge/kel/schemas/",
+        "knowledge/kel/templates/",
+        "knowledge/kel/feedback_records/",
+        "knowledge/kel/expert_reviews/",
+        "knowledge/kel/examples/",
+        "tools/kel/validate_kel_record.py",
+        "tools/kel/create_kel_experience_record.py",
+        "tools/kel/evaluate_kg_sufficiency.py",
+        "tools/kel/convert_feedback_to_pmap_apf.py",
+        "tools/kel/generate_graph_change_request.py",
+        "tools/kel/create_expert_review_record.py",
+        "tools/kel/promote_accepted_kel_change.py",
+        "tools/kel/run_kel_cycle.py"
+      ]
     }
   },
   "recommended_repo_structure": {
@@ -82,6 +105,9 @@
     "docs": "docs/",
     "plotters_and_builders": "plotters/",
     "knowledge_knowloop": "knowledge/knowloop/",
+    "knowledge_kel": "knowledge/kel/",
+    "tools_kel": "tools/kel/",
+    "tests_kel": "tests/kel/",
     "superseded": "superseded/"
   },
   "repo_review": {
@@ -362,6 +388,34 @@
         "description": "Generates Knowloop candidate JSON after every design query."
       },
       {
+        "id": "tool:kel_validate_record",
+        "repo_path": "tools/kel/validate_kel_record.py",
+        "status": "present",
+        "required": false,
+        "description": "Validates KEL experience, feedback, graph change request, and expert review JSON records against KEL schemas and governance checks."
+      },
+      {
+        "id": "tool:kel_create_experience_record",
+        "repo_path": "tools/kel/create_kel_experience_record.py",
+        "status": "present",
+        "required": false,
+        "description": "Creates a KEL experience record from EDPR, retrieval context, solution, plot/layout reports, and optional KnowLoop candidate artifacts."
+      },
+      {
+        "id": "tool:kel_evaluate_kg_sufficiency",
+        "repo_path": "tools/kel/evaluate_kg_sufficiency.py",
+        "status": "present",
+        "required": false,
+        "description": "Evaluates whether current framework knowledge was sufficient for a query and emits a KEL sufficiency report with gaps."
+      },
+      {
+        "id": "tool:kel_convert_feedback_to_pmap_apf",
+        "repo_path": "tools/kel/convert_feedback_to_pmap_apf.py",
+        "status": "present",
+        "required": false,
+        "description": "Converts querier feedback into a structured KEL feedback record with affected P-map links and APF-style action."
+      },
+      {
         "id": "tool:plot_design",
         "repo_path": "tools/plot_design.py",
         "status": "present",
@@ -440,6 +494,34 @@
         "repo_path": "docs/KNOWLOOP_FEEDBACK_WORKFLOW.md",
         "status": "present_after_batch_upload",
         "required": true
+      },
+      {
+        "id": "doc:kel_readme",
+        "repo_path": "knowledge/kel/README.md",
+        "status": "present",
+        "required": true,
+        "description": "Defines KEL as the closed-loop knowledge evolution layer."
+      },
+      {
+        "id": "doc:kel_workflow",
+        "repo_path": "knowledge/kel/KEL_WORKFLOW.md",
+        "status": "present",
+        "required": true,
+        "description": "Workflow for query-to-experience-to-change-request-to-expert-promotion lifecycle."
+      },
+      {
+        "id": "doc:kel_architecture",
+        "repo_path": "knowledge/kel/KEL_ARCHITECTURE.md",
+        "status": "present",
+        "required": true,
+        "description": "KEL module and traceability architecture."
+      },
+      {
+        "id": "doc:kel_terminology",
+        "repo_path": "knowledge/kel/KEL_TERMINOLOGY.md",
+        "status": "present",
+        "required": false,
+        "description": "Terminology for KEL records, sufficiency ratings, graph change requests, reviews, and promotion."
       },
       {
         "id": "doc:upload_map",
@@ -599,6 +681,71 @@
         "required": false,
         "description": "Rejected feedback records retained for traceability."
       }
+    ],
+    "kel": [
+      {
+        "id": "kel:schema:experience_record",
+        "repo_path": "knowledge/kel/schemas/KEL_EXPERIENCE_RECORD_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for KEL design-query experience records."
+      },
+      {
+        "id": "kel:schema:feedback_to_pmap_apf",
+        "repo_path": "knowledge/kel/schemas/KEL_FEEDBACK_TO_PMAP_APF_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for converting querier feedback into structured P-map/APF issue/action records."
+      },
+      {
+        "id": "kel:schema:graph_change_request",
+        "repo_path": "knowledge/kel/schemas/KEL_GRAPH_CHANGE_REQUEST_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for proposed changes to EDPR, EDES, EDAS, EDIKB, datasets, plotters, tools, standard layouts, or docs."
+      },
+      {
+        "id": "kel:schema:expert_review",
+        "repo_path": "knowledge/kel/schemas/KEL_EXPERT_REVIEW_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for expert review decisions governing KEL promotion."
+      },
+      {
+        "id": "kel:schema:kg_sufficiency_report",
+        "repo_path": "knowledge/kel/schemas/KEL_KG_SUFFICIENCY_REPORT_SCHEMA.json",
+        "status": "present",
+        "required": false,
+        "description": "Schema for KEL knowledge sufficiency reports."
+      },
+      {
+        "id": "kel:templates",
+        "repo_path": "knowledge/kel/templates/",
+        "status": "present",
+        "required": true,
+        "description": "Starter templates for all KEL record types."
+      },
+      {
+        "id": "kel:examples",
+        "repo_path": "knowledge/kel/examples/",
+        "status": "present",
+        "required": false,
+        "description": "Initial valve and L-shaped branch KEL experience record examples."
+      },
+      {
+        "id": "kel:experience_records",
+        "repo_path": "knowledge/kel/experience_records/",
+        "status": "present",
+        "required": true,
+        "description": "Lifecycle folders for generated, accepted, rejected, and implemented KEL experience records."
+      },
+      {
+        "id": "kel:graph_change_requests",
+        "repo_path": "knowledge/kel/graph_change_requests/",
+        "status": "present",
+        "required": true,
+        "description": "Lifecycle folders for pending, accepted, rejected, and implemented KEL graph change requests."
+      }
     ]
   },
   "pending_artifacts": [],
@@ -647,6 +794,11 @@
       "step": 9,
       "name": "emit_knowloop_candidate",
       "action": "Always run tools/generate_knowloop_candidate.py after the query, whether the outcome is successful, partial, or failed."
+    },
+    {
+      "step": 10,
+      "name": "run_kel_governance",
+      "action": "Optionally run tools/kel/run_kel_cycle.py after the design run. Emit experience and sufficiency records; create feedback, review, and promotion records only from supplied human or expert input."
     }
   ],
   "validator_commands": {
@@ -656,7 +808,9 @@
     "check_pmap_apf_examples": "python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json",
     "run_pipeline_with_knowloop": "python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_ilt --solution-format md",
     "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py",
-    "test_plotters": "python -m unittest discover -s tools -p 'test_plot*.py'"
+    "test_plotters": "python -m unittest discover -s tools -p 'test_plot*.py'",
+    "test_kel": "python -m pytest -q tests/kel",
+    "kel_dry_run": "python tools/kel/run_kel_cycle.py --label smoke --output-dir runs/kel/smoke --feedback-text \"Plot must use the repository plotter.\" --dry-run"
   },
   "llm_bootstrap_instructions": [
     "Read this manifest first.",
@@ -690,17 +844,15 @@
     ]
   },
   "local_update": {
-    "date": "2026-09-11",
-    "status": "Phases 1 through 7 pushed to GitHub main; implementation commit 4f0d3116f11fb6ba473a78a99d6e871dc5c64372",
+    "date": "2026-09-13",
+    "status": "KEL v0.1 governance toolchain integrated with the Phase 1 through 7 plotter workflow.",
     "upload_map": "UPLOAD_MAP.md",
-    "summary": "Phases 1 through 7 are on GitHub main: EDPR retrieval/solving, EDAS study-layout mapping, component and assembly plotting, visual QA, and Knowloop feedback.",
+    "summary": "Adds KEL experience, feedback, sufficiency, graph-change, expert-review, and promotion records without changing Knowloop responsibilities. Generated records remain non-official until expert-reviewed.",
     "verification": [
-      "Component and ILT default PNGs pixel-identical to Phase 2 baselines.",
-      "Nine CLI/configuration tests passed: exports, invalid input, fallback, override loading, catalog coverage and geometry preservation.",
-      "Phase 4: all 14 plotter tests passed, including corrupt/missing/blank exports, clipping, scale warnings and geometry preservation. Component/ILT sample exports produced no errors.",
-      "Phase 5: 18 plotter tests passed; explicit ILT passed_with_corrections with no remaining detected collisions.",
-      "Phase 6: 24 plotter tests passed; all 12 EDES components built and rendered in component and assembly views.",
-      "Phase 7: 29 distinct tests passed; EDPR-to-plot and Knowloop schema verified."
+      "KEL schemas, examples, lifecycle records, tools, and tests imported from the reviewed update package.",
+      "Final expert reviews require a decision, named reviewer, timestamp, and decision reason.",
+      "Promotion status must agree with the review decision; implemented promotion requires an implementation reference.",
+      "KEL tests use the active Python interpreter for Windows portability."
     ],
     "known_plot_issue": "Boss sleeve attachment/load transfer remains unspecified and emits a warning. Large tables can require tall figures; leader crossings are not checked."
   },

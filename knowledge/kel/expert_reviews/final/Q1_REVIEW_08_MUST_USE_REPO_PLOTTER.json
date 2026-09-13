@@ -1,0 +1,13 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:q1_ilt_layout:must_use_repo_plotter",
+  "linked_change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+  "status": "final",
+  "decision": "accepted",
+  "reviewer": "domain-expert-placeholder",
+  "reviewed_utc": "2026-09-13T09:23:45Z",
+  "decision_reason": "Accept as a KEL workflow gate: framework-backed design geometry must use EDPR/P-map/APF retrieval and repository plotter/build checks before presentation.",
+  "required_evidence": [],
+  "implementation_target": "knowledge/kel/",
+  "implementation_reference": "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md"
+}

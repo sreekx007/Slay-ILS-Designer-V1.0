@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-experience-record/0.1",
+  "title": "KEL Experience Record Schema",
+  "description": "Schema for one Knowledge Evolution Loop design-query experience record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "experience_id",
+    "status",
+    "created_utc",
+    "source_query",
+    "edpr_trace",
+    "retrieval_trace",
+    "solution_trace",
+    "ratings",
+    "limitations",
+    "feedback_refs",
+    "graph_change_request_refs",
+    "expert_review_refs"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kel-experience-record/0.1"
+    },
+    "experience_id": {
+      "type": "string",
+      "pattern": "^kel:experience:[A-Za-z0-9_\\-:.]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "generated",
+        "querier_reviewed",
+        "needs_evidence",
+        "expert_accepted",
+        "expert_rejected",
+        "implemented",
+        "superseded"
+      ]
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "source_query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_id",
+        "raw_text",
+        "problem_title"
+      ],
+      "properties": {
+        "query_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_text": {
+          "type": "string"
+        },
+        "problem_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "edpr_trace": {
+      "$ref": "#/$defs/artifact_trace"
+    },
+    "retrieval_trace": {
+      "$ref": "#/$defs/artifact_trace"
+    },
+    "solution_trace": {
+      "$ref": "#/$defs/artifact_trace"
+    },
+    "plot_trace": {
+      "$ref": "#/$defs/artifact_trace"
+    },
+    "ratings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "llm_confidence",
+        "knowledge_sufficiency",
+        "evidence_strength",
+        "rationale"
+      ],
+      "properties": {
+        "llm_confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "knowledge_sufficiency": {
+          "type": "string",
+          "enum": [
+            "sufficient",
+            "partially_sufficient",
+            "insufficient",
+            "unknown"
+          ]
+        },
+        "evidence_strength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "feedback_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "graph_change_request_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "expert_review_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "$defs": {
+    "artifact_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "repo_path",
+        "summary"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "repo_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "repo_path"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "repo_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

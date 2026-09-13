@@ -1,0 +1,15 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q1_ilt_layout:stress_strain_objective",
+  "status": "pending",
+  "created_utc": "2026-09-13T09:20:15Z",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "linked_feedback_id": "kel:feedback:q1_ilt_layout:stress_strain_objective",
+  "target_layer": "EDPR",
+  "change_type": "new_design_guidance",
+  "problem_observed": "Always propose layouts that minimize strain and stress. Always mention the assumption in results. Mark the possible max stress and strain.",
+  "proposed_change": "Review and implement APF action `add_design_objective_or_ranking_rule_for_stress_strain_minimization` for observed issue: Always propose layouts that minimize strain and stress. Always mention the assumption in results. Mark the possible max stress and strain.",
+  "evidence_requirement": "Provide EDPR parser example input/output and P-map/APF checks showing the new objective, rule, or assumption is captured.",
+  "priority": "high",
+  "expert_review_ref": null
+}

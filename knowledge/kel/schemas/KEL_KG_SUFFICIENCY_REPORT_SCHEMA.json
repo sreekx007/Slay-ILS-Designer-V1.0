@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-kg-sufficiency-report/0.1",
+  "title": "KEL Knowledge Graph Sufficiency Report Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "assessment_id",
+    "created_utc",
+    "linked_experience_id",
+    "inputs",
+    "ratings",
+    "coverage",
+    "gaps",
+    "rationale"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kel-kg-sufficiency-report/0.1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kel:sufficiency:[A-Za-z0-9_\\-:.]+$"
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "linked_experience_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edpr_json",
+        "context_json",
+        "solution_artifact"
+      ],
+      "properties": {
+        "edpr_json": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "context_json": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "solution_artifact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ratings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "knowledge_sufficiency",
+        "evidence_strength",
+        "confidence"
+      ],
+      "properties": {
+        "knowledge_sufficiency": {
+          "type": "string",
+          "enum": [
+            "sufficient",
+            "partially_sufficient",
+            "insufficient",
+            "unknown"
+          ]
+        },
+        "evidence_strength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component_targets",
+        "component_context_count",
+        "missing_component_count",
+        "edikb_node_count",
+        "edikb_edge_count",
+        "numeric_evidence_rows",
+        "solution_available",
+        "explicit_missing_issue_count"
+      ],
+      "properties": {
+        "component_targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "component_context_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing_component_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edikb_node_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edikb_edge_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "numeric_evidence_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "solution_available": {
+          "type": "boolean"
+        },
+        "explicit_missing_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gap_type",
+          "target_layer",
+          "issue",
+          "suggested_action",
+          "priority",
+          "evidence_requirement"
+        ],
+        "properties": {
+          "gap_type": {
+            "type": "string"
+          },
+          "target_layer": {
+            "type": "string",
+            "enum": [
+              "EDPR",
+              "EDES",
+              "EDAS",
+              "EDIKB",
+              "Dataset",
+              "Plotters",
+              "Tools",
+              "Docs",
+              "StandardLayouts"
+            ]
+          },
+          "issue": {
+            "type": "string"
+          },
+          "suggested_action": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "evidence_requirement": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rationale": {
+      "type": "string"
+    }
+  }
+}

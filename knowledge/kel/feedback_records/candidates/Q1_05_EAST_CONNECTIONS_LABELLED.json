@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:east_connections_labelled",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T08:55:39Z",
+  "raw_feedback_text": "EA-ST to pipeline connections need to be labelled and plotted.",
+  "feedback_type": "plot_correction",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:header_12in",
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": "edpr:q1:pmap:artifact:header_pipe",
+    "affected_constraint": null,
+    "pmap_issue": "EA-ST to pipeline connections need to be labelled and plotted.",
+    "apf_action": "correct_plot_geometry_labels_or_scale_and_add_regression_case",
+    "priority": "high"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-feedback-to-pmap-apf/0.1",
+  "title": "KEL Feedback To P-map/APF Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "feedback_id",
+    "linked_experience_id",
+    "created_utc",
+    "raw_feedback_text",
+    "feedback_type",
+    "structured_feedback"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kel-feedback-to-pmap-apf/0.1"
+    },
+    "feedback_id": {
+      "type": "string",
+      "pattern": "^kel:feedback:[A-Za-z0-9_\\-:.]+$"
+    },
+    "linked_experience_id": {
+      "type": "string"
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "raw_feedback_text": {
+      "type": "string"
+    },
+    "feedback_type": {
+      "type": "string",
+      "enum": [
+        "clarification",
+        "correction",
+        "missing_constraint",
+        "missing_component",
+        "incorrect_behavior",
+        "wrong_assumption",
+        "insufficient_evidence",
+        "poor_plot",
+        "plot_correction",
+        "answer_format_requirement",
+        "default_assumption",
+        "design_objective_requirement",
+        "better_design_alternative",
+        "future_study"
+      ]
+    },
+    "structured_feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "affected_requirement",
+        "affected_function",
+        "affected_behavior",
+        "affected_structure",
+        "affected_constraint",
+        "pmap_issue",
+        "apf_action",
+        "priority"
+      ],
+      "properties": {
+        "affected_requirement": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "affected_function": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "affected_behavior": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "affected_structure": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "affected_constraint": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pmap_issue": {
+          "type": "string"
+        },
+        "apf_action": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    }
+  }
+}

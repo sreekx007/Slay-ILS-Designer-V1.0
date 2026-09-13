@@ -1,0 +1,16 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:template",
+  "status": "pending",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "linked_experience_id": "kel:experience:template",
+  "linked_feedback_id": null,
+  "target_layer": "KEL",
+  "change_type": "new_workflow_gate",
+  "problem_observed": "Template observed knowledge gap.",
+  "proposed_change": "Template proposed change.",
+  "evidence_requirement": "Template evidence requirement.",
+  "priority": "medium",
+  "expert_review_ref": null,
+  "implementation_ref": null
+}

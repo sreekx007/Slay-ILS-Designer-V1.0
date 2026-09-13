@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:z_branch_for_vertical_connector",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T09:08:08Z",
+  "raw_feedback_text": "Branch shape is incorrect. A vertical connector needs a Z-shaped GD-B branch, not the simple vertical branch sketch.",
+  "feedback_type": "correction",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:branch_8in_vertical_connector",
+    "affected_function": "edpr:q1:pmap:function:provide_branch_connection",
+    "affected_behavior": "edpr:q1:pmap:behaviour:branch_strain",
+    "affected_structure": "edpr:q1:pmap:artifact:branch_pipe",
+    "affected_constraint": null,
+    "pmap_issue": "Branch shape is incorrect. A vertical connector needs a Z-shaped GD-B branch, not the simple vertical branch sketch.",
+    "apf_action": "revise_solution_or_knowledge_item_after_expert_review",
+    "priority": "high"
+  }
+}

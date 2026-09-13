@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:valve_easb_default",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T08:55:39Z",
+  "raw_feedback_text": "There is valve on header line, but no EA-SB was added. Record default condition for valves that they cannot ride the rollers as well as take their contact loads. So it needs protection. Mention this assumption.",
+  "feedback_type": "default_assumption",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:header_valve",
+    "affected_function": "edpr:q1:pmap:function:provide_header_flow",
+    "affected_behavior": "edpr:q1:pmap:behaviour:branch_strain",
+    "affected_structure": "edpr:q1:pmap:artifact:header_valve",
+    "affected_constraint": null,
+    "pmap_issue": "There is valve on header line, but no EA-SB was added. Record default condition for valves that they cannot ride the rollers as well as take their contact loads. So it needs protection. Mention this assumption.",
+    "apf_action": "add_default_design_assumption_for_expert_review_and_reuse",
+    "priority": "high"
+  }
+}

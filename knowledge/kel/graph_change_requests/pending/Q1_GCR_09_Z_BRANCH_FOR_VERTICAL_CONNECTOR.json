@@ -1,0 +1,15 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q1_ilt_layout:z_branch_for_vertical_connector",
+  "status": "pending",
+  "created_utc": "2026-09-13T09:20:15Z",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "linked_feedback_id": "kel:feedback:q1_ilt_layout:z_branch_for_vertical_connector",
+  "target_layer": "EDAS",
+  "change_type": "new_assembly_constraint",
+  "problem_observed": "Branch shape is incorrect. A vertical connector needs a Z-shaped GD-B branch, not the simple vertical branch sketch.",
+  "proposed_change": "Update EDPR/EDAS layout selection so a vertical connector maps to GD-B variant Z and an appropriate ILT-Z standard layout anchor before plotting.",
+  "evidence_requirement": "Provide an EDAS layout example, successful build_ils validation, declared associations, and plotter output demonstrating the rule.",
+  "priority": "high",
+  "expert_review_ref": null
+}

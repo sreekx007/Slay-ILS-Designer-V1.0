@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:stress_strain_objective",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T08:55:40Z",
+  "raw_feedback_text": "Always propose layouts that minimize strain and stress. Always mention the assumption in results. Mark the possible max stress and strain.",
+  "feedback_type": "design_objective_requirement",
+  "structured_feedback": {
+    "affected_requirement": null,
+    "affected_function": null,
+    "affected_behavior": "edpr:q1:pmap:behaviour:header_strain",
+    "affected_structure": null,
+    "affected_constraint": null,
+    "pmap_issue": "Always propose layouts that minimize strain and stress. Always mention the assumption in results. Mark the possible max stress and strain.",
+    "apf_action": "add_design_objective_or_ranking_rule_for_stress_strain_minimization",
+    "priority": "high"
+  }
+}

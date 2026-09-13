@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:easb_shape_from_edes",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T09:08:09Z",
+  "raw_feedback_text": "EA-SB shape is not correct. It must follow EDES GD-SB knowledge and its parameters, not a generic rectangular protection frame.",
+  "feedback_type": "correction",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:ilt_structure",
+    "affected_function": "edpr:q1:pmap:function:provide_header_flow",
+    "affected_behavior": "edpr:q1:pmap:behaviour:valve_roller_contact",
+    "affected_structure": "edpr:q1:pmap:artifact:header_pipe",
+    "affected_constraint": null,
+    "pmap_issue": "EA-SB shape is not correct. It must follow EDES GD-SB knowledge and its parameters, not a generic rectangular protection frame.",
+    "apf_action": "revise_solution_or_knowledge_item_after_expert_review",
+    "priority": "high"
+  }
+}

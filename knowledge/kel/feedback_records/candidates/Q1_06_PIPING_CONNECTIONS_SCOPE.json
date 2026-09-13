@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q1_ilt_layout:piping_connections_scope",
+  "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
+  "created_utc": "2026-09-13T08:55:39Z",
+  "raw_feedback_text": "Connections mentioned here are all piping connections.",
+  "feedback_type": "answer_format_requirement",
+  "structured_feedback": {
+    "affected_requirement": "edpr:q1:pmap:requirement:header_valve",
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": "edpr:q1:pmap:artifact:header_valve",
+    "affected_constraint": null,
+    "pmap_issue": "Connections mentioned here are all piping connections.",
+    "apf_action": "add_or_update_kel_output_presentation_policy",
+    "priority": "medium"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "kel-kg-sufficiency-report/0.1",
+  "assessment_id": "kel:sufficiency:template",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "linked_experience_id": null,
+  "inputs": {
+    "edpr_json": null,
+    "context_json": null,
+    "solution_artifact": null
+  },
+  "ratings": {
+    "knowledge_sufficiency": "unknown",
+    "evidence_strength": 1,
+    "confidence": "low"
+  },
+  "coverage": {
+    "component_targets": [],
+    "component_context_count": 0,
+    "missing_component_count": 0,
+    "edikb_node_count": 0,
+    "edikb_edge_count": 0,
+    "numeric_evidence_rows": 0,
+    "solution_available": false,
+    "explicit_missing_issue_count": 0
+  },
+  "gaps": [],
+  "rationale": "Template placeholder."
+}
