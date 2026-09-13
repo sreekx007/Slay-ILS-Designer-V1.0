@@ -17,7 +17,7 @@ generated `runs/` artifacts, Python caches, and `.git/` remain excluded.
 
 Source package commit: `7d1d380 Add KEL governance toolchain`
 Source ZIP SHA-256: `e43dca776b696728d05f5ce174f8458194e0a76bd65fe9c610ddd1acd6123bad`
-GitHub integration commit: `PENDING_KEL_INTEGRATION_COMMIT`
+GitHub integration commit: `6d69db2134b830a54dc568245fa9819555df4a54`
 
 The reviewed package contributes 73 mapped files. This integration also updates the root README and upload map, and adds the development requirements file. The manual upload set is 76 repository paths:
 

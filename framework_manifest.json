@@ -20,7 +20,7 @@
     "provider": "github",
     "url": "https://github.com/sreekx007/Slay-ILS-Designer-V1.0",
     "default_branch": "main",
-    "checked_commit": "8ef0bd80620885636dc51f87eb32aa3c691cd2fc",
+    "checked_commit": "6d69db2134b830a54dc568245fa9819555df4a54",
     "checked_utc": "2026-09-13",
     "repo_access_status": "readable"
   },
@@ -845,14 +845,16 @@
   },
   "local_update": {
     "date": "2026-09-13",
-    "status": "KEL v0.1 governance toolchain integrated with the Phase 1 through 7 plotter workflow.",
+    "status": "KEL v0.1 governance toolchain pushed to GitHub main in implementation commit 6d69db2134b830a54dc568245fa9819555df4a54",
     "upload_map": "UPLOAD_MAP.md",
     "summary": "Adds KEL experience, feedback, sufficiency, graph-change, expert-review, and promotion records without changing Knowloop responsibilities. Generated records remain non-official until expert-reviewed.",
     "verification": [
-      "KEL schemas, examples, lifecycle records, tools, and tests imported from the reviewed update package.",
-      "Final expert reviews require a decision, named reviewer, timestamp, and decision reason.",
-      "Promotion status must agree with the review decision; implemented promotion requires an implementation reference.",
-      "KEL tests use the active Python interpreter for Windows portability."
+      "12 KEL tests passed.",
+      "31 KEL lifecycle, template, and example records validated.",
+      "Five KEL JSON schemas passed schema checks.",
+      "29 Phase 7 plotter and solver regression tests passed.",
+      "A real no-feedback KEL cycle emitted and validated downloadable experience and sufficiency JSON records.",
+      "Final expert reviews require a decision, named reviewer, timestamp, and decision reason. Promotion status must match the review decision; implemented promotion requires an implementation reference."
     ],
     "known_plot_issue": "Boss sleeve attachment/load transfer remains unspecified and emits a warning. Large tables can require tall figures; leader crossings are not checked."
   },
