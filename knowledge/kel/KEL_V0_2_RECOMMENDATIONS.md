@@ -26,17 +26,19 @@ closing the gap between reviewed change requests and actual framework updates.
 | Medium | Add review dashboards or summary reports | Experts need a compact view of pending, accepted, rejected, and implemented records. |
 | Low | Add optional automatic Git branch/commit helpers | Useful later, but only after lifecycle and implementation gates are reliable. |
 
-## Q1-Driven v0.2 Implementation Candidates
+## Prioritized Q1-Driven Implementation Plan
 
-The Q1 ILT test should drive early v0.2 work:
+The first KEL v0.2 implementation pass must follow this order:
 
-| Change Request | Recommended v0.2 Action |
-|---|---|
-| `Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR` | Teach EDPR/layout selection that vertical connectors require `GD-B` variant `Z` and an `ILT-Z-*` anchor. |
-| `Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS` | Require plots/reports to expose `GD-ST` parameters, active connector slots, branch association, and pipe-side connection points. |
-| `Q1_GCR_10_EASB_SHAPE_FROM_EDES` | Ensure EA-SB protection is represented with `GD-SB` geometry and parameters, not a generic frame sketch. |
-| `Q1_GCR_02_VALVE_EASB_DEFAULT` | Add a default assumption/rule that valves cannot ride rollers or take contact loads and need explicit protection. |
-| `Q1_GCR_07_STRESS_STRAIN_OBJECTIVE` | Add EDPR ranking guidance for minimizing strain/stress and marking likely peak zones without inventing FEA values. |
+| Order | Implementation gap | Q1 evidence | Completion test |
+|---:|---|---|---|
+| 1 | Feedback grouping and de-duplication | All Q1 feedback candidates and graph-change requests | Near-duplicate feedback is grouped into one change request while preserving every source feedback ID and evidence link. |
+| 2 | EDPR/EDAS rule for vertical connectors | `Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR` | A vertical connector deterministically selects a Z-shaped `GD-B` and an `ILT-Z-*` layout; incompatible L-branch output fails validation. |
+| 3 | Plotter/report EA-ST exposure gate | `Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT`, `Q1_GCR_05_EAST_CONNECTIONS_LABELLED`, and `Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS` | The plot and report expose the `GD-ST` parameters that realize EA-ST, all active connector slots, pipe-side connections, and branch-to-top or branch-to-side associations. Missing items fail the gate. |
+| 4 | EA-SB valve protection with real geometry | `Q1_GCR_02_VALVE_EASB_DEFAULT` and `Q1_GCR_10_EASB_SHAPE_FROM_EDES` | A protected inline valve uses actual `GD-SB` geometry, parameters, contact ownership, connectors, and associations; a generic frame cannot satisfy the rule. |
+| 5 | Two-branch valve representation gap | Q1 experience; dedicated feedback/change request still required | EDPR, EDAS, builder, plotter, and report represent two branch valves as distinct components with unambiguous topology and associations, or emit a machine-readable representation gap. |
+
+This sequence moves KEL from recording lessons to improving the executable design workflow. Item 5 must first be formalized as a dedicated feedback record and graph-change request so its exact two-valve topology and acceptance evidence are traceable before implementation.
 
 ## Proposed v0.2 Milestone
 
