@@ -56,19 +56,23 @@ To make the Q1 case study publication-ready, collect:
 | Workflow correction | Repository code/tests at `c3157c6`: vertical connector selects `ILT-Z-FT-PS`; EA-ST exposure is reported; unsupported valve protection and unresolved two-valve topology fail closed. |
 | Final representative output | Use the Q1 vertical-connector emitted layout/plot and the 12-inch valve `VALVE_PROTECTION_INPUTS_MISSING` report as paired successful and fail-closed artifacts. |
 
-## Evidence Needed From Research Papers
+## Supplied Literature Coverage
 
-The manuscript should not claim these areas without citations:
+| Area | Registered source | Status and use |
+|---|---|---|
+| P-map/problem formulation | R1 and R4 | Supplied. Use for representation and ontology-annotation limitations. |
+| OAM / assembly ontology | R2 and R3 | Supplied. Use for object, hierarchy, association, and product-information claims. |
+| Human-in-the-loop KG design | R5 | Supplied. Use as the KnowLoop comparison and expert-supervision precedent. |
+| APF for high-cost simulation design | R6 | Supplied. Use for requirement-to-formulation context; distinguish its solver-independent evaluation from this repository's P-map/APF implementation. |
+| EDIKB Paper 1 | R7 | Supplied primary source for IW/EA, Type A/B/C, and isolated-component behavior. |
+| EDIKB Paper 2 | R8 | Supplied primary source for EA-ST, EA-SB, connection systems, branch assemblies, and mass-position behavior. |
+| Original FBS theory | Not yet supplied | Still required before manuscript release. |
+| Engineering KGs, RAG/tool use, and active learning/surrogates | Not yet supplied | Still required for related work and future-ML claims. |
+| Applicable subsea design codes | Not yet supplied | Still required for code-compliance and allowable claims. |
 
-| Area | Citation need |
-|---|---|
-| FBS | Original or accepted FBS design-theory references. |
-| OAM / assembly ontology | References defining object/assembly/feature/association modeling. |
-| Knowledge graphs in engineering design | Engineering KG survey or applied design KG papers. |
-| LLM + RAG + tools | Foundational RAG and tool-use references. |
-| Human-in-the-loop KG evolution | KnowLoop paper and related human-review KG update work. |
-| Active learning / surrogate modeling | Engineering design optimization and FEA surrogate references. |
-| Subsea pipeline/ILS behavior | Domain papers supporting strain/stress behavior and ILS component trends. |
+### EDIKB Evidence Requirement
+
+R7 and R8 establish publication-level provenance for the existing Paper 1 and Paper 2 EDIKB families. Before a quantitative figure, table, or claim is used in the preprint, add a claim-level link to the paper table/figure, case ID, parameter range, response location, and limitation. Do not cite a graph filename alone as evidence.
 
 ## Suggested Preprint Evidence Standard
 

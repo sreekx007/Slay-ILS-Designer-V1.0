@@ -1,0 +1,67 @@
+{
+  "schema": "papers/edikb-source-provenance/0.1",
+  "updated_utc": "2026-09-14T00:00:00Z",
+  "purpose": "Map author-supplied publications to EDIKB source families without embedding or redistributing the PDFs.",
+  "publication_sources": [
+    {
+      "id": "reference:R7",
+      "title": "Toward AI-Assisted Conceptual Design of Subsea Inline Structures: Classification and Strain Behaviour of Inline Components during S-Lay Installation",
+      "authors": [
+        "Sreekanth Manakkattil Sivaraman",
+        "Jagannatha Venkataramana Reddy"
+      ],
+      "year": 2026,
+      "doi": "10.22214/ijraset.2026.84268",
+      "source_filename": "doc (1).pdf",
+      "sha256": "36e0cdc7da22c86832dfa8991ea40cb7f1356c4de60c0f96619bc778a9fa805d",
+      "source_type": "author_supplied_published_paper",
+      "edikb_source_families": [
+        "paper1_inline_behaviour"
+      ],
+      "supports": [
+        "IW/EA physical classification",
+        "Type A/B/C mechanical behavior classification",
+        "isolated inline-component stiffness, elevation, and transition trends"
+      ],
+      "scope_control": "Use only within the paper's analyzed S-lay cases, parameter ranges, response locations, and stated limitations."
+    },
+    {
+      "id": "reference:R8",
+      "title": "Advancing AI Assisted Conceptual Design of Subsea Inline Structures: Mechanical Behaviour of Pipeline-Mounted Structural Assemblies during S-Lay Installation",
+      "authors": [
+        "Sreekanth Manakkattil Sivaraman",
+        "Jagannatha Venkataramana Reddy"
+      ],
+      "year": 2026,
+      "doi": "10.22214/ijraset.2026.84577",
+      "source_filename": "doc.pdf",
+      "sha256": "30618898e45834a814d3f5b185dca472421603d09a3c65ca48f2885a0e2adef6",
+      "source_type": "author_supplied_published_paper",
+      "edikb_source_families": [
+        "paper2_east_behaviour",
+        "paper2_easb_behaviour",
+        "paper2_assembly_mass_branch_behaviour"
+      ],
+      "supports": [
+        "EA-ST and EA-SB behavior",
+        "F1/F2/PS and deadband connection-system comparisons",
+        "branch assembly and support behavior",
+        "added-mass position effects"
+      ],
+      "scope_control": "Preserve structure type, connection system, geometry, contact ownership, case definition, and stated limitations; do not transfer EA-ST behavior directly to EA-SB."
+    }
+  ],
+  "claim_level_requirement": {
+    "required_for_numeric_claims": [
+      "publication_id",
+      "source_family",
+      "table_or_figure",
+      "case_id",
+      "parameter_range",
+      "response_location",
+      "limitation"
+    ],
+    "note": "Bibliographic mapping establishes lineage but does not certify every numeric row independently."
+  },
+  "repository_pdf_policy": "Source PDFs are not committed. Add binaries only with explicit redistribution approval and a licensing check."
+}

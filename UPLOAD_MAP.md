@@ -13,6 +13,24 @@ GitHub `main` contains KEL v0.1, Plotter Phases 1 through 7, and the KEL v0.2 re
 the local virtual environment, Python caches, staging files, and `.git/` remain
 excluded.
 
+
+## Research reference registration - confirmed
+
+The eight supplied publications are registered by citation, role, and source-file checksum. The two author papers are also mapped directly to the EDIKB Paper 1 and Paper 2 source families. Source PDFs remain outside Git; no paper binaries are uploaded.
+
+| Action | Repository path |
+| --- | --- |
+| Update | `framework_manifest.json` |
+| Update | `knowledge/edikb/EDIKB_FULL_KNOWLEDGE_GRAPH.json` |
+| Update | `papers/README.md` |
+| Update | `papers/PAPER_REFERENCE_REQUESTS.md` |
+| Update | `papers/PAPER_01A_AI4D_KG_CASE_STUDY_OUTLINE.md` |
+| Update | `papers/PAPER_01B_INDEPENDENT_FRAMEWORK_OUTLINE.md` |
+| Update | `papers/PAPER_01_FIGURES_TABLES_AND_EVIDENCE_PLAN.md` |
+| Add | `papers/REFERENCE_LIBRARY.md` |
+| Add | `papers/EDIKB_SOURCE_PROVENANCE.json` |
+| Update | `UPLOAD_MAP.md` |
+
 ## KEL v0.2 Steps 1 through 6 - release batch
 
 | Action | Repository path |

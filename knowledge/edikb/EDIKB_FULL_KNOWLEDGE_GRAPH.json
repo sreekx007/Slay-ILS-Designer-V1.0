@@ -17758,5 +17758,27 @@
     "EA-ST F2 and EA-SB F2 comparison to GD-TT/GD-TP/GD-SH is recorded as future ML study where direct equivalent datasets are not available.",
     "Edge vocabularies from draft graphs were normalized to source/predicate/target while preserving original properties.",
     "v0.3 adds feature-interaction policy: direct combined evidence overrides isolated component superposition; missing combined evidence becomes an ML/FEA interaction candidate."
+  ],
+  "source_publications": [
+    {
+      "publication_id": "reference:R7",
+      "doi": "10.22214/ijraset.2026.84268",
+      "title": "Toward AI-Assisted Conceptual Design of Subsea Inline Structures: Classification and Strain Behaviour of Inline Components during S-Lay Installation",
+      "source_families": [
+        "paper1_inline_behaviour"
+      ],
+      "provenance_record": "papers/EDIKB_SOURCE_PROVENANCE.json"
+    },
+    {
+      "publication_id": "reference:R8",
+      "doi": "10.22214/ijraset.2026.84577",
+      "title": "Advancing AI Assisted Conceptual Design of Subsea Inline Structures: Mechanical Behaviour of Pipeline-Mounted Structural Assemblies during S-Lay Installation",
+      "source_families": [
+        "paper2_east_behaviour",
+        "paper2_easb_behaviour",
+        "paper2_assembly_mass_branch_behaviour"
+      ],
+      "provenance_record": "papers/EDIKB_SOURCE_PROVENANCE.json"
+    }
   ]
 }

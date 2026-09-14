@@ -124,10 +124,11 @@
     "knowledge_kel": "knowledge/kel/",
     "tools_kel": "tools/kel/",
     "tests_kel": "tests/kel/",
-    "superseded": "superseded/"
+    "superseded": "superseded/",
+    "papers": "papers/"
   },
   "repo_review": {
-    "summary": "Core knowledge, schemas, runtime tools, plotters and archived manifests are present. Source-paper files are not included in the current checkout.",
+    "summary": "Core knowledge, schemas, runtime tools, plotters, paper plans, and archived manifests are present. Eight supplied publications are registered by citation and checksum; source PDFs remain outside the checkout.",
     "json_parse_status": "All discovered JSON files in schemas/, knowledge/edes/, knowledge/edas/, knowledge/edikb/, and framework_manifest.json parsed successfully during review.",
     "naming_notes": [
       "Repository currently uses stable filenames without version suffixes, for example schemas/EDPR_METASCHEMA.json. Versioning should be carried inside the JSON metadata and this manifest.",
@@ -334,8 +335,8 @@
         "repo_path": "knowledge/edikb/EDIKB_FULL_KNOWLEDGE_GRAPH.json",
         "status": "present",
         "required": true,
-        "description": "Consolidated semantic behavior knowledge graph.",
-        "size_bytes": 612101
+        "description": "Consolidated semantic behavior knowledge graph with explicit source-publication links to the two author-supplied EDIKB papers.",
+        "size_bytes": 630804
       },
       {
         "id": "edikb:full_dataset",
@@ -580,32 +581,88 @@
         "status": "present",
         "required": false,
         "role": "Plotter migration phases and acceptance criteria"
+      },
+      {
+        "id": "doc:paper_reference_library",
+        "repo_path": "papers/REFERENCE_LIBRARY.md",
+        "status": "present",
+        "required": false,
+        "role": "Citation registry and supplied-paper role mapping"
+      },
+      {
+        "id": "doc:edikb_source_provenance",
+        "repo_path": "papers/EDIKB_SOURCE_PROVENANCE.json",
+        "status": "present",
+        "required": false,
+        "role": "Machine-readable mapping from author papers to EDIKB source families"
       }
     ],
     "reference_papers": [
       {
-        "repo_path": "Reference Papers/Apf via llm.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R1",
+        "title": "Problem Map: An Ontological Framework for a Computational Study of Problem Formulation in Engineering Design",
+        "doi_or_url": "https://doi.org/10.1115/1.4030076",
+        "source_filename": "Problem_Map_An_ontological_framework_for.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "P-map and design problem formulation"
       },
       {
-        "repo_path": "Reference Papers/Problem_Map_An_ontological_framework_for.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R2",
+        "title": "A Model for Capturing Product Assembly Information",
+        "doi_or_url": "https://doi.org/10.1115/1.2164451",
+        "source_filename": "Nist capturing product ontology.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "Open Assembly Model"
       },
       {
-        "repo_path": "Reference Papers/Challenges in developing ontology for pf.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R3",
+        "title": "Information Models for Product Representation: Core and Assembly Models",
+        "doi_or_url": "https://doi.org/10.6028/NIST.IR.7173",
+        "source_filename": "nistir7173.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "CPM/OAM foundation"
       },
       {
-        "repo_path": "Reference Papers/Human in loop cdf with llm.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R4",
+        "title": "Challenges in Developing an Ontology for Problem Formulation in Design",
+        "doi_or_url": "https://www.designsociety.org/publication/37714/challenges_in_developing_an_ontology_for_problem_formulation_in_design",
+        "source_filename": "Challenges in developing ontology for pf.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "Ontology granularity and annotation challenges"
       },
       {
-        "repo_path": "Reference Papers/Nist capturing product ontology.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R5",
+        "title": "A Human-in-the-Loop Conceptual Design Framework Jointly Driven by Large Language Models and Knowledge Graphs",
+        "doi_or_url": "https://doi.org/10.1016/j.aei.2026.104646",
+        "source_filename": "Human in loop cdf with llm.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "KnowLoop and expert-supervised LLM/KG conceptual design"
       },
       {
-        "repo_path": "Reference Papers/nistir 7173.pdf",
-        "status": "not_in_current_checkout"
+        "id": "reference:R6",
+        "title": "Solver-Independent Automated Problem Formulation via LLMs for High-Cost Simulation-Driven Design",
+        "doi_or_url": "https://doi.org/10.18653/v1/2026.findings-acl.102",
+        "source_filename": "Apf via llm.pdf",
+        "status": "registered_external_pdf_not_committed",
+        "paper_role": "Solver-independent APF"
+      },
+      {
+        "id": "reference:R7",
+        "title": "Toward AI-Assisted Conceptual Design of Subsea Inline Structures: Classification and Strain Behaviour of Inline Components during S-Lay Installation",
+        "doi_or_url": "https://doi.org/10.22214/ijraset.2026.84268",
+        "source_filename": "doc (1).pdf",
+        "status": "registered_author_pdf_not_committed",
+        "paper_role": "Primary EDIKB Paper 1 domain source",
+        "provenance_record": "papers/EDIKB_SOURCE_PROVENANCE.json"
+      },
+      {
+        "id": "reference:R8",
+        "title": "Advancing AI Assisted Conceptual Design of Subsea Inline Structures: Mechanical Behaviour of Pipeline-Mounted Structural Assemblies during S-Lay Installation",
+        "doi_or_url": "https://doi.org/10.22214/ijraset.2026.84577",
+        "source_filename": "doc.pdf",
+        "status": "registered_author_pdf_not_committed",
+        "paper_role": "Primary EDIKB Paper 2 domain source",
+        "provenance_record": "papers/EDIKB_SOURCE_PROVENANCE.json"
       }
     ],
     "plotters_and_builders": [

@@ -66,7 +66,7 @@ Introduce:
 
 ### 2. Related Work
 
-Subsections to prepare after collecting references:
+Subsections to develop using the registered sources and remaining literature:
 
 - Knowledge graphs for engineering design.
 - FBS and design ontology.
@@ -256,6 +256,22 @@ State clearly:
 - Create an evaluation benchmark comparing unguided LLM, RAG-only, and governed neuro-symbolic workflow.
 - Produce an expert-review dashboard for KEL records.
 - Generalize the framework to other structural assembly domains.
+
+
+## Supplied Literature Anchors
+
+Use the stable citation IDs in `REFERENCE_LIBRARY.md` while drafting:
+
+| Draft claim | Required anchor |
+|---|---|
+| P-map representation and problem-space evolution | R1; use R4 for ontology granularity and annotation challenges. |
+| OAM/CPM assembly objects, hierarchy, features, and associations | R2 and R3. |
+| KnowLoop as the front-half human/expert-supervised conceptual-design precedent | R5. |
+| Solver-independent APF for high-cost simulation-driven design | R6. |
+| EDIKB Paper 1 classifications and isolated-component behavior | R7. |
+| EDIKB Paper 2 EA-ST, EA-SB, connector, branch, and mass-position behavior | R8. |
+
+R7 and R8 are the author's primary published domain sources and must be cited wherever the manuscript attributes EDIKB classifications, parametric trends, connection-system behavior, or branch-layout behavior to prior analysis. The manuscript must still identify the relevant table, figure, case, parameter range, and limitation for quantitative claims.
 
 ## My Recommendation
 

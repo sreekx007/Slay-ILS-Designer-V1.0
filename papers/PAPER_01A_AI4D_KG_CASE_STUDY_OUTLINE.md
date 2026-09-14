@@ -330,16 +330,28 @@ Include:
 4. A very good paper figure would compare three modes: unguided LLM answer, RAG-only answer, and governed KEL answer. Q1 is a perfect demonstration.
 5. The dataset-sufficiency argument is valuable. It shows maturity: you are not assuming that a small historical KG magically produces reliable engineering intelligence.
 
-## Citation Needs Before Preprint
+## Remaining Citation Needs Before Preprint
 
-This outline still needs citation support for:
+The supplied set now covers OAM/CPM, P-map, KnowLoop, APF, and the two EDIKB domain papers. The outline still needs direct citation support for:
 
 - AI4D / AI for design principles;
 - knowledge graphs in engineering design;
-- FBS and FBS ontology;
-- OAM or assembly ontology/modeling references;
-- P-map/APF or problem formulation references;
-- human-in-the-loop knowledge evolution / KnowLoop paper;
-- RAG and tool-using LLM agent references;
+- original FBS design theory;
+- foundational RAG and tool-using LLM agents;
 - active learning / surrogate modeling for engineering design;
-- subsea ILS/ILT or pipeline structural design evidence papers.
+- applicable subsea pipeline and installation design codes.
+
+## Supplied Literature Anchors
+
+Use the stable citation IDs in `REFERENCE_LIBRARY.md` while drafting:
+
+| Draft claim | Required anchor |
+|---|---|
+| P-map representation and problem-space evolution | R1; use R4 for ontology granularity and annotation challenges. |
+| OAM/CPM assembly objects, hierarchy, features, and associations | R2 and R3. |
+| KnowLoop as the front-half human/expert-supervised conceptual-design precedent | R5. |
+| Solver-independent APF for high-cost simulation-driven design | R6. |
+| EDIKB Paper 1 classifications and isolated-component behavior | R7. |
+| EDIKB Paper 2 EA-ST, EA-SB, connector, branch, and mass-position behavior | R8. |
+
+R7 and R8 are the author's primary published domain sources and must be cited wherever the manuscript attributes EDIKB classifications, parametric trends, connection-system behavior, or branch-layout behavior to prior analysis. The manuscript must still identify the relevant table, figure, case, parameter range, and limitation for quantitative claims.
