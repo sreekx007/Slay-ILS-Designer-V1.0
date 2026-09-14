@@ -7,7 +7,7 @@ Eight papers have been reviewed and registered in `REFERENCE_LIBRARY.md`. The se
 The two author-supplied subsea papers are primary domain evidence:
 
 1. R7 is the source anchor for the EDIKB Paper 1 inline-behavior family, including the IW/EA and Type A/B/C classifications and isolated component trends.
-2. R8 is the source anchor for the EDIKB Paper 2 families covering EA-ST, EA-SB, connector arrangements, branch assemblies, and mass-position behavior.
+2. R8 is the source anchor for the EDIKB Paper 2 families covering EA-ST and EA-SB (normalized in the manuscripts to GD-ST and GD-SB), connector arrangements, branch assemblies, and mass-position behavior.
 
 Their machine-readable mapping is in `EDIKB_SOURCE_PROVENANCE.json`. The PDFs remain outside the repository; the registry records filenames and SHA-256 checksums for exact-copy identification.
 

@@ -10,7 +10,7 @@
 
 ## Abstract
 
-Large language models can translate engineering language and coordinate software tools, but unconstrained generation does not preserve physical topology, evidence scope, or change authority. This paper presents a governed neuro-symbolic architecture for conceptual design of assembly-intensive engineering systems, instantiated in Slay-ILS-Designer for subsea inline structures installed by S-lay. The system separates a problem instance graph (EDPR), component graph (EDES), assembly graph (EDAS), and behavior/evidence graph (EDIKB). Language-model operations propose problem mappings, retrieval plans, explanations, and feedback decompositions. Deterministic transitions validate schemas, restrict topology, retrieve compatible evidence, construct layouts, calculate defined checks, produce plots and reports, and emit typed gaps when knowledge is insufficient. A Knowledge Evolution Loop (KEL) converts design experience into atomic feedback, semantic groups, graph-change requests, expert decisions, implementation plans, and reconciled lifecycle states. Two regression cases expose the value of the separation. A vertical connector requirement changes the admissible branch family from L to Z; it is not a drawing rotation. A request for a valve on a 12-inch header with moment capacity equal to 80% of pipeline capacity does not justify base geometry or connector selection because envelopes, roller clearance, load cases, allowable-moment basis, and combined-assembly evidence are missing. The current repository passes 23 KEL tests and 29 plotter/solver tests and reports no authoritative lifecycle conflicts. These results demonstrate executable governance and design gates, not comparative LLM superiority or structural adequacy. We specify a four-baseline evaluation, ablations, task families, and metrics for topology validity, requirement fidelity, parameter completeness, evidence precision, traceability, and calibrated gap behavior. The work positions engineering design assistance as a constrained transition system in which neural language capability operates over explicit symbolic state and persistent knowledge changes require expert authorization.
+Large language models can translate engineering language and coordinate software tools, but unconstrained generation does not preserve physical topology, evidence scope, or change authority. This paper presents a governed neuro-symbolic architecture for conceptual design of assembly-intensive engineering systems, instantiated in Slay-ILS-Designer for subsea inline structures installed by S-lay. The system separates a problem instance graph (EDPR), component graph (EDES), assembly graph (EDAS), and behavior/evidence graph (EDIKB). Language-model operations propose problem mappings, retrieval plans, explanations, and feedback decompositions. Deterministic transitions validate schemas, restrict topology, retrieve compatible evidence, construct layouts, calculate defined checks, produce plots and reports, and emit typed gaps when knowledge is insufficient. A Knowledge Evolution Loop (KEL) converts design experience into atomic feedback, semantic groups, graph-change requests, expert decisions, implementation plans, and reconciled lifecycle states. Two regression cases expose the value of the separation. A branch anchoring gate requires both L-horizontal and Z-vertical branch assemblies to terminate at an explicit `GD-ST` feature; connector orientation separately determines the admissible branch family. A request for a valve on a 12-inch header with moment capacity equal to 80% of pipeline capacity does not justify base geometry or connector selection because envelopes, roller clearance, load cases, allowable-moment basis, and combined-assembly evidence are missing. The current repository passes 24 KEL tests and 29 plotter/solver tests and reports no authoritative lifecycle conflicts. These results demonstrate executable governance and design gates, not comparative LLM superiority or structural adequacy. We specify a four-baseline evaluation, ablations, task families, and metrics for topology validity, requirement fidelity, parameter completeness, evidence precision, traceability, and calibrated gap behavior. The work positions engineering design assistance as a constrained transition system in which neural language capability operates over explicit symbolic state and persistent knowledge changes require expert authorization.
 
 **Keywords:** neuro-symbolic AI; knowledge graph; engineering design; large language model; tool use; human-in-the-loop; provenance; calibrated refusal; subsea pipeline; structural assembly
 
@@ -36,11 +36,13 @@ The paper contributes: (i) a four-layer engineering knowledge model; (ii) a tool
 
 ## 2. Domain and Ontology
 
+**Notation used in this paper.** The source studies [7], [8] use the identifiers `EA-ST` and `EA-SB` for the external top and base structures. This paper normalizes them to the repository identifiers `GD-ST` and `GD-SB` and uses the `GD-` notation thereafter. This is a naming change only; it does not change the underlying component concepts, mechanics, geometry, or evidence interpretation.
+
 ### 2.1 Minimum S-lay context
 
-During S-lay installation, the pipeline travels from the vessel firing line across a curved stinger and into the suspended catenary. Inline hardware passing through the overbend can change local bending stiffness, elevation, mass, contact, and curvature. A complete ILT may contain a header, tee and branch, valves, thick anchor regions, a top structure (EA-ST), a base structure (EA-SB), connectors, supports, and a mudmat.
+During S-lay installation, the pipeline travels from the vessel firing line across a curved stinger and into the suspended catenary. Inline hardware passing through the overbend can change local bending stiffness, elevation, mass, contact, and curvature. A complete ILT may contain a header, tee and branch, valves, thick anchor regions, a top structure (GD-ST), a base structure (GD-SB), connectors, supports, and a mudmat.
 
-The first domain study classifies physical items as inline-welded or externally attached and classifies mechanical behavior as stiffness-dominant Type A, elevation-dominant Type B, or combined Type C [7]. The second characterizes EA-ST, EA-SB, connection systems, branch assemblies, and mass-position effects [8]. These are evidence-bounded taxonomies rather than universal constitutive laws.
+The first domain study classifies physical items as inline-welded or externally attached and classifies mechanical behavior as stiffness-dominant Type A, elevation-dominant Type B, or combined Type C [7]. The second characterizes GD-ST, GD-SB, connection systems, branch assemblies, and mass-position effects [8]. These are evidence-bounded taxonomies rather than universal constitutive laws.
 
 ![Preliminary repository-generated ILT schematic](figures/preliminary/shared_repository_ilt_schematic.svg)
 
@@ -48,7 +50,7 @@ The first domain study classifies physical items as inline-welded or externally 
 
 ### 2.2 Canonical component vocabulary
 
-Before formalizing the knowledge layers, the domain symbols must be grounded in physical objects. The papers use ten established `GD-` identifiers from the current implementation. These are stable local ontology IDs rather than universal industry abbreviations. Human-readable labels remain attached to every ID. When the source-paper taxonomy is being discussed, EA-ST and EA-SB denote external top- and base-structure classes; when the executable repository object is meant, the corresponding IDs are `GD-ST` and `GD-SB`.
+Before formalizing the knowledge layers, the domain symbols must be grounded in physical objects. The papers use ten established `GD-` identifiers from the current implementation. These are stable local ontology IDs rather than universal industry abbreviations. Human-readable labels remain attached to every ID. The same identifiers are used in the narrative, graph, plot, and report so that a component is not renamed between representation layers.
 
 ![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
 
@@ -90,7 +92,7 @@ Let the knowledge state be K = (G_E, G_A, G_K), and let G_P be the current probl
 
 A standard-layout library provides reusable anchors but is not a fifth source of truth. An anchor must be materialized through EDAS and evaluated against EDPR and EDIKB.
 
-The separation is semantically significant. EDAS can declare a nested shroud and thick pipe buildable while EDIKB warns that their combined behavior is non-additive. EDES can define EA-SB geometry without claiming that EA-SB is needed in the current problem. EDPR may refer to a missing component or relation without mutating the master ontology.
+The separation is semantically significant. EDAS can declare a nested shroud and thick pipe buildable while EDIKB warns that their combined behavior is non-additive. EDES can define GD-SB geometry without claiming that GD-SB is needed in the current problem. EDPR may refer to a missing component or relation without mutating the master ontology.
 
 ## 3. Related Work
 
@@ -116,7 +118,7 @@ and a relation is:
 
     e = (id, source, relation_type, target, attributes, provenance)
 
-Schema validation constrains field shape. Domain validators add rules that are awkward or insufficient in schema alone, such as section overlap, boss bore clearance, branch orientation, active connector slots, and lifecycle uniqueness.
+Schema validation constrains field shape. Domain validators add rules that are awkward or insufficient in schema alone, such as section overlap, branch orientation, branch-to-frame anchoring, active connector slots, and lifecycle uniqueness.
 
 Cross-layer references are directional. EDPR selects EDES objects, EDAS patterns, and EDIKB evidence. EDAS uses EDES interfaces. EDIKB states that a rule applies to an EDES component or EDAS pattern. None of these references gives the LLM permission to rewrite the target layer.
 
@@ -179,13 +181,14 @@ A build-valid candidate can therefore remain unsupported. This avoids using topo
 
 Current gates include:
 
+- every `GD-B` branch requires `GD-ST` and a declared terminal association; L terminals are horizontal, Z terminals are vertical, and the selected anchor defines the compatible frame feature;
 - a vertical connector restricts every selected branch to GD-B variant Z and ILT-Z anchors;
-- an EA-SB protection concept must contain canonical GD-SB geometry;
+- a GD-SB protection concept must contain canonical GD-SB geometry;
 - valve protection requires envelopes, contact/roller scope, clearance, load cases, acceptance measure, connection system, spacing basis, connector evidence, and moment evidence;
 - moment utilization is computed from demand, capacity ratio, and a defined pipeline allowable basis;
 - two branch valves require an accepted topology and two distinct valve instances with parent-branch ownership;
 - unknown candidate identifiers fail rather than being matched approximately;
-- plot reports expose EA-ST parameters, active connectors, associations, defaults, findings, and QA status.
+- plot reports expose GD-ST parameters, active connectors, associations, defaults, findings, and QA status.
 
 ### 5.2 Plot as an observable system output
 
@@ -232,8 +235,9 @@ The benchmark should contain:
 
 - standard layouts with sufficient inputs;
 - ambiguous connector wording;
+- L-horizontal and Z-vertical branch anchoring, including missing `GD-ST` or missing terminal associations;
 - vertical and horizontal connector requirements;
-- missing EA-ST and EA-SB parameters;
+- missing GD-ST and GD-SB parameters;
 - valve protection with incomplete and complete evidence;
 - isolated-component evidence presented for a combined assembly;
 - two valves on one branch versus one valve on each of two branches;
@@ -270,9 +274,9 @@ For binary metrics, report counts, proportions, and confidence intervals. For re
 
 ## 8. Current Implementation Evidence
 
-The repository was tested on 14 September 2026 at implementation baseline 1d8831600dddeeeec48a9d68ff152089f377afaf. Twenty-three KEL tests and twenty-nine plotter/solver tests passed. The KEL status tool reported no invalid JSON and no authoritative lifecycle conflicts.
+The repository was tested on 14 September 2026 at implementation baseline 31a57d378a70f4aa8f232ed8a50130f85b3bfbea. Twenty-four KEL tests and twenty-nine plotter/solver tests passed. The KEL status tool reported no invalid JSON and no authoritative lifecycle conflicts.
 
-The tests cover feedback decomposition and grouping, lifecycle reconciliation, expert-review and implementation-plan policies, connector orientation, valve-protection blockers, moment utilization, canonical GD-SB use, two-valve representation gaps, component rendering, boss/header preservation, solver-to-layout mapping, export checks, label correction, and report behavior.
+The tests cover feedback decomposition and grouping, lifecycle reconciliation, expert-review and implementation-plan policies, L- and Z-branch anchoring to GD-ST, connector orientation, valve-protection blockers, moment utilization, canonical GD-SB use, two-valve representation gaps, component rendering, solver-to-layout mapping, export checks, label correction, and report behavior.
 
 These results establish executable invariants for the tested cases. They are not results for B0-B3 and do not support a claim of improved design quality. Table 1 therefore reports implementation status rather than comparative performance.
 
@@ -288,9 +292,11 @@ These results establish executable invariants for the tested cases. They are not
 
 ## 9. Case Analysis
 
-### 9.1 Vertical connector
+### 9.1 Branch anchoring and connector orientation
 
-The phrase "vertical connector" was initially vulnerable to conflation with branch direction or drawing orientation. The revised EDPR has a dedicated connector-orientation field. The deterministic selector restricts candidate identifiers to ILT-Z and checks that emitted GD-B components use variant Z. The case demonstrates a topology-level consequence from a small linguistic distinction.
+A regression trial first revealed the problem for a Z branch with a vertical connector. The phrase "vertical connector" was vulnerable to conflation with branch direction or drawing orientation, so the revised EDPR now gives connector orientation its own field. The deterministic selector restricts vertical-connector candidates to `ILT-Z-*` and checks that emitted `GD-B` components use variant Z.
+
+The missing-connection failure is broader than the triggering case. An L branch with a horizontal terminal can also appear to meet a frame without a declared load-transfer relation. The generalized invariant requires every `GD-B` branch to include `GD-ST` and an explicit terminal association. L terminals are horizontal and Z terminals are vertical; the selected layout anchor defines the compatible `GD-ST` feature, including post-specific features where applicable. The branch-family check and the anchoring check are therefore separate deterministic gates.
 
 ### 9.2 Valve capacity and protection
 
@@ -298,7 +304,7 @@ The request for a 12-inch header, inline valve, and valve moment capacity equal 
 
     U_M = M_valve,max / (0.80 M_pipeline,allow) <= 1
 
-Neither demand nor the allowable-moment basis is given. The request also lacks valve, actuator, flange, thick-section and roller envelopes; required clearance; load cases; EA-SB dimensions; connector system; spacing basis; and combined valve/base behavior evidence.
+Neither demand nor the allowable-moment basis is given. The request also lacks valve, actuator, flange, thick-section and roller envelopes; required clearance; load cases; GD-SB dimensions; connector system; spacing basis; and combined valve/base behavior evidence.
 
 An early plausible output introduced a deep, long base and P-S supports without providing these bases, did not ask whether a top structure was required, and did not emit its EDPR interpretation. The revised system returns a clarification or evidence gap. The relevant research point is not that one geometry was replaced by another. It is that output completeness is defined over requirements, parameters, relations, and evidence rather than visual plausibility.
 

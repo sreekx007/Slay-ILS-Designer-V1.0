@@ -425,3 +425,37 @@ Added the Paper 01B manuscript and reproducible preliminary SVG/PNG figures. Pap
 | Update | `UPLOAD_MAP.md` |
 
 Both papers now introduce the ten established GD component classes used in these manuscripts before using them in EDES/EDAS reasoning. The shared preliminary figure distinguishes pipe parts, thick-section representations, inline equipment, branch assemblies, external structures, contact envelopes and connector behavior. The repository-generated schematic now uses manuscript-scale fonts and a geometry-focused image while retaining the complete design-workflow payload in its companion reports. No source-paper PDFs are added to Git.
+
+## Generalized branch anchoring and paper notation
+
+| Action | Repository path |
+| --- | --- |
+| Update | `tools/design_rules_v02.py` |
+| Update | `plotters/ils_builder.py` |
+| Update | `tests/kel/test_design_workflow_v02.py` |
+| Update | `knowledge/edas/EDAS_SHARED_KNOWLEDGE.json` |
+| Update | `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` |
+| Update | `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` |
+| Update | `knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md` |
+| Update | `README.md` |
+| Update | `framework_manifest.json` |
+| Update | `papers/PAPER_01A_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/PAPER_01B_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/PAPER_01A_DRAFTING_ACTION_PLAN.md` |
+| Update | `papers/PAPER_01B_DRAFTING_ACTION_PLAN.md` |
+| Update | `papers/PAPER_01A_AI4D_KG_CASE_STUDY_OUTLINE.md` |
+| Update | `papers/PAPER_01B_INDEPENDENT_FRAMEWORK_OUTLINE.md` |
+| Update | `papers/PAPER_01_FIGURES_TABLES_AND_EVIDENCE_PLAN.md` |
+| Update | `papers/PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md` |
+| Update | `papers/PAPER_01A_CLAIM_EVIDENCE_REGISTER.md` |
+| Update | `papers/PAPER_REFERENCE_REQUESTS.md` |
+| Update | `papers/REFERENCE_LIBRARY.md` |
+| Update | `papers/EDIKB_SOURCE_PROVENANCE.json` |
+| Update | `papers/README.md` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.svg.report.json` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.png.report.json` |
+| Update | `UPLOAD_MAP.md` |
+
+The core gate is implemented in commit `31a57d378a70f4aa8f232ed8a50130f85b3bfbea`. Every `GD-B` branch in an emitted ILS now requires `GD-ST` and a declared terminal association. The regression covers an L branch with a horizontal terminal, a Z branch with a vertical terminal, a missing association, and a missing top frame. A branch-only component study may remain `study_only` but cannot claim a complete ILS layout.
+
+Both manuscripts now use `GD-ST` and `GD-SB` consistently after an opening note maps the source papers' `EA-ST` and `EA-SB` notation. The mapping is terminological and does not change the source concepts or evidence meaning. Validation baseline: 24 KEL tests and 29 plotter/solver tests pass.

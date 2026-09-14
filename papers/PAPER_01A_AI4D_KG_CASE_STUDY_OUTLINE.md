@@ -114,17 +114,17 @@ FBS provides a natural way to organize engineering reasoning:
 |---|---|
 | Function | Route flow, support pipe, connect branch, protect valve, permit installation, control strain. |
 | Behavior | Stress, strain, contact load, bending moment, stiffness transition, roller interaction, installation response. |
-| Structure | Pipe, valve, branch, connector, top frame, side base, protection frame, thick pipe, boss, support. |
+| Structure | Pipe, valve, branch, connector, top frame, side base, protection frame, thick pipe, support. |
 
 OAM adds what is essential for assembly design:
 
 | OAM concept | ILS/ILT interpretation |
 |---|---|
 | Part | Valve body, pipe segment, connector, support, frame member. |
-| Assembly | ILT, ILS, EA-ST, EA-SB, branch subassembly, protection frame. |
+| Assembly | ILT, ILS, GD-ST, GD-SB, branch subassembly, protection frame. |
 | Assembly feature | Weld end, connector slot, support interface, contact patch, branch take-off. |
 | Association | Branch-to-header, connector-to-frame, support-to-pipe, valve-to-protection relation. |
-| Position/orientation | Z-branch, L-branch, vertical connector, inline valve placement, roller contact region. |
+| Position/orientation | Z branch with vertical terminal, L branch with horizontal terminal, inline valve placement, roller contact region. |
 
 Why this matters:
 
@@ -230,27 +230,28 @@ Original design request:
 Observed framework lesson:
 
 - A normal LLM response can generate a plausible-looking but incorrect layout.
-- It may draw the branch below the pipeline, assume an unsupported EA-SB protection arrangement, ignore EA-ST association for branch connectors, use incorrect component shapes, omit parameters/connections, and produce a plot that is not repository-backed.
+- It may draw the branch below the pipeline, assume an unsupported GD-SB protection arrangement, omit the required GD-B-to-GD-ST anchor for either branch family, use incorrect component shapes, omit parameters/connections, and produce a plot that is not repository-backed.
 - Under KEL, these are not just errors; they become structured feedback records and graph change requests.
 
 Case-study table:
 
 | Feedback lesson | Framework update direction |
 |---|---|
-| Branch location and vertical connector misunderstood | EDPR/EDAS design-intent gate for connector orientation and Z-branch selection. |
-| Valve protection unsupported or omitted | EDPR clarification/evidence gate; use canonical GD-SB only when roller scope, protection mode, envelopes, clearances, load cases, connector basis, and compatible moment evidence support EA-SB. |
-| Branch connector not associated with EA-ST | EDAS association rule and plot/report exposure gate. |
+| Branch routing and connector orientation misunderstood | EDPR/EDAS design-intent gate keeps routing and connector orientation separate; vertical intent selects the Z family. |
+| Valve protection unsupported or omitted | EDPR clarification/evidence gate; use canonical GD-SB only when roller scope, protection mode, envelopes, clearances, load cases, connector basis, and compatible moment evidence support GD-SB. |
+| Branch terminal not anchored to GD-ST | General EDAS gate requires every GD-B branch to terminate at the compatible GD-ST feature declared by its selected anchor; L terminals are horizontal and Z terminals are vertical. |
 | Freehand plot too small and wrong geometry | Mandatory repository plotter use and plot quality checks. |
 | Component parameters and connections missing | EDES/EDAS parameter and association exposure in report. |
 | Strain optimization was inferred without being requested | Do not create an optimization objective. Evaluate stress/strain only against explicit objectives or acceptance constraints and state evidence limits. |
 
 ### 9.1 Repository-Verified KEL v0.2 Behavior
 
-The current repository demonstrates the following behavior at commit `c3157c6`:
+The current repository demonstrates the following behavior at commit `31a57d37`:
 
+- every GD-B branch requires GD-ST and a declared terminal association, with the selected L or Z anchor defining the compatible frame feature;
 - explicit vertical connector intent restricts selection to `ILT-Z-*` and emits GD-B variant Z;
 - the Q1 vertical-connector regression emits `ILT-Z-FT-PS` rather than an L branch;
-- complete EA-ST reports expose canonical GD-ST parameters, active and inactive slots, modeled GD-Con parts, pipe landings, and associations;
+- complete GD-ST reports expose canonical parameters, active and inactive slots, modeled GD-Con parts, pipe landings, and branch associations;
 - the incomplete 12-inch valve request stops with `VALVE_PROTECTION_INPUTS_MISSING` and does not emit a misleading layout;
 - P-S valve support without compatible combined evidence produces a `needs_evidence` FEA study candidate;
 - valve moment evidence is checked using capacity utilization for every supplied load case;
@@ -350,6 +351,6 @@ Use the stable citation IDs in `REFERENCE_LIBRARY.md` while drafting:
 | Human-in-the-loop LLM/KG conceptual-design precedent | R5. |
 | Solver-independent APF for high-cost simulation-driven design | R6. |
 | EDIKB Paper 1 classifications and isolated-component behavior | R7. |
-| EDIKB Paper 2 EA-ST, EA-SB, connector, branch, and mass-position behavior | R8. |
+| EDIKB Paper 2 GD-ST, GD-SB, connector, branch, and mass-position behavior | R8. |
 
 R7 and R8 are the author's primary published domain sources and must be cited wherever the manuscript attributes EDIKB classifications, parametric trends, connection-system behavior, or branch-layout behavior to prior analysis. The manuscript must still identify the relevant table, figure, case, parameter range, and limitation for quantitative claims.

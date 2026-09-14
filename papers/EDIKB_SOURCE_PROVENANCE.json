@@ -2,6 +2,17 @@
   "schema": "papers/edikb-source-provenance/0.1",
   "updated_utc": "2026-09-14T00:00:00Z",
   "purpose": "Map author-supplied publications to EDIKB source families without embedding or redistributing the PDFs.",
+  "manuscript_notation": {
+    "source_terms": {
+      "EA-ST": "external top structure",
+      "EA-SB": "external base structure"
+    },
+    "normalized_terms": {
+      "EA-ST": "GD-ST",
+      "EA-SB": "GD-SB"
+    },
+    "impact": "Terminology normalization only; component concepts, geometry, mechanics, and evidence meaning are unchanged."
+  },
   "publication_sources": [
     {
       "id": "reference:R7",

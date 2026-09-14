@@ -48,7 +48,7 @@
       "3. Size the header: half = max(7.0, widest_reach + 3.0). See headerRule.",
       "4. Place the IW components at their x, centreline on the pipeline axis. Check for overlap and report it rather than resolving it silently. IF THE HEADER IS MODELLED AS edes:GD-HdPipe SEGMENTS, split it so no segment spans an IW component -- see sectionVersusContact.consequenceForChainedHeaders.",
       "5. Place edes:GD-SH if used. NOT a weld and NOT in the chain -- a PositionOrientation against the centreline (see positionConstraints). It claims contact but NO section, so it may overlap IW components freely; this is why a shroud nests over a thick pipe. Set ownership=lowest when it does.",
-      "6. Add branch piping if the layout has one. Every edes:GD-B emitted as part of an ILS must terminate at a declared edes:GD-ST feature. Build GD-ST after the branch: top_structure_for_branch() derives it FROM the branch, then align both axes and declare the terminal association. L branches use a horizontal side feature; Z branches use a vertical top feature. A standalone branch is permitted only as a study_only component study and cannot pass the complete design gate. See branchLayouts.",
+      "6. Add branch piping if the layout has one. Every edes:GD-B emitted as part of an ILS must terminate at a declared edes:GD-ST feature. Build GD-ST after the branch: top_structure_for_branch() derives it FROM the branch, then align both axes and declare the terminal association. L terminals are horizontal and Z terminals are vertical; the selected anchor defines the compatible GD-ST feature. A standalone branch is permitted only as a study_only component study and cannot pass the complete design gate. See branchLayouts.",
       "7. Place the EA components (edes:GD-ST / edes:GD-SB) at their x and y.",
       "8. For EACH populated connector slot on a edes:GD-ST or edes:GD-SB, in this order: (a) SPLIT the header at the slot's x and insert a edes:GD-TP centred there -- NEUTRAL, t_comp = t_pipe, unless the problem asks for a thick section in its own right; (b) place a edes:GD-Con at the same x; (c) declare BOTH associations, TP.conMid --F-- Con.pipeEnd and Con.structEnd --<slot type>-- <structure>.slotN. The GD-TP is NOT optional and is the step most often skipped: a connector may not attach to plain line pipe, and edes:GD-HdPipe has no conMid to attach to. ils_builder now reports a missing host as an ERROR. See connectorAttachment.",
       "9. Verify. Build, read findings, AND call unmated_gaps() separately."
@@ -226,7 +226,7 @@
     "EDIKB and EDPR are not built, so nothing currently answers whether a valid layout is a GOOD one."
   ],
   "branchLayouts": {
-    "gdStAnchorRequired": "SUPERSEDES the 5Sep26 standalone-branch interpretation. A later regression trial exposed that a branch can look attached while lacking a declared load-transfer relation. The failure is variant-independent: an L branch needs a horizontal association to a GD-ST side feature, and a Z branch needs a vertical association to a GD-ST top feature. Every GD-B in an emitted ILS therefore requires GD-ST and an explicit terminal association. A branch-only representation is study_only and cannot claim a complete ILS layout.",
+    "gdStAnchorRequired": "SUPERSEDES the 5Sep26 standalone-branch interpretation. A later regression trial exposed that a branch can look attached while lacking a declared load-transfer relation. The failure is variant-independent: L and Z branches both require a terminal association to the compatible GD-ST feature defined by the selected anchor. The L terminal is horizontal and the Z terminal is vertical; post arrangements can use anchor-specific feature names. Every GD-B in an emitted ILS therefore requires GD-ST and an explicit terminal association. A branch-only representation is study_only and cannot claim a complete ILS layout.",
     "variant": {
       "values": "'L' or 'Z', a STRING, and there is no default that suits both -- ask if it is not stated.",
       "L": "one elbow. The run ends HORIZONTALLY, so the far end meets a SIDE edge of a structure (right_connector_y). connector_axis reports 'horizontal'.",
@@ -294,7 +294,7 @@
       "completeDesignRequires": [
         "GD-ST present whenever GD-B is present",
         "every GD-B terminal associated to a GD-ST feature",
-        "L branch uses a horizontal side association and Z branch uses a vertical top association",
+        "selected anchor defines a compatible GD-ST feature for the horizontal L terminal or vertical Z terminal",
         "canonical GD-ST parameters",
         "active connector slots and types",
         "GD-Con instances",

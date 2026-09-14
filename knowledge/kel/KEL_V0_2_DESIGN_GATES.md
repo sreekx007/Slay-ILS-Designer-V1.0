@@ -7,8 +7,9 @@ Generated outputs remain concept-screening artifacts until expert review.
 ## Branch-to-GD-ST anchoring
 
 Every `GD-B` branch emitted as part of an ILS must terminate at a declared
-`GD-ST` feature. An L branch uses its horizontal terminal and a `GD-ST` side
-feature; a Z branch uses its vertical terminal and a `GD-ST` top feature. A
+`GD-ST` feature. An L branch uses its horizontal terminal and a Z branch uses
+its vertical terminal; the selected layout anchor defines the compatible
+`GD-ST` feature, including post-specific features where applicable. A
 regression trial first exposed the omission on a Z branch, but the same
 visually-adjacent-without-association failure applies to L branches. Missing
 `GD-ST` or a missing terminal association fails the complete-design gate. A

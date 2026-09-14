@@ -426,6 +426,20 @@
         ]
       }
     ],
+    "branch_gd_st_gate": {
+      "required": true,
+      "status": "failed",
+      "branch_ids": [
+        "B"
+      ],
+      "gd_st_ids": [
+        "ST"
+      ],
+      "unanchored_branch_ids": [
+        "B"
+      ],
+      "rule": "Every GD-B branch terminates at GD-ST through the compatible feature defined by the selected anchor; L terminals are horizontal and Z terminals are vertical."
+    },
     "branch_structure_associations": [],
     "valve_base_geometry": {
       "active": false,

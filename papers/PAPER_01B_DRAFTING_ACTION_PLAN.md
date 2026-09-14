@@ -33,7 +33,7 @@ An LLM can support safety-relevant conceptual engineering only when natural-lang
 
 ## Opening Domain and Ontology Sequence
 
-Paper 01B should introduce the ontology early, but its purpose is to make the AI problem formally understandable.
+Paper 01B should introduce the ontology early, but its purpose is to make the AI problem formally understandable. Begin the section with a notation statement explaining that R7/R8 use EA-ST and EA-SB while this manuscript uses GD-ST and GD-SB; state that the normalization does not change the underlying concepts or evidence.
 
 ### Step 1: Give the minimum mechanical context
 
@@ -107,8 +107,9 @@ Notation should remain compact and correspond directly to existing JSON schemas 
 ### Benchmark task families
 
 - Valid standard layouts with adequate inputs.
+- L-horizontal and Z-vertical branch cases with missing GD-ST or missing terminal associations.
 - Ambiguous connector orientation requiring clarification or deterministic topology selection.
-- Missing EA-ST or EA-SB parameters.
+- Missing GD-ST or GD-SB parameters.
 - Unsupported valve-protection assumptions.
 - Evidence-scope mismatch between component and assembly behavior.
 - Two-branch-valve representation gap.

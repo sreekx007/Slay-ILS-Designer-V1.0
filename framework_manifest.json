@@ -1026,7 +1026,7 @@
     {
       "step": 6,
       "name": "apply_kel_v0_2_design_gates",
-      "action": "Require every GD-B branch to terminate at GD-ST through a declared L-side or Z-top association. Normalize explicit connector/valve/topology intent, block unsupported valve-protection or two-valve concepts, and restrict vertical connectors to GD-B Z and ILT-Z-* anchors."
+      "action": "Require every GD-B branch to terminate at GD-ST through the terminal association defined by its selected L or Z anchor. Normalize explicit connector/valve/topology intent, block unsupported valve-protection or two-valve concepts, and restrict vertical connectors to GD-B Z and ILT-Z-* anchors."
     },
     {
       "step": 7,

@@ -33,7 +33,7 @@ Industrial AI for conceptual engineering is primarily a data and knowledge-manag
 
 ## Opening Ontology Sequence
 
-The ontology must appear near the beginning, immediately after the engineering problem is introduced.
+The ontology must appear near the beginning, immediately after the engineering problem is introduced. Add one notation statement explaining that R7/R8 use EA-ST and EA-SB while the manuscripts normalize these terms to GD-ST and GD-SB without changing the underlying concepts.
 
 ### Step 1: Show the physical design object
 
@@ -45,7 +45,7 @@ Use R8 Figure 5 as the temporary overall-assembly schematic, supported by R8 Fig
 
 ### Step 3: Expose design parameters and interfaces
 
-Use R8 Figures 22–25 to introduce the EA-ST, EA-SB, Z-branch, and L-branch parameter sets. Use R8 Figures 16–18 when explaining connector and connection-system representation.
+Use R8 Figures 22–25 to introduce the GD-ST, GD-SB, Z-branch, and L-branch parameter sets. Use R8 Figures 16–18 when explaining connector and connection-system representation.
 
 ### Step 4: Convert the schematic into ontology records
 
@@ -63,7 +63,7 @@ Use the repository terms EDES, EDAS, EDIKB, and EDPR only after the reader under
 
 ### Step 5: Link ontology to the two published domain papers
 
-State that R7 supplies the physical IW/EA classification, Type A/B/C mechanical classification, and isolated-component behavior basis. State that R8 extends the ontology and behavior basis to EA-ST, EA-SB, connection systems, and branch assemblies. Quantitative statements must retain table/figure/case and applicability limits through `EDIKB_SOURCE_PROVENANCE.json`.
+State that R7 supplies the physical IW/EA classification, Type A/B/C mechanical classification, and isolated-component behavior basis. State that R8 extends the ontology and behavior basis to GD-ST, GD-SB, connection systems, and branch assemblies. Quantitative statements must retain table/figure/case and applicability limits through `EDIKB_SOURCE_PROVENANCE.json`.
 
 ## Section-by-Section Draft Plan
 
@@ -75,7 +75,7 @@ State that R7 supplies the physical IW/EA classification, Type A/B/C mechanical 
 | 3. Why Engineering AI Starts With Data Management | Explain identifiers, controlled terms, parameters, relationships, evidence, provenance, versioning, and missing-data handling. | Before/after example: document fragment versus structured record. |
 | 4. Knowledge Architecture | Explain EDES, EDAS, EDIKB, EDPR, and KEL using an engineering document-control analogy. | Layer diagram and one traceable design fact. |
 | 5. Role of the LLM and Deterministic Tools | Separate language interpretation and explanation from validation, retrieval, layout construction, plotting, and tests. | Workflow diagram with human review points. |
-| 6. Case Study: Q1 ILT Layout | Walk through request, problem interpretation, retrieval, layout selection, plot, feedback, KEL changes, and current topology gap. | Q1 evidence package and repository-generated plots. |
+| 6. Case Study: Q1 ILT Layout | Walk through request, problem interpretation, the generalized L/Z branch-to-GD-ST gate, orientation selection, retrieval, layout selection, plot, feedback, KEL changes, and current topology gap. | Q1 evidence package and repository-generated plots. |
 | 7. Evaluation | Report whether the governed workflow exposes parameters, connections, assumptions, evidence, and representation gaps more reliably than an unconstrained response. | Completeness and traceability matrix. |
 | 8. Organizational Application | Explain adoption: source inventory, ontology ownership, review roles, change control, and integration with existing engineering systems. | Practical implementation checklist. |
 | 9. Limits and Future Development | Bound the prototype and explain the path to parametric FEA, surrogate models, uncertainty estimation, and optimization. | Evidence-coverage gap diagram. |

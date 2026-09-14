@@ -38,9 +38,9 @@ This document lists the figures, tables, repository artifacts, and evidence need
 | `knowledge/kel/README.md` | KEL purpose, graph-evolution scope, and governance lifecycle. |
 | `knowledge/kel/KEL_ARCHITECTURE.md` | Traceability chain and toolchain list. |
 | `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` | Scope, ordering, completion state, and current Step 5 representation-gap boundary. |
-| `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` | Authoritative description of implemented connector, EA-ST, valve-protection, and topology gates. |
+| `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` | Authoritative description of implemented branch-to-GD-ST, connector-orientation, valve-protection, and topology gates. |
 | `tests/kel/` | Evidence that gates are testable, not only narrative. |
-| `tools/design_rules_v02.py` | Encoded design-intent rules for vertical connector, EA-SB, and representation gaps. |
+| `tools/design_rules_v02.py` | Encoded rules for GD-B-to-GD-ST anchoring, connector orientation, GD-SB, and representation gaps. |
 | `plotters/` | Evidence that geometry/plot output is tool-backed. |
 
 ## Q1 Case Study Evidence Package
@@ -53,7 +53,7 @@ To make the Q1 case study publication-ready, collect:
 | Initial assistant output | Text overview and plot that failed review, if acceptable to include. |
 | Human feedback | The numbered feedback list from the review. |
 | KEL records | Atomic feedback, grouped records, graph change requests, expert reviews, implementation plans. |
-| Workflow correction | Repository code/tests at `c3157c6`: vertical connector selects `ILT-Z-FT-PS`; EA-ST exposure is reported; unsupported valve protection and unresolved two-valve topology fail closed. |
+| Workflow correction | Repository code and tests: every L or Z GD-B is anchored to GD-ST; vertical connector intent selects `ILT-Z-FT-PS`; GD-ST exposure is reported; unsupported valve protection and unresolved two-valve topology fail closed. |
 | Final representative output | Use the Q1 vertical-connector emitted layout/plot and the 12-inch valve `VALVE_PROTECTION_INPUTS_MISSING` report as paired successful and fail-closed artifacts. |
 
 ## Supplied Literature Coverage
@@ -65,7 +65,7 @@ To make the Q1 case study publication-ready, collect:
 | Human-in-the-loop KG design | R5 | Supplied. Use as a human-in-the-loop LLM/KG comparison and expert-supervision precedent. |
 | APF for high-cost simulation design | R6 | Supplied. Use for requirement-to-formulation context; distinguish its solver-independent evaluation from this repository's P-map/APF implementation. |
 | EDIKB Paper 1 | R7 | Supplied primary source for IW/EA, Type A/B/C, and isolated-component behavior. |
-| EDIKB Paper 2 | R8 | Supplied primary source for EA-ST, EA-SB, connection systems, branch assemblies, and mass-position behavior. |
+| EDIKB Paper 2 | R8 | Supplied primary source for EA-ST and EA-SB (normalized in the manuscripts to GD-ST and GD-SB), connection systems, branch assemblies, and mass-position behavior. |
 | Original FBS theory | Not yet supplied | Still required before manuscript release. |
 | Engineering KGs, RAG/tool use, and active learning/surrogates | Not yet supplied | Still required for related work and future-ML claims. |
 | Applicable subsea design codes | Not yet supplied | Still required for code-compliance and allowable claims. |
@@ -89,9 +89,9 @@ This tagging will make the preprint stronger and safer. It will also help conver
 
 ## Current Repository Verification Baseline
 
-The synchronized implementation baseline is commit `c3157c6` (2026-09-14):
+The synchronized implementation baseline is commit `31a57d37` (2026-09-14):
 
-- 23 KEL tests passed;
+- 24 KEL tests passed;
 - 29 plotter/solver tests passed;
 - 40 KEL instance documents and 10 KEL schemas validated;
 - all four repository EDPR examples validated;

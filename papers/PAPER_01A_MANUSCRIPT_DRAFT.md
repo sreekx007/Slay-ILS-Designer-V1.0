@@ -55,6 +55,8 @@ The contribution is an applied framework and implementation case study. It conne
 
 ## 2. S-Lay Inline Structures and Their Ontology
 
+**Notation used in this paper.** The source studies [7], [8] use the identifiers `EA-ST` and `EA-SB` for the external top and base structures. This paper normalizes those identifiers to the repository terms `GD-ST` and `GD-SB` and uses the `GD-` notation from this point onward. The change is terminological; it does not alter the component concepts, geometry, mechanical classification, or meaning of the cited evidence.
+
 ### 2.1 The physical engineering problem
 
 An S-lay pipeline leaves the installation vessel through a firing line and passes across a curved stinger before entering the suspended catenary. The overbend is a displacement-dominated region in which the pipeline changes curvature while being supported by rollers. When an inline component or structural assembly reaches this region, its local stiffness, outside profile, connection system, and mass distribution may alter the contact sequence and load path.
@@ -71,7 +73,7 @@ A base structure and top structure can use nominally similar connectors but beha
 
 ### 2.2 Component primer: what the GD codes represent
 
-The repository gives every reusable component class a stable identifier beginning with `GD-`. The prefix is a local machine-readable namespace; it is not proposed as universal industry notation. Authors and engineers can continue to use readable names, while data records use the code to distinguish objects that may look similar in a small schematic but have different geometry, load paths, or assembly behavior. The source papers use **EA-ST** and **EA-SB** when discussing the external-attachment taxonomy; the corresponding repository component identities are `GD-ST` and `GD-SB`.
+The repository gives every reusable component class a stable identifier beginning with `GD-`. The prefix is a local machine-readable namespace; it is not proposed as universal industry notation. Authors and engineers can continue to use readable names, while data records use the code to distinguish objects that may look similar in a small schematic but have different geometry, load paths, or assembly behavior. This paper uses the repository identifiers consistently so that one component has one name in the narrative, data records, plots, and validation reports.
 
 ![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
 
@@ -98,9 +100,9 @@ EDES defines these reusable component objects, their parameters, interfaces, and
 
 A realistic ILT contains detail essential for fabrication but excessive for early reasoning. The AI representation begins with a controlled schematic that preserves component identity, longitudinal position, elevation, dimensions, connection type, support relationship, and the distinction between a structural section and a roller-contact envelope.
 
-The second domain study [8] separates the main external structures into a top structure (EA-ST) and base structure (EA-SB). The top structure occupies the region above the header and can protect or support inline and branch equipment. The base structure occupies the underside, can protect equipment, and can contact installation rollers. Either may connect directly to the pipeline; a second structure can connect to the first. A mudmat may connect to either structure or remain independent. The same study introduces branch-layout and connector taxonomies and parameterized views for EA-ST, EA-SB, Z branches, and L branches.
+The second domain study [8] separates the main external structures into a top structure (GD-ST) and base structure (GD-SB). The top structure occupies the region above the header and can protect or support inline and branch equipment. The base structure occupies the underside, can protect equipment, and can contact installation rollers. Either may connect directly to the pipeline; a second structure can connect to the first. A mudmat may connect to either structure or remain independent. The same study introduces branch-layout and connector taxonomies and parameterized views for GD-ST, GD-SB, Z branches, and L branches.
 
-> **Figure 3 placeholder - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, EA-ST, EA-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.
+> **Figure 3 placeholder - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, GD-ST, GD-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.
 
 The transformation can be read as:
 
@@ -115,11 +117,13 @@ An ontology is the controlled description that makes this sequence consistent. I
 
 ### 2.4 Parameters, connectors, and associations
 
-For EA-ST, relevant data include connector locations, stiffness between connections, frame elevation relative to the pipe centerline, geometry, and active connection system. EA-SB additionally needs the dimensions of the roller-contacting base and any deadband. A branch layout requires its shape, dimensions, tee-relative positions, valve instances, and support connections [8].
+For GD-ST, relevant data include connector locations, stiffness between connections, frame elevation relative to the pipe centerline, geometry, and active connection system. GD-SB additionally needs the dimensions of the roller-contacting base and any deadband. A branch layout requires its shape, dimensions, tee-relative positions, valve instances, and support connections [8].
 
-The connector taxonomy in [8] includes fixed (F), pinned (P), slotted (S), and deadband (D) behavior. These primitives form systems such as F1, F2, F1D, F2D, PS, and PSD. The notation separates the component from the way load is transferred. The same EA-ST geometry with different connection systems is not the same mechanical case.
+The connector taxonomy in [8] includes fixed (F), pinned (P), slotted (S), and deadband (D) behavior. These primitives form systems such as F1, F2, F1D, F2D, PS, and PSD. The notation separates the component from the way load is transferred. The same GD-ST geometry with different connection systems is not the same mechanical case.
 
-Associations are equally important. A connector identifies both objects it joins and the feature used at each end. A branch valve belongs to a particular branch instance. A boss lies coaxially around the header and does not replace it. A base structure may provide a contact envelope while the pipeline or an inline component retains ownership of the structural section. These relations cannot be inferred reliably from drawing proximity and must be explicit.
+Branch anchoring is an assembly rule independent of branch family. Every `GD-B` branch assembly emitted as part of an ILS must terminate at a declared `GD-ST` feature. An L branch has a horizontal terminal connector, while a Z branch has a vertical terminal connector. In both families, the association must identify the compatible `GD-ST` feature defined by the selected layout anchor. Omission of the top frame or its terminal association fails the same gate for either branch family.
+
+Associations are equally important. A connector identifies both objects it joins and the feature used at each end. A branch valve belongs to a particular branch instance. A base structure may provide a contact envelope while the pipeline or an inline component retains ownership of the structural section. These relations cannot be inferred reliably from drawing proximity and must be explicit.
 
 ### 2.5 The S-lay ILT ontology
 
@@ -134,7 +138,7 @@ A Standard ILS Layout Library sits beside EDAS as reusable starting arrangements
 
 > **Figure 4 placeholder - ontology map.** Map objects visible in Figure 3 to function, component, parameter, connection, assembly, behavior/evidence, requirement, and issue nodes. Show EDES, EDAS, EDIKB, and EDPR ownership.
 
-The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evidence on distributed stiffness, elevation, and selected combined cases [7]. The second extends the basis to EA-ST, EA-SB, connector systems, branch assemblies, and added-mass position [8]. A paper citation establishes lineage; a quantitative design statement still requires the precise figure or table, case, parameter range, response location, and limitation.
+The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evidence on distributed stiffness, elevation, and selected combined cases [7]. The second extends the basis to GD-ST, GD-SB, connector systems, branch assemblies, and added-mass position [8]. A paper citation establishes lineage; a quantitative design statement still requires the precise figure or table, case, parameter range, response location, and limitation.
 
 
 ## 3. Why Engineering AI Starts With Data Management
@@ -143,7 +147,7 @@ The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evi
 
 A calculation report is designed for human review. Its title page, assumptions, figures, tables, and conclusions form a narrative. An AI workflow requires the same information to be addressable as records. The difference resembles the difference between storing a drawing PDF and maintaining an equipment register linked to the drawing. Both are needed; they serve different purposes.
 
-Consider the statement, "the PS arrangement gave a lower response." Reuse requires answers to several questions. Was PS applied to EA-ST or EA-SB? What were the connector locations and structure geometry? Which response was lower, and where was it measured? What was the comparison case? Did the model include the anchor bulkheads, a valve, branch mass, roller contact, and the project pipe properties? Is the statement a trend within a study or a code-compliant design value? Without those fields, retrieval returns relevant prose but cannot establish applicability.
+Consider the statement, "the PS arrangement gave a lower response." Reuse requires answers to several questions. Was PS applied to GD-ST or GD-SB? What were the connector locations and structure geometry? Which response was lower, and where was it measured? What was the comparison case? Did the model include the anchor bulkheads, a valve, branch mass, roller contact, and the project pipe properties? Is the statement a trend within a study or a code-compliant design value? Without those fields, retrieval returns relevant prose but cannot establish applicability.
 
 The framework therefore treats a design fact as a package:
 
@@ -166,7 +170,7 @@ Engineering documents often use local names: base frame, lower frame, protection
 
 In Slay-ILS-Designer, component codes such as GD-ST, GD-SB, GD-VLV, GD-B, and GD-BrPipe provide stable identities. The label visible in a report can change without changing the identifier used by tools. This is similar to using a tag number rather than relying only on an equipment description.
 
-Stable identity also applies to relations. "Near the valve" is not an adequate assembly association. The record must state whether a structure contains the valve envelope, whether a connector joins the structure to the header, whether a support joins the branch to EA-ST, and which feature is active. These relations allow the same facts to be checked in a JSON report and displayed in a plot.
+Stable identity also applies to relations. "Near the valve" is not an adequate assembly association. The record must state whether a structure contains the valve envelope, whether a connector joins the structure to the header, whether a support joins the branch to GD-ST, and which feature is active. These relations allow the same facts to be checked in a JSON report and displayed in a plot.
 
 ### 3.3 Parameters, units, defaults, and unknowns
 
@@ -358,7 +362,7 @@ The revised workflow separates the problem into requirements, unknowns, candidat
 | Required artifact | Inline layout containing a GD-VLV valve on a 12-inch header |
 | Hard constraint | Valve moment demand must not exceed 0.8 times the defined pipeline allowable moment basis |
 | Objective | No optimization objective is stated; do not invent strain minimization |
-| Candidate protection | EA-SB or other protection concept only after need, geometry, and contact mode are established |
+| Candidate protection | GD-SB or other protection concept only after need, geometry, and contact mode are established |
 | Candidate top structure | Optional; ask whether protection/support above the valve is required |
 | Blocking geometry | Valve, actuator, flange, local thick section, roller envelope, and required clearance |
 | Blocking design data | Installation load cases and pipeline allowable-moment definition |
@@ -378,7 +382,9 @@ KEL v0.2 converted the feedback into deterministic checks.
 
 **Valve-protection input gate.** When valve protection is being selected, the workflow requires the roller-passage scope, protection mode, valve/actuator/flange and thick-section envelopes, roller geometry, clearance, load cases, acceptance measure, connector-spacing basis, connection system, connector evidence, and compatible moment evidence. Missing project inputs produce the code VALVE_PROTECTION_INPUTS_MISSING. Missing behavior support produces VALVE_PROTECTION_EVIDENCE_MISSING and proposes a combined GD-VLV plus GD-SB study.
 
-**Canonical base-structure gate.** If EA-SB protection is selected, the emitted assembly must contain canonical GD-SB geometry. A generic rectangular frame does not satisfy the rule.
+**Canonical base-structure gate.** If GD-SB protection is selected, the emitted assembly must contain canonical GD-SB geometry. A generic rectangular frame does not satisfy the rule.
+
+**Branch-to-top-frame anchoring gate.** Every emitted `GD-B` branch must include `GD-ST` and a declared terminal association. The gate checks that `GD-ST` is present and that the selected L or Z anchor declares the branch-to-frame terminal association. Connector orientation is evaluated separately. A missing top frame or missing association blocks a complete-layout claim.
 
 **Moment-capacity gate.** Where compatible demand and allowable values are supplied, the deterministic utilization calculation rejects a case above unity.
 
@@ -390,11 +396,11 @@ The result for the incomplete valve prompt is a structured clarification outcome
 
 > **Figure 7 placeholder - initial concept and governed outcome.** Left: reconstructed early schematic annotated with missing base dimensions, unexplained P-S supports, absent top-frame decision, and unreported connector spacing. Right: EDPR/gate report showing explicit requirements, unknowns, and VALVE_PROTECTION_INPUTS_MISSING. Do not label the left concept as a validated design.
 
-### 6.5 Related topology regression: vertical connector
+### 6.5 Branch anchoring and connector orientation
 
-A separate regression example addresses the instruction that a branch connector must be vertical. Earlier language interpretation could select an L-branch archetype because "branch direction" and "connector orientation" were conflated. The current rule keeps branch routing, connector orientation, and drawing orientation separate. A required vertical connector restricts candidates to the GD-B Z variant and ILT-Z family of anchors. If the recommended L anchor has a compatible Z counterpart, the deterministic selector maps to it; otherwise it chooses only among eligible Z anchors or reports that no eligible anchor exists.
+A regression trial first exposed the problem on a Z branch requested with a vertical connector. Earlier language interpretation could select an L-branch archetype because branch routing, connector orientation, and drawing orientation were conflated. The current orientation rule keeps these concepts separate: a required vertical connector restricts candidates to the `GD-B` Z variant and the `ILT-Z-*` family. If the recommended L anchor has a compatible Z counterpart, the deterministic selector maps to it; otherwise it selects only an eligible Z anchor or reports that none exists.
 
-This example illustrates why ontology relations matter. A vertical connector is not merely a label rotation on the page. It changes the admissible branch assembly.
+The underlying anchoring failure is not specific to the Z branch. An L branch with a horizontal terminal can also be left visually adjacent to the top frame without a valid connection. The generalized gate therefore requires every `GD-B` branch to terminate at `GD-ST` through an explicit association. The L terminal is horizontal and the Z terminal is vertical; the selected anchor supplies the compatible `GD-ST` feature, including post-specific features where applicable. A drawing that omits `GD-ST` or merely places the branch near it cannot pass the complete-layout gate.
 
 ### 6.6 Human feedback as governed knowledge evolution
 
@@ -431,17 +437,17 @@ Six practical questions are used:
 
 ### 7.2 Repository verification baseline
 
-The repository was verified on 14 September 2026 at commit 1d8831600dddeeeec48a9d68ff152089f377afaf. The KEL test suite completed 23 tests successfully. The plotter and solver integration suite completed 29 tests successfully. The KEL status tool reported no invalid JSON documents and no authoritative lifecycle conflicts.
+The repository was verified on 14 September 2026 at commit 31a57d378a70f4aa8f232ed8a50130f85b3bfbea. The KEL test suite completed 24 tests successfully. The plotter and solver integration suite completed 29 tests successfully. The KEL status tool reported no invalid JSON documents and no authoritative lifecycle conflicts.
 
 | Evaluation property | Repository observation | Interpretation |
 |---|---|---|
 | Problem completeness | EDPR fixtures contain requirements, constraints, knowns, unknowns, behavior concerns, retrieval plans, and open questions | Structure supports inspectable problem formulation |
-| Topology validity | Vertical-connector regression requires GD-B Z and ILT-Z candidates | Known orientation error is deterministically rejected |
-| Parameter visibility | Plot/report contracts expose EA-ST data, active connectors, associations, findings, and resolved defaults | Review data can accompany the image |
+| Topology validity | Every GD-B branch is anchored to GD-ST; vertical intent additionally requires GD-B Z and ILT-Z candidates | Missing branch-to-GD-ST associations and incorrect orientation are deterministically rejected |
+| Parameter visibility | Plot/report contracts expose GD-ST data, active connectors, associations, findings, and resolved defaults | Review data can accompany the image |
 | Evidence traceability | R7/R8 publications are mapped to EDIKB source families; claim-level requirements are defined | Publication lineage exists; some quantitative row checks remain |
 | Fail-closed behavior | Incomplete valve protection and unresolved two-branch-valve topology produce explicit blocker codes | Missing evidence or representation is not silently completed |
 | Feedback governance | Atomic/group schemas, fingerprints, expert review, implementation plans, promotion, and reconciliation are executable | Persistent change is reviewable and state-controlled |
-| Regression coverage | 23 KEL and 29 plotter/solver tests passed | Implemented behavior is reproducible at this baseline |
+| Regression coverage | 24 KEL and 29 plotter/solver tests passed | Implemented behavior is reproducible at this baseline |
 
 These observations establish implementation behavior. They do not prove that every ontology rule is correct, that the test suite covers all engineering cases, or that a successful plot is physically valid.
 
@@ -452,7 +458,7 @@ The before-and-after case can be assessed without claiming a final design:
 | Review criterion | Early conversational output | Governed workflow |
 |---|---|---|
 | Explicit problem interpretation | Not emitted | EDPR separates requirement, constraint, unknowns, and objective status |
-| Base geometry | Shape/length basis absent | EA-SB requires canonical parameters or reports missing data |
+| Base geometry | Shape/length basis absent | GD-SB requires canonical parameters or reports missing data |
 | A/B connections | Type not clearly provided | Connector system and active associations are reportable fields |
 | Strain objective | Implicitly introduced | Preserved as absent unless explicitly requested |
 | Vertical offset | Larger than needed without evidence | Offset requires geometry and applicable evidence |
@@ -466,13 +472,13 @@ The correction is therefore a change in information quality, not evidence that t
 
 ### 7.4 Remaining evaluation work
 
-Before preprint submission, the study should run a controlled set of prompts covering valid standard layouts, ambiguous connector orientation, missing EA-ST/EA-SB parameters, unsupported valve-protection assumptions, evidence-scope mismatch, two-branch-valve topology, plot/report completeness, and duplicate feedback. At minimum, compare an unguided LLM, repository retrieval without enforced gates, and the full governed workflow. Reviewers should score requirement fidelity, topology validity, parameter and association completeness, evidence precision, traceability, and appropriate clarification or refusal. The protocol and raw outputs should be published with the manuscript.
+Before preprint submission, the study should run a controlled set of prompts covering valid standard layouts, L-horizontal and Z-vertical branch anchoring, ambiguous connector orientation, missing GD-ST/GD-SB parameters, unsupported valve-protection assumptions, evidence-scope mismatch, two-branch-valve topology, plot/report completeness, and duplicate feedback. At minimum, compare an unguided LLM, repository retrieval without enforced gates, and the full governed workflow. Reviewers should score requirement fidelity, topology validity, parameter and association completeness, evidence precision, traceability, and appropriate clarification or refusal. The protocol and raw outputs should be published with the manuscript.
 
 ## 8. Application in an Engineering Organization
 
 ### 8.1 Start from a bounded use case
 
-An organization should begin with one decision family where historical evidence exists and where conceptual support has value. For example, the first scope might compare known EA-ST connection arrangements within a fixed installation model. Beginning with a bounded domain makes terminology, evidence applicability, and review responsibilities manageable.
+An organization should begin with one decision family where historical evidence exists and where conceptual support has value. For example, the first scope might compare known GD-ST connection arrangements within a fixed installation model. Beginning with a bounded domain makes terminology, evidence applicability, and review responsibilities manageable.
 
 ### 8.2 Build a source register before a graph
 

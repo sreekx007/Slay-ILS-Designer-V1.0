@@ -987,7 +987,8 @@ class ILS:
             'branch_ids': branch_ids,
             'gd_st_ids': sorted(top_ids),
             'unanchored_branch_ids': unanchored_branches,
-            'rule': 'Every GD-B branch terminates at GD-ST: L uses a horizontal side feature and Z uses a vertical top feature.'
+            'rule': ('Every GD-B branch terminates at GD-ST through the compatible feature '
+                     'defined by the selected anchor; L terminals are horizontal and Z terminals are vertical.')
         }
 
         basis = self.definition.get('design_basis', {}) or {}

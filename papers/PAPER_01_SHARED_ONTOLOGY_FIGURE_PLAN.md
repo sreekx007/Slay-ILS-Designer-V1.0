@@ -32,7 +32,7 @@ The following figures may be cropped from the author-supplied PDFs for internal 
 | Branch layout taxonomy | R8 Figure 15 | R8 source PDF page 16 | Recreate L and Z branch families from the repository's GD-B definitions. |
 | Connector taxonomy | R8 Figure 16 and connection systems in Figures 17–18 | R8 source PDF pages 17–18 | Redraw F/S and F1/F2/PS/deadband relationships with consistent symbols. |
 | Schematic abstraction examples | R8 Figure 19 | R8 source PDF page 19 | Use as a visual reference; rebuild from EDES/EDAS objects. |
-| EA-ST, EA-SB, and branch parameters | R8 Figures 22–25 | R8 source PDF pages 22–23 | Recreate as publication-quality parameter diagrams tied to canonical JSON field names. |
+| GD-ST, GD-SB, and branch parameters | R8 Figures 22–25 | R8 source PDF pages 22–23 | Recreate as publication-quality parameter diagrams tied to canonical JSON field names. |
 | Mechanical behavior classes | R7 Figures 14–16 and Table II | R7 source PDF pages 10–12 | Redraw compact Type A/B/C mechanism diagrams. |
 | Offset geometry and response regions | R7 Figures 44–45 | R7 source PDF page 37 | Recreate if used in the evidence/behavior explanation. |
 
@@ -48,7 +48,7 @@ Four panels:
 
 1. realistic ILT assembly;
 2. simplified overall schematic;
-3. separated header, branch, valve, EA-ST, EA-SB, connectors, and supports;
+3. separated header, branch, valve, GD-ST, GD-SB, connectors, and supports;
 4. parameter labels and interfaces.
 
 This is the main introductory ontology figure requested for both papers.

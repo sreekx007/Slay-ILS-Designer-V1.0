@@ -4,6 +4,8 @@ This folder contains the Paper 01A working manuscript, preprint planning materia
 
 Repository status at 2026-09-14: KEL v0.2 Steps 1 through 4 and Step 6 are implemented. Step 5 is deliberately represented as a machine-readable two-branch-valve topology gap pending expert review. The paper outlines below have been synchronized with that behavior.
 
+Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source papers' `EA-ST`/`EA-SB` notation to the repository identifiers. The mapping changes terminology only. The generalized assembly gate requires every `GD-B` branch to terminate at `GD-ST` through a declared association; this applies to L-horizontal and Z-vertical branch terminals.
+
 ## Current Draft Set
 
 | File | Purpose |

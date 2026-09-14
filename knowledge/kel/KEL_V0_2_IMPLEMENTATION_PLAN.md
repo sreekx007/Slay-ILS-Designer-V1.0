@@ -169,9 +169,9 @@ explicit gap, never an L candidate.
 ### Required output
 
 Every GD-B branch in an emitted ILS must terminate at GD-ST through an
-explicit association. An L branch terminates at a side feature through its
-horizontal connector; a Z branch terminates at a top feature through its
-vertical connector. The issue first surfaced in a Z-branch trial, but the gate
+explicit association. An L branch has a horizontal terminal and a Z branch has
+a vertical terminal; the selected anchor defines the compatible GD-ST feature.
+The issue first surfaced in a Z-branch trial, but the gate
 is branch-family independent. Whenever GD-ST is active, the machine-readable
 report and plotted design must expose:
 
@@ -377,7 +377,7 @@ KEL v0.2 is complete when:
 - compound feedback is decomposed into atomic traceable issues;
 - equivalent feedback is grouped without losing source IDs or evidence;
 - one change-request ID has one authoritative lifecycle state;
-- every GD-B branch terminates at GD-ST through the correct L-side or Z-top association;
+- every GD-B branch terminates at GD-ST through the terminal association defined by the selected L or Z anchor;
 - a vertical connector selects GD-B Z and `ILT-Z-*` or emits a gap;
 - GD-ST plots and reports expose all parameters, active connectors, and
   associations;
