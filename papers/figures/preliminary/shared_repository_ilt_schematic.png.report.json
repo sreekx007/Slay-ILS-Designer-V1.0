@@ -1,0 +1,998 @@
+{
+  "plot_status": "warning",
+  "plot_qa_status": "passed_with_corrections",
+  "output_image": "papers\\figures\\preliminary\\shared_repository_ilt_schematic.png",
+  "checks": [
+    {
+      "id": "assembly_validation",
+      "status": "warning"
+    },
+    {
+      "id": "ea_exposure_gate",
+      "status": "failed",
+      "missing": [
+        "ST.slot2.connector_modelled",
+        "ST.slot2.pipe_landing_modelled",
+        "ST.slot2.pipe_association",
+        "ST.slot2.structure_association",
+        "ST.slot4.connector_modelled",
+        "ST.slot4.pipe_landing_modelled",
+        "ST.slot4.pipe_association",
+        "ST.slot4.structure_association",
+        "GD-B.to.GD-ST.association"
+      ]
+    },
+    {
+      "id": "output_exists",
+      "status": "passed",
+      "message": "Export exists and is nonempty."
+    },
+    {
+      "id": "export_integrity",
+      "status": "passed",
+      "message": "PNG decoded successfully."
+    },
+    {
+      "id": "export_nonblank",
+      "status": "passed",
+      "message": "PNG contains pixel variation."
+    },
+    {
+      "id": "axis_bounds",
+      "status": "passed",
+      "message": "Axes require finite, nonzero x/y ranges."
+    },
+    {
+      "id": "figure_content",
+      "status": "passed",
+      "message": "Geometry axes contain visible artists and pixel variation."
+    },
+    {
+      "id": "geometry_clipping",
+      "status": "passed",
+      "message": "Accessor geometry and sampled contact surfaces fit the axes."
+    },
+    {
+      "id": "physical_scale",
+      "status": "passed",
+      "message": "Compared x/y physical scale with 1% tolerance; no correction applied."
+    },
+    {
+      "id": "whitespace_zoom",
+      "status": "passed",
+      "message": "Drawn data span uses 100.0% of x and 28.9% of y; header extent is retained."
+    },
+    {
+      "id": "label_legend_overlap",
+      "status": "corrected",
+      "message": "No detected layout collisions remain."
+    },
+    {
+      "id": "image_export",
+      "status": "passed"
+    }
+  ],
+  "corrections": [
+    {
+      "type": "table_wrap",
+      "panel": 1,
+      "row": 32,
+      "column": 1,
+      "before": "x = -0.4064 m, arm 0.2032 m",
+      "after": "x = -0.4064 m, arm\n0.2032 m"
+    },
+    {
+      "type": "table_wrap",
+      "panel": 1,
+      "row": 33,
+      "column": 1,
+      "before": "x = +2.8448 m, arm 0.2032 m",
+      "after": "x = +2.8448 m, arm\n0.2032 m"
+    },
+    {
+      "type": "table_wrap",
+      "panel": 1,
+      "row": 47,
+      "column": 1,
+      "before": "x = +4.0640, y = -0.8128 m",
+      "after": "x = +4.0640, y = -0.8128\nm"
+    },
+    {
+      "type": "table_wrap",
+      "panel": 1,
+      "row": 0,
+      "column": 0,
+      "before": "assembly parameter",
+      "after": "assembly\nparameter"
+    },
+    {
+      "type": "figure_height",
+      "before": [
+        15.0,
+        9.1
+      ],
+      "after": [
+        15.0,
+        14.673237260008177
+      ]
+    },
+    {
+      "type": "view_margin",
+      "before": [
+        0.560832,
+        -1.7800319999999998
+      ],
+      "after": [
+        2.1994368,
+        -3.4186368
+      ]
+    },
+    {
+      "type": "label_move",
+      "label": "F",
+      "anchor": [
+        -0.40639999999999965,
+        -0.1016
+      ],
+      "before": [
+        -0.40639999999999965,
+        -0.1016
+      ],
+      "before_coordinates": "data",
+      "after": [
+        -29.951999999999934,
+        -21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "2",
+      "anchor": [
+        -0.40639999999999965,
+        -0.2032
+      ],
+      "before": [
+        0,
+        15
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -23.731200000000026,
+        -37.424999999999976
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "F",
+      "anchor": [
+        2.8448,
+        -0.1016
+      ],
+      "before": [
+        2.8448,
+        -0.1016
+      ],
+      "before_coordinates": "data",
+      "after": [
+        -29.951999999999934,
+        -21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "4",
+      "anchor": [
+        2.8448,
+        -0.2032
+      ],
+      "before": [
+        0,
+        15
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -23.731200000000026,
+        -37.424999999999976
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "3.0 t",
+      "anchor": [
+        2.032,
+        -0.8128
+      ],
+      "before": [
+        9,
+        6
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -59.500799999999906,
+        38.00000000000012
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "3.0 t",
+      "anchor": [
+        4.064,
+        -0.8128
+      ],
+      "before": [
+        9,
+        6
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        29.750399999999953,
+        21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "F",
+      "anchor": [
+        4.064,
+        -0.8128
+      ],
+      "before": [
+        4.064,
+        -0.8128
+      ],
+      "before_coordinates": "data",
+      "after": [
+        14.198400000000019,
+        -21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "support",
+      "anchor": [
+        4.064,
+        -0.8128
+      ],
+      "before": [
+        0,
+        15
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        35.971200000000024,
+        -21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "GD-ST",
+      "anchor": [
+        1.2192000000000003,
+        -0.6096
+      ],
+      "before": [
+        1.2192000000000003,
+        -0.6096
+      ],
+      "before_coordinates": "data",
+      "after": [
+        -93.30209999999988,
+        65.80800000000006
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "GD-B",
+      "anchor": [
+        0.0,
+        -0.6095999999999999
+      ],
+      "before": [
+        0.0,
+        -0.6095999999999999
+      ],
+      "before_coordinates": "data",
+      "after": [
+        -80.86050000000006,
+        65.80800000000006
+      ],
+      "after_coordinates": "offset points"
+    }
+  ],
+  "warnings": [
+    "[WARNING] connectors: connection_system='F2' populates 2 slot(s), but the layout contains NO GD-Con parts, so nothing models where those connections meet the pipe. This is the SIMPLIFIED form used by the archetype library; a complete layout places a GD-Con at each slot, landing on a GD-TP, with associations at both ends -- see edas:shared#/connectorAttachment.twoModellingLevels."
+  ],
+  "errors": [],
+  "defaulted_parameters": [
+    {
+      "path": "pipeline.nu",
+      "value": 0.3
+    },
+    {
+      "path": "pipeline.E",
+      "value": 210000000000.0
+    },
+    {
+      "path": "components.ST.P_gap",
+      "value": null
+    },
+    {
+      "path": "components.ST.top_connector_x",
+      "value": [
+        1.2192000000000003
+      ]
+    },
+    {
+      "path": "components.ST.left_connector_y",
+      "value": [
+        -0.8128
+      ]
+    },
+    {
+      "path": "components.ST.kT_ratio",
+      "value": 2.5
+    },
+    {
+      "path": "components.B.P_b3",
+      "value": null
+    },
+    {
+      "path": "components.B.P_bv",
+      "value": 2.032
+    },
+    {
+      "path": "components.B.OD_branch",
+      "value": 0.2731
+    },
+    {
+      "path": "components.B.t_branch",
+      "value": 0.0159
+    },
+    {
+      "path": "components.B.mass_valve",
+      "value": 3000.0
+    },
+    {
+      "path": "components.B.mass_connector",
+      "value": 3000.0
+    }
+  ],
+  "input_file": "knowledge/edas/standard_ils_layouts.json",
+  "archetype": "ILS-ILT",
+  "resolved_assembly_settings": {
+    "header_half_length": 6.164,
+    "header_auto_extended": false,
+    "connection_system": "F2",
+    "ownership": "strict"
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "where": "connectors",
+      "message": "connection_system='F2' populates 2 slot(s), but the layout contains NO GD-Con parts, so nothing models where those connections meet the pipe. This is the SIMPLIFIED form used by the archetype library; a complete layout places a GD-Con at each slot, landing on a GD-TP, with associations at both ends -- see edas:shared#/connectorAttachment.twoModellingLevels."
+    }
+  ],
+  "design_workflow": {
+    "schema": "ils-design-workflow-report/0.2",
+    "gate_mode": "advisory",
+    "purpose": "unspecified",
+    "status": "failed",
+    "ea_structures": [
+      {
+        "component_id": "ST",
+        "code": "GD-ST",
+        "canonical_parameters": {
+          "centre_x": 1.2192000000000003,
+          "P_vt": -0.2032,
+          "P_c1": 3.2512,
+          "P_c2": 0.4064,
+          "P_gap": null,
+          "top_connector_x": [
+            1.2192000000000003
+          ],
+          "left_connector_y": [
+            -0.8128
+          ],
+          "right_connector_y": [
+            -0.8128
+          ],
+          "L_top": 5.6895999999999995,
+          "H_top": 1.2191999999999998,
+          "kT_ratio": 2.5
+        },
+        "active_connectors": [
+          {
+            "slot": 2,
+            "feature": "slot2",
+            "x_m": -0.40639999999999965,
+            "type": "F",
+            "arm_m": 0.2032,
+            "gap_m": null,
+            "connector_id": null,
+            "pipe_landing": null,
+            "associations": [],
+            "coverage": {
+              "connector_modelled": false,
+              "pipe_landing_modelled": false,
+              "pipe_association": false,
+              "structure_association": false
+            }
+          },
+          {
+            "slot": 4,
+            "feature": "slot4",
+            "x_m": 2.8448,
+            "type": "F",
+            "arm_m": 0.2032,
+            "gap_m": null,
+            "connector_id": null,
+            "pipe_landing": null,
+            "associations": [],
+            "coverage": {
+              "connector_modelled": false,
+              "pipe_landing_modelled": false,
+              "pipe_association": false,
+              "structure_association": false
+            }
+          }
+        ],
+        "inactive_connectors": [
+          {
+            "slot": 1,
+            "x_m": -0.8127999999999996,
+            "status": "inactive"
+          },
+          {
+            "slot": 3,
+            "x_m": 1.2192000000000003,
+            "status": "inactive"
+          },
+          {
+            "slot": 5,
+            "x_m": 3.2512000000000003,
+            "status": "inactive"
+          }
+        ]
+      }
+    ],
+    "branch_structure_associations": [],
+    "valve_base_geometry": {
+      "active": false,
+      "component_code": null,
+      "design_basis": {},
+      "missing_basis": []
+    },
+    "unresolved_or_inactive_slots": [
+      "ST.slot2.connector_modelled",
+      "ST.slot2.pipe_landing_modelled",
+      "ST.slot2.pipe_association",
+      "ST.slot2.structure_association",
+      "ST.slot4.connector_modelled",
+      "ST.slot4.pipe_landing_modelled",
+      "ST.slot4.pipe_association",
+      "ST.slot4.structure_association",
+      "GD-B.to.GD-ST.association"
+    ],
+    "complete_design_claim_allowed": false
+  },
+  "layout_qa": {
+    "corrections": [
+      {
+        "type": "table_wrap",
+        "panel": 1,
+        "row": 32,
+        "column": 1,
+        "before": "x = -0.4064 m, arm 0.2032 m",
+        "after": "x = -0.4064 m, arm\n0.2032 m"
+      },
+      {
+        "type": "table_wrap",
+        "panel": 1,
+        "row": 33,
+        "column": 1,
+        "before": "x = +2.8448 m, arm 0.2032 m",
+        "after": "x = +2.8448 m, arm\n0.2032 m"
+      },
+      {
+        "type": "table_wrap",
+        "panel": 1,
+        "row": 47,
+        "column": 1,
+        "before": "x = +4.0640, y = -0.8128 m",
+        "after": "x = +4.0640, y = -0.8128\nm"
+      },
+      {
+        "type": "table_wrap",
+        "panel": 1,
+        "row": 0,
+        "column": 0,
+        "before": "assembly parameter",
+        "after": "assembly\nparameter"
+      },
+      {
+        "type": "figure_height",
+        "before": [
+          15.0,
+          9.1
+        ],
+        "after": [
+          15.0,
+          14.673237260008177
+        ]
+      },
+      {
+        "type": "view_margin",
+        "before": [
+          0.560832,
+          -1.7800319999999998
+        ],
+        "after": [
+          2.1994368,
+          -3.4186368
+        ]
+      },
+      {
+        "type": "label_move",
+        "label": "F",
+        "anchor": [
+          -0.40639999999999965,
+          -0.1016
+        ],
+        "before": [
+          -0.40639999999999965,
+          -0.1016
+        ],
+        "before_coordinates": "data",
+        "after": [
+          -29.951999999999934,
+          -21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "2",
+        "anchor": [
+          -0.40639999999999965,
+          -0.2032
+        ],
+        "before": [
+          0,
+          15
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -23.731200000000026,
+          -37.424999999999976
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "F",
+        "anchor": [
+          2.8448,
+          -0.1016
+        ],
+        "before": [
+          2.8448,
+          -0.1016
+        ],
+        "before_coordinates": "data",
+        "after": [
+          -29.951999999999934,
+          -21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "4",
+        "anchor": [
+          2.8448,
+          -0.2032
+        ],
+        "before": [
+          0,
+          15
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -23.731200000000026,
+          -37.424999999999976
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "3.0 t",
+        "anchor": [
+          2.032,
+          -0.8128
+        ],
+        "before": [
+          9,
+          6
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -59.500799999999906,
+          38.00000000000012
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "3.0 t",
+        "anchor": [
+          4.064,
+          -0.8128
+        ],
+        "before": [
+          9,
+          6
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          29.750399999999953,
+          21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "F",
+        "anchor": [
+          4.064,
+          -0.8128
+        ],
+        "before": [
+          4.064,
+          -0.8128
+        ],
+        "before_coordinates": "data",
+        "after": [
+          14.198400000000019,
+          -21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "support",
+        "anchor": [
+          4.064,
+          -0.8128
+        ],
+        "before": [
+          0,
+          15
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          35.971200000000024,
+          -21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "GD-ST",
+        "anchor": [
+          1.2192000000000003,
+          -0.6096
+        ],
+        "before": [
+          1.2192000000000003,
+          -0.6096
+        ],
+        "before_coordinates": "data",
+        "after": [
+          -93.30209999999988,
+          65.80800000000006
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "GD-B",
+        "anchor": [
+          0.0,
+          -0.6095999999999999
+        ],
+        "before": [
+          0.0,
+          -0.6095999999999999
+        ],
+        "before_coordinates": "data",
+        "after": [
+          -80.86050000000006,
+          65.80800000000006
+        ],
+        "after_coordinates": "offset points"
+      }
+    ],
+    "initial_issues": [
+      {
+        "label": "F",
+        "index": 0,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "2",
+        "index": 1,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "F",
+        "index": 2,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "4",
+        "index": 3,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "3.0 t",
+        "index": 4,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "3.0 t",
+        "index": 5,
+        "reasons": [
+          "label_overlap"
+        ]
+      },
+      {
+        "label": "F",
+        "index": 6,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "support",
+        "index": 7,
+        "reasons": [
+          "label_overlap",
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "GD-ST",
+        "index": 9,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "GD-B",
+        "index": 10,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "table 1:(3, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(4, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(5, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(5, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(6, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(7, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(9, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(9, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(10, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(10, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(11, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(11, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(14, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(14, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(15, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(17, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(18, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(27, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(28, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(31, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(32, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(33, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(37, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(38, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(39, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(40, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(41, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(42, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(43, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(44, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(47, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(0, 0)",
+        "reasons": [
+          "table_overflow"
+        ]
+      },
+      {
+        "label": "table 1:(0, 1)",
+        "reasons": [
+          "table_overflow"
+        ]
+      }
+    ],
+    "remaining_issues": [],
+    "max_attempts_per_label": 100
+  }
+}

@@ -27,3 +27,11 @@ Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology, authorship metada
 ## Source-Paper Handling
 
 The reviewed PDFs remain outside the Git repository. `REFERENCE_LIBRARY.md` records their source filenames and SHA-256 checksums, while `EDIKB_SOURCE_PROVENANCE.json` records the two author-paper mappings. This keeps citation and evidence provenance in Git without redistributing third-party PDFs.
+
+## Manuscripts and Preliminary Figures
+
+- PAPER_01A_MANUSCRIPT_DRAFT.md - engineering-professional draft with explanatory workflow figures.
+- PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture, benchmark and case analysis.
+- figures/generate_preliminary_figures.py - reproducible generator for workflow diagrams.
+- figures/figure_sources.json - figure source and status register.
+- figures/preliminary/ - SVG and PNG previews plus the ILS-Plotter schematic and reports.

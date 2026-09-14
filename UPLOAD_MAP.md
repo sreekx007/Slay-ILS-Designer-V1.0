@@ -400,3 +400,7 @@ No new deletions were required.
 - UPLOAD_MAP.md
 
 Exclude runs/phase7 and .venv. Old manifests remain in superseded. 29 distinct tests passed, including EDPR-to-plot and Knowloop schema validation.
+
+## Paper 01B and preliminary figures - confirmed
+
+Added the Paper 01B manuscript and reproducible preliminary SVG/PNG figures. Paper 01A now embeds an engineering workflow, ILT abstraction ladder, KEL lifecycle and repository-generated ILT schematic. Updated papers/README.md, framework_manifest.json and UPLOAD_MAP.md.

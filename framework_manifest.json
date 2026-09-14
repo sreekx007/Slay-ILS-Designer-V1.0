@@ -630,6 +630,27 @@
         "status": "present",
         "required": false,
         "role": "Claim-level evidence class, status, and release-action register for Paper 01A"
+      },
+      {
+        "id": "doc:paper_01b_manuscript_draft",
+        "repo_path": "papers/PAPER_01B_MANUSCRIPT_DRAFT.md",
+        "status": "present",
+        "required": false,
+        "role": "AI-research manuscript draft for Paper 01B and planned arXiv submission"
+      },
+      {
+        "id": "doc:paper_preliminary_figure_generator",
+        "repo_path": "papers/figures/generate_preliminary_figures.py",
+        "status": "present",
+        "required": false,
+        "role": "Reproducible generator for preliminary Paper 01A and 01B diagrams"
+      },
+      {
+        "id": "doc:paper_figure_sources",
+        "repo_path": "papers/figures/figure_sources.json",
+        "status": "present",
+        "required": false,
+        "role": "Source and status register for manuscript figures"
       }
     ],
     "reference_papers": [

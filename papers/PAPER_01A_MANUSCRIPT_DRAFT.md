@@ -14,6 +14,26 @@ Engineering organizations accumulate valuable design knowledge in drawings, calc
 
 **Keywords:** engineering knowledge management; artificial intelligence for design; ontology; knowledge graph; large language model; subsea inline structure; S-lay installation; human-in-the-loop engineering; conceptual design; design provenance
 
+## Preliminary Visual Guide
+
+The following sketches are generated from the current repository architecture and are included for early technical review. They are placeholders for publication figures and do not certify an engineering design.
+
+![Repository-generated ILT schematic](figures/preliminary/shared_repository_ilt_schematic.svg)
+
+**Preliminary Figure A.** ILS-Plotter output showing geometry, labels and the parameter/report panel. Its warning state is deliberately retained.
+
+![S-lay ILT abstraction ladder](figures/preliminary/shared_ilt_abstraction_ladder.svg)
+
+**Preliminary Figure B.** Transformation from physical assembly to schematic, parameterized objects, typed knowledge and an executable outcome.
+
+![Engineering AI workflow](figures/preliminary/paper01a_engineering_workflow.svg)
+
+**Preliminary Figure C.** Engineering-facing request-to-review workflow, including explicit gap outcomes and human-governed knowledge change.
+
+![Knowledge Evolution Loop](figures/preliminary/shared_kel_lifecycle.svg)
+
+**Preliminary Figure D.** Feedback decomposition, grouping, expert review, implementation and released-knowledge lifecycle.
+
 ## 1. Introduction
 
 Industrial structural design rarely starts from a blank sheet. Engineers consult earlier drawings, calculation reports, fabrication lessons, installation records, standard details, and the judgment of colleagues who remember why a previous arrangement succeeded or failed. This experience is valuable, but its storage is usually document-centered. A report may state that one support arrangement reduced strain, while the geometry, connector type, response location, and assumptions needed to reuse the result are scattered across figures, tables, and appendices. A drawing may define the arrangement but not the behavior observed during installation. A review comment may correct a decision without being converted into a reusable rule.

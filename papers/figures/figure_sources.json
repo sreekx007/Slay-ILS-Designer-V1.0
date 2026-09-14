@@ -1,0 +1,41 @@
+{
+  "schema": "paper-figure-sources/0.1",
+  "figures": [
+    {
+      "id": "P01A-F5",
+      "file": "preliminary/paper01a_engineering_workflow.svg",
+      "type": "generated_vector",
+      "status": "preliminary",
+      "source": "repository architecture and workflow documentation"
+    },
+    {
+      "id": "P01-S2",
+      "file": "preliminary/shared_ilt_abstraction_ladder.svg",
+      "type": "generated_vector",
+      "status": "preliminary",
+      "source": "R7/R8 ontology mapping and repository crosswalk"
+    },
+    {
+      "id": "P01B-F2",
+      "file": "preliminary/paper01b_governed_architecture.svg",
+      "type": "generated_vector",
+      "status": "preliminary",
+      "source": "EDPR/EDES/EDAS/EDIKB/KEL implementation"
+    },
+    {
+      "id": "P01-S6",
+      "file": "preliminary/shared_kel_lifecycle.svg",
+      "type": "generated_vector",
+      "status": "preliminary",
+      "source": "KEL v0.2 schemas, tools, and lifecycle documentation"
+    },
+    {
+      "id": "P01-S1",
+      "file": "preliminary/shared_repository_ilt_schematic.svg",
+      "type": "ils_plotter_output",
+      "status": "preliminary_warning",
+      "source": "standard_ils_layouts.json archetype ILS-ILT",
+      "report": "preliminary/shared_repository_ilt_schematic.svg.report.json"
+    }
+  ]
+}
