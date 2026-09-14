@@ -215,50 +215,29 @@ Why it matters:
 - It reveals missing data, weak evidence, and representability gaps.
 - It supports engineering governance: traceable, auditable, reviewable updates.
 
-### 9. Case Study: Q1 Inline Tee / Branch / Valve Layout
+### 9. Planned Controlled Example Section
 
-Use the Q1 interaction as the running case.
+Do not use the current conversational trials as paper evidence. After the workflow is stable, select three or four examples in advance and preserve every artifact needed for review.
 
-Original design request:
+The future example package should include:
 
-- 12 inch pipeline header.
-- Valve on header line.
-- 8 inch branch going to vertical connector.
-- Two valves on branch line.
-- Need ILT layout.
+- the exact user query;
+- confirmed EDPR/problem understanding;
+- retrieved EDES, EDAS, and EDIKB context;
+- emitted layout or typed blocker;
+- repository plot/report artifacts where a layout is emitted;
+- reviewer comments and final judgment.
 
-Observed framework lesson:
+Candidate task families:
 
-- A normal LLM response can generate a plausible-looking but incorrect layout.
-- It may draw the branch below the pipeline, assume an unsupported GD-SB protection arrangement, omit the required GD-B-to-GD-ST anchor for either branch family, use incorrect component shapes, omit parameters/connections, and produce a plot that is not repository-backed.
-- Under KEL, these are not just errors; they become structured feedback records and graph change requests.
-
-Case-study table:
-
-| Feedback lesson | Framework update direction |
+| Task family | Purpose |
 |---|---|
-| Branch routing and connector orientation misunderstood | EDPR/EDAS design-intent gate keeps routing and connector orientation separate; vertical intent selects the Z family. |
-| Valve protection unsupported or omitted | EDPR clarification/evidence gate; use canonical GD-SB only when roller scope, protection mode, envelopes, clearances, load cases, connector basis, and compatible moment evidence support GD-SB. |
-| Branch terminal not anchored to GD-ST | General EDAS gate requires every GD-B branch to terminate at the compatible GD-ST feature declared by its selected anchor; L terminals are horizontal and Z terminals are vertical. |
-| Freehand plot too small and wrong geometry | Mandatory repository plotter use and plot quality checks. |
-| Component parameters and connections missing | EDES/EDAS parameter and association exposure in report. |
-| Strain optimization was inferred without being requested | Do not create an optimization objective. Evaluate stress/strain only against explicit objectives or acceptance constraints and state evidence limits. |
+| Valid standard layout | Show normal end-to-end layout emission after EDPR confirmation. |
+| Branch-to-GD-ST anchoring | Show that a branch has explicit top-frame association and connection labeling. |
+| Header component requiring GD-SB | Show compulsory base-structure protection or a correct stop for missing inputs. |
+| Representation gap | Show that unresolved topology stops rather than producing a plausible drawing. |
 
-### 9.1 Repository-Verified KEL v0.2 Behavior
-
-The current repository demonstrates the following behavior at commit `31a57d37`:
-
-- every GD-B branch requires GD-ST and a declared terminal association, with the selected L or Z anchor defining the compatible frame feature;
-- explicit vertical connector intent restricts selection to `ILT-Z-*` and emits GD-B variant Z;
-- the Q1 vertical-connector regression emits `ILT-Z-FT-PS` rather than an L branch;
-- complete GD-ST reports expose canonical parameters, active and inactive slots, modeled GD-Con parts, pipe landings, and branch associations;
-- the incomplete 12-inch valve request stops with `VALVE_PROTECTION_INPUTS_MISSING` and does not emit a misleading layout;
-- P-S valve support without compatible combined evidence produces a `needs_evidence` FEA study candidate;
-- valve moment evidence is checked using capacity utilization for every supplied load case;
-- two branch valves remain `TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED` until expert review fixes their ownership topology.
-
-These statements are repository-demonstrated prototype behavior. They are not claims of code compliance, structural adequacy, or final engineering approval.
-
+Until this package is executed and reviewed, the manuscript should describe workflow requirements rather than results.
 ### 10. Dataset Sufficiency and the Need for Parametric Studies
 
 This is a key paper argument.

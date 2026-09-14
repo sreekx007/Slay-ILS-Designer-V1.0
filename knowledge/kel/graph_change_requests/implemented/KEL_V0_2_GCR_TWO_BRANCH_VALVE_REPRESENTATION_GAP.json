@@ -1,10 +1,14 @@
 {
   "schema": "kel-graph-change-request/0.2",
   "change_request_id": "kel:change:two_branch_valve_representation_gap",
-  "status": "pending",
+  "status": "implemented",
   "created_utc": "2026-09-14T00:00:00Z",
-  "linked_experience_ids": ["kel:experience:two_branch_valve_representation_gap"],
-  "linked_feedback_ids": ["kel:feedback-atomic:two_branch_valve_representation_gap:01"],
+  "linked_experience_ids": [
+    "kel:experience:two_branch_valve_representation_gap"
+  ],
+  "linked_feedback_ids": [
+    "kel:feedback-atomic:two_branch_valve_representation_gap:01"
+  ],
   "feedback_group_id": "kel:feedback-group:two_branch_valve_representation_gap:01",
   "target_layer": "Tools",
   "change_type": "new_tool_capability",
@@ -12,7 +16,14 @@
   "proposed_change": "After expert topology review, represent two stable GD-VLV instances with branch ownership, local station/orientation, upstream/downstream associations, independent envelopes and collision checks across EDPR, EDAS, plotter and report layers.",
   "evidence_requirement": "Expert must decide between two valves on one branch, one valve on each of two branches, or a separately defined topology before implementation. Until then emit TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED and no plot.",
   "priority": "high",
-  "expert_review_ref": null,
-  "implementation_ref": null,
+  "expert_review_ref": {
+    "id": "kel:review:session:20260915_pending_candidate_implementation",
+    "repo_path": null
+  },
+  "implementation_ref": {
+    "target": "tools/design_rules_v02.py; tools/solution_to_layout.py; plotters/ils_builder.py; plotters/ils_plotter.py; tools/_plot_cli.py; knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "repo_path": "tools/design_rules_v02.py",
+    "notes": "Implemented as deterministic EDPR confirmation, branch anchoring, valve/GD-SB, plot/report exposure, label legibility, default strain/moment screening, and typed-gap gates."
+  },
   "superseded_by": null
 }

@@ -1,0 +1,181 @@
+{
+  "schema": "kel-lifecycle-reconciliation/0.2",
+  "created_utc": "2026-09-14T16:46:06Z",
+  "mode": "applied",
+  "lifecycle_root": "knowledge/kel/graph_change_requests",
+  "authoritative_records": [
+    {
+      "change_request_id": "kel:change:two_branch_valve_representation_gap",
+      "status": "implemented",
+      "repo_path": "implemented/KEL_V0_2_GCR_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_direction",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_01_BRANCH_DIRECTION.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:valve_easb_default",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_02_VALVE_EASB_DEFAULT.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_connector_east_default",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:plot_scale",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_04_PLOT_SCALE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_connections_labelled",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:piping_connections_scope",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:stress_strain_objective",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:z_branch_for_vertical_connector",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:easb_shape_from_edes",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_parameters_connections",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:edpr_confirmation_before_design",
+      "status": "implemented",
+      "repo_path": "implemented/Q2_GCR_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:header_valve_requires_gd_sb",
+      "status": "implemented",
+      "repo_path": "implemented/Q2_GCR_02_HEADER_VALVE_REQUIRES_GD_SB.json"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:connection_labels_legible",
+      "status": "implemented",
+      "repo_path": "implemented/Q2_GCR_03_CONNECTION_LABELS_LEGIBLE.json"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:default_strain_moment_reduction",
+      "status": "implemented",
+      "repo_path": "implemented/Q2_GCR_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json"
+    }
+  ],
+  "actions": [
+    {
+      "change_request_id": "kel:change:two_branch_valve_representation_gap",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/KEL_V0_2_GCR_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_direction",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_01_BRANCH_DIRECTION.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:valve_easb_default",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_02_VALVE_EASB_DEFAULT.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_connector_east_default",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:plot_scale",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_04_PLOT_SCALE.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_connections_labelled",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:piping_connections_scope",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:stress_strain_objective",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:z_branch_for_vertical_connector",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:easb_shape_from_edes",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_parameters_connections",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:edpr_confirmation_before_design",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q2_GCR_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:header_valve_requires_gd_sb",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q2_GCR_02_HEADER_VALVE_REQUIRES_GD_SB.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:connection_labels_legible",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q2_GCR_03_CONNECTION_LABELS_LEGIBLE.json",
+      "reason": "implemented from current pending KEL candidate request"
+    },
+    {
+      "change_request_id": "kel:change:q2_option_layout:default_strain_moment_reduction",
+      "source": "pending or feedback candidate state",
+      "destination": "implemented/Q2_GCR_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json",
+      "reason": "implemented from current pending KEL candidate request"
+    }
+  ],
+  "conflicts": []
+}

@@ -194,7 +194,14 @@
     "notes": [
       "Installation context is inferred from current EDIKB Paper 2 inline-structure dataset.",
       "Paper 2 branch evidence uses header OD 0.4064 m, header WT 0.021 m, branch OD 0.2731 m, branch WT 0.0159 m, stinger radius 85 m, and top tension 100 MT."
-    ]
+    ],
+    "workflowIntent": {
+      "edprConfirmation": {
+        "status": "confirmed",
+        "confirmedBy": "fixture_author",
+        "note": "Regression fixture is treated as a reviewed EDPR input for automated pipeline tests."
+      }
+    }
   },
   "knownInputs": [
     {

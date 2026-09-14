@@ -28,7 +28,7 @@ Industrial AI for conceptual engineering is primarily a data and knowledge-manag
 | S-lay ILT ontology introduction | Explain the ontology through recognizable components, assembly drawings, parameters, interfaces, and strain behavior from R7 and R8. |
 | Engineering data-management model | Show how documents and tacit experience become governed EDES, EDAS, EDIKB, and EDPR records. |
 | Accessible AI workflow | Explain ontology, knowledge graph, retrieval, LLM, validation gate, and feedback loop in engineering language. |
-| Repository-backed case study | Demonstrate the Q1 ILT request, the initial failure modes, the corrected workflow, and the fail-closed boundary. |
+| Repository-backed framework | Describe the governed workflow and defer worked examples until the design workflow is stable. |
 | Human-governed learning | Explain KEL as the controlled evolutionary loop for graph change. |
 
 ## Opening Ontology Sequence
@@ -69,13 +69,13 @@ State that R7 supplies the physical IW/EA classification, Type A/B/C mechanical 
 
 | Section | Main purpose | Required evidence or visual |
 |---|---|---|
-| Abstract | Present the engineering knowledge-management problem, framework, case study, and bounded contribution in plain language. | Finalized after all results are frozen. |
+| Abstract | Present the engineering knowledge-management problem, framework, and bounded contribution in plain language without claiming example results. | Finalized after controlled examples are frozen. |
 | 1. Introduction | Explain why experienced engineering organizations still struggle to reuse design knowledge. Define the problem without assuming AI expertise. | Examples of reports, drawings, calculations, and tacit review knowledge. |
 | 2. S-Lay ILTs and Their Ontology | Introduce the physical assembly, installation challenge, component/assembly classifications, realistic-to-schematic mapping, parameters, and connections. | Shared Figures S1–S4; R7 and R8. |
 | 3. Why Engineering AI Starts With Data Management | Explain identifiers, controlled terms, parameters, relationships, evidence, provenance, versioning, and missing-data handling. | Before/after example: document fragment versus structured record. |
 | 4. Knowledge Architecture | Explain EDES, EDAS, EDIKB, EDPR, and KEL using an engineering document-control analogy. | Layer diagram and one traceable design fact. |
 | 5. Role of the LLM and Deterministic Tools | Separate language interpretation and explanation from validation, retrieval, layout construction, plotting, and tests. | Workflow diagram with human review points. |
-| 6. Case Study: Q1 ILT Layout | Walk through request, problem interpretation, the generalized L/Z branch-to-GD-ST gate, orientation selection, retrieval, layout selection, plot, feedback, KEL changes, and current topology gap. | Q1 evidence package and repository-generated plots. |
+| 6. Workflow Requirements Before Reported Examples | Define EDPR confirmation, EDAS assembly gates, evidence gates, plot/report gates, and KEL governance as requirements. | Current architecture and pending workflow-stabilization work. |
 | 7. Evaluation | Report whether the governed workflow exposes parameters, connections, assumptions, evidence, and representation gaps more reliably than an unconstrained response. | Completeness and traceability matrix. |
 | 8. Organizational Application | Explain adoption: source inventory, ontology ownership, review roles, change control, and integration with existing engineering systems. | Practical implementation checklist. |
 | 9. Limits and Future Development | Bound the prototype and explain the path to parametric FEA, surrogate models, uncertainty estimation, and optimization. | Evidence-coverage gap diagram. |
@@ -99,7 +99,7 @@ Paper 01A should emphasize inspectable engineering outcomes rather than an AI le
 - Define ontology as a controlled engineering description of objects, properties, relationships, and permitted meanings.
 - Explain knowledge graphs as linked engineering records, not as an abstract AI technology.
 - Introduce acronyms once and reinforce them with the same physical example.
-- Prefer one worked trace from design request to plotted layout over many shallow examples.
+- Add worked traces only after the workflow is stable and the examples are preselected, preserved, and reviewed.
 - Keep equations to established engineering quantities or a small number of workflow definitions.
 - Mark every claim as repo-demonstrated, literature-supported, domain-expert assertion, or future work during drafting.
 

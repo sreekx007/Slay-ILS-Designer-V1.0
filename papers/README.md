@@ -2,7 +2,7 @@
 
 This folder contains the Paper 01A working manuscript, preprint planning material, evidence controls, and the reviewed reference registry. The manuscript is a technical-review draft and is not yet submission-ready.
 
-Repository status at 2026-09-14: KEL v0.2 Steps 1 through 4 and Step 6 are implemented. Step 5 is deliberately represented as a machine-readable two-branch-valve topology gap pending expert review. The paper outlines below have been synchronized with that behavior.
+Current status: the papers folder now treats the manuscripts as framework drafts. Validated example results, comparative evaluation, and publication-ready case evidence are deferred until the design workflow is stable and controlled examples have been reviewed.
 
 Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source papers' `EA-ST`/`EA-SB` notation to the repository identifiers. The mapping changes terminology only. The generalized assembly gate requires every `GD-B` branch to terminate at `GD-ST` through a declared association; this applies to L-horizontal and Z-vertical branch terminals.
 
@@ -25,7 +25,7 @@ Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source p
 
 ## Recommended Next Step
 
-Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology, authorship metadata, and the valve-case interpretation. Then complete the R7/R8 row-level evidence matrix and Figures 1-8 before running the controlled evaluation. Paper 01B remains a separate AI-research manuscript.
+Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology and authorship metadata. Then complete the R7/R8 row-level evidence matrix, final ontology/workflow figures, and a controlled example protocol before adding any results section. Paper 01B remains a separate AI-research manuscript.
 
 ## Source-Paper Handling
 
@@ -34,7 +34,7 @@ The reviewed PDFs remain outside the Git repository. `REFERENCE_LIBRARY.md` reco
 ## Manuscripts and Preliminary Figures
 
 - PAPER_01A_MANUSCRIPT_DRAFT.md - engineering-professional draft with explanatory workflow figures.
-- PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture, benchmark and case analysis.
+- PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture and planned benchmark design.
 - figures/generate_preliminary_figures.py - reproducible generator for workflow and component-ontology diagrams.
 - figures/generate_repository_schematic.py - reproducible ILS-Plotter export with manuscript-scale fonts and a geometry-focused image; companion reports retain the complete design-workflow payload.
 - figures/figure_sources.json - figure source and status register.

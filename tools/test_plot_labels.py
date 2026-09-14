@@ -51,6 +51,28 @@ class LabelLayoutTests(unittest.TestCase):
         self.assertFalse(any('table_overflow' in x['reasons'] or 'title_overflow' in x['reasons']
                              for x in result['remaining_issues']))
 
+
+    def test_declared_connection_labels_are_added_to_figure(self):
+        spec = {
+            'schema_version': 1,
+            'ils': {'connection_system': 'F1'},
+            'pipeline': {'OD_pipe': 0.4064, 't_pipe': 0.021},
+            'components': [
+                {'id': 'st1', 'code': 'GD-ST', 'centre_x': 0.0, 'P_vt': -1.0, 'P_c1': 1.0, 'P_c2': 1.0},
+                {'id': 'con1', 'code': 'GD-Con', 'centre_x': 0.0, 'conn_type': 'F', 'y_struct': -1.0},
+                {'id': 'tp1', 'code': 'GD-TP', 'centre_x': 0.0, 't_comp': 0.032},
+            ],
+            'associations': [
+                {'type': 'Connection', 'connection': 'F', 'from': {'component': 'con1', 'feature': 'pipeEnd'}, 'to': {'component': 'st1', 'feature': 'slot3'}},
+                {'type': 'Connection', 'connection': 'F', 'from': {'component': 'con1', 'feature': 'pipeEnd'}, 'to': {'component': 'tp1', 'feature': 'conMid'}},
+            ],
+        }
+        ils = build_ils(spec)
+        fig = ils.plot()
+        labels = getattr(fig, '_connection_labels', [])
+        self.assertGreaterEqual(len(labels), 1)
+        self.assertTrue(any('F GD-Con->GD-ST' == item['text'] for item in labels))
+
     def test_model_and_anchor_coordinates_preserved(self):
         spec={'schema_version':1,'pipeline':{'OD_pipe':0.4064,'t_pipe':0.021},
               'components':[{'code':'GD-TP','centre_x':0}]}

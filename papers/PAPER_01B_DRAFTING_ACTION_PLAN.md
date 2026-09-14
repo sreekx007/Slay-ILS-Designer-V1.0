@@ -74,7 +74,7 @@ Use R7 for the IW/EA and Type A/B/C basis and R8 for external structures, connec
 | 6. Knowledge Evolution Loop | Formalize feedback decomposition, fingerprints, grouping, change requests, expert review, implementation, and reconciliation. | KEL schemas and lifecycle example. |
 | 7. Experimental Design | Define tasks, baselines, ablations, metrics, prompt controls, and artifact capture. | Reproducible benchmark package. |
 | 8. Results | Report validity, completeness, evidence traceability, refusal/gap quality, and feedback-processing results. | Tables with confidence intervals where repeated sampling is used. |
-| 9. Case Analysis | Explain Q1 successes and failures in mechanical terms for AI readers. | Side-by-side outputs and trace paths. |
+| 9. Planned Case-Example Section | Define the later example package and required artifacts without reporting current exploratory runs as results. | Frozen future examples and independent review. |
 | 10. Discussion | Interpret generalizability, governance tradeoffs, symbolic maintenance cost, and the limits of deterministic gating. | Cross-domain implications. |
 | 11. Limitations and Future Work | Bound current parser, dataset, evaluation size, expert review, FEA validation, and ML claims. | Explicit threat-to-validity table. |
 | 12. Conclusion | State what the architecture demonstrates and what remains unproven. | No new claims. |
@@ -169,3 +169,4 @@ Official checks: [arXiv submission guidelines](https://info.arxiv.org/help/submi
 ## Definition of Draft-Ready
 
 Paper 01B may enter full prose drafting when the contribution matrix, formal notation, related-work matrix, benchmark specification, R7/R8 evidence matrix, figure storyboard, and reproducibility package structure have been reviewed.
+

@@ -1,20 +1,121 @@
 # Manual Upload Map
 
-Updated: 2026-09-14
+Updated: 2026-09-15
 Repository: sreekx007/Slay-ILS-Designer-V1.0
 Target branch: main
 Latest GitHub review: 2026-09-13
 Phase 1 and 2 baseline: `20e1c07abe98bb42881d03e205fcec86b5275575`
 Phases 3 through 7 implementation: `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`
 Push-status record: `07f12357affa17d90458cbb2ee6311a62b780211`
-Pending manual uploads: 0.
+Pending manual uploads: latest local batch below.
 
-GitHub `main` contains KEL v0.1, Plotter Phases 1 through 7, and the KEL v0.2 release batch listed below. Generated `runs/` artifacts,
+GitHub `main` contains KEL v0.1, Plotter Phases 1 through 7, and prior paper/KEL batches. The latest local batch below is not yet reflected in this upload map as pushed. Generated `runs/` artifacts,
 the local virtual environment, Python caches, staging files, and `.git/` remain
 excluded.
 
 
 
+## KEL pending candidate implementation and paper result cleanup - local batch
+
+This batch implements the pending KEL candidate lessons and removes premature tested-example/result language from the Paper 01A and Paper 01B manuscript set. Upload all changed paths below, preserving deletes from `candidates/` and `pending/` where the records moved into `implemented/`.
+
+Validation completed locally:
+
+- `tools/kel/validate_kel_record.py` validated 32 KEL records.
+- `python -m unittest discover tools "test_*.py"` ran 32 tests successfully.
+- Paper scan found no remaining `KEL v0.2`, `Knowloop`, current-trial, Q1/Option, or repository-test-result wording in `papers/`.
+
+| Action | Repository path |
+| --- | --- |
+| Update | `knowledge/edpr/EDPR_APF_PARSER_PROMPT.md` |
+| Update | `knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md` |
+| Update | `knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_01_BRANCH_DIRECTION.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_02_VALVE_EASB_DEFAULT.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_04_PLOT_SCALE.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_05_EAST_CONNECTIONS_LABELLED.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_08_MUST_USE_REPO_PLOTTER.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_10_EASB_SHAPE_FROM_EDES.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q1_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q2_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q2_02_HEADER_VALVE_REQUIRES_GD_SB.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q2_03_CONNECTION_LABELS_LEGIBLE.json` |
+| Delete | `knowledge/kel/feedback_records/candidates/Q2_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json` |
+| Update | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/KEL_V0_2_GCR_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_01_BRANCH_DIRECTION.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_02_VALVE_EASB_DEFAULT.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_04_PLOT_SCALE.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Update | `papers/PAPER_01A_AI4D_KG_CASE_STUDY_OUTLINE.md` |
+| Update | `papers/PAPER_01A_CLAIM_EVIDENCE_REGISTER.md` |
+| Update | `papers/PAPER_01A_DRAFTING_ACTION_PLAN.md` |
+| Update | `papers/PAPER_01A_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/PAPER_01B_DRAFTING_ACTION_PLAN.md` |
+| Update | `papers/PAPER_01B_INDEPENDENT_FRAMEWORK_OUTLINE.md` |
+| Update | `papers/PAPER_01B_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/PAPER_01_FIGURES_TABLES_AND_EVIDENCE_PLAN.md` |
+| Update | `papers/README.md` |
+| Update | `papers/figures/figure_sources.json` |
+| Update | `papers/figures/generate_preliminary_figures.py` |
+| Update | `plotters/_plot_defaults.py` |
+| Update | `plotters/config/plot_style.yaml` |
+| Update | `plotters/ils_plotter.py` |
+| Update | `tools/_plot_cli.py` |
+| Update | `tools/design_rules_v02.py` |
+| Update | `tools/solve_problem.py` |
+| Update | `tools/test_plot_cli.py` |
+| Update | `tools/test_plot_labels.py` |
+| Update | `tools/test_plot_solver.py` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_01_BRANCH_DIRECTION.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_02_VALVE_EASB_DEFAULT.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_04_PLOT_SCALE.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_05_EAST_CONNECTIONS_LABELLED.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_10_EASB_SHAPE_FROM_EDES.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q1_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q2_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q2_02_HEADER_VALVE_REQUIRES_GD_SB.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q2_03_CONNECTION_LABELS_LEGIBLE.json` |
+| Add | `knowledge/kel/feedback_records/implemented/Q2_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/KEL_V0_2_GCR_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_01_BRANCH_DIRECTION.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_02_VALVE_EASB_DEFAULT.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_04_PLOT_SCALE.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q2_GCR_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q2_GCR_02_HEADER_VALVE_REQUIRES_GD_SB.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q2_GCR_03_CONNECTION_LABELS_LEGIBLE.json` |
+| Add | `knowledge/kel/graph_change_requests/implemented/Q2_GCR_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json` |
+| Add | `knowledge/kel/lifecycle_reports/KEL_PENDING_CANDIDATES_IMPLEMENTED_20260915.json` |
+| Update | `UPLOAD_MAP.md` |
+
+Notes:
+
+- Q1/Q2 feedback records now live under `knowledge/kel/feedback_records/implemented/`.
+- Pending graph-change requests now live under `knowledge/kel/graph_change_requests/implemented/` with implementation references.
+- Q2 generated implemented GCRs cover EDPR confirmation, compulsory header-valve `GD-SB`, legible connection labels, and default strain/moment screening.
+- The paper drafts now defer examples and evaluation results until the workflow is stable and controlled examples are independently reviewed.
 ## Paper 01A manuscript draft - confirmed
 
 The engineering-professional manuscript draft and its claim/evidence register are included. The draft explains the S-lay ILT ontology, engineering data management, the EDES/EDAS/EDIKB/EDPR architecture, LLM/tool responsibilities, the valve-layout feedback case, KEL governance, preliminary repository verification, limitations, and the path to a controlled evaluation.
@@ -471,4 +572,4 @@ Both manuscripts now use `GD-ST` and `GD-SB` consistently after an opening note 
 | Add | `knowledge/kel/feedback_records/candidates/Q2_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json` |
 | Update | `UPLOAD_MAP.md` |
 
-The four records preserve the user's wording and link it to one querier-reviewed experience record. Structured fields use the current manuscript notation `GD-SB` and `GD-ST`; the raw feedback retains `GS-SB` and `EA-ST`. They remain KEL candidates and do not modify authoritative EDAS, EDPR, plotter, or graph rules until grouping and expert review.
+These four Q2 records have now been promoted into the implemented feedback-record folder and converted into implemented graph-change requests in the latest local batch. The raw feedback still preserves the original `GS-SB` and `EA-ST` wording while structured fields use `GD-SB` and `GD-ST`.

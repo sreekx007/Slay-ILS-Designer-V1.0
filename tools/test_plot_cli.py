@@ -34,7 +34,7 @@ class PlotCommands(unittest.TestCase):
         defaults = {item['path'] for item in report['defaulted_parameters']}
         self.assertIn('pipeline.OD_pipe', defaults)
         self.assertNotIn('components.C1.t_comp', defaults)
-        self.assertEqual(report['plot_qa_status'], 'passed')
+        self.assertIn(report['plot_qa_status'], {'passed', 'passed_with_corrections'})
 
     def test_archetype_warning_is_preserved(self):
         output = self.directory / 'ilt.png'

@@ -6,11 +6,11 @@
 **Authors:** Sreekanth Manakkattil Sivaraman; Jagannatha Venkataramana Reddy
 **Draft date:** 14 September 2026
 
-> **Draft status.** This manuscript defines the architecture, formal objects, benchmark, and current implementation evidence. The comparative LLM experiment has not yet been run, so Section 8 reports repository verification rather than model-performance results. All figures are preliminary placeholders or generated sketches.
+> **Draft status.** This manuscript defines the architecture, formal objects, and planned evaluation. It is not submission-ready and does not yet present validated example results or comparative model-performance results. All figures are preliminary placeholders or generated sketches.
 
 ## Abstract
 
-Large language models can translate engineering language and coordinate software tools, but unconstrained generation does not preserve physical topology, evidence scope, or change authority. This paper presents a governed neuro-symbolic architecture for conceptual design of assembly-intensive engineering systems, instantiated in Slay-ILS-Designer for subsea inline structures installed by S-lay. The system separates a problem instance graph (EDPR), component graph (EDES), assembly graph (EDAS), and behavior/evidence graph (EDIKB). Language-model operations propose problem mappings, retrieval plans, explanations, and feedback decompositions. Deterministic transitions validate schemas, restrict topology, retrieve compatible evidence, construct layouts, calculate defined checks, produce plots and reports, and emit typed gaps when knowledge is insufficient. A Knowledge Evolution Loop (KEL) converts design experience into atomic feedback, semantic groups, graph-change requests, expert decisions, implementation plans, and reconciled lifecycle states. Two regression cases expose the value of the separation. A branch anchoring gate requires both L-horizontal and Z-vertical branch assemblies to terminate at an explicit `GD-ST` feature; connector orientation separately determines the admissible branch family. A request for a valve on a 12-inch header with moment capacity equal to 80% of pipeline capacity does not justify base geometry or connector selection because envelopes, roller clearance, load cases, allowable-moment basis, and combined-assembly evidence are missing. The current repository passes 24 KEL tests and 29 plotter/solver tests and reports no authoritative lifecycle conflicts. These results demonstrate executable governance and design gates, not comparative LLM superiority or structural adequacy. We specify a four-baseline evaluation, ablations, task families, and metrics for topology validity, requirement fidelity, parameter completeness, evidence precision, traceability, and calibrated gap behavior. The work positions engineering design assistance as a constrained transition system in which neural language capability operates over explicit symbolic state and persistent knowledge changes require expert authorization.
+Large language models can translate engineering language and coordinate software tools, but unconstrained generation does not preserve physical topology, evidence scope, or change authority. This paper presents a governed neuro-symbolic architecture for conceptual design of assembly-intensive engineering systems, instantiated in Slay-ILS-Designer for subsea inline structures installed by S-lay. The system separates a problem instance graph (EDPR), component graph (EDES), assembly graph (EDAS), and behavior/evidence graph (EDIKB). Language-model operations propose problem mappings, retrieval plans, explanations, and feedback decompositions. Deterministic transitions validate schemas, restrict topology, retrieve compatible evidence, construct layouts, calculate defined checks, produce plots and reports, and emit typed gaps when knowledge is insufficient. A Knowledge Evolution Loop (KEL) converts design experience into atomic feedback, semantic groups, graph-change requests, expert decisions, implementation plans, and reconciled lifecycle states. The manuscript specifies the symbolic state, transition boundaries, human-review points, planned baselines, task families, ablations, and metrics for topology validity, requirement fidelity, parameter completeness, evidence precision, traceability, plot observability, and calibrated gap behavior. It does not yet report validated example cases, comparative LLM performance, or structural adequacy. The work positions engineering design assistance as a constrained transition system in which neural language capability operates over explicit symbolic state and persistent knowledge changes require expert authorization.
 
 **Keywords:** neuro-symbolic AI; knowledge graph; engineering design; large language model; tool use; human-in-the-loop; provenance; calibrated refusal; subsea pipeline; structural assembly
 
@@ -32,7 +32,7 @@ The research questions are:
 4. How should missing evidence and missing representation be exposed as system outcomes?
 5. Which parts of the architecture can transfer to other assembly-intensive domains?
 
-The paper contributes: (i) a four-layer engineering knowledge model; (ii) a tool-backed reasoning pipeline with typed gap semantics; (iii) a governed feedback lifecycle; (iv) domain-grounded regression cases; and (v) a reproducible comparative evaluation design. Current results are limited to implementation verification. Controlled model comparisons remain planned work.
+The paper contributes: (i) a four-layer engineering knowledge model; (ii) a tool-backed reasoning pipeline with typed gap semantics; (iii) a governed feedback lifecycle; and (iv) a reproducible comparative evaluation design. Controlled examples and model comparisons remain planned work.
 
 ## 2. Domain and Ontology
 
@@ -272,48 +272,28 @@ Ablations should remove EDAS topology gates, EDIKB applicability checks, plot/re
 
 For binary metrics, report counts, proportions, and confidence intervals. For repeated generations, treat prompt instances as the primary unit and account for within-task repetitions. Use at least two qualified reviewers for engineering-validity labels and report agreement before adjudication. Keep language quality separate from technical validity. Predefine how a partial clarification, mixed-validity candidate, and correct refusal are scored.
 
-## 8. Current Implementation Evidence
+## 8. Pre-Evaluation Implementation Scope
 
-The repository was tested on 14 September 2026 at implementation baseline 31a57d378a70f4aa8f232ed8a50130f85b3bfbea. Twenty-four KEL tests and twenty-nine plotter/solver tests passed. The KEL status tool reported no invalid JSON and no authoritative lifecycle conflicts.
+The current repository should be treated as a developing implementation of the proposed architecture, not as research evidence for improved design performance. Its schemas, prompts, validators, plotting tools, and KEL records define the intended workflow surface. They do not yet establish that the full workflow produces consistently acceptable engineering concepts.
 
-The tests cover feedback decomposition and grouping, lifecycle reconciliation, expert-review and implementation-plan policies, L- and Z-branch anchoring to GD-ST, connector orientation, valve-protection blockers, moment utilization, canonical GD-SB use, two-valve representation gaps, component rendering, solver-to-layout mapping, export checks, label correction, and report behavior.
+Before the paper reports results, the implementation must demonstrate stable behavior across a frozen example set. Each run should preserve the confirmed EDPR understanding, retrieval context, solution or blocker, layout JSON where applicable, plot/report output, KEL records when feedback occurs, and reviewer decisions. Repository tests may be cited later as software-verification support, but they should not be presented as design results.
 
-These results establish executable invariants for the tested cases. They are not results for B0-B3 and do not support a claim of improved design quality. Table 1 therefore reports implementation status rather than comparative performance.
-
-| Capability | Implemented evidence | Remaining research evidence |
+| Capability | Current manuscript treatment | Required evidence before claims |
 |---|---|---|
-| Typed problem representation | EDPR schemas and validated examples | Parser accuracy across benchmark |
-| Component/assembly separation | EDES/EDAS schemas and validators | Coverage and reviewer agreement |
-| Evidence provenance | R7/R8 source-family mapping | Row-level audit and precision metric |
-| Fail-closed gates | Regression tests and blocker codes | Gap recall and false-positive rate |
-| Plot observability | SVG/PNG reports and QA tests | Reviewer utility study |
-| KEL governance | Schemas, tools, lifecycle status | Feedback-retention evaluation |
+| Typed problem representation | Architectural object | Parser accuracy and confirmed EDPR records across benchmark |
+| Component/assembly separation | Formal model | Reviewer agreement that emitted layouts preserve topology and associations |
+| Evidence provenance | Required contract | Claim-level R7/R8 and repository evidence audit |
+| Fail-closed gates | Workflow requirement | Gap recall and false-positive rate on frozen tasks |
+| Plot observability | Required artifact | Reviewer utility and readability assessment |
+| KEL governance | Change-control mechanism | Feedback-retention and graph-change trace evaluation |
 | Comparative architecture claim | Experimental specification | B0-B3 and ablation results |
+## 9. Planned Case-Example Section
 
-## 9. Case Analysis
+A later version of this paper should include a compact case-example section after the workflow is stable. The section should not be a collection of conversational trials. It should use preselected tasks, frozen prompts, fixed tool versions, preserved artifacts, and independent review.
 
-### 9.1 Branch anchoring and connector orientation
+The example set should include at least one successful standard-layout emission, one branch layout that exercises explicit `GD-B` to `GD-ST` anchoring, one header-component protection case requiring `GD-SB`, and one representation-gap case where the correct output is to stop. Each example should report the confirmed EDPR understanding, symbolic state transitions, retrieved evidence, deterministic gate results, plot/report artifact, and reviewer decision.
 
-A regression trial first revealed the problem for a Z branch with a vertical connector. The phrase "vertical connector" was vulnerable to conflation with branch direction or drawing orientation, so the revised EDPR now gives connector orientation its own field. The deterministic selector restricts vertical-connector candidates to `ILT-Z-*` and checks that emitted `GD-B` components use variant Z.
-
-The missing-connection failure is broader than the triggering case. An L branch with a horizontal terminal can also appear to meet a frame without a declared load-transfer relation. The generalized invariant requires every `GD-B` branch to include `GD-ST` and an explicit terminal association. L terminals are horizontal and Z terminals are vertical; the selected layout anchor defines the compatible `GD-ST` feature, including post-specific features where applicable. The branch-family check and the anchoring check are therefore separate deterministic gates.
-
-### 9.2 Valve capacity and protection
-
-The request for a 12-inch header, inline valve, and valve moment capacity equal to 80% of pipeline capacity appears sufficiently specific to invite a layout. It is not. The ratio defines a possible acceptance constraint:
-
-    U_M = M_valve,max / (0.80 M_pipeline,allow) <= 1
-
-Neither demand nor the allowable-moment basis is given. The request also lacks valve, actuator, flange, thick-section and roller envelopes; required clearance; load cases; GD-SB dimensions; connector system; spacing basis; and combined valve/base behavior evidence.
-
-An early plausible output introduced a deep, long base and P-S supports without providing these bases, did not ask whether a top structure was required, and did not emit its EDPR interpretation. The revised system returns a clarification or evidence gap. The relevant research point is not that one geometry was replaced by another. It is that output completeness is defined over requirements, parameters, relations, and evidence rather than visual plausibility.
-
-> **Figure 8 placeholder - case error trace.** Compare the initial apparent completion with the governed output. Annotate invented objective, missing dimensions, unsupported connector choice, unasked top-frame decision, missing moment inputs, and the resulting typed blockers.
-
-### 9.3 Two-branch-valve representation gap
-
-The current assembly language cannot safely infer whether "two branch valves" means two instances on one branch or one instance on each of two branches. It requires two IDs and parent-branch associations after an expert accepts the topology. The system emits TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED. This case separates missing world knowledge from missing representational capacity and offers a direct test for calibrated gap behavior.
-
+Until those examples are completed and reviewed, this paper should discuss the gates as architectural requirements rather than as demonstrated results.
 ## 10. Discussion
 
 The architecture makes generation conditional on explicit state. This has a cost: ontologies, schemas, validators, and evidence mappings require maintenance. The benefit is that failure becomes observable. A missing parameter is a field, an incompatible topology is a validation result, and an evidence mismatch is a traceable predicate rather than an intuition hidden in generated prose.
@@ -334,7 +314,7 @@ KEL also creates a path for active evidence acquisition. Repeated EvidenceGap ou
 
 **Evidence validity.** R7 and R8 contain bounded models and relative trends. R8 omits thick anchoring components and models studied connectors at pipe centerline. Quantitative claims need case-level provenance and cannot be treated as project design values.
 
-**Implementation validity.** Passing tests proves only the encoded behavior. It does not establish that the encoded rule is a complete engineering requirement.
+**Implementation validity.** Repository checks can support software verification, but they do not establish that the encoded rule is a complete engineering requirement or that generated concepts are acceptable.
 
 **Human governance.** KEL records expert decisions but cannot guarantee reviewer competence, independence, or organizational authority.
 
@@ -350,7 +330,7 @@ The repository demonstrates that the architecture and selected invariants are ex
 
 ## Data and Software Availability
 
-The repository is available at https://github.com/sreekx007/Slay-ILS-Designer-V1.0. Source-paper PDFs are not redistributed. The repository stores bibliographic records, checksums, source-family mappings, schemas, tools, tests, and manuscript artifacts. [AUTHOR REVIEW: create a release tag and archival DOI before submission.]
+The repository is available at https://github.com/sreekx007/Slay-ILS-Designer-V1.0. Source-paper PDFs are not redistributed. The repository stores bibliographic records, checksums, source-family mappings, schemas, tools, and manuscript artifacts. [AUTHOR REVIEW: create a release tag and archival DOI before submission.]
 
 ## AI-Assistance Statement
 

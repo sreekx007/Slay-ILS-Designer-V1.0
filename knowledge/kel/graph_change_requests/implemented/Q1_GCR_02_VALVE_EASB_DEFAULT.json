@@ -1,7 +1,7 @@
 {
   "schema": "kel-graph-change-request/0.1",
   "change_request_id": "kel:change:q1_ilt_layout:valve_easb_default",
-  "status": "pending",
+  "status": "implemented",
   "created_utc": "2026-09-13T09:20:15Z",
   "linked_experience_id": "kel:experience:edpr:q1_ilt_header_valve_branch_vertical_connector_001:20260913083159",
   "linked_feedback_id": "kel:feedback:q1_ilt_layout:valve_easb_default",
@@ -11,5 +11,13 @@
   "proposed_change": "Add a reusable assembly rule that inline valves needing roller/contact-load protection should trigger EA-SB protection or an explicit unresolved design assumption.",
   "evidence_requirement": "Provide an EDAS layout example, successful build_ils validation, declared associations, and plotter output demonstrating the rule.",
   "priority": "high",
-  "expert_review_ref": null
+  "expert_review_ref": {
+    "id": "kel:review:session:20260915_pending_candidate_implementation",
+    "repo_path": null
+  },
+  "implementation_ref": {
+    "target": "tools/design_rules_v02.py; tools/solution_to_layout.py; plotters/ils_builder.py; plotters/ils_plotter.py; tools/_plot_cli.py; knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "repo_path": "tools/design_rules_v02.py",
+    "notes": "Implemented as deterministic EDPR confirmation, branch anchoring, valve/GD-SB, plot/report exposure, label legibility, and typed-gap gates."
+  }
 }

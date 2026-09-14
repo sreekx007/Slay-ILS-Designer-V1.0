@@ -170,6 +170,7 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
             "Use EDAS to confirm topology and interface validity before selecting a final concept.",
             "Use EDES to confirm component-specific constraints such as roller contact, support conditions, and installation envelope.",
             "If feature interactions are present, combined evidence overrides simple addition of isolated component effects.",
+            "Every concept must consider reduction of high strain and bending moment; formal optimization requires an explicit EDPR objective and compatible evidence.",
             "If no direct numeric evidence exists, mark the comparison as a future FEA/ML study candidate.",
         ],
         "residual_risk": [

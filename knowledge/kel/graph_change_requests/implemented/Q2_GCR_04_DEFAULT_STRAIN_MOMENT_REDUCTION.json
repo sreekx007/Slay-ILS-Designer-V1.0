@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q2_option_layout:default_strain_moment_reduction",
+  "status": "implemented",
+  "created_utc": "2026-09-14T16:40:31Z",
+  "linked_experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "linked_feedback_id": "kel:feedback:q2_option_layout:default_strain_moment_reduction",
+  "target_layer": "EDPR",
+  "change_type": "new_design_guidance",
+  "problem_observed": "The design answer did not consider reduction of high strains and bending moments by default.",
+  "proposed_change": "Require every concept to consider strain/moment reduction as a screening duty while keeping formal optimization tied to explicit objectives and evidence.",
+  "evidence_requirement": "Focused regression tests and repository implementation demonstrating the gate or report behavior.",
+  "priority": "high",
+  "expert_review_ref": {
+    "id": "kel:review:session:20260915_pending_candidate_implementation",
+    "repo_path": null
+  },
+  "implementation_ref": {
+    "target": "tools/design_rules_v02.py; tools/solve_problem.py; knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "repo_path": "tools/design_rules_v02.py",
+    "notes": "Implemented from Q2 candidate feedback in this update."
+  }
+}

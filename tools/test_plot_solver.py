@@ -54,6 +54,28 @@ class SolverPlotTests(unittest.TestCase):
                 schema = json.loads((ROOT / "knowledge/knowloop/KNOWLOOP_FEEDBACK_SCHEMA.json").read_text(encoding="utf-8"))
                 jsonschema.validate(candidate, schema)
 
+
+    def test_kel_confirmation_and_header_valve_gates(self):
+        from design_rules_v02 import extract_design_intent, workflow_blockers, validate_layout_against_intent
+        intent = extract_design_intent({"sourceRequest": {"rawText": "Provide an ILS layout with a valve on the header"}})
+        codes = {item["code"] for item in workflow_blockers(intent)}
+        self.assertIn("EDPR_CONFIRMATION_REQUIRED", codes)
+        self.assertIn("VALVE_PROTECTION_INPUTS_MISSING", codes)
+        gaps = validate_layout_against_intent({
+            "components": [{"id": "vlv1", "code": "GD-VLV", "centre_x": 0.0}],
+            "associations": []
+        }, intent)
+        self.assertEqual(gaps[0]["code"], "HEADER_VALVE_REQUIRES_GD_SB")
+
+    def test_confirmed_edpr_clears_confirmation_blocker(self):
+        from design_rules_v02 import extract_design_intent, workflow_blockers
+        intent = extract_design_intent({
+            "sourceRequest": {"rawText": "Provide an ILT layout with minimum strain"},
+            "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}}
+        })
+        self.assertNotIn("EDPR_CONFIRMATION_REQUIRED", {item["code"] for item in workflow_blockers(intent)})
+        self.assertTrue(intent["objectives"]["strain_optimization_requested"])
+
     def test_edpr_pipeline_markdown_with_plot(self):
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run([sys.executable, str(ROOT / "tools/run_edpr_pipeline.py"),

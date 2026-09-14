@@ -1182,17 +1182,15 @@ Recommended next artifacts:
 | `EDPR_example_GDSH_GDTP.json` | Test the parser on a nested C1 assembly problem |
 | `EDPR_METASCHEMA_v0_1.json` | Validate parser outputs after examples stabilize |
 
-## KEL v0.2 Design-Intent Gates
+## KEL Design-Intent Gates
 
+- Before design generation, write `designContext.workflowIntent.edprConfirmation` with the emitted problem understanding and a `status`. Use `required_before_design` until the user confirms the EDPR understanding; layout emission is blocked until it becomes `confirmed`.
 - Write connector direction to `designContext.workflowIntent.connectorOrientation`.
   Treat connector direction separately from branch routing, branch take-off
   direction, and drawing orientation. `vertical` requires GD-B Z and only
   `ILT-Z-*` standard-layout candidates.
-- For a valve protection request, populate `workflowIntent.valveProtection` and
-  make unknown envelope, roller/contact, clearance, top-frame, connector-spacing,
-  load-case, acceptance, and combined-moment-evidence inputs blocking questions.
-  A capacity ratio is a constraint; it does not imply support topology or a
-  strain-minimization objective.
+- For any header valve or other header component unable to bear roller contact, populate `workflowIntent.valveProtection` and make GD-SB protection compulsory unless the workflow stops for missing information. Unknown envelope, roller/contact, clearance, connector-spacing, load-case, acceptance, and combined-moment-evidence inputs are blocking questions. A capacity ratio is a constraint; it does not imply support topology or formal strain optimization by itself.
+- For every layout concept, consider reduction of high strain and bending moment by default. Treat this as an engineering screening duty; formal optimization still requires an explicit objective and applicable evidence.
 - For two branch valves, populate `workflowIntent.twoBranchValves`. Unless expert
   review fixed the topology and supplied two distinct branch-owned valve
   instances, emit a representation gap and do not request a plot.

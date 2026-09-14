@@ -354,7 +354,7 @@ if __name__ == "__main__":
         {"id":"P01-SC1","file":"preliminary/shared_component_ontology_primer.svg","type":"generated_vector","status":"preliminary","source":"EDES component definitions and plotter component catalog"},
         {"id":"P01-S2","file":"preliminary/shared_ilt_abstraction_ladder.svg","type":"generated_vector","status":"preliminary","source":"R7/R8 ontology mapping and repository crosswalk"},
         {"id":"P01B-F2","file":"preliminary/paper01b_governed_architecture.svg","type":"generated_vector","status":"preliminary","source":"EDPR/EDES/EDAS/EDIKB/KEL implementation"},
-        {"id":"P01-S6","file":"preliminary/shared_kel_lifecycle.svg","type":"generated_vector","status":"preliminary","source":"KEL v0.2 schemas, tools, and lifecycle documentation"},
+        {"id":"P01-S6","file":"preliminary/shared_kel_lifecycle.svg","type":"generated_vector","status":"preliminary","source":"KEL schemas, tools, and lifecycle documentation"},
         {"id":"P01-S1","file":"preliminary/shared_repository_ilt_schematic.svg","type":"ils_plotter_output","status":"preliminary_warning","source":"standard_ils_layouts.json archetype ILS-ILT","generator":"generate_repository_schematic.py","report":"preliminary/shared_repository_ilt_schematic.svg.report.json"},
     ]
     (ROOT / "figure_sources.json").write_text(json.dumps({"schema":"paper-figure-sources/0.1","figures":records},indent=2)+"\n",encoding="utf-8")

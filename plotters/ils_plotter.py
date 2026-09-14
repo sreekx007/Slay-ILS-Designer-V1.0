@@ -352,6 +352,49 @@ def _exclusion_note(ax, exclusions):
                 va='top', ha='left', fontsize=STYLE['fonts']['exclusions'], color=STYLE['colors']['WARNING'])
 
 
+
+def _draw_connection_labels(ax, ils):
+    """Annotate declared non-weld connections with their connector type."""
+    assocs = getattr(ils, 'definition', {}).get('associations', []) or []
+    ids = getattr(ils, 'ids', [])
+    codes = getattr(ils, 'codes', [])
+    code_by_id = dict(zip(ids, codes))
+    labels = []
+    used = []
+    for index, assoc in enumerate(assocs):
+        if assoc.get('type') != 'Connection':
+            continue
+        ctype = assoc.get('connection') or '--'
+        if ctype == 'W':
+            continue
+        left = assoc.get('from') or {}
+        right = assoc.get('to') or {}
+        a_id, b_id = left.get('component'), right.get('component')
+        if not a_id or not b_id:
+            continue
+        a_xy = ils.feature_xy(a_id, left.get('feature'))
+        b_xy = ils.feature_xy(b_id, right.get('feature'))
+        if a_xy is None or b_xy is None:
+            continue
+        x = (a_xy[0] + b_xy[0]) / 2.0
+        y = (a_xy[1] + b_xy[1]) / 2.0
+        while any(abs(x - ux) < 0.16 and abs(y - uy) < 0.12 for ux, uy in used):
+            y -= 0.16
+        used.append((x, y))
+        label = f"{ctype}: {a_id}.{left.get('feature')} -> {b_id}.{right.get('feature')}"
+        short = f"{ctype} {code_by_id.get(a_id, a_id)}->{code_by_id.get(b_id, b_id)}"
+        ax.plot([a_xy[0], b_xy[0]], [a_xy[1], b_xy[1]], color='0.28', lw=0.8,
+                ls=(0, (2, 2)), zorder=11)
+        ax.annotate(short, xy=(x, y), textcoords='offset points', xytext=(8, 8),
+                    fontsize=STYLE['fonts']['connection_label'], ha='left', va='bottom',
+                    color='0.15', weight='bold', zorder=16,
+                    bbox=dict(boxstyle='round,pad=0.20', fc='white', ec='0.35',
+                              lw=STYLE['line_widths']['stroke_0_9'], alpha=0.94),
+                    arrowprops={'arrowstyle': '-', 'color': '0.35', 'lw': 0.7})
+        labels.append({'index': index, 'label': label, 'text': short, 'xy': [x, y]})
+    if labels:
+        setattr(ax.figure, '_connection_labels', labels)
+
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
@@ -447,6 +490,9 @@ def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['ass
         cp.draw_branch_support(ax, comp, label=True)
         cp.draw_junctions(ax, comp, label=first)
         first = False
+
+    # --- declared connection labels -------------------------------------
+    _draw_connection_labels(ax, ils)
 
     # --- the assembly-level envelope -----------------------------------
     _, _, _, _paths, _, ambiguous, deepest = draw_contact_envelope(

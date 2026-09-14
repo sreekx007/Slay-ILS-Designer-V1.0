@@ -122,6 +122,12 @@ def execute(args, make_spec, component=False):
             qa = check_plot(fig, ils.components, output)
             report['plot_qa_status'] = qa['plot_qa_status']
             report['layout_qa'] = getattr(fig, '_layout_qa', {})
+            report['connection_labels'] = getattr(fig, '_connection_labels', [])
+            min_connection_font = getattr(__import__('plot_settings'), 'STYLE')['fonts'].get('connection_label', 0)
+            label_check = {'id': 'connection_label_legibility', 'status': 'passed' if min_connection_font >= 9 else 'failed', 'minimum_font_pt': min_connection_font}
+            report['checks'].append(label_check)
+            if label_check['status'] == 'failed':
+                report['errors'].append('Connection labels must be at least 9 pt for review plots')
             for key in ('checks', 'errors', 'warnings', 'corrections'):
                 report[key].extend(qa[key])
         finally:

@@ -82,7 +82,12 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
 
     lower = raw.lower()
     objective_text = " ".join(str(v) for v in _walk(edpr.get("objectiveFunction", [])) if isinstance(v, str)).lower()
-    strain_optimization = bool(re.search(r"(?:minimi[sz]e|optim(?:i[sz]e|um)).{0,24}strain|strain.{0,24}(?:minimi[sz]e|optim)", lower + " " + objective_text))
+    strain_optimization = bool(re.search(r"(?:minimi[sz]e|minimum|lowest|reduc(?:e|tion)|optim(?:i[sz]e|um)).{0,24}strain|strain.{0,24}(?:minimi[sz]e|minimum|lowest|reduc(?:e|tion)|optim)", lower + " " + objective_text))
+    strain_moment_terms = bool(re.search(r"\b(strain|moment|bending|curvature)\b", lower + " " + objective_text))
+    confirmation = workflow.get("edprConfirmation", {})
+    if not isinstance(confirmation, dict):
+        confirmation = {}
+    confirmation_status = str(confirmation.get("status") or "required_before_design")
 
     valve_cfg = workflow.get("valveProtection", {})
     if not isinstance(valve_cfg, dict):
@@ -90,6 +95,7 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
     valve_present = bool(re.search(r"\bvalve\b", lower)) or bool(valve_cfg)
     capacity = _capacity_ratio(raw, valve_cfg.get("capacityRatio"))
     protection_requested = bool(valve_cfg) or bool(re.search(r"\b(protect|protection|support|base structure|ea-sb|gd-sb)\b", lower)) or capacity is not None
+    header_valve_requires_base = valve_present
 
     required = {
         "roller_passage_in_scope": valve_cfg.get("rollerPassageInScope"),
@@ -132,11 +138,11 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
     evidence_fields = {"connector_evidence_refs", "moment_evidence"}
     clarification_missing = [key for key in missing if key not in evidence_fields]
     evidence_missing = [key for key in missing if key in evidence_fields]
-    if valve_present and protection_requested and clarification_missing:
+    if header_valve_requires_base and clarification_missing:
         valve_status = "needs_clarification"
-    elif valve_present and protection_requested and evidence_missing:
+    elif header_valve_requires_base and evidence_missing:
         valve_status = "needs_evidence"
-    elif valve_present and protection_requested:
+    elif header_valve_requires_base:
         valve_status = "ready"
     else:
         valve_status = "not_applicable"
@@ -161,18 +167,28 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
             "branch_routing_is_separate": True,
             "drawing_orientation_is_separate": True,
         },
-        "objectives": {"strain_optimization_requested": strain_optimization},
+        "edpr_confirmation": {
+            "status": confirmation_status,
+            "confirmed": confirmation_status in {"confirmed", "reviewed_confirmed", "user_confirmed"},
+            "rule": "Emit EDPR/problem understanding for user review before concept generation or layout emission.",
+        },
+        "objectives": {
+            "strain_optimization_requested": strain_optimization,
+            "strain_moment_reduction_default": not strain_optimization,
+            "strain_moment_terms_present": strain_moment_terms,
+            "rule": "Every concept must at least consider reduction of high strain and bending moment; formal optimization requires an explicit objective and compatible evidence.",
+        },
         "valve_protection": {
             "valve_present": valve_present,
-            "gate_required": bool(valve_present and protection_requested),
+            "gate_required": bool(header_valve_requires_base),
             "capacity_ratio": capacity,
             "inputs": required,
-            "missing_inputs": missing if valve_present and protection_requested else [],
-            "missing_clarifications": clarification_missing if valve_present and protection_requested else [],
-            "missing_evidence": evidence_missing if valve_present and protection_requested else [],
+            "missing_inputs": missing if header_valve_requires_base else [],
+            "missing_clarifications": clarification_missing if header_valve_requires_base else [],
+            "missing_evidence": evidence_missing if header_valve_requires_base else [],
             "status": valve_status,
             "moment_check": moment_check,
-            "rule": "An 80% valve capacity is a constraint; it does not select support topology or create a strain objective.",
+            "rule": "A header valve or other header component that cannot bear roller contact requires GD-SB protection; an 80% valve capacity is a constraint, not a support selection.",
         },
         "two_branch_valves": {
             "requested": two_requested,
@@ -186,6 +202,13 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
 
 def workflow_blockers(intent: dict[str, Any]) -> list[dict[str, Any]]:
     blockers: list[dict[str, Any]] = []
+    confirmation = intent.get("edpr_confirmation", {})
+    if confirmation and not confirmation.get("confirmed"):
+        blockers.append({
+            "code": "EDPR_CONFIRMATION_REQUIRED",
+            "status": "needs_user_confirmation",
+            "required_action": "Emit EDPR/problem understanding and wait for user confirmation before design generation or layout emission.",
+        })
     valve = intent.get("valve_protection", {})
     if valve.get("status") == "needs_clarification":
         blockers.append({
@@ -282,7 +305,7 @@ def validate_layout_against_intent(spec: dict[str, Any], intent: dict[str, Any])
     if valve.get("gate_required"):
         bases = [c for c in spec.get("components", []) if c.get("code") == "GD-SB"]
         if not bases:
-            gaps.append({"code": "EA_SB_REQUIRES_GD_SB", "message": "Valve protection selected as EA-SB must contain canonical GD-SB geometry; a generic frame is insufficient."})
+            gaps.append({"code": "HEADER_VALVE_REQUIRES_GD_SB", "message": "A header GD-VLV or other non-roller-contact header component requires canonical GD-SB geometry; a generic frame or unsupported valve-only layout is insufficient."})
     return gaps
 
 
@@ -290,4 +313,6 @@ def valve_moment_utilization(maximum_valve_moment: float, capacity_ratio: float,
     if maximum_valve_moment < 0 or not 0 < capacity_ratio <= 1 or pipeline_allowable_moment <= 0:
         raise ValueError("Moment must be non-negative, capacity ratio in (0, 1], and pipeline allowable moment positive")
     return maximum_valve_moment / (capacity_ratio * pipeline_allowable_moment)
+
+
 

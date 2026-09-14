@@ -1,4 +1,4 @@
-# Knowledge-Graph-Governed AI4D for Industrial Structural Design: An S-Lay Inline Structure Case Study
+# Knowledge-Graph-Governed AI4D for Industrial Structural Design: An S-Lay Inline Structure Framework
 
 **Working manuscript:** Paper 01A, Draft v0.1
 **Planned venue:** engrXiv
@@ -6,11 +6,11 @@
 **Corresponding author:** [TO BE COMPLETED]
 **Draft date:** 14 September 2026
 
-> **Draft status.** This manuscript is complete enough for technical and narrative review, but it is not yet submission-ready. Figures are represented by production notes, quantitative EDIKB statements still require claim-level checks, and the comparative evaluation in Section 7 remains to be executed. Bracketed [AUTHOR REVIEW] notes identify required decisions or evidence.
+> **Draft status.** This manuscript is a framework draft for technical and narrative review. It is not submission-ready and does not yet present validated example results. Figures are represented by production notes or preliminary sketches, quantitative EDIKB statements still require claim-level checks, and the controlled example section remains to be produced after the workflow is verified through further trials. Bracketed [AUTHOR REVIEW] notes identify required decisions or evidence.
 
 ## Abstract
 
-Engineering organizations accumulate valuable design knowledge in drawings, calculations, finite element analysis reports, specifications, spreadsheets, review comments, and expert experience. Much of that knowledge is difficult to reuse because documents describe similar objects with different terms, omit the assumptions needed to interpret a result, or record a conclusion without a machine-readable link to its geometry and load case. This paper presents Slay-ILS-Designer, an ontology-grounded artificial intelligence for design (AI4D) case study for the conceptual design of subsea inline structures installed with an S-lay pipeline. The framework treats engineering AI first as a data- and knowledge-management problem. It separates component definitions, assembly rules, behavior evidence, and the current design problem into four governed layers: the Engineering Design Equipment Specification (EDES), Engineering Design Assembly Specification (EDAS), Engineering Design Intuition Knowledge Base (EDIKB), and Engineering Design Problem Representation (EDPR). A large language model interprets requests and explains results, while deterministic validators, retrieval tools, layout builders, plotting tools, and design gates control operations that require repeatability. Human feedback enters a Knowledge Evolution Loop (KEL), where it is decomposed, grouped, reviewed, implemented, and retained with provenance rather than being written directly into approved knowledge. A worked valve-layout request shows why a plausible drawing is insufficient: a 12-inch header and a valve moment capacity equal to 80% of pipeline capacity do not establish the valve envelope, roller clearance, support geometry, connector spacing, load cases, or combined valve-and-base-structure behavior needed to select a defensible arrangement. The revised workflow therefore exposes missing inputs and stops layout emission where evidence or topology is inadequate. Repository verification demonstrates executable schemas, plotting and validation coverage, and a conflict-free KEL lifecycle; it does not establish design-code compliance or comparative superiority over other AI methods. The case study provides practicing engineers with a route from familiar engineering records to traceable, tool-assisted conceptual design, while preserving project-specific analysis and professional judgment as explicit gates.
+Engineering organizations accumulate valuable design knowledge in drawings, calculations, finite element analysis reports, specifications, spreadsheets, review comments, and expert experience. Much of that knowledge is difficult to reuse because documents describe similar objects with different terms, omit the assumptions needed to interpret a result, or record a conclusion without a machine-readable link to its geometry and load case. This paper presents Slay-ILS-Designer, an ontology-grounded artificial intelligence for design (AI4D) framework for conceptual reasoning about subsea inline structures installed with an S-lay pipeline. The framework treats engineering AI first as a data- and knowledge-management problem. It separates component definitions, assembly rules, behavior evidence, and the current design problem into four governed layers: the Engineering Design Equipment Specification (EDES), Engineering Design Assembly Specification (EDAS), Engineering Design Intuition Knowledge Base (EDIKB), and Engineering Design Problem Representation (EDPR). A large language model interprets requests and explains results, while deterministic validators, retrieval tools, layout builders, plotting tools, and design gates control operations that require repeatability. Human feedback enters a Knowledge Evolution Loop (KEL), where it is decomposed, grouped, reviewed, implemented, and retained with provenance rather than being written directly into approved knowledge. The manuscript describes the ontology, data architecture, workflow controls, and adoption path for practicing engineers. It does not yet present validated design examples, comparative evaluation results, design-code compliance, or evidence that the workflow improves design quality. Those claims are reserved for a later controlled example and review section after the workflow has been stabilized.
 
 **Keywords:** engineering knowledge management; artificial intelligence for design; ontology; knowledge graph; large language model; subsea inline structure; S-lay installation; human-in-the-loop engineering; conceptual design; design provenance
 
@@ -51,7 +51,7 @@ The paper asks four questions:
 3. Which tasks suit a large language model, and which require deterministic tools or engineering review?
 4. How can design feedback improve the knowledge system without turning an unreviewed comment into approved knowledge?
 
-The contribution is an applied framework and implementation case study. It connects a physical S-lay ILT ontology, derived from two preceding domain studies [7], [8], to a layered data architecture; explains how a natural-language request becomes an explicit problem record; shows how repository-backed plotting and validation constrain output; and demonstrates how feedback passes through a governed knowledge-evolution lifecycle. It does not claim that the software sizes a project design, replaces FEA, demonstrates code compliance, or learns validated rules autonomously.
+The contribution is an applied framework draft. It connects a physical S-lay ILT ontology, derived from two preceding domain studies [7], [8], to a layered data architecture; explains how a natural-language request becomes an explicit problem record; shows how repository-backed plotting and validation constrain output; and demonstrates how feedback passes through a governed knowledge-evolution lifecycle. It does not claim that the software sizes a project design, replaces FEA, demonstrates code compliance, or learns validated rules autonomously.
 
 ## 2. S-Lay Inline Structures and Their Ontology
 
@@ -324,156 +324,32 @@ The engineer remains responsible for interpreting requirements, approving assump
 | Change governed knowledge | Draft request | Validate lifecycle | Review and authorize |
 | Verify final design | Assist documentation | Run approved analyses | Responsible authority |
 
-## 6. Case Study: A 12-Inch Header With an Inline Valve
+## 6. Workflow Requirements Before Reported Examples
 
-### 6.1 Source request
+This manuscript will not present the current exploratory outputs as research results. The workflow is still being corrected, and example cases should only be included after they pass a stable review protocol. Until then, the paper records the requirements that any future example must satisfy.
 
-The worked request was:
+### 6.1 Problem-understanding gate
 
-> "An ILS layout is required. Header line is 12inch and it has a Valve. It has a bending moment capacity of 80% of the pipeline. Design a suitable layout."
+Before concept generation, the system must emit the EDPR interpretation for user review. The emitted understanding should identify the requested artifact, component vocabulary, known inputs, unknown inputs, constraints, objectives, assumptions, and planned evidence retrieval. The design step should begin only after that understanding is confirmed or corrected.
 
-The explicit information is limited but meaningful:
+### 6.2 Assembly and protection gates
 
-- an inline-structure layout is required;
-- the header nominal size is 12 inches;
-- the header contains a valve;
-- the valve bending-moment capacity is stated as 80% of the pipeline capacity.
+A generated layout must satisfy EDAS before it is presented as a candidate concept. Every branch assembly (`GD-B`) must be anchored to a top frame (`GD-ST`) through an explicit association. When a header valve or another header component cannot bear roller contact, a base structure (`GD-SB`) is compulsory unless the workflow stops and reports missing information. The source studies used slightly different external-structure notation; this paper uses `GD-ST` and `GD-SB` consistently.
 
-The request does not explicitly ask for strain minimization. It does not state that a base structure or top frame is required. It also does not define the pipeline wall thickness, valve and actuator envelope, flange dimensions, local thick-section geometry, valve mass, roller geometry, required clearance, installation load cases, allowable pipeline moment, connection system, connector spacing basis, or project acceptance criteria.
+### 6.3 Evidence and objective gates
 
-### 6.2 Why the first plausible concept was inadequate
+The workflow should consider reduction of high strain and bending moment by default, while avoiding unsupported claims of formal optimization. Any ranking or selection based on strain, curvature, moment, connector spacing, or support type must identify applicable EDIKB evidence and its limits. If combined component behavior is missing, the correct output is a gap or future analysis requirement rather than a completed design.
 
-An early conversational response produced a schematic with a base structure and P-S-type supports. Human review identified that the output did not state the base shape and length, did not define the two base-to-pipeline connection types, and did not emit its interpretation of the problem in EDPR terms. Further review found five deeper issues:
+### 6.4 Plot and report gates
 
-1. The response had not established strain optimization as an objective, yet it presented the geometry as if optimized.
-2. The base depth exceeded the valve-protection need even though [7] indicates that increased vertical offset can increase strain within its studied Type B1 domain.
-3. The base length was not correlated with compatible strain evidence.
-4. The P-S support choice had no evidence for the combined stiff valve and base-structure assembly.
-5. The response neither asked whether a top frame was required nor explained connector spacing.
+Plots must be generated through the repository ILS plotter when repository geometry is available. The plot and its JSON report must expose component parameters, active connectors, connection types, GD-ST/GD-SB associations, branch anchoring, resolved defaults, warnings, and plot-quality findings. Labels must be large enough for review and must not hide required structure or connection information.
+## 7. Planned Example and Evaluation Program
 
-The important failure was not poor graphics. The drawing concealed decisions that had no stated requirement, parameter basis, or evidence. A technically neat plot would not have corrected the reasoning.
+The research paper will need a controlled final section containing three or four examples only after the workflow performs reliably. The examples should be selected before execution, run with frozen prompts and tool versions, and reviewed by independent engineering reviewers.
 
-### 6.3 Revised problem representation
+The planned example set should cover a valid standard layout, a branch-layout case with explicit GD-ST anchoring, a header-component protection case requiring GD-SB, and one representation-gap case where the correct behavior is to stop. For each example, the paper should report the confirmed EDPR understanding, retrieved evidence, emitted layout or blocker, plot/report artifact, reviewer judgment, and any remaining engineering limitations.
 
-The revised workflow separates the problem into requirements, unknowns, candidate objects, and gates.
-
-| EDPR element | Case interpretation |
-|---|---|
-| Required artifact | Inline layout containing a GD-VLV valve on a 12-inch header |
-| Hard constraint | Valve moment demand must not exceed 0.8 times the defined pipeline allowable moment basis |
-| Objective | No optimization objective is stated; do not invent strain minimization |
-| Candidate protection | GD-SB or other protection concept only after need, geometry, and contact mode are established |
-| Candidate top structure | Optional; ask whether protection/support above the valve is required |
-| Blocking geometry | Valve, actuator, flange, local thick section, roller envelope, and required clearance |
-| Blocking design data | Installation load cases and pipeline allowable-moment definition |
-| Required association data | Structure-to-pipeline connections, active slots, valve ownership, and connector locations |
-| Required evidence | Combined GD-VLV plus GD-SB response and connector basis |
-| Output state | Clarification or evidence gap until the above are resolved |
-
-The capacity statement is represented as a constraint, not a topology selector. For a defined analysis case, the utilization would be:
-
-    U_M = M_valve,max / (0.80 M_pipeline,allow)
-
-and the case would require U_M <= 1.0. The prompt supplies neither moment demand nor the numerical and code basis for pipeline allowable moment. The calculation therefore cannot be completed.
-
-### 6.4 Implemented design gates
-
-KEL v0.2 converted the feedback into deterministic checks.
-
-**Valve-protection input gate.** When valve protection is being selected, the workflow requires the roller-passage scope, protection mode, valve/actuator/flange and thick-section envelopes, roller geometry, clearance, load cases, acceptance measure, connector-spacing basis, connection system, connector evidence, and compatible moment evidence. Missing project inputs produce the code VALVE_PROTECTION_INPUTS_MISSING. Missing behavior support produces VALVE_PROTECTION_EVIDENCE_MISSING and proposes a combined GD-VLV plus GD-SB study.
-
-**Canonical base-structure gate.** If GD-SB protection is selected, the emitted assembly must contain canonical GD-SB geometry. A generic rectangular frame does not satisfy the rule.
-
-**Branch-to-top-frame anchoring gate.** Every emitted `GD-B` branch must include `GD-ST` and a declared terminal association. The gate checks that `GD-ST` is present and that the selected L or Z anchor declares the branch-to-frame terminal association. Connector orientation is evaluated separately. A missing top frame or missing association blocks a complete-layout claim.
-
-**Moment-capacity gate.** Where compatible demand and allowable values are supplied, the deterministic utilization calculation rejects a case above unity.
-
-**Objective-preservation gate.** An 80% capacity limit does not create a strain-minimization objective. The workflow records optimization only when the request or reviewed EDPR includes it.
-
-**Report and plot exposure.** Layout and plot reports must expose geometry parameters, active connectors, and assembly associations so that the engineer can see the basis of the schematic.
-
-The result for the incomplete valve prompt is a structured clarification outcome rather than a generated layout. This is useful engineering progress: it identifies exactly what must be supplied before a protection arrangement and connector system can be defended.
-
-> **Figure 7 placeholder - initial concept and governed outcome.** Left: reconstructed early schematic annotated with missing base dimensions, unexplained P-S supports, absent top-frame decision, and unreported connector spacing. Right: EDPR/gate report showing explicit requirements, unknowns, and VALVE_PROTECTION_INPUTS_MISSING. Do not label the left concept as a validated design.
-
-### 6.5 Branch anchoring and connector orientation
-
-A regression trial first exposed the problem on a Z branch requested with a vertical connector. Earlier language interpretation could select an L-branch archetype because branch routing, connector orientation, and drawing orientation were conflated. The current orientation rule keeps these concepts separate: a required vertical connector restricts candidates to the `GD-B` Z variant and the `ILT-Z-*` family. If the recommended L anchor has a compatible Z counterpart, the deterministic selector maps to it; otherwise it selects only an eligible Z anchor or reports that none exists.
-
-The underlying anchoring failure is not specific to the Z branch. An L branch with a horizontal terminal can also be left visually adjacent to the top frame without a valid connection. The generalized gate therefore requires every `GD-B` branch to terminate at `GD-ST` through an explicit association. The L terminal is horizontal and the Z terminal is vertical; the selected anchor supplies the compatible `GD-ST` feature, including post-specific features where applicable. A drawing that omits `GD-ST` or merely places the branch near it cannot pass the complete-layout gate.
-
-### 6.6 Human feedback as governed knowledge evolution
-
-The review comments were not copied directly into EDES, EDAS, or EDIKB. KEL represents the transition:
-
-    design run
-      -> human feedback
-      -> atomic issues
-      -> grouped and de-duplicated feedback
-      -> graph-change request
-      -> expert review
-      -> implementation plan and tests
-      -> accepted, implemented, rejected, or superseded state
-
-The distinction matters because a comment can contain several claims with different target layers. "The base is too deep, its length is unsupported, and P-S was not justified" contains geometry, behavior-evidence, and reasoning-presentation issues. Atomic decomposition allows each issue to receive its own evidence requirement and review decision. Semantic fingerprints and grouping preserve repeated feedback without creating uncontrolled duplicate rules.
-
-The repository status at the drafting baseline contains one atomic v0.2 feedback record, one grouped record, two v0.2 graph-change records, eleven earlier feedback-to-problem mappings, and a lifecycle reconciliation report. One graph-change request has completed the formal implemented lifecycle, eleven remain pending expert action, one stale record is superseded, and no authoritative lifecycle conflict is reported. This status is evidence that the lifecycle is executable; it is also evidence that tool implementation and knowledge approval are distinct states.
-
-
-## 7. Preliminary Evaluation
-
-### 7.1 Evaluation purpose
-
-The present evaluation asks whether the framework makes engineering reasoning more inspectable. It does not yet measure whether the full governed workflow outperforms an unconstrained or retrieval-only LLM across repeated trials. That comparison requires frozen prompts, models, sampling settings, task sets, and independent review criteria and is reserved for the next evaluation stage.
-
-Six practical questions are used:
-
-1. Does EDPR preserve explicit requirements and expose missing inputs?
-2. Does EDAS prevent a known invalid or mismatched topology?
-3. Do plot and report outputs expose parameters, connectors, and associations?
-4. Can behavior statements be traced to an EDIKB source and applicability boundary?
-5. Does the workflow stop on missing evidence or representation?
-6. Can human feedback be traced into a controlled change lifecycle?
-
-### 7.2 Repository verification baseline
-
-The repository was verified on 14 September 2026 at commit 31a57d378a70f4aa8f232ed8a50130f85b3bfbea. The KEL test suite completed 24 tests successfully. The plotter and solver integration suite completed 29 tests successfully. The KEL status tool reported no invalid JSON documents and no authoritative lifecycle conflicts.
-
-| Evaluation property | Repository observation | Interpretation |
-|---|---|---|
-| Problem completeness | EDPR fixtures contain requirements, constraints, knowns, unknowns, behavior concerns, retrieval plans, and open questions | Structure supports inspectable problem formulation |
-| Topology validity | Every GD-B branch is anchored to GD-ST; vertical intent additionally requires GD-B Z and ILT-Z candidates | Missing branch-to-GD-ST associations and incorrect orientation are deterministically rejected |
-| Parameter visibility | Plot/report contracts expose GD-ST data, active connectors, associations, findings, and resolved defaults | Review data can accompany the image |
-| Evidence traceability | R7/R8 publications are mapped to EDIKB source families; claim-level requirements are defined | Publication lineage exists; some quantitative row checks remain |
-| Fail-closed behavior | Incomplete valve protection and unresolved two-branch-valve topology produce explicit blocker codes | Missing evidence or representation is not silently completed |
-| Feedback governance | Atomic/group schemas, fingerprints, expert review, implementation plans, promotion, and reconciliation are executable | Persistent change is reviewable and state-controlled |
-| Regression coverage | 24 KEL and 29 plotter/solver tests passed | Implemented behavior is reproducible at this baseline |
-
-These observations establish implementation behavior. They do not prove that every ontology rule is correct, that the test suite covers all engineering cases, or that a successful plot is physically valid.
-
-### 7.3 Case-study comparison
-
-The before-and-after case can be assessed without claiming a final design:
-
-| Review criterion | Early conversational output | Governed workflow |
-|---|---|---|
-| Explicit problem interpretation | Not emitted | EDPR separates requirement, constraint, unknowns, and objective status |
-| Base geometry | Shape/length basis absent | GD-SB requires canonical parameters or reports missing data |
-| A/B connections | Type not clearly provided | Connector system and active associations are reportable fields |
-| Strain objective | Implicitly introduced | Preserved as absent unless explicitly requested |
-| Vertical offset | Larger than needed without evidence | Offset requires geometry and applicable evidence |
-| Support choice | P-S selected without combined-case basis | Missing connector evidence becomes an evidence gap |
-| Top-frame need | Not asked | Recorded as an open design decision |
-| Connector spacing | Unexplained | Requires a spacing basis and supporting evidence |
-| Valve moment check | Capacity percentage treated as design guidance | Capacity becomes an equation and fails closed without demand/allowable inputs |
-| Plot source | Concept could appear authoritative | Repository plotter records definition, defaults, findings, and QA status |
-
-The correction is therefore a change in information quality, not evidence that the final valve layout has been solved. The framework converts an apparently complete answer into a reviewable statement of what is known, what is missing, and which analysis would close the gap.
-
-### 7.4 Remaining evaluation work
-
-Before preprint submission, the study should run a controlled set of prompts covering valid standard layouts, L-horizontal and Z-vertical branch anchoring, ambiguous connector orientation, missing GD-ST/GD-SB parameters, unsupported valve-protection assumptions, evidence-scope mismatch, two-branch-valve topology, plot/report completeness, and duplicate feedback. At minimum, compare an unguided LLM, repository retrieval without enforced gates, and the full governed workflow. Reviewers should score requirement fidelity, topology validity, parameter and association completeness, evidence precision, traceability, and appropriate clarification or refusal. The protocol and raw outputs should be published with the manuscript.
-
+The evaluation should compare an unguided LLM, repository retrieval without enforced gates, and the governed workflow. Reviewers should score requirement fidelity, topology validity, parameter and association completeness, evidence precision, traceability, plot readability, and appropriate clarification or refusal. Until this protocol is executed, this manuscript should not claim validated design performance.
 ## 8. Application in an Engineering Organization
 
 ### 8.1 Start from a bounded use case
@@ -533,13 +409,13 @@ The solver performs first-pass grouping and ranking. It does not yet implement c
 
 The source studies themselves state important boundaries. The Type A/B/C work uses defined FEA models and reports relative trends, with limitations in roller modeling, mesh comparability, and parameter coverage [7]. The assembly study intentionally excludes thick anchoring components, places studied connectors on the pipe centerline, and uses a limited set of branch and connector combinations [8]. Complete project behavior may be non-additive, and combined evidence has priority over isolated-component inference.
 
-Plot QA detects selected export, scale, clipping, and overlap conditions. It does not validate a load path, check fabrication feasibility, or certify structural adequacy. The two-branch-valve configuration remains an explicit representation gap pending expert review of topology and instance ownership.
+Plot QA detects selected export, scale, clipping, label, and overlap conditions. It does not validate a load path, check fabrication feasibility, or certify structural adequacy.
 
 ### 9.2 Research limitations
 
 The current paper is a single-domain case study. The ontology has been shaped by S-lay ILT practice and by the two supplied domain studies. Generalization to other engineering systems has not been demonstrated.
 
-The present verification establishes that coded rules behave as tested. It does not quantify LLM accuracy, reviewer agreement, time savings, design quality, or error reduction. The evaluation package described in Section 7 must be completed before stronger performance claims are made.
+The manuscript does not yet quantify LLM accuracy, reviewer agreement, time savings, design quality, or error reduction. The planned example and evaluation package in Section 7 must be completed before performance claims are made.
 
 The manuscript's literature base is sufficient for this draft's P-map, assembly-model, human-in-the-loop, APF, and domain framing [1]-[8]. A submission version should add canonical Function-Behavior-Structure sources, broader engineering knowledge-graph literature, tool-using and retrieval-augmented language-model research, engineering lessons-learned literature, and the project-relevant subsea design standards. [AUTHOR REVIEW: approve and supply the intended code editions before adding compliance language.]
 
@@ -567,13 +443,11 @@ Slay-ILS-Designer demonstrates an engineering-centered approach to AI-assisted c
 
 This separation changes the role of the LLM. The model interprets language, proposes structured records, plans queries, and explains results. Deterministic tools validate schemas, enforce selected topology and evidence gates, compute defined checks, construct layouts, and produce inspectable plots and reports. Engineers confirm intent, judge evidence applicability, define project criteria, approve knowledge changes, and retain responsibility for verification.
 
-The valve case shows the value of this arrangement. A 12-inch header and an 80% relative moment capacity are insufficient to select the shape, depth, length, connectors, and spacing of a protection structure. The governed output makes the missing geometry, load cases, clearance, moment basis, and combined evidence visible. Stopping at that boundary is a more useful conceptual-design result than presenting an unsupported arrangement as complete.
-
-The repository baseline confirms that the architecture can express and test this workflow, including feedback grouping, lifecycle reconciliation, design-intent gates, canonical plotting, and explicit representation gaps. The next evidence step is a controlled comparison across representative prompts and independent engineering review. The longer-term step is to use knowledge gaps to direct parametric analysis and qualified surrogate modeling. The enduring requirement is that every recommendation remain connected to the design problem, assembly definition, evidence scope, tool result, and human decision that supports it.
+The next evidence step is a controlled set of reviewed examples across representative prompts. The longer-term step is to use knowledge gaps to direct parametric analysis and qualified surrogate modeling. The enduring requirement is that every recommendation remain connected to the design problem, assembly definition, evidence scope, tool result, and human decision that supports it.
 
 ## Data, Software, and Reproducibility Statement
 
-The Slay-ILS-Designer source, schemas, knowledge records, examples, validation tools, plotting tools, tests, and paper planning artifacts are available at:
+The Slay-ILS-Designer source, schemas, knowledge records, validation tools, plotting tools, and paper planning artifacts are available at:
 
 https://github.com/sreekx007/Slay-ILS-Designer-V1.0
 
@@ -632,8 +506,7 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 - [ ] Approve title, author order, affiliations, corresponding author, acknowledgments, and conflicts declaration.
 - [ ] Build the R7/R8 claim-to-evidence matrix at table/figure/case level.
 - [ ] Create final Figures 1-8 and verify reuse/redraw rights.
-- [ ] Curate the early-output and governed-output artifacts for Figure 7.
-- [ ] Freeze the controlled evaluation protocol, run artifacts, reviewer rubric, and results.
+- [ ] Freeze the controlled example protocol, run artifacts, reviewer rubric, and results after the workflow is stable.
 - [ ] Add canonical FBS, engineering KG, RAG/tool-use, lessons-learned, surrogate/active-learning, and applicable code references.
 - [ ] Replace the commit placeholder with a tagged release and archival DOI.
 - [ ] Verify every acronym, term, cross-reference, number, caption, and citation.
