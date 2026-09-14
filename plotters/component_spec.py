@@ -3028,30 +3028,42 @@ class BaseStructure(ExternalStructure):
                 'P_vt': -1.5 * pipe.OD_pipe}   # NEGATIVE: top ABOVE the C/L
 
     def validate(self) -> None:
-        # NOT super().validate() -- and the original reason for that is now
-        # STALE. It was skipped because ExternalStructure required
-        # P_vt >= 0, right for GD-ST (then a standoff DISTANCE) but wrong
-        # here, where P_vt is a POSITION, negative by default so the
-        # structure straddles the pipe. That rule was RETIRED on
-        # 23 Aug 2026 when P_vt was unified as a signed position, so
-        # ExternalStructure.validate() no longer checks P_vt at all.
+        # CALLS super() -- RESOLVED 14 Sep 2026, and the history matters
+        # because the skip was once deliberate.
         #
-        # LIVE CONSEQUENCE, unresolved as of 26 Aug 2026: what the skip now
-        # discards is the inherited P_c1/P_c2 POSITIVITY check, which is
-        # the only thing left in ExternalStructure.validate(). GD-SB
-        # therefore accepts a negative P_c1 and builds crossed, unordered
-        # connector slots -- e.g. P_c1 = -1.0 yields
-        # (-0.584, +0.5, 0.0, -0.5, +0.584), slot 2 past slot 4. This went
-        # live when P_c1/P_c2 were promoted to FREE (24 Aug 2026): while
-        # they were derived from a positive width they could not go
-        # negative, so nothing could reach the check.
+        # It was skipped because ExternalStructure required P_vt >= 0, right
+        # for GD-ST (then a standoff DISTANCE) but wrong here, where P_vt is
+        # a POSITION, negative by default so the structure straddles the
+        # pipe. That rule was RETIRED on 23 Aug 2026 when P_vt was unified as
+        # a signed position, so ExternalStructure.validate() no longer checks
+        # P_vt at all and the reason for skipping it went with it.
         #
-        # FIX is one line -- call super().validate() below -- but it is left
-        # as a DECISION rather than applied silently, since the skip was
-        # once deliberate. GD-ST is unaffected: it calls super().
+        # What the skip discarded was the inherited P_c1/P_c2/P_gap checks,
+        # which are all that is left in the parent. It went live when
+        # P_c1/P_c2 were promoted to FREE (24 Aug 2026): while they were
+        # derived from a positive width they could not go negative, so
+        # nothing could reach the check.
         #
-        # The check that IS meaningful here is that the BOTTOM still lies
-        # below the centreline -- otherwise no roller could ever contact it.
+        # MEASURED CONSEQUENCE, which is why this is a fix and not a tidy-up.
+        # A negative P_c1 puts inL to the RIGHT of inR, and the outer slots
+        # are then placed relative to the swapped pair, so the result is not
+        # a relabelling but a DIFFERENT, SMALLER structure:
+        #
+        #   P_c1 = +2.1675          ->  (-2.1675, -1.0837, 0, +1.0837, +2.1675)
+        #   P_c1 = -1.0000          ->  (-0.5837,   +0.50, 0,   -0.50, +0.5837)
+        #
+        # Downstream the mesher SORTS stations, so the crossed order is
+        # silently straightened into an ordinary ascending chord and the
+        # corruption survives only as connectors in the wrong places. On
+        # ILS-EASB at 200 kN that built, validated and solved clean at
+        # 78.477 mm against the healthy component's 70.395 -- an 11.5% error
+        # with nothing objecting anywhere. GD-ST was always immune: it calls
+        # super().
+        super().validate()
+
+        # The check that is particular to THIS subclass: the BOTTOM must
+        # still lie below the centreline -- otherwise no roller could ever
+        # contact it.
         if self.P_vt + self.P_v <= 0:
             raise GeometryRuleError(
                 f'{self.code}: structure bottom (P_vt + P_v = '
