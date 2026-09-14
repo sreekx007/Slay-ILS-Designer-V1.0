@@ -46,17 +46,42 @@ The first domain study classifies physical items as inline-welded or externally 
 
 **Figure 1. Preliminary repository-generated ILT schematic.** The image is emitted from the canonical ILS-ILT archetype and includes component labels, resolved parameters, connectors, associations, and findings. Its retained warning state illustrates that successful export is not equivalent to a valid design or complete evidence package.
 
-### 2.2 Abstraction ladder
+### 2.2 Canonical component vocabulary
+
+Before formalizing the knowledge layers, the domain symbols must be grounded in physical objects. The implementation uses twelve canonical `GD-` identifiers. These are stable local ontology IDs rather than universal industry abbreviations. Human-readable labels remain attached to every ID. When the source-paper taxonomy is being discussed, EA-ST and EA-SB denote external top- and base-structure classes; when the executable repository object is meant, the corresponding IDs are `GD-ST` and `GD-SB`.
+
+![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
+
+**Figure 2. Canonical GD component vocabulary (preliminary).** Each icon is a reduced schematic glyph for an EDES component class. Placement, nesting, connection, contact, and section ownership are added by EDAS; therefore visual adjacency alone does not encode an assembly relation.
+
+| Canonical ID | Object role | Operational semantics in the graph |
+|---|---|---|
+| `GD-HdPipe` | Main-line pipe part | Owns a uniform header section and plain-pipe contact over its declared span |
+| `GD-BrPipe` | Branch pipe part | Owns a uniform branch section; belongs to a branch context and owns no roller contact |
+| `GD-TP` | Reduced-order thick-section part | Represents a square-shouldered thick body for concept studies and exposes length, thickness, position, stiffness and mass effects |
+| `GD-TT` | Tapered thick-section part | Adds explicit taper stations between the header and thick body so section transitions are represented |
+| `GD-PIP` | Concentric bulkhead part | Specializes the tapered thick-section model with inner and fabricated outer members and declared outer-member junctions |
+| `GD-VLV` | Inline equipment part | Contributes valve-body/stem geometry, mass and a non-passable direct roller envelope on its parent line |
+| `GD-BOSS` | Coaxial sleeve part | Adds separate sleeve steel around an intact header; clearance is checked against every enclosed header section |
+| `GD-B` | Branch subassembly | Owns an L or Z multi-member path, a header tee junction and an external terminal tie to a structure connector |
+| `GD-SH` | Contact-envelope component | Changes the accessible roller-contact surface without owning or replacing the pipeline structural section |
+| `GD-ST` | External top-structure subassembly | Owns a closed frame and selectable connector features above the header; it does not own roller contact |
+| `GD-SB` | External base-structure subassembly | Owns a closed lower frame, contact-capable bottom/slope members and selectable connector features |
+| `GD-Con` | Connection part | Associates two features through typed F, P, S, D or W behavior, explicit degrees of freedom and stiffness data |
+
+Several pairs are intentionally non-interchangeable. `GD-TP` is a simplified concept object while `GD-TT` contains explicit tapered transitions. `GD-BrPipe` is a pipe part while `GD-B` is a connected branch assembly. `GD-PIP` owns fabricated concentric outer members, while `GD-BOSS` is a distinct sleeve whose header attachment remains unresolved unless declared. `GD-SH` contributes contact geometry without becoming the structural pipeline line. These distinctions give topology validators and evidence retrieval specific node and relation types instead of relying on lexical similarity.
+
+### 2.3 Abstraction ladder
 
 The domain becomes machine-operable through five levels: physical asset, engineering schematic, parameterized objects, typed knowledge, and executable outcome.
 
 ![S-lay ILT abstraction ladder](figures/preliminary/shared_ilt_abstraction_ladder.svg)
 
-**Figure 2. S-lay ILT abstraction ladder (preliminary).** The final version will add a rights-cleared realistic panel based on [7], parameter notation based on [8], and canonical repository field names.
+**Figure 3. S-lay ILT abstraction ladder (preliminary).** The final version will add a rights-cleared realistic panel based on [7], parameter notation based on [8], and canonical repository field names.
 
 The typed objects include components, parameters, assembly features, associations, behavior records, evidence anchors, requirements, and issues. A connector has endpoints and degrees of freedom; a valve has a parent line and envelope; a structure has geometry and contact behavior. This prevents the graph from becoming a bag of related terms.
 
-### 2.3 Ontology layers
+### 2.4 Ontology layers
 
 Let the knowledge state be K = (G_E, G_A, G_K), and let G_P be the current problem instance.
 
@@ -124,7 +149,7 @@ This formulation permits gap quality to be evaluated. A system can be rewarded f
 
 ![Governed neuro-symbolic architecture](figures/preliminary/paper01b_governed_architecture.svg)
 
-**Figure 3. Governed neuro-symbolic architecture (preliminary).** Neural interpretation proposes state; symbolic layers and deterministic tools constrain transitions; experts authorize persistent change.
+**Figure 4. Governed neuro-symbolic architecture (preliminary).** Neural interpretation proposes state; symbolic layers and deterministic tools constrain transitions; experts authorize persistent change.
 
 
 ## 5. Governed Reasoning Pipeline
@@ -168,7 +193,7 @@ Current gates include:
 
 The plotter is part of the reasoning interface. It constructs geometry from repository definitions and does not accept a freehand LLM sketch as the authoritative layout. Reports retain input provenance, resolved defaults, build findings, and export state. The overlap checker can move labels and add leaders without changing engineering geometry. These controls make a visual result auditable while preserving the distinction between drawing QA and structural verification.
 
-> **Figure 4 placeholder - transition trace.** Show one EDPR field flowing through retrieval, an EDAS topology check, an EDIKB applicability check, materialization, plot/report emission, and a claim-level provenance link.
+> **Figure 5 placeholder - transition trace.** Show one EDPR field flowing through retrieval, an EDAS topology check, an EDIKB applicability check, materialization, plot/report emission, and a claim-level provenance link.
 
 ## 6. Knowledge Evolution Loop
 
@@ -180,7 +205,7 @@ An expert review d assigns accepted, rejected, or needs-evidence status with rat
 
 ![Knowledge Evolution Loop](figures/preliminary/shared_kel_lifecycle.svg)
 
-**Figure 5. Knowledge Evolution Loop (preliminary).** Feedback is decomposed and grouped before expert review. Persistent knowledge changes only after authorization and implementation evidence.
+**Figure 6. Knowledge Evolution Loop (preliminary).** Feedback is decomposed and grouped before expert review. Persistent knowledge changes only after authorization and implementation evidence.
 
 KEL makes three distinctions that are often collapsed:
 
@@ -239,7 +264,7 @@ Each task needs a reviewed gold record containing permitted candidates, required
 
 Ablations should remove EDAS topology gates, EDIKB applicability checks, plot/report completeness checks, typed-gap handling, and KEL grouping/reconciliation one at a time. The purpose is to identify which mechanism changes each error class. Removing all mechanisms merely reproduces B0 and does not explain contribution.
 
-> **Figure 6 placeholder - evaluation matrix.** Plot task families against B0-B3 and show the artifact captured at each stage. Add an ablation panel linking mechanisms to expected error classes.
+> **Figure 7 placeholder - evaluation matrix.** Plot task families against B0-B3 and show the artifact captured at each stage. Add an ablation panel linking mechanisms to expected error classes.
 
 ### 7.5 Statistical and review protocol
 
@@ -279,7 +304,7 @@ Neither demand nor the allowable-moment basis is given. The request also lacks v
 
 An early plausible output introduced a deep, long base and P-S supports without providing these bases, did not ask whether a top structure was required, and did not emit its EDPR interpretation. The revised system returns a clarification or evidence gap. The relevant research point is not that one geometry was replaced by another. It is that output completeness is defined over requirements, parameters, relations, and evidence rather than visual plausibility.
 
-> **Figure 7 placeholder - case error trace.** Compare the initial apparent completion with the governed output. Annotate invented objective, missing dimensions, unsupported connector choice, unasked top-frame decision, missing moment inputs, and the resulting typed blockers.
+> **Figure 8 placeholder - case error trace.** Compare the initial apparent completion with the governed output. Annotate invented objective, missing dimensions, unsupported connector choice, unasked top-frame decision, missing moment inputs, and the resulting typed blockers.
 
 ### 9.3 Two-branch-valve representation gap
 

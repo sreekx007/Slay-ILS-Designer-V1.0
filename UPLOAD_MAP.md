@@ -404,3 +404,19 @@ Exclude runs/phase7 and .venv. Old manifests remain in superseded. 29 distinct t
 ## Paper 01B and preliminary figures - confirmed
 
 Added the Paper 01B manuscript and reproducible preliminary SVG/PNG figures. Paper 01A now embeds an engineering workflow, ILT abstraction ladder, KEL lifecycle and repository-generated ILT schematic. Updated papers/README.md, framework_manifest.json and UPLOAD_MAP.md.
+
+## Paper component ontology primer
+
+| Action | Repository path |
+| --- | --- |
+| Update | `papers/PAPER_01A_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/PAPER_01B_MANUSCRIPT_DRAFT.md` |
+| Update | `papers/README.md` |
+| Update | `papers/figures/generate_preliminary_figures.py` |
+| Update | `papers/figures/figure_sources.json` |
+| Add | `papers/figures/preliminary/shared_component_ontology_primer.svg` |
+| Add | `papers/figures/preliminary/shared_component_ontology_primer.png` |
+| Update | `framework_manifest.json` |
+| Update | `UPLOAD_MAP.md` |
+
+Both papers now introduce all twelve canonical GD component classes before using them in EDES/EDAS reasoning. The shared preliminary figure distinguishes pipe parts, thick-section representations, inline equipment, branch assemblies, external structures, contact envelopes and connector behavior. No source-paper PDFs are added to Git.

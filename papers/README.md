@@ -15,6 +15,7 @@ Repository status at 2026-09-14: KEL v0.2 Steps 1 through 4 and Step 6 are imple
 | `PAPER_01B_DRAFTING_ACTION_PLAN.md` | arXiv-oriented research plan for AI specialists who need the mechanical/structural domain explained. |
 | `PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md` | Shared realistic-to-schematic-to-ontology storyboard, source-paper placeholder map, and figure production method. |
 | `PAPER_01A_MANUSCRIPT_DRAFT.md` | Complete Paper 01A working manuscript for engineering-professional review and planned engrXiv submission. |
+| `PAPER_01B_MANUSCRIPT_DRAFT.md` | Complete Paper 01B working manuscript for AI-research review and planned arXiv submission. |
 | `PAPER_01A_CLAIM_EVIDENCE_REGISTER.md` | Claim classification, evidence source, draft status, and release action for Paper 01A. |
 | `PAPER_REFERENCE_REQUESTS.md` | Status of supplied references and the literature still needed before a citation-ready preprint. |
 | `REFERENCE_LIBRARY.md` | Citation-ready registry for the eight supplied papers, with checksums and manuscript roles. |
@@ -22,7 +23,7 @@ Repository status at 2026-09-14: KEL v0.2 Steps 1 through 4 and Step 6 are imple
 
 ## Recommended Next Step
 
-Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology, authorship metadata, and the valve-case interpretation. Then complete the R7/R8 row-level evidence matrix and Figures 1-7 before running the controlled evaluation. Paper 01B remains a separate AI-research manuscript.
+Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology, authorship metadata, and the valve-case interpretation. Then complete the R7/R8 row-level evidence matrix and Figures 1-8 before running the controlled evaluation. Paper 01B remains a separate AI-research manuscript.
 
 ## Source-Paper Handling
 
@@ -32,6 +33,7 @@ The reviewed PDFs remain outside the Git repository. `REFERENCE_LIBRARY.md` reco
 
 - PAPER_01A_MANUSCRIPT_DRAFT.md - engineering-professional draft with explanatory workflow figures.
 - PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture, benchmark and case analysis.
-- figures/generate_preliminary_figures.py - reproducible generator for workflow diagrams.
+- figures/generate_preliminary_figures.py - reproducible generator for workflow and component-ontology diagrams.
 - figures/figure_sources.json - figure source and status register.
+- figures/preliminary/shared_component_ontology_primer.svg - shared twelve-component visual vocabulary used before the EDES/EDAS discussion.
 - figures/preliminary/ - SVG and PNG previews plus the ILS-Plotter schematic and reports.

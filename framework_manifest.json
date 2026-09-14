@@ -646,6 +646,13 @@
         "role": "Reproducible generator for preliminary Paper 01A and 01B diagrams"
       },
       {
+        "id": "doc:paper_component_ontology_primer",
+        "repo_path": "papers/figures/preliminary/shared_component_ontology_primer.svg",
+        "status": "present",
+        "required": false,
+        "role": "Shared illustrative introduction to the twelve canonical GD component classes used by both manuscripts"
+      },
+      {
         "id": "doc:paper_figure_sources",
         "repo_path": "papers/figures/figure_sources.json",
         "status": "present",

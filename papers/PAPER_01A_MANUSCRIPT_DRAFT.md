@@ -69,13 +69,40 @@ A base structure and top structure can use nominally similar connectors but beha
 
 > **Figure 1 placeholder - S-lay ILT physical context.** Redraw the vessel firing line, stinger rollers, overbend, pipeline travel direction, and a representative ILT. A temporary internal crop may use Figure 4 or Figure 7 of [7]. The final figure should be a rights-cleared vector reconstruction.
 
-### 2.2 From a realistic assembly to a schematic
+### 2.2 Component primer: what the GD codes represent
+
+The repository gives every reusable component class a stable identifier beginning with `GD-`. The prefix is a local machine-readable namespace; it is not proposed as universal industry notation. Authors and engineers can continue to use readable names, while data records use the code to distinguish objects that may look similar in a small schematic but have different geometry, load paths, or assembly behavior. The source papers use **EA-ST** and **EA-SB** when discussing the external-attachment taxonomy; the corresponding repository component identities are `GD-ST` and `GD-SB`.
+
+![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
+
+**Figure 2. Canonical GD component vocabulary (preliminary).** The symbols introduce the twelve component classes currently available to the plotter and assembly model. They communicate identity and mechanical role; they are not fabrication drawings or proof of design adequacy.
+
+| Code | Readable component | What it represents in the engineering model | Key data or relationship |
+|---|---|---|---|
+| `GD-HdPipe` | Header pipe | A uniform segment of the main pipeline and its structural section/contact reference | Pipe outside diameter and wall thickness, segment length, axial position |
+| `GD-BrPipe` | Branch pipe | One uniform pipe segment within a branch run | Branch section and length; it does not own roller contact |
+| `GD-TP` | Thick pipe | A square-shouldered reduced-order thick section for concept studies | Body length, thickness, center position, stiffness and mass ratios |
+| `GD-TT` | Tapered thick pipe | A thick body connected to the header through explicit tapered transitions | Thick-body and taper dimensions, section continuity, center position |
+| `GD-PIP` | Pipe-in-pipe bulkhead | A concentric inner load path with one or more fabricated outer members | Inner/outer geometry, bulkhead location, inherited thick-section relations |
+| `GD-VLV` | Valve | An enlarged inline valve body with stem and installation envelope | Body length and diameter, stem envelope, mass, parent line; direct roller passage is prohibited |
+| `GD-BOSS` | Boss | A separate sleeve lying coaxially around an intact header or thick section | Sleeve length, outside diameter and wall; bore must clear the largest enclosed outside diameter |
+| `GD-B` | Branch piping assembly | A multi-member L or Z branch from the header tee toward a supported endpoint | Branch dimensions, orientation, valve position, terminal support connector |
+| `GD-SH` | Shroud | An offset protective/contact envelope around an inline component | Offset and end dimensions; it can own contact but does not replace the pipe section |
+| `GD-ST` | Top structure | A closed structural frame above the header for support or protection | Frame length/height, stiffness, active connector slots and associations |
+| `GD-SB` | Base structure | A structural frame below the header whose lower surface can contact rollers | Base length/depth, slopes, stiffness, contact geometry and active connectors |
+| `GD-Con` | Connector | The interface through which two component features transfer load | Endpoints, fixed/pinned/slotted/deadband/welded type, degrees of freedom and stiffness |
+
+Four distinctions prevent common interpretation errors. `GD-TP` is the deliberately simplified square-shouldered concept representation, whereas `GD-TT` makes the tapered transitions explicit. `GD-BrPipe` is one pipe part, whereas `GD-B` is the complete branch assembly. `GD-SH` and `GD-SB` may alter the roller-contact path without becoming the header structural section. `GD-BOSS` surrounds the header as separate steel; it does not replace or consume the header within its span, and its attachment/load-transfer detail remains an explicit unresolved input when not supplied.
+
+EDES defines these reusable component objects, their parameters, interfaces, and local constraints. EDAS then states how selected instances may be positioned, nested, chained, and connected in a complete ILS. This separation lets a drawing show the same component vocabulary while an assembly record distinguishes valid and invalid combinations.
+
+### 2.3 From a realistic assembly to a schematic
 
 A realistic ILT contains detail essential for fabrication but excessive for early reasoning. The AI representation begins with a controlled schematic that preserves component identity, longitudinal position, elevation, dimensions, connection type, support relationship, and the distinction between a structural section and a roller-contact envelope.
 
 The second domain study [8] separates the main external structures into a top structure (EA-ST) and base structure (EA-SB). The top structure occupies the region above the header and can protect or support inline and branch equipment. The base structure occupies the underside, can protect equipment, and can contact installation rollers. Either may connect directly to the pipeline; a second structure can connect to the first. A mudmat may connect to either structure or remain independent. The same study introduces branch-layout and connector taxonomies and parameterized views for EA-ST, EA-SB, Z branches, and L branches.
 
-> **Figure 2 placeholder - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, EA-ST, EA-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.
+> **Figure 3 placeholder - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, EA-ST, EA-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.
 
 The transformation can be read as:
 
@@ -88,7 +115,7 @@ The transformation can be read as:
 
 An ontology is the controlled description that makes this sequence consistent. It defines what objects exist, what properties they can carry, how they may be related, and what each relation means. In engineering terms, it performs part of the role of a tag register, design basis, standard drawing vocabulary, calculation index, and rules catalogue.
 
-### 2.3 Parameters, connectors, and associations
+### 2.4 Parameters, connectors, and associations
 
 For EA-ST, relevant data include connector locations, stiffness between connections, frame elevation relative to the pipe centerline, geometry, and active connection system. EA-SB additionally needs the dimensions of the roller-contacting base and any deadband. A branch layout requires its shape, dimensions, tee-relative positions, valve instances, and support connections [8].
 
@@ -96,7 +123,7 @@ The connector taxonomy in [8] includes fixed (F), pinned (P), slotted (S), and d
 
 Associations are equally important. A connector identifies both objects it joins and the feature used at each end. A branch valve belongs to a particular branch instance. A boss lies coaxially around the header and does not replace it. A base structure may provide a contact envelope while the pipeline or an inline component retains ownership of the structural section. These relations cannot be inferred reliably from drawing proximity and must be explicit.
 
-### 2.4 The S-lay ILT ontology
+### 2.5 The S-lay ILT ontology
 
 | Engineering question | Layer | Typical record |
 |---|---|---|
@@ -107,7 +134,7 @@ Associations are equally important. A connector identifies both objects it joins
 
 A Standard ILS Layout Library sits beside EDAS as reusable starting arrangements. A standard layout remains subject to assembly validation, evidence checks, problem constraints, and project-specific verification.
 
-> **Figure 3 placeholder - ontology map.** Map objects visible in Figure 2 to function, component, parameter, connection, assembly, behavior/evidence, requirement, and issue nodes. Show EDES, EDAS, EDIKB, and EDPR ownership.
+> **Figure 4 placeholder - ontology map.** Map objects visible in Figure 3 to function, component, parameter, connection, assembly, behavior/evidence, requirement, and issue nodes. Show EDES, EDAS, EDIKB, and EDPR ownership.
 
 The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evidence on distributed stiffness, elevation, and selected combined cases [7]. The second extends the basis to EA-ST, EA-SB, connector systems, branch assemblies, and added-mass position [8]. A paper citation establishes lineage; a quantitative design statement still requires the precise figure or table, case, parameter range, response location, and limitation.
 
@@ -162,7 +189,7 @@ Provenance answers, "Where did this claim come from?" Applicability answers, "Wh
 
 The EDIKB separates behavior rules from numeric evidence rows. A rule can indicate a trend, while an evidence row records a case and response. Each quantitative use should identify the publication, source family, table or figure, case, parameter range, response location, and limitation. The first and second domain papers explicitly frame their results as bounded studies [7], [8]. For example, [8] intentionally omitted the thick inline components needed to anchor the structures so that connection-layout effects could be isolated. Its strain results are therefore suitable for relative behavior interpretation within the stated model, not direct transfer to a complete project assembly.
 
-> **Figure 4 placeholder - one traceable engineering fact.** Show a source-paper case flowing into an EDIKB evidence row, then into an applicable behavior rule, an EDPR retrieval, and a qualified output statement. Include a visible branch where an applicability mismatch stops the claim.
+> **Figure 5 placeholder - one traceable engineering fact.** Show a source-paper case flowing into an EDIKB evidence row, then into an applicable behavior rule, an EDPR retrieval, and a qualified output statement. Include a visible branch where an applicability mismatch stops the claim.
 
 ### 3.5 Versioning and governed change
 
@@ -245,7 +272,7 @@ The implemented workflow is:
       -> human review
       -> KnowLoop/KEL change lifecycle
 
-> **Figure 5 placeholder - governed workflow.** Draw the sequence above with separate visual lanes for the engineer, LLM, governed knowledge, deterministic tools, and KEL review. Mark every point that can emit a clarification, evidence gap, or representation gap.
+> **Figure 6 placeholder - governed workflow.** Draw the sequence above with separate visual lanes for the engineer, LLM, governed knowledge, deterministic tools, and KEL review. Mark every point that can emit a clarification, evidence gap, or representation gap.
 
 Human-supervised conceptual design using linked LLM and knowledge-graph operations has a published precedent in KnowLoop [5]. KEL adopts the need for expert supervision and adds repository-level records for decomposition, grouping, review, implementation, promotion, and lifecycle reconciliation.
 
@@ -363,7 +390,7 @@ KEL v0.2 converted the feedback into deterministic checks.
 
 The result for the incomplete valve prompt is a structured clarification outcome rather than a generated layout. This is useful engineering progress: it identifies exactly what must be supplied before a protection arrangement and connector system can be defended.
 
-> **Figure 6 placeholder - initial concept and governed outcome.** Left: reconstructed early schematic annotated with missing base dimensions, unexplained P-S supports, absent top-frame decision, and unreported connector spacing. Right: EDPR/gate report showing explicit requirements, unknowns, and VALVE_PROTECTION_INPUTS_MISSING. Do not label the left concept as a validated design.
+> **Figure 7 placeholder - initial concept and governed outcome.** Left: reconstructed early schematic annotated with missing base dimensions, unexplained P-S supports, absent top-frame decision, and unreported connector spacing. Right: EDPR/gate report showing explicit requirements, unknowns, and VALVE_PROTECTION_INPUTS_MISSING. Do not label the left concept as a validated design.
 
 ### 6.5 Related topology regression: vertical connector
 
@@ -528,7 +555,7 @@ A future loop can:
 
 Machine learning would then support behavior approximation, sensitivity analysis, gap detection, and optimization. It would not replace geometry, topology, provenance, or engineering acceptance.
 
-> **Figure 7 placeholder - evidence expansion loop.** Show historical designs and published studies feeding a coverage map, gaps generating parametric FEA cases, reviewed results extending EDIKB, and a bounded surrogate model serving the conceptual workflow with uncertainty and out-of-domain checks.
+> **Figure 8 placeholder - evidence expansion loop.** Show historical designs and published studies feeding a coverage map, gaps generating parametric FEA cases, reviewed results extending EDIKB, and a bounded surrogate model serving the conceptual workflow with uncertainty and out-of-domain checks.
 
 ## 10. Conclusions
 
@@ -601,8 +628,8 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 
 - [ ] Approve title, author order, affiliations, corresponding author, acknowledgments, and conflicts declaration.
 - [ ] Build the R7/R8 claim-to-evidence matrix at table/figure/case level.
-- [ ] Create final Figures 1-7 and verify reuse/redraw rights.
-- [ ] Curate the early-output and governed-output artifacts for Figure 6.
+- [ ] Create final Figures 1-8 and verify reuse/redraw rights.
+- [ ] Curate the early-output and governed-output artifacts for Figure 7.
 - [ ] Freeze the controlled evaluation protocol, run artifacts, reviewer rubric, and results.
 - [ ] Add canonical FBS, engineering KG, RAG/tool-use, lessons-learned, surrogate/active-learning, and applicable code references.
 - [ ] Replace the commit placeholder with a tagged release and archival DOI.

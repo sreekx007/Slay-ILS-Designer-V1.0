@@ -8,8 +8,9 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+matplotlib.rcParams["svg.hashsalt"] = "slay-ils-paper-figures-v1"
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Polygon, Rectangle
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "preliminary"
@@ -65,7 +66,7 @@ def arrow(ax, x1, y1, x2, y2, color="grey", style="-|>", curve=0.0, label=None):
     return p
 
 
-def setup(title, subtitle, size=(13, 7.2)):
+def setup(title, subtitle, size=(13, 7.2), footer="PRELIMINARY - CONCEPTUAL WORKFLOW, NOT DESIGN VERIFICATION"):
     fig, ax = plt.subplots(figsize=size)
     fig.patch.set_facecolor("white")
     ax.set_xlim(0, 1)
@@ -74,13 +75,16 @@ def setup(title, subtitle, size=(13, 7.2)):
     ax.text(0.03, 0.96, title, fontsize=16, fontweight="bold",
             color=COLORS["navy"], va="top")
     ax.text(0.03, 0.905, subtitle, fontsize=9, color=COLORS["grey"], va="top")
-    ax.text(0.97, 0.025, "PRELIMINARY - CONCEPTUAL WORKFLOW, NOT DESIGN VERIFICATION",
+    ax.text(0.97, 0.025, footer,
             fontsize=6.8, color=COLORS["red"], ha="right")
     return fig, ax
 
 
 def save(fig, name):
-    fig.savefig(OUT / f"{name}.svg", bbox_inches="tight", facecolor="white")
+    svg_path = OUT / f"{name}.svg"
+    fig.savefig(svg_path, bbox_inches="tight", facecolor="white", metadata={"Date": None})
+    normalized = "\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines()) + "\n"
+    svg_path.write_text(normalized, encoding="utf-8")
     fig.savefig(OUT / f"{name}.png", dpi=220, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
@@ -118,6 +122,124 @@ def engineering_workflow():
             "Engineer role: confirm intent, judge evidence applicability and authorize knowledge change.",
             fontsize=9, color=COLORS["ink"], va="bottom", linespacing=1.45)
     save(fig, "paper01a_engineering_workflow")
+
+
+def component_ontology_primer():
+    """Draw the canonical component vocabulary before either paper uses its codes."""
+    fig, ax = setup(
+        "Canonical GD component vocabulary",
+        "Shared ontology primer - simplified symbols show identity and mechanical role, not fabrication detail",
+        (15, 9.2),
+        "PRELIMINARY - SCHEMATIC ONTOLOGY, NOT DESIGN VERIFICATION",
+    )
+
+    cards = [
+        ("GD-HdPipe", "Header pipe", "main pipeline segment", "pipe", "blue"),
+        ("GD-BrPipe", "Branch pipe", "individual branch segment", "branch_pipe", "blue"),
+        ("GD-TP", "Thick pipe", "square-shouldered concept section", "thick", "blue"),
+        ("GD-TT", "Tapered thick pipe", "tapered design realization", "taper", "blue"),
+        ("GD-PIP", "Pipe-in-pipe bulkhead", "concentric inner and outer member", "pip", "navy"),
+        ("GD-VLV", "Valve", "inline body, stem and envelope", "valve", "navy"),
+        ("GD-BOSS", "Boss", "separate sleeve around intact header", "boss", "navy"),
+        ("GD-B", "Branch piping assembly", "L or Z multi-member branch", "branch", "purple"),
+        ("GD-SH", "Shroud", "offset roller-contact envelope", "shroud", "cyan"),
+        ("GD-ST", "Top structure", "frame above header", "top", "green"),
+        ("GD-SB", "Base structure", "frame and contact below header", "base", "green"),
+        ("GD-Con", "Connector", "F, P, S, D or W load transfer", "connector", "amber"),
+    ]
+
+    x0, y0 = 0.035, 0.105
+    card_w, card_h = 0.225, 0.225
+    x_gap, y_gap = 0.018, 0.035
+
+    def line(x1, y1, x2, y2, color="ink", width=2.0, style="-"):
+        ax.plot([x1, x2], [y1, y2], color=COLORS[color], lw=width,
+                linestyle=style, solid_capstyle="round", zorder=4)
+
+    def draw_icon(kind, cx, cy, scale, color):
+        c = COLORS[color]
+        if kind == "pipe":
+            line(cx-scale, cy, cx+scale, cy, color, 5.0)
+            line(cx-scale, cy, cx+scale, cy, "ink", 1.2)
+        elif kind == "branch_pipe":
+            line(cx-scale*0.8, cy-scale*0.55, cx, cy-scale*0.55, color, 4.0)
+            line(cx, cy-scale*0.55, cx, cy+scale*0.65, color, 4.0)
+        elif kind == "thick":
+            line(cx-scale, cy, cx-scale*0.55, cy, "ink", 2.0)
+            ax.add_patch(Rectangle((cx-scale*0.55, cy-scale*0.28), scale*1.1, scale*0.56,
+                                   facecolor="white", edgecolor=c, lw=3.0, zorder=4))
+            line(cx+scale*0.55, cy, cx+scale, cy, "ink", 2.0)
+        elif kind == "taper":
+            pts = [(cx-scale,cy-scale*0.12),(cx-scale*0.55,cy-scale*0.34),
+                   (cx+scale*0.55,cy-scale*0.34),(cx+scale,cy-scale*0.12),
+                   (cx+scale,cy+scale*0.12),(cx+scale*0.55,cy+scale*0.34),
+                   (cx-scale*0.55,cy+scale*0.34),(cx-scale,cy+scale*0.12)]
+            ax.add_patch(Polygon(pts, closed=True, facecolor="white", edgecolor=c, lw=2.5, zorder=4))
+            line(cx-scale, cy, cx+scale, cy, "ink", 1.1)
+        elif kind == "pip":
+            ax.add_patch(Rectangle((cx-scale, cy-scale*0.30), 2*scale, scale*0.60,
+                                   facecolor="white", edgecolor=c, lw=2.5, zorder=4))
+            line(cx-scale, cy, cx+scale, cy, "ink", 3.0)
+        elif kind == "valve":
+            line(cx-scale, cy, cx-scale*0.42, cy, "ink", 2.0)
+            line(cx+scale*0.42, cy, cx+scale, cy, "ink", 2.0)
+            ax.add_patch(Polygon([(cx-scale*0.42,cy-scale*0.35),(cx,cy),(cx-scale*0.42,cy+scale*0.35)],
+                                 closed=True, facecolor="white", edgecolor=c, lw=2.2, zorder=4))
+            ax.add_patch(Polygon([(cx+scale*0.42,cy-scale*0.35),(cx,cy),(cx+scale*0.42,cy+scale*0.35)],
+                                 closed=True, facecolor="white", edgecolor=c, lw=2.2, zorder=4))
+            line(cx, cy+scale*0.05, cx, cy+scale*0.62, color, 2.0)
+            line(cx-scale*0.22, cy+scale*0.62, cx+scale*0.22, cy+scale*0.62, color, 2.0)
+        elif kind == "boss":
+            line(cx-scale, cy, cx+scale, cy, "ink", 2.2)
+            ax.add_patch(Rectangle((cx-scale*0.58,cy-scale*0.27),scale*1.16,scale*0.54,
+                                   facecolor="none",edgecolor=c,lw=3.0,zorder=4))
+        elif kind == "branch":
+            line(cx-scale, cy-scale*0.55, cx+scale, cy-scale*0.55, "ink", 2.0)
+            line(cx, cy-scale*0.55, cx, cy+scale*0.18, color, 3.0)
+            line(cx, cy+scale*0.18, cx+scale*0.62, cy+scale*0.18, color, 3.0)
+            line(cx+scale*0.62, cy+scale*0.18, cx+scale*0.62, cy+scale*0.62, color, 3.0)
+        elif kind == "shroud":
+            line(cx-scale, cy+scale*0.28, cx+scale, cy+scale*0.28, "ink", 2.0)
+            line(cx-scale*0.68, cy-scale*0.22, cx+scale*0.68, cy-scale*0.22, color, 5.0)
+            line(cx-scale*0.68, cy-scale*0.22, cx-scale*0.48, cy+scale*0.28, color, 2.0)
+            line(cx+scale*0.68, cy-scale*0.22, cx+scale*0.48, cy+scale*0.28, color, 2.0)
+        elif kind == "top":
+            line(cx-scale, cy-scale*0.42, cx+scale, cy-scale*0.42, "ink", 2.0)
+            ax.add_patch(Rectangle((cx-scale*0.70,cy-scale*0.25),scale*1.40,scale*0.88,
+                                   facecolor="none",edgecolor=c,lw=2.5,zorder=4))
+        elif kind == "base":
+            line(cx-scale, cy+scale*0.42, cx+scale, cy+scale*0.42, "ink", 2.0)
+            pts=[(cx-scale*0.70,cy+scale*0.25),(cx-scale*0.92,cy-scale*0.55),
+                 (cx+scale*0.92,cy-scale*0.55),(cx+scale*0.70,cy+scale*0.25)]
+            ax.add_patch(Polygon(pts,closed=True,facecolor="none",edgecolor=c,lw=2.5,zorder=4))
+        elif kind == "connector":
+            line(cx-scale, cy, cx-scale*0.25, cy, "ink", 2.0)
+            line(cx+scale*0.25, cy, cx+scale, cy, "ink", 2.0)
+            ax.add_patch(Circle((cx,cy),scale*0.25,facecolor="white",edgecolor=c,lw=2.5,zorder=4))
+            ax.text(cx,cy,"DOF",ha="center",va="center",fontsize=5.8,fontweight="bold",color=c,zorder=5)
+
+    for index, (code, name, role, kind, color) in enumerate(cards):
+        row, col = divmod(index, 4)
+        x = x0 + col * (card_w + x_gap)
+        y = y0 + (2-row) * (card_h + y_gap)
+        patch = FancyBboxPatch((x,y),card_w,card_h,
+                               boxstyle="round,pad=0.010,rounding_size=0.018",
+                               facecolor="white",edgecolor=COLORS[color],lw=1.5,zorder=2)
+        ax.add_patch(patch)
+        ax.add_patch(Rectangle((x,y+card_h-0.035),card_w,0.035,
+                               facecolor=COLORS[color],edgecolor="none",alpha=0.13,zorder=2))
+        draw_icon(kind, x+card_w/2, y+card_h*0.62, 0.058, color)
+        ax.text(x+card_w/2,y+card_h*0.33,code,ha="center",va="center",
+                fontsize=9.2,fontweight="bold",color=COLORS["ink"],zorder=5)
+        ax.text(x+card_w/2,y+card_h*0.20,name,ha="center",va="center",
+                fontsize=7.8,color=COLORS[color],fontweight="bold",zorder=5)
+        ax.text(x+card_w/2,y+card_h*0.08,role,ha="center",va="center",
+                fontsize=6.8,color=COLORS["grey"],zorder=5)
+
+    ax.text(0.035,0.065,
+            "Part and assembly identity is separate from placement and connection: EDES defines each object; EDAS defines how objects may be combined.",
+            fontsize=8.5,color=COLORS["ink"],ha="left")
+    save(fig, "shared_component_ontology_primer")
 
 
 def abstraction_ladder():
@@ -221,14 +343,17 @@ def kel_lifecycle():
 
 if __name__ == "__main__":
     engineering_workflow()
+    component_ontology_primer()
     abstraction_ladder()
     ai_architecture()
     kel_lifecycle()
     records = [
         {"id":"P01A-F5","file":"preliminary/paper01a_engineering_workflow.svg","type":"generated_vector","status":"preliminary","source":"repository architecture and workflow documentation"},
+        {"id":"P01-SC1","file":"preliminary/shared_component_ontology_primer.svg","type":"generated_vector","status":"preliminary","source":"EDES component definitions and plotter component catalog"},
         {"id":"P01-S2","file":"preliminary/shared_ilt_abstraction_ladder.svg","type":"generated_vector","status":"preliminary","source":"R7/R8 ontology mapping and repository crosswalk"},
         {"id":"P01B-F2","file":"preliminary/paper01b_governed_architecture.svg","type":"generated_vector","status":"preliminary","source":"EDPR/EDES/EDAS/EDIKB/KEL implementation"},
         {"id":"P01-S6","file":"preliminary/shared_kel_lifecycle.svg","type":"generated_vector","status":"preliminary","source":"KEL v0.2 schemas, tools, and lifecycle documentation"},
+        {"id":"P01-S1","file":"preliminary/shared_repository_ilt_schematic.svg","type":"ils_plotter_output","status":"preliminary_warning","source":"standard_ils_layouts.json archetype ILS-ILT","report":"preliminary/shared_repository_ilt_schematic.svg.report.json"},
     ]
     (ROOT / "figure_sources.json").write_text(json.dumps({"schema":"paper-figure-sources/0.1","figures":records},indent=2)+"\n",encoding="utf-8")
     print("generated", len(records), "preliminary figures")

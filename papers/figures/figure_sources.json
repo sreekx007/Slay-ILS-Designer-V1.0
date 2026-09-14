@@ -9,6 +9,13 @@
       "source": "repository architecture and workflow documentation"
     },
     {
+      "id": "P01-SC1",
+      "file": "preliminary/shared_component_ontology_primer.svg",
+      "type": "generated_vector",
+      "status": "preliminary",
+      "source": "EDES component definitions and plotter component catalog"
+    },
+    {
       "id": "P01-S2",
       "file": "preliminary/shared_ilt_abstraction_ladder.svg",
       "type": "generated_vector",
