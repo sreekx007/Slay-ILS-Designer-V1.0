@@ -57,6 +57,17 @@ Every required load case must have utilization no greater than 1.0. A stated
 80 percent capacity does not choose a support topology and does not create a
 strain-minimization objective.
 
+## Support and protection structure sizing
+
+When `GD-SB` is introduced to protect `GD-VLV`, the base-structure dimensions
+must be explicitly fitted to the valve envelope, actuator/stem clearance, roller
+clearance, and connector spacing basis. Leaving `P_l1`, `P_l2`, `P_v`, or
+`P_vt` to generic EDAS defaults fails the support-sizing gate. The same rule
+applies by family to `GD-ST` when it supports `GD-B`: the top-frame length,
+height, and vertical offset must be fitted to the branch terminal and connector
+geometry before the layout can claim complete status.
+
+
 ## Two branch valves
 
 The current accepted topology is unresolved. EDPR emits

@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "status": "implemented",
+  "created_utc": "2026-09-14T17:23:05Z",
+  "linked_experience_id": "kel:experience:q3_inline_valve_gdsb_preliminary_plot:20260915",
+  "linked_feedback_id": "kel:feedback:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "target_layer": "EDAS",
+  "change_type": "new_assembly_constraint",
+  "problem_observed": "A preliminary inline GD-VLV plot used default GD-SB dimensions that were much deeper and longer than the valve, contradicting the stated recommendation to size protection from the valve envelope.",
+  "proposed_change": "Require GD-ST/GD-SB support or protection structures to carry explicit component-fitted sizing parameters when introduced to suit GD-VLV, GD-B, or similar supported/protected components; otherwise report a sizing gate failure or placeholder state.",
+  "evidence_requirement": "Focused design workflow regression tests and plot/report gate showing defaulted support dimensions are detected and explicit valve-sized dimensions pass.",
+  "priority": "high",
+  "expert_review_ref": {
+    "id": "kel:review:q3_inline_valve_gdsb:support_structure_sized_to_component",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q3_REVIEW_01_SUPPORT_STRUCTURE_SIZED_TO_COMPONENT.json"
+  },
+  "implementation_ref": {
+    "target": "plotters/ils_builder.py; tools/design_rules_v02.py; knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "repo_path": "plotters/ils_builder.py",
+    "notes": "Implemented support_sizing_gate and SUPPORT_STRUCTURE_DIMENSIONS_DEFAULTED validation."
+  }
+}

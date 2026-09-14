@@ -995,6 +995,43 @@ class ILS:
         valve_base = 'GD-VLV' in self.codes and 'GD-SB' in self.codes
         basis_required = ('base_depth', 'base_length', 'connector_spacing', 'evidence')
         basis_missing = [name for name in basis_required if basis.get(name) in (None, '', [], {})] if valve_base else []
+
+        support_sizing = []
+        component_defs = {entry.get('id', f'C{index+1}'): entry
+                          for index, entry in enumerate(self.definition.get('components', []))
+                          if isinstance(entry, dict)}
+        for cid, code in zip(self.ids, self.codes):
+            if code == 'GD-SB' and 'GD-VLV' in self.codes:
+                required = ('P_l1', 'P_l2', 'P_v', 'P_vt')
+                supplied = component_defs.get(cid, {})
+                defaulted = [name for name in required if name not in supplied]
+                if defaulted:
+                    missing.append(f'{cid}.sizing.defaulted_to_EDAS')
+                support_sizing.append({
+                    'component_id': cid,
+                    'code': code,
+                    'sized_for': 'GD-VLV',
+                    'required_explicit_parameters': list(required),
+                    'defaulted_parameters': defaulted,
+                    'status': 'passed' if not defaulted else 'failed',
+                    'rule': 'When GD-SB is provided to protect GD-VLV, its dimensions must be fitted to the valve envelope and clearance basis rather than left at generic EDAS defaults.'
+                })
+            if code == 'GD-ST' and 'GD-B' in self.codes:
+                required = ('L_top', 'H_top', 'P_vt')
+                supplied = component_defs.get(cid, {})
+                defaulted = [name for name in required if name not in supplied]
+                if defaulted and mode == 'complete':
+                    missing.append(f'{cid}.sizing.defaulted_to_EDAS')
+                support_sizing.append({
+                    'component_id': cid,
+                    'code': code,
+                    'sized_for': 'GD-B',
+                    'required_explicit_parameters': list(required),
+                    'defaulted_parameters': defaulted,
+                    'status': 'passed' if not defaulted else 'placeholder' if mode != 'complete' else 'failed',
+                    'rule': 'When GD-ST is provided to support GD-B, its frame dimensions must be fitted to the branch terminal and connector geometry before claiming a complete layout.'
+                })
+
         if mode == 'complete':
             missing.extend(f'design_basis.{name}' for name in basis_missing)
 
@@ -1010,6 +1047,11 @@ class ILS:
                 'purpose': meta.get('purpose', 'unspecified'), 'status': status,
                 'ea_structures': structures, 'branch_gd_st_gate': branch_gate,
                 'branch_structure_associations': branch_links,
+                'support_sizing_gate': {
+                    'required': bool(support_sizing),
+                    'status': 'not_applicable' if not support_sizing else 'passed' if all(item['status'] == 'passed' for item in support_sizing) else 'failed',
+                    'items': support_sizing,
+                },
                 'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
                                         'design_basis': basis, 'missing_basis': basis_missing},
                 'unresolved_or_inactive_slots': missing,

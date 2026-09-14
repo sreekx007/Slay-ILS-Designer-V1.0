@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "linked_experience_id": "kel:experience:q3_inline_valve_gdsb_preliminary_plot:20260915",
+  "created_utc": "2026-09-14T17:23:05Z",
+  "raw_feedback_text": "Issue - The Base Structure depth and Length are significantly more than the Valve. This does not match the recommendation provided to User. When an inline component like GD-VLV or GD-B is plotted with required dimensions, and GD-ST or GD-SB are then dimensioned to suit these components, the GD-ST / SB need to be modified from their default EDAS dimension parameters.",
+  "feedback_type": "missing_constraint",
+  "structured_feedback": {
+    "affected_requirement": "Support/protection structures must be dimensioned to the supported/protected component envelope.",
+    "affected_function": "produce a preliminary plot whose GD-ST/GD-SB dimensions match the stated assembly recommendation",
+    "affected_behavior": "avoid excessive support depth/length that may add stiffness, offset, strain, or bending effects without evidence",
+    "affected_structure": "GD-SB; GD-ST",
+    "affected_constraint": "Do not use generic EDAS default dimensions for GD-ST/GD-SB when they are introduced to suit a specific GD-VLV, GD-B, or similar component.",
+    "pmap_issue": "The plotted GD-SB used default dimensions much larger than the valve while the explanation recommended valve-fitted protection geometry.",
+    "apf_action": "add_support_structure_sizing_gate_and_plot_report_check",
+    "priority": "high"
+  }
+}

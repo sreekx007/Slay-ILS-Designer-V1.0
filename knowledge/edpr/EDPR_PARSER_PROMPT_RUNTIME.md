@@ -337,6 +337,7 @@ Return only the final JSON object.
   `ILT-Z-*` standard-layout candidates.
 - For any header valve or other header component unable to bear roller contact, populate `workflowIntent.valveProtection` and make GD-SB protection compulsory unless the workflow stops for missing information. Unknown envelope, roller/contact, clearance, connector-spacing, load-case, acceptance, and combined-moment-evidence inputs are blocking questions. A capacity ratio is a constraint; it does not imply support topology or formal strain optimization by itself.
 - For every layout concept, consider reduction of high strain and bending moment by default. Treat this as an engineering screening duty; formal optimization still requires an explicit objective and applicable evidence.
+- When `GD-ST` or `GD-SB` is introduced to support or protect another component, do not leave its dimensions at generic EDAS defaults. Ask for the supported/protected component envelope and clearance basis, or mark the structure dimensions as explicit preliminary placeholders fitted to that component.
 - For two branch valves, populate `workflowIntent.twoBranchValves`. Unless expert
   review fixed the topology and supplied two distinct branch-owned valve
   instances, emit a representation gap and do not request a plot.

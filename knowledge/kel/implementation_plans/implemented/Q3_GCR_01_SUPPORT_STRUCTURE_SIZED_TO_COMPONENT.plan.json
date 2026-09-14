@@ -1,0 +1,65 @@
+{
+  "schema": "kel-implementation-plan/0.2",
+  "implementation_plan_id": "kel:implementation-plan:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "created_utc": "2026-09-14T17:23:05Z",
+  "status": "verified",
+  "source_change_request_id": "kel:change:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "source_change_request_status": "implemented",
+  "expert_review_ref": {
+    "id": "kel:review:q3_inline_valve_gdsb:support_structure_sized_to_component",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q3_REVIEW_01_SUPPORT_STRUCTURE_SIZED_TO_COMPONENT.json"
+  },
+  "target_layer": "EDAS",
+  "requirements": [
+    "Flag GD-SB default dimensions when GD-SB protects GD-VLV.",
+    "Expose support_sizing_gate in design workflow reports.",
+    "Clear the sizing gate when GD-SB dimensions are explicitly fitted to the valve envelope.",
+    "Instruct EDPR parsing to ask for or explicitly mark support/protection sizing basis."
+  ],
+  "changed_paths": [
+    "plotters/ils_builder.py",
+    "tools/design_rules_v02.py",
+    "knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "knowledge/edpr/EDPR_APF_PARSER_PROMPT.md",
+    "tests/kel/test_design_workflow_v02.py"
+  ],
+  "evidence": [
+    "tests/kel/test_design_workflow_v02.py::test_gdsb_protecting_valve_requires_explicit_sizing"
+  ],
+  "checklist": [
+    {
+      "id": "step_1",
+      "action": "Add support-sizing gate to design workflow report.",
+      "status": "complete"
+    },
+    {
+      "id": "step_2",
+      "action": "Add layout-intent validation gap for defaulted support dimensions.",
+      "status": "complete"
+    },
+    {
+      "id": "step_3",
+      "action": "Add parser prompt rule for support/protection structure sizing basis.",
+      "status": "complete"
+    },
+    {
+      "id": "step_4",
+      "action": "Add focused regression test.",
+      "status": "complete"
+    }
+  ],
+  "tests": [
+    "pytest tests/kel/test_design_workflow_v02.py",
+    "python -m unittest discover tools \"test_*.py\""
+  ],
+  "review": {
+    "reviewer": "User/domain expert",
+    "decision": "accepted",
+    "notes": "Approved in session and requested implementation."
+  },
+  "completion": {
+    "implemented_utc": "2026-09-14T17:23:05Z",
+    "verified_utc": "2026-09-14T17:27:50Z",
+    "implementation_ref": "plotters/ils_builder.py"
+  }
+}

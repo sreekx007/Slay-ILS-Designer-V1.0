@@ -19,7 +19,7 @@ from ils_builder import build_ils
 
 
 def test_vertical_connector_is_distinct_and_selects_z_anchor() -> None:
-    intent = extract_design_intent({"sourceRequest": {"rawText": "The branch connector shall be vertical."}})
+    intent = extract_design_intent({"sourceRequest": {"rawText": "The branch connector shall be vertical."}, "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}}})
     assert intent["connector"]["required_orientation"] == "vertical"
     spec, report = materialize({"design_intent": intent, "recommendation": {"recommended_candidate": "L-FT-F2"}})
     assert report["source_anchor"].startswith("ILT-Z-")
@@ -37,7 +37,7 @@ def test_l_and_z_branches_require_declared_gdst_anchors() -> None:
         ("vertical", "ILT-Z-FT-F2", "Z", "top1"),
     )
     for orientation, candidate, variant, structure_feature in cases:
-        intent = extract_design_intent({"sourceRequest": {"rawText": f"The branch connector shall be {orientation}."}})
+        intent = extract_design_intent({"sourceRequest": {"rawText": f"The branch connector shall be {orientation}."}, "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}}})
         spec, _ = materialize({"design_intent": intent, "recommendation": {"recommended_candidate": candidate}})
         branch = next(c for c in spec["components"] if c["code"] == "GD-B")
         assert branch["variant"] == variant
@@ -118,11 +118,54 @@ def test_valve_query_stops_and_complete_fixture_uses_real_gdsb() -> None:
     assert "GD-SB" in build_ils(layout).codes
     generic = json.loads(json.dumps(layout))
     generic["components"] = [c for c in generic["components"] if c["code"] != "GD-SB"]
-    assert validate_layout_against_intent(generic, complete_intent)[0]["code"] == "EA_SB_REQUIRES_GD_SB"
+    assert validate_layout_against_intent(generic, complete_intent)[0]["code"] == "HEADER_VALVE_REQUIRES_GD_SB"
+
+
+def test_gdsb_protecting_valve_requires_explicit_sizing() -> None:
+    intent = extract_design_intent({
+        "sourceRequest": {"rawText": "Design an ILS assembly that consists of a valve welded inline with the pipeline."},
+        "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}, "valveProtection": {
+            "rollerPassageInScope": True,
+            "protectionMode": "GD-SB",
+            "valveEnvelope": {"source": "default GD-VLV"},
+            "actuatorEnvelope": {"source": "default GD-VLV stem"},
+            "flangeEnvelope": {"source": "not modelled"},
+            "localThickSectionEnvelope": {"source": "not applicable"},
+            "rollerGeometry": {"source": "placeholder"},
+            "requiredClearance": 0.1,
+            "loadCases": ["placeholder"],
+            "acceptanceMeasure": "review_only",
+            "connectorSpacingBasis": "placeholder",
+            "connectorSystem": "PS",
+            "connectorEvidenceRefs": ["placeholder"],
+            "momentEvidence": {"cases": [{"id": "placeholder", "maximum_valve_moment_kNm": 10, "pipeline_allowable_moment_kNm": 100}]},
+            "capacityRatio": 1.0
+        }}}
+    })
+    defaulted = {
+        "components": [
+            {"id": "vlv1", "code": "GD-VLV", "centre_x": 0.0},
+            {"id": "sb1", "code": "GD-SB", "centre_x": 0.0},
+        ],
+        "associations": []
+    }
+    gaps = validate_layout_against_intent(defaulted, intent)
+    assert any(gap["code"] == "SUPPORT_STRUCTURE_DIMENSIONS_DEFAULTED" for gap in gaps)
+    report = build_ils({"schema_version": 1, "ils": {"design_gate": "advisory"}, "pipeline": {"OD_pipe": 0.3048, "t_pipe": 0.0159}, **defaulted}).design_workflow_report()
+    assert report["support_sizing_gate"]["status"] == "failed"
+    assert "sb1.sizing.defaulted_to_EDAS" in report["unresolved_or_inactive_slots"]
+
+    valve_sized = json.loads(json.dumps(defaulted))
+    valve_sized["components"][1].update({"P_l1": 1.8, "P_l2": 0.18, "P_vt": -0.12, "P_v": 0.55})
+    gaps = validate_layout_against_intent(valve_sized, intent)
+    assert not [gap for gap in gaps if gap["code"] == "SUPPORT_STRUCTURE_DIMENSIONS_DEFAULTED"]
+    report = build_ils({"schema_version": 1, "ils": {"design_gate": "advisory"}, "pipeline": {"OD_pipe": 0.3048, "t_pipe": 0.0159}, **valve_sized}).design_workflow_report()
+    assert report["support_sizing_gate"]["status"] == "passed"
 
 
 def test_ps_without_compatible_valve_evidence_creates_fea_candidate() -> None:
     fixture = json.loads((ROOT / "tests/kel/fixtures/VALVE_EASB_COMPLETE_DESIGN.json").read_text(encoding="utf-8"))
+    fixture["designContext"]["workflowIntent"]["edprConfirmation"] = {"status": "confirmed"}
     cfg = fixture["designContext"]["workflowIntent"]["valveProtection"]
     cfg["connectorSystem"] = "PS"
     cfg.pop("connectorEvidenceRefs")

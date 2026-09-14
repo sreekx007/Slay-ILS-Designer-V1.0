@@ -306,6 +306,17 @@ def validate_layout_against_intent(spec: dict[str, Any], intent: dict[str, Any])
         bases = [c for c in spec.get("components", []) if c.get("code") == "GD-SB"]
         if not bases:
             gaps.append({"code": "HEADER_VALVE_REQUIRES_GD_SB", "message": "A header GD-VLV or other non-roller-contact header component requires canonical GD-SB geometry; a generic frame or unsupported valve-only layout is insufficient."})
+        else:
+            required = {"P_l1", "P_l2", "P_v", "P_vt"}
+            for index, base in enumerate(bases, 1):
+                defaulted = sorted(required - set(base))
+                if defaulted:
+                    gaps.append({
+                        "code": "SUPPORT_STRUCTURE_DIMENSIONS_DEFAULTED",
+                        "message": "GD-SB used to protect GD-VLV must be dimensioned from the valve envelope and clearance basis instead of left at generic EDAS defaults.",
+                        "component": str(base.get("id") or f"GD-SB[{index}]"),
+                        "defaulted_parameters": defaulted,
+                    })
     return gaps
 
 

@@ -1,0 +1,17 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "linked_change_request_id": "kel:change:q3_inline_valve_gdsb:support_structure_sized_to_component",
+  "status": "final",
+  "decision": "implemented",
+  "reviewer": "User/domain expert",
+  "reviewed_utc": "2026-09-14T17:23:05Z",
+  "decision_reason": "User approved the KEL lesson and requested implementation after observing that default GD-SB dimensions contradicted the valve-sized recommendation.",
+  "required_evidence": [
+    "Regression test that defaulted GD-SB sizing is flagged when protecting GD-VLV.",
+    "Regression test that explicitly valve-sized GD-SB clears the support-sizing gate.",
+    "Updated plot/report gate exposes support sizing status."
+  ],
+  "implementation_target": "EDAS; Plotters; EDPR",
+  "implementation_reference": "plotters/ils_builder.py; tools/design_rules_v02.py; tests/kel/test_design_workflow_v02.py"
+}

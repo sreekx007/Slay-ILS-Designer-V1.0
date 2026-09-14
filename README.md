@@ -18,7 +18,7 @@ The current repository supports a complete run from an existing EDPR JSON file. 
 - Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
 - Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
 - Packages the completed run as a KEL experience and can turn supplied human feedback into atomic, grouped, governed graph-change requests.
-- Applies KEL v0.2 gates for L/Z branch anchoring to GD-ST, connector orientation, GD-ST report coverage, valve-protection evidence, and unresolved two-valve topology.
+- Applies KEL v0.2 gates for L/Z branch anchoring to GD-ST, connector orientation, GD-ST report coverage, valve-protection evidence, GD-SB/GD-ST support sizing, and unresolved two-valve topology.
 
 The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 
@@ -158,7 +158,7 @@ python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output run
 python tools/plot_design.py --input plotters/examples/example_boss_layout.json --output runs/boss.png
 ```
 
-PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, and the KEL v0.2 EA exposure gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, and both associations. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
+PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, the KEL v0.2 EA exposure gate, and the support-sizing gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, both associations, and any GD-SB/GD-ST dimensions needed to fit a protected or supported component. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
 
 Presentation lives in:
 
