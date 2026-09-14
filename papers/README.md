@@ -11,15 +11,16 @@ Repository status at 2026-09-14: KEL v0.2 Steps 1 through 4 and Step 6 are imple
 | `PAPER_01A_AI4D_KG_CASE_STUDY_OUTLINE.md` | User-directed Paper 1 outline: AI4D as data management, smart querying, ontology-grounded graph building, and KEL-governed industrial structural design practice. |
 | `PAPER_01B_INDEPENDENT_FRAMEWORK_OUTLINE.md` | Alternative Paper 1 outline from an independent framing: governed neuro-symbolic design assistant for subsea inline structures. |
 | `PAPER_01_FIGURES_TABLES_AND_EVIDENCE_PLAN.md` | Shared plan for figures, tables, evidence, and repository artifacts needed by either version. |
+| `PAPER_01A_DRAFTING_ACTION_PLAN.md` | engrXiv-oriented drafting plan for engineering professionals without assumed AI/ML expertise. |
+| `PAPER_01B_DRAFTING_ACTION_PLAN.md` | arXiv-oriented research plan for AI specialists who need the mechanical/structural domain explained. |
+| `PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md` | Shared realistic-to-schematic-to-ontology storyboard, source-paper placeholder map, and figure production method. |
 | `PAPER_REFERENCE_REQUESTS.md` | Status of supplied references and the literature still needed before a citation-ready preprint. |
 | `REFERENCE_LIBRARY.md` | Citation-ready registry for the eight supplied papers, with checksums and manuscript roles. |
 | `EDIKB_SOURCE_PROVENANCE.json` | Machine-readable mapping from the two author papers to the EDIKB Paper 1 and Paper 2 source families. |
 
 ## Recommended Next Step
 
-Use `PAPER_01A_AI4D_KG_CASE_STUDY_OUTLINE.md` as the first preprint path because it best matches the intended job-application story: engineering practice, industrial knowledge management, and practical AI4D implementation.
-
-Use `PAPER_01B_INDEPENDENT_FRAMEWORK_OUTLINE.md` to sharpen the academic framing and title. A future manuscript can merge Version A's professional narrative with Version B's stronger research positioning after the remaining literature and case-study evidence package are complete.
+Execute `PAPER_01A_DRAFTING_ACTION_PLAN.md` and `PAPER_01B_DRAFTING_ACTION_PLAN.md` against the shared evidence base. Begin with the R7/R8 claim-to-evidence matrix and the realistic-to-schematic ontology storyboard in `PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md`. Keep the manuscripts separate: Paper 01A teaches engineering data management for engrXiv, while Paper 01B presents and evaluates the governed AI architecture for arXiv.
 
 ## Source-Paper Handling
 

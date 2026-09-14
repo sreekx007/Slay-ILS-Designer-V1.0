@@ -14,6 +14,20 @@ the local virtual environment, Python caches, staging files, and `.git/` remain
 excluded.
 
 
+
+## Paper 01A and 01B drafting plans - confirmed
+
+Audience-specific action plans and a shared ontology/figure storyboard are included. Paper 01A targets engineering professionals and engrXiv; Paper 01B targets AI researchers and arXiv. The shared figure plan maps temporary figures from the two author papers to final repository-backed redraws.
+
+| Action | Repository path |
+| --- | --- |
+| Add | `papers/PAPER_01A_DRAFTING_ACTION_PLAN.md` |
+| Add | `papers/PAPER_01B_DRAFTING_ACTION_PLAN.md` |
+| Add | `papers/PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md` |
+| Update | `papers/README.md` |
+| Update | `framework_manifest.json` |
+| Update | `UPLOAD_MAP.md` |
+
 ## Research reference registration - confirmed
 
 The eight supplied publications are registered by citation, role, and source-file checksum. The two author papers are also mapped directly to the EDIKB Paper 1 and Paper 2 source families. Source PDFs remain outside Git; no paper binaries are uploaded.

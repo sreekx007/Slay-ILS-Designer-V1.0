@@ -595,6 +595,27 @@
         "status": "present",
         "required": false,
         "role": "Machine-readable mapping from author papers to EDIKB source families"
+      },
+      {
+        "id": "doc:paper_01a_drafting_action_plan",
+        "repo_path": "papers/PAPER_01A_DRAFTING_ACTION_PLAN.md",
+        "status": "present",
+        "required": false,
+        "role": "Audience, structure, evidence, evaluation, and engrXiv execution plan for Paper 01A"
+      },
+      {
+        "id": "doc:paper_01b_drafting_action_plan",
+        "repo_path": "papers/PAPER_01B_DRAFTING_ACTION_PLAN.md",
+        "status": "present",
+        "required": false,
+        "role": "Formalization, experiments, reproducibility, and arXiv execution plan for Paper 01B"
+      },
+      {
+        "id": "doc:paper_01_shared_ontology_figure_plan",
+        "repo_path": "papers/PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md",
+        "status": "present",
+        "required": false,
+        "role": "Shared source-paper placeholder map and realistic-to-schematic-to-ontology figure plan"
       }
     ],
     "reference_papers": [
