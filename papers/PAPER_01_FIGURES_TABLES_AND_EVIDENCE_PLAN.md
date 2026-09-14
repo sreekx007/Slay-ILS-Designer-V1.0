@@ -13,7 +13,7 @@ This document lists the figures, tables, repository artifacts, and evidence need
 | 3 | FBS-OAM mapping for ILS/ILT assemblies | New conceptual diagram: Function/Behavior/Structure plus OAM assembly features | Needs drafting |
 | 4 | P-map/APF query decomposition | Use `docs/EDPR_PMAP_APF_IMPLEMENTATION.md` | Ready for diagram drafting |
 | 5 | KEL feedback-to-graph-change lifecycle | Use `knowledge/kel/KEL_ARCHITECTURE.md` | Ready for diagram drafting |
-| 6 | Q1 case study failure and correction path | Use Q1 feedback and KEL v0.2 records | Needs curated before/after artifacts |
+| 6 | Q1 case study failure and correction path | Use Q1 feedback and KEL v0.2 records | Corrected/fail-closed outputs are ready; initial before artifact still needs curation |
 | 7 | Dataset sufficiency and parametric-study expansion | New diagram: historical design KG -> gap map -> FEA/parametric studies -> ML surrogate | Needs drafting |
 
 ## Recommended Tables
@@ -37,7 +37,8 @@ This document lists the figures, tables, repository artifacts, and evidence need
 | `docs/EDPR_PMAP_APF_IMPLEMENTATION.md` | P-map/APF explanation and parser workflow. |
 | `knowledge/kel/README.md` | KEL purpose and position relative to Knowloop. |
 | `knowledge/kel/KEL_ARCHITECTURE.md` | Traceability chain and toolchain list. |
-| `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` | Evidence of KEL v0.2 gates driven by Q1 feedback. |
+| `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` | Scope, ordering, completion state, and current Step 5 representation-gap boundary. |
+| `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` | Authoritative description of implemented connector, EA-ST, valve-protection, and topology gates. |
 | `tests/kel/` | Evidence that gates are testable, not only narrative. |
 | `tools/design_rules_v02.py` | Encoded design-intent rules for vertical connector, EA-SB, and representation gaps. |
 | `plotters/` | Evidence that geometry/plot output is tool-backed. |
@@ -52,8 +53,8 @@ To make the Q1 case study publication-ready, collect:
 | Initial assistant output | Text overview and plot that failed review, if acceptable to include. |
 | Human feedback | The numbered feedback list from the review. |
 | KEL records | Atomic feedback, grouped records, graph change requests, expert reviews, implementation plans. |
-| Workflow correction | How v0.2 gates now handle vertical connector, EA-ST, EA-SB, plotter use, and two-valve gap. |
-| Final representative output | A corrected or fail-closed workflow artifact from the repo. |
+| Workflow correction | Repository code/tests at `c3157c6`: vertical connector selects `ILT-Z-FT-PS`; EA-ST exposure is reported; unsupported valve protection and unresolved two-valve topology fail closed. |
+| Final representative output | Use the Q1 vertical-connector emitted layout/plot and the 12-inch valve `VALVE_PROTECTION_INPUTS_MISSING` report as paired successful and fail-closed artifacts. |
 
 ## Evidence Needed From Research Papers
 
@@ -81,3 +82,16 @@ Before release, every technical claim should be tagged as one of:
 | Future work | Proposed but not yet implemented. |
 
 This tagging will make the preprint stronger and safer. It will also help convert the paper into a job-application talking artifact because each claim has a defensible basis.
+
+## Current Repository Verification Baseline
+
+The synchronized implementation baseline is commit `c3157c6` (2026-09-14):
+
+- 23 KEL tests passed;
+- 29 plotter/solver tests passed;
+- 40 KEL instance documents and 10 KEL schemas validated;
+- all four repository EDPR examples validated;
+- the lifecycle status report found zero authoritative conflicts.
+
+Generated files under `runs/` are reproducible local artifacts and should be
+curated into a publication evidence package before citation or release.

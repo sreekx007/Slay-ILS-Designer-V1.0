@@ -232,7 +232,7 @@ Original design request:
 Observed framework lesson:
 
 - A normal LLM response can generate a plausible-looking but incorrect layout.
-- It may draw the branch below the pipeline, omit required EA-SB protection, ignore EA-ST association for branch connectors, use incorrect component shapes, omit parameters/connections, and produce a plot that is not repository-backed.
+- It may draw the branch below the pipeline, assume an unsupported EA-SB protection arrangement, ignore EA-ST association for branch connectors, use incorrect component shapes, omit parameters/connections, and produce a plot that is not repository-backed.
 - Under KEL, these are not just errors; they become structured feedback records and graph change requests.
 
 Case-study table:
@@ -240,11 +240,25 @@ Case-study table:
 | Feedback lesson | Framework update direction |
 |---|---|
 | Branch location and vertical connector misunderstood | EDPR/EDAS design-intent gate for connector orientation and Z-branch selection. |
-| Valve protection omitted | EA-SB default assumption and evidence gate for valve roller/contact protection. |
+| Valve protection unsupported or omitted | EDPR clarification/evidence gate; use canonical GD-SB only when roller scope, protection mode, envelopes, clearances, load cases, connector basis, and compatible moment evidence support EA-SB. |
 | Branch connector not associated with EA-ST | EDAS association rule and plot/report exposure gate. |
 | Freehand plot too small and wrong geometry | Mandatory repository plotter use and plot quality checks. |
 | Component parameters and connections missing | EDES/EDAS parameter and association exposure in report. |
-| Stress/strain minimization not declared | Results must state optimization assumption, likely high-stress/strain regions, and evidence limits. |
+| Strain optimization was inferred without being requested | Do not create an optimization objective. Evaluate stress/strain only against explicit objectives or acceptance constraints and state evidence limits. |
+
+### 9.1 Repository-Verified KEL v0.2 Behavior
+
+The current repository demonstrates the following behavior at commit `c3157c6`:
+
+- explicit vertical connector intent restricts selection to `ILT-Z-*` and emits GD-B variant Z;
+- the Q1 vertical-connector regression emits `ILT-Z-FT-PS` rather than an L branch;
+- complete EA-ST reports expose canonical GD-ST parameters, active and inactive slots, modeled GD-Con parts, pipe landings, and associations;
+- the incomplete 12-inch valve request stops with `VALVE_PROTECTION_INPUTS_MISSING` and does not emit a misleading layout;
+- P-S valve support without compatible combined evidence produces a `needs_evidence` FEA study candidate;
+- valve moment evidence is checked using capacity utilization for every supplied load case;
+- two branch valves remain `TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED` until expert review fixes their ownership topology.
+
+These statements are repository-demonstrated prototype behavior. They are not claims of code compliance, structural adequacy, or final engineering approval.
 
 ### 10. Dataset Sufficiency and the Need for Parametric Studies
 

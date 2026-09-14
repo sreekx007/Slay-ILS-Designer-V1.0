@@ -44,3 +44,12 @@ The paper will be stronger if it avoids sounding like "we made an LLM app." The 
 > We built a governed engineering knowledge system in which the LLM is the natural-language and reasoning interface, while the knowledge graph, tools, tests, and KEL lifecycle provide engineering discipline.
 
 This wording makes the work credible to both engineering managers and AI reviewers.
+
+## Repository Evidence Already Available
+
+KEL v0.2 implementation evidence is available in the repository at commit
+`c3157c6`, including design rules, schemas, lifecycle records, regression
+fixtures, implementation-plan tooling, and successful/fail-closed workflow
+outputs. The outstanding requests above are external literature and underlying
+domain sources needed to support publication claims; repository behavior alone
+does not replace those citations.
