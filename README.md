@@ -209,6 +209,20 @@ python tools/kel/promote_accepted_kel_change.py --change-request path/to/change.
 
 `implemented` promotion additionally requires `--implementation-reference` on the expert-review record. See [KEL workflow](knowledge/kel/README.md), [LLM workflow instructions](knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md), and [v0.2 recommendations](knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md).
 
+## Critical update notes
+
+Open defects that build, validate and return a number without anything
+objecting are recorded in [`docs/CRITICAL_UPDATE_NOTES.md`](docs/CRITICAL_UPDATE_NOTES.md).
+Read it before relying on a check this repository documents but may not
+perform.
+
+**CUN-001 — OPEN.** A `D` (deadband) connector requires `P_gap`, and nothing
+requires it. `component_spec.py` states the rule and names
+`ils_builder.validate()` as its enforcement point; that check does not exist.
+An F2D/F1D/PSD layout with `P_gap` unset builds, validates clean, and hands
+every consumer a deadband with `gap = None`. The shipped anchors all set it,
+so the invariant currently holds by convention in the data, not by code.
+
 ## Engineering model notes
 
 All 12 current EDES component codes have component and assembly rendering coverage. `GD-BrPipe` is a branch pipe part; `GD-B` is the multi-member branch subassembly.
@@ -274,3 +288,4 @@ The local framework remains manifest schema/version 0.4 with plotter migration P
 - Structured retrieval is implemented; vector-index retrieval is a future enhancement.
 - Plot QA supports inspection and catches obvious presentation/export problems, but does not certify physical validity.
 - Source-paper files referenced by knowledge provenance are not included in the current checkout.
+- A `D` connector's required `P_gap` is not enforced anywhere; see CUN-001 in `docs/CRITICAL_UPDATE_NOTES.md`.
