@@ -1,0 +1,17 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "linked_change_request_id": "kel:change:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "status": "final",
+  "decision": "implemented",
+  "reviewer": "User/domain expert",
+  "reviewed_utc": "2026-09-14T17:52:35Z",
+  "decision_reason": "User closed the feedback loop and approved implementation after identifying that useful EDIKB shroud-plus-stiff-component knowledge was missed by judgement.",
+  "required_evidence": [
+    "Regression test that GD-VLV + GD-SH intent marks the shroud-stiff interaction as requiring EDIKB retrieval.",
+    "Regression test that retrieval selects ILS-SHTP, C1 EDIKB graph nodes, and GD-SH+GD-TP numeric rows by analogy.",
+    "Regression test that missing C1 evidence raises EDIKB_USEFULNESS_JUDGEMENT_FAILURE."
+  ],
+  "implementation_target": "Tools; EDPR; KEL",
+  "implementation_reference": "tools/design_rules_v02.py; tools/retrieve_context.py; tools/solve_problem.py; tests/kel/test_design_workflow_v02.py"
+}

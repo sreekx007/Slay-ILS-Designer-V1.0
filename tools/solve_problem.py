@@ -20,6 +20,39 @@ from typing import Any
 
 from design_rules_v02 import workflow_blockers
 
+SHROUD_STIFF_REQUIRED_REFS = {
+    "edikb:p1_c1_shtp_nonadditive_01",
+    "edikb:p1_c1_shtp_location_01",
+    "edikb:p1_c1_shtp_peakloc_01",
+    "edikb:p1_c1_shtp_size_01",
+}
+
+
+def selected_edikb_ids(context: dict[str, Any]) -> set[str]:
+    graph = context.get("edikb_graph_context", {})
+    return {str(node.get("id")) for node in graph.get("selected_nodes", []) if isinstance(node, dict)}
+
+
+def shroud_stiff_judgement_flags(context: dict[str, Any]) -> list[dict[str, Any]]:
+    intent = context.get("design_intent", {})
+    gate = intent.get("shroud_stiff_component", {}) if isinstance(intent, dict) else {}
+    if not gate.get("required"):
+        return []
+    selected = selected_edikb_ids(context)
+    missing = sorted(SHROUD_STIFF_REQUIRED_REFS - selected)
+    rows = context.get("numeric_evidence", {}).get("rows", [])
+    has_shtp_rows = any(isinstance(row, dict) and str(row.get("component_system")) == "GD-SH+GD-TP" for row in rows)
+    flags: list[dict[str, Any]] = []
+    if missing or not has_shtp_rows:
+        flags.append({
+            "code": "EDIKB_USEFULNESS_JUDGEMENT_FAILURE",
+            "status": "retrieval_gap",
+            "message": "GD-VLV + GD-SH was present, but analogous GD-SH + stiff-component EDIKB evidence was not fully retrieved. Existing GD-TT/GD-TP + GD-SH C1 evidence must be considered useful by analogy before recommending valve placement or shroud length.",
+            "missing_edikb_refs": missing,
+            "missing_numeric_shtp_rows": not has_shtp_rows,
+        })
+    return flags
+
 
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
@@ -135,6 +168,7 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
     graph_cues = collect_graph_cues(context)
     design_intent = context.get("design_intent", {})
     blockers = workflow_blockers(design_intent)
+    judgement_flags = shroud_stiff_judgement_flags(context)
 
     recommendation = None
     if numeric_ranking and numeric_ranking[0].get("score_lower_is_better") is not None:
@@ -163,6 +197,7 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
         "problem": context.get("problem", {}),
         "design_intent": design_intent,
         "workflow_gates": {"status": "blocked" if blockers else "passed", "blockers": blockers},
+        "judgement_flags": judgement_flags,
         "recommendation": recommendation,
         "numeric_ranking": numeric_ranking,
         "graph_cues": graph_cues,
@@ -170,6 +205,7 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
             "Use EDAS to confirm topology and interface validity before selecting a final concept.",
             "Use EDES to confirm component-specific constraints such as roller contact, support conditions, and installation envelope.",
             "If feature interactions are present, combined evidence overrides simple addition of isolated component effects.",
+            "When GD-VLV is combined with GD-SH, use GD-SH + stiff-component C1 evidence by analogy before deciding valve placement or shroud length; record applicability limits.",
             "Every concept must consider reduction of high strain and bending moment; formal optimization requires an explicit EDPR objective and compatible evidence.",
             "If no direct numeric evidence exists, mark the comparison as a future FEA/ML study candidate.",
         ],
@@ -216,6 +252,14 @@ def to_markdown(solution: dict[str, Any]) -> str:
             lines.append(f"- `{cue.get('id')}`: {cue.get('label')} ({cue.get('type')})")
     else:
         lines.append("No graph guidance/rule nodes were selected.")
+
+    lines.extend(["", "## Judgement Flags", ""])
+    flags = solution.get("judgement_flags", [])
+    if flags:
+        for flag in flags:
+            lines.append(f"- `{flag.get('code')}`: {flag.get('message')}")
+    else:
+        lines.append("No judgement-failure flags were raised.")
 
     lines.extend(["", "## Engineering Notes", ""])
     for note in solution.get("engineering_notes", []):

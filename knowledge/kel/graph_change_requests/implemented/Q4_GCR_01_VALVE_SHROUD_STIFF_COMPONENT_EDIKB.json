@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "status": "implemented",
+  "created_utc": "2026-09-14T17:52:35Z",
+  "linked_experience_id": "kel:experience:q4_inline_valve_tapered_shroud_plot:20260915",
+  "linked_feedback_id": "kel:feedback:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "target_layer": "Tools",
+  "change_type": "new_workflow_gate",
+  "problem_observed": "A GD-VLV + GD-SH concept was treated as a tapered roller-guide placement problem only, missing the analogous C1 GD-SH + stiff-component EDIKB evidence for placement, length, non-additive response, and strain implications.",
+  "proposed_change": "When GD-VLV and GD-SH are both present or requested, classify the design as a stiff inline component inside a shroud, retrieve ILS-SHTP / GD-SH + GD-TP/GD-TT evidence by analogy, and flag EDIKB_USEFULNESS_JUDGEMENT_FAILURE if those nodes or rows are omitted.",
+  "evidence_requirement": "Focused regression tests for intent extraction, retrieval of C1 SHTP evidence, and judgement-failure reporting.",
+  "priority": "high",
+  "expert_review_ref": {
+    "id": "kel:review:q4_valve_shroud:stiff_component_edikb_retrieval",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q4_REVIEW_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json"
+  },
+  "implementation_ref": {
+    "target": "tools/design_rules_v02.py; tools/retrieve_context.py; tools/solve_problem.py",
+    "repo_path": "tools/retrieve_context.py",
+    "notes": "Implemented shroud_stiff_component intent, deterministic C1/SHTP retrieval expansion, and EDIKB usefulness judgement flag."
+  }
+}

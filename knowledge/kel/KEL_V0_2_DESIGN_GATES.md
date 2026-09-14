@@ -67,6 +67,17 @@ applies by family to `GD-ST` when it supports `GD-B`: the top-frame length,
 height, and vertical offset must be fitted to the branch terminal and connector
 geometry before the layout can claim complete status.
 
+## Shroud plus stiff inline component evidence
+
+When `GD-VLV` is combined with `GD-SH`, the workflow treats the valve as a
+stiff inline component inside an offset shroud. This is analogous to the
+accepted `ILS-SHTP` / `GD-SH + GD-TP/GD-TT` C1 evidence pattern: combined
+response is non-additive, stiff-component position relative to the shroud X2
+region matters, peak strain can remain governed by the shroud transition
+region, and shroud/stiff-component lengths must be checked against available
+EDIKB rows before recommending a placement. The solver must flag
+`EDIKB_USEFULNESS_JUDGEMENT_FAILURE` when this interaction is present but those
+useful EDIKB nodes or numeric rows are not selected.
 
 ## Two branch valves
 

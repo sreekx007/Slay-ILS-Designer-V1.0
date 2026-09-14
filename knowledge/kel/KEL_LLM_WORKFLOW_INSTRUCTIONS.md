@@ -77,6 +77,7 @@ Correct behavior:
   branch/connector rules.
 - Use the EDAS standard `ILT-Z-*` anchors when a vertical connector is requested.
 - When `GD-SB` protects `GD-VLV`, and when `GD-ST` supports `GD-B`, size the structure from the protected/supported component envelope and clearance basis instead of leaving EDAS defaults in place.
+- When `GD-VLV` is paired with `GD-SH`, treat it as a stiff inline component inside a shroud and retrieve the analogous `ILS-SHTP` / C1 EDIKB evidence before choosing valve position or shroud length. Flag `EDIKB_USEFULNESS_JUDGEMENT_FAILURE` if those useful nodes are missed.
 - Use the repository plotter when plotting.
 - Record any unsupported hybrid requirement as a KEL gap.
 
@@ -91,6 +92,7 @@ Every design response should include:
 | Assumptions | State default assumptions and unresolved inputs. |
 | Stress/strain | Prefer layouts minimizing strain/stress and mark likely peak locations; do not invent FEA values. |
 | Support sizing | If a support/protection structure is added, state the supported component envelope and the explicit GD-ST/GD-SB dimensions used. |
+| Shroud + stiff component | If GD-SH is combined with GD-VLV, GD-TP, or GD-TT, retrieve C1 shroud-plus-stiff-body EDIKB evidence and state applicability limits before recommending placement or length. |
 | Plot | Ask whether the user wants a plot unless the user directly requests one. If plotting, use the repository plotter when possible. |
 | Confidence | State confidence and knowledge sufficiency. |
 | KEL trace | Record feedback, gaps, and expert-review candidates when the interaction reveals missing knowledge or tooling. |

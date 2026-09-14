@@ -14,7 +14,9 @@ sys.path.insert(0, str(TOOLS))
 sys.path.insert(0, str(PLOTTERS))
 
 from design_rules_v02 import extract_design_intent, validate_layout_against_intent, valve_moment_utilization
+from retrieve_context import build_context_package
 from solution_to_layout import materialize
+from solve_problem import build_solution, shroud_stiff_judgement_flags
 from ils_builder import build_ils
 
 
@@ -184,3 +186,55 @@ def test_two_branch_valve_request_emits_representation_gap() -> None:
     with pytest.raises(ValueError, match="TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED"):
         materialize({"design_intent": intent, "recommendation": {"recommended_candidate": "ILT-L-FT-F2"}})
 
+
+
+def test_valve_shroud_interaction_retrieves_shtp_evidence(tmp_path: Path) -> None:
+    edpr = {
+        "id": "edpr:test:valve_shroud",
+        "sourceRequest": {"rawText": "There is a valve on the header line. It can take roller reaction at base but cannot ride rollers, so use tapered shrouds at the sides."},
+        "problemIdentity": {"title": "Inline valve with tapered shroud guide"},
+        "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}},
+    }
+    intent = extract_design_intent(edpr)
+    gate = intent["shroud_stiff_component"]
+    assert gate["required"] is True
+    assert "edikb:p1_c1_shtp_location_01" in gate["required_knowledge_refs"]
+    assert "judgement failure" in gate["judgement_failure_flag"].lower()
+
+    edpr_path = tmp_path / "valve_shroud.edpr.json"
+    edpr_path.write_text(json.dumps(edpr), encoding="utf-8")
+
+    class Args:
+        repo_root = str(ROOT)
+        edpr_json = str(edpr_path)
+        manifest = None
+        max_graph_nodes = 80
+        max_dataset_rows = 120
+
+    context = build_context_package(Args())
+    terms = context["retrieval_terms"]
+    assert "edes:GD-VLV" in terms["component_ids"]
+    assert "edes:GD-SH" in terms["component_ids"]
+    assert "ILS-SHTP" in terms["layout_ids"]
+    selected_ids = {node["id"] for node in context["edikb_graph_context"]["selected_nodes"]}
+    assert "edikb:p1_c1_shtp_location_01" in selected_ids
+    assert "edikb:p1_c1_shtp_size_01" in selected_ids
+    assert any(row.get("component_system") == "GD-SH+GD-TP" for row in context["numeric_evidence"]["rows"])
+    assert build_solution(context)["judgement_flags"] == []
+
+
+def test_valve_shroud_missing_shtp_evidence_flags_judgement_failure() -> None:
+    context = {
+        "design_intent": {
+            "shroud_stiff_component": {
+                "required": True,
+                "status": "requires_edikb_retrieval",
+            }
+        },
+        "edikb_graph_context": {"selected_nodes": []},
+        "numeric_evidence": {"rows": []},
+    }
+    flags = shroud_stiff_judgement_flags(context)
+    assert flags
+    assert flags[0]["code"] == "EDIKB_USEFULNESS_JUDGEMENT_FAILURE"
+    assert "edikb:p1_c1_shtp_location_01" in flags[0]["missing_edikb_refs"]

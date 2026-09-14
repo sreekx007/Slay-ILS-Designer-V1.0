@@ -1,0 +1,22 @@
+{
+  "schema": "kel-lifecycle-reconciliation/0.2",
+  "created_utc": "2026-09-14T17:52:35Z",
+  "mode": "applied",
+  "lifecycle_root": "knowledge/kel/graph_change_requests",
+  "authoritative_records": [
+    {
+      "change_request_id": "kel:change:q4_valve_shroud:stiff_component_edikb_retrieval",
+      "status": "implemented",
+      "repo_path": "implemented/Q4_GCR_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json"
+    }
+  ],
+  "actions": [
+    {
+      "change_request_id": "kel:change:q4_valve_shroud:stiff_component_edikb_retrieval",
+      "source": "expert-approved session feedback",
+      "destination": "implemented/Q4_GCR_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json",
+      "reason": "expert-approved KEL lesson implemented and closed in the implemented lifecycle folder"
+    }
+  ],
+  "conflicts": []
+}

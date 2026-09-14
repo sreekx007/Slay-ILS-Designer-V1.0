@@ -23,6 +23,26 @@ from design_rules_v02 import extract_design_intent
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST_NAMES = ("framework_manifest.json", "framework_manifest_v0_2.json")
 
+SHROUD_STIFF_EDIKB_REFS = {
+    "edikb:p1_c1_shtp_nonadditive_01",
+    "edikb:p1_c1_shtp_location_01",
+    "edikb:p1_c1_shtp_peakloc_01",
+    "edikb:p1_c1_shtp_size_01",
+    "edikb:guidance_keep_gdtp_out_of_shroud_x2",
+    "edikb:guidance_limit_gdtp_size_inside_shroud",
+    "edikb:guidance_consider_long_shroud_only_with_verification",
+}
+
+SHROUD_STIFF_DATASET_FILTERS = (
+    {"component_system": "GD-SH+GD-TP", "study_family": "shtp_thick_pipe_length"},
+    {"component_system": "GD-SH+GD-TP", "study_family": "shtp_thick_pipe_location"},
+    {"component_system": "GD-SH", "study_family": "shroud_run_matrix"},
+)
+
+
+def shroud_stiff_interaction_requested(edpr: dict[str, Any]) -> bool:
+    return bool(extract_design_intent(edpr).get("shroud_stiff_component", {}).get("required"))
+
 
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
@@ -155,9 +175,16 @@ def collect_retrieval_terms(edpr: dict[str, Any]) -> dict[str, set[str]]:
                 elif value.startswith("edikb:") or value.startswith("EDIKB_"):
                     edikb_ids.add(value)
 
+    if shroud_stiff_interaction_requested(edpr):
+        component_ids.update({"edes:GD-SH", "edes:GD-VLV", "edes:GD-TP", "edes:GD-TT"})
+        layout_ids.add("ILS-SHTP")
+        edikb_ids.update(SHROUD_STIFF_EDIKB_REFS)
+
     raw = edpr.get("sourceRequest", {}).get("rawText", "")
     title = edpr.get("problemIdentity", {}).get("title", "")
     semantic_tokens = tokenise(f"{raw} {title} {' '.join(component_ids)} {' '.join(layout_ids)}")
+    if shroud_stiff_interaction_requested(edpr):
+        semantic_tokens.update({"shtp", "shroud", "stiff", "thick", "c1", "nonadditive", "location"})
 
     return {
         "component_ids": component_ids,
@@ -292,6 +319,8 @@ def filter_dataset(
         return {"repo_path": str(csv_path), "missing": True, "rows": []}
 
     plans = [item for item in edpr.get("numericComparisonPlan", []) if isinstance(item, dict)]
+    if shroud_stiff_interaction_requested(edpr):
+        plans = plans + [{"id": f"kel_shroud_stiff_{index}", "filters": filters} for index, filters in enumerate(SHROUD_STIFF_DATASET_FILTERS, 1)]
     exact_rows: list[dict[str, str]] = []
     fallback_rows: list[dict[str, str]] = []
     with csv_path.open("r", encoding="utf-8", newline="") as f:
@@ -360,6 +389,7 @@ def build_context_package(args: argparse.Namespace) -> dict[str, Any]:
             "Deterministic retrieval only; add vector index retrieval later for semantic expansion.",
             "For quantitative ranking, prefer numeric_evidence rows over graph-only guidance.",
             "For combined layouts, inspect interactionEffectPlan and EDIKB interaction nodes before assuming additive effects.",
+            "KEL gate: GD-VLV + GD-SH must retrieve analogous C1 GD-SH + thick-component evidence and flag a judgement failure if omitted.",
         ],
     }
 

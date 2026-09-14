@@ -147,6 +147,14 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
     else:
         valve_status = "not_applicable"
 
+    shroud_cfg = workflow.get("shroudStiffComponent", {})
+    if not isinstance(shroud_cfg, dict):
+        shroud_cfg = {}
+    shroud_text = lower + " " + _text(workflow)
+    shroud_present = bool(re.search(r"\b(?:shroud|gd-sh|tapered\s+shrouds?)\b", shroud_text)) or bool(shroud_cfg)
+    stiff_inline_present = valve_present or bool(re.search(r"\b(?:gd-vlv|gd-tt|gd-tp|thick\s+(?:pipe|body|component)|stiff\s+(?:pipe|body|component))\b", shroud_text))
+    shroud_interaction_required = bool(shroud_present and stiff_inline_present)
+
     two_cfg = workflow.get("twoBranchValves", {})
     if not isinstance(two_cfg, dict):
         two_cfg = {}
@@ -189,6 +197,26 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
             "status": valve_status,
             "moment_check": moment_check,
             "rule": "A header valve or other header component that cannot bear roller contact requires GD-SB protection; an 80% valve capacity is a constraint, not a support selection.",
+        },
+        "shroud_stiff_component": {
+            "required": shroud_interaction_required,
+            "components": [code for code, present in (("GD-SH", shroud_present), ("GD-VLV", valve_present)) if present],
+            "analogous_precedent": "ILS-SHTP / GD-SH + GD-TP or GD-TT",
+            "required_knowledge_refs": [
+                "edes:GD-SH",
+                "edes:GD-VLV",
+                "edas:ILS-SHTP",
+                "edikb:p1_c1_shtp_nonadditive_01",
+                "edikb:p1_c1_shtp_location_01",
+                "edikb:p1_c1_shtp_peakloc_01",
+                "edikb:p1_c1_shtp_size_01",
+                "edikb:guidance_keep_gdtp_out_of_shroud_x2",
+                "edikb:guidance_limit_gdtp_size_inside_shroud",
+                "edikb:guidance_consider_long_shroud_only_with_verification",
+            ],
+            "status": "requires_edikb_retrieval" if shroud_interaction_required else "not_applicable",
+            "rule": "When GD-VLV is combined with GD-SH, treat the valve as a stiff inline component inside an offset shroud and retrieve the analogous C1 GD-SH + thick-component EDIKB evidence before recommending placement or shroud length.",
+            "judgement_failure_flag": "Do not dismiss existing GD-TT/GD-TP + GD-SH evidence as irrelevant merely because the stiff component is a valve; flag a retrieval-usefulness judgement failure if those EDIKB nodes are not selected.",
         },
         "two_branch_valves": {
             "requested": two_requested,

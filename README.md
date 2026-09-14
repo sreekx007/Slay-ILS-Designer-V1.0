@@ -18,7 +18,7 @@ The current repository supports a complete run from an existing EDPR JSON file. 
 - Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
 - Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
 - Packages the completed run as a KEL experience and can turn supplied human feedback into atomic, grouped, governed graph-change requests.
-- Applies KEL v0.2 gates for L/Z branch anchoring to GD-ST, connector orientation, GD-ST report coverage, valve-protection evidence, GD-SB/GD-ST support sizing, and unresolved two-valve topology.
+- Applies KEL v0.2 gates for L/Z branch anchoring to GD-ST, connector orientation, GD-ST report coverage, valve-protection evidence, GD-SB/GD-ST support sizing, GD-VLV + GD-SH stiff-component evidence retrieval, and unresolved two-valve topology.
 
 The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 
@@ -99,7 +99,7 @@ See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [prob
 | `tools/retrieve_context.py` | Builds a traceable EDES/EDAS/EDIKB context package |
 | `tools/solve_problem.py` | First-pass ranking of retrieved numeric study candidates |
 | `tools/solution_to_layout.py` | Materializes a known solver candidate from EDAS anchors and enforces v0.2 representation gates |
-| `tools/design_rules_v02.py` | Shares explicit connector, valve-protection, and topology intent across retrieval, solver, and layout emission |
+| `tools/design_rules_v02.py` | Shares explicit connector, valve-protection, shroud-stiff-component, and topology intent across retrieval, solver, and layout emission |
 | `tools/plot_design.py` | Builds, renders, corrects, checks, and reports an assembly |
 | `tools/plot_component.py` | Builds and reports an individual EDES component |
 | `plotters/checkers/label_overlap_checker.py` | Bounded label, legend, margin, title, and table corrections |

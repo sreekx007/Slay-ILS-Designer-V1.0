@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "linked_experience_id": "kel:experience:q4_inline_valve_tapered_shroud_plot:20260915",
+  "created_utc": "2026-09-14T17:52:35Z",
+  "raw_feedback_text": "Issue - The assembly was not identified as a stiff component in combination with the shroud, similar to the GD-TT + GD-SH combo. EDIKB contains knowledge about such combinations about where GD-TT must be placed with respect to GD-SH to minimize strains, and lessons about GD-SH length that helps reduce strains. There was a judgement failure where the EDIKB knowledge node was not identified as useful.",
+  "feedback_type": "insufficient_evidence",
+  "structured_feedback": {
+    "affected_requirement": "GD-VLV + GD-SH concepts must retrieve analogous GD-SH + stiff-component EDIKB evidence before recommending valve placement or shroud length.",
+    "affected_function": "select valve position within shroud and shroud dimensions using available EDIKB evidence",
+    "affected_behavior": "avoid treating shroud-valve concepts as only roller-rideability geometry when they also create a stiff-component plus offset-shroud interaction",
+    "affected_structure": "GD-VLV; GD-SH; ILS-SHTP analogous precedent",
+    "affected_constraint": "Do not dismiss GD-TT/GD-TP + GD-SH evidence as irrelevant merely because the stiff component is a valve; flag retrieval-usefulness judgement failure if omitted.",
+    "pmap_issue": "The solution centered the valve in the shroud without using existing EDIKB evidence on C1 stiff-body plus shroud placement and length effects.",
+    "apf_action": "add_shroud_stiff_component_retrieval_gate_and_judgement_flag",
+    "priority": "high"
+  }
+}

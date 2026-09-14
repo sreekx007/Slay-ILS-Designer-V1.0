@@ -1,6 +1,35 @@
 # Manual Upload Map
 
 
+
+## Q4 valve-shroud stiff-component EDIKB KEL closeout - 2026-09-15
+
+This batch implements the expert-approved KEL from the inline-valve tapered-shroud review: `GD-VLV + GD-SH` must be treated as a stiff inline component inside an offset shroud, analogous to the existing `ILS-SHTP` / `GD-SH + GD-TP/GD-TT` C1 evidence pattern. The toolchain now retrieves those EDIKB nodes and numeric rows by default and flags `EDIKB_USEFULNESS_JUDGEMENT_FAILURE` if they are missed.
+
+Files to upload or verify in Git:
+
+- `tools/design_rules_v02.py`
+- `tools/retrieve_context.py`
+- `tools/solve_problem.py`
+- `knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md`
+- `knowledge/edpr/EDPR_APF_PARSER_PROMPT.md`
+- `knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md`
+- `knowledge/kel/KEL_V0_2_DESIGN_GATES.md`
+- `knowledge/kel/feedback_records/implemented/Q4_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json`
+- `knowledge/kel/expert_reviews/final/Q4_REVIEW_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json`
+- `knowledge/kel/graph_change_requests/implemented/Q4_GCR_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json`
+- `knowledge/kel/implementation_plans/implemented/Q4_GCR_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.plan.json`
+- `knowledge/kel/lifecycle_reports/KEL_Q4_VALVE_SHROUD_STIFF_COMPONENT_CLOSEOUT_20260915.json`
+- `tests/kel/test_design_workflow_v02.py`
+- `README.md`
+- `UPLOAD_MAP.md`
+
+Validation to run:
+
+- `.\.venv\Scripts\python.exe -m pytest tests\kel\test_design_workflow_v02.py`
+- `.\.venv\Scripts\python.exe -m unittest discover tools "test_*.py"`
+- `.\.venv\Scripts\python.exe tools\kel\validate_kel_record.py ...Q4...`
+
 ## Q3 support-structure sizing KEL closeout - 2026-09-15
 
 This batch implements the expert-approved KEL from the inline-valve layout review: when `GD-SB` protects `GD-VLV`, or `GD-ST` supports `GD-B`, the support/protection structure must be sized from the protected/supported component envelope and clearance basis instead of left at generic EDAS defaults.

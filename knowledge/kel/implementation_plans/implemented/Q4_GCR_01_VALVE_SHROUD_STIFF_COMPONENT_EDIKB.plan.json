@@ -1,0 +1,69 @@
+{
+  "schema": "kel-implementation-plan/0.2",
+  "implementation_plan_id": "kel:implementation-plan:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "created_utc": "2026-09-14T17:52:35Z",
+  "status": "verified",
+  "source_change_request_id": "kel:change:q4_valve_shroud:stiff_component_edikb_retrieval",
+  "source_change_request_status": "implemented",
+  "expert_review_ref": {
+    "id": "kel:review:q4_valve_shroud:stiff_component_edikb_retrieval",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q4_REVIEW_01_VALVE_SHROUD_STIFF_COMPONENT_EDIKB.json"
+  },
+  "target_layer": "Tools",
+  "requirements": [
+    "Identify GD-VLV + GD-SH as a stiff inline component inside a shroud.",
+    "Retrieve analogous ILS-SHTP and C1 GD-SH + thick-component EDIKB rules and rows.",
+    "Flag EDIKB_USEFULNESS_JUDGEMENT_FAILURE when the useful C1 evidence is omitted.",
+    "Document the rule in EDPR/KEL workflow instructions."
+  ],
+  "changed_paths": [
+    "tools/design_rules_v02.py",
+    "tools/retrieve_context.py",
+    "tools/solve_problem.py",
+    "knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "knowledge/edpr/EDPR_APF_PARSER_PROMPT.md",
+    "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+    "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
+    "tests/kel/test_design_workflow_v02.py"
+  ],
+  "evidence": [
+    "tests/kel/test_design_workflow_v02.py::test_valve_shroud_interaction_retrieves_shtp_evidence",
+    "tests/kel/test_design_workflow_v02.py::test_valve_shroud_missing_shtp_evidence_flags_judgement_failure"
+  ],
+  "checklist": [
+    {
+      "id": "step_1",
+      "action": "Add shroud-stiff-component intent extraction.",
+      "status": "complete"
+    },
+    {
+      "id": "step_2",
+      "action": "Add deterministic retrieval expansion for ILS-SHTP and C1 EDIKB evidence.",
+      "status": "complete"
+    },
+    {
+      "id": "step_3",
+      "action": "Add solver judgement-failure flag for missed useful EDIKB evidence.",
+      "status": "complete"
+    },
+    {
+      "id": "step_4",
+      "action": "Add focused regression tests and workflow documentation.",
+      "status": "complete"
+    }
+  ],
+  "tests": [
+    "pytest tests/kel/test_design_workflow_v02.py",
+    "python -m unittest discover tools \"test_*.py\""
+  ],
+  "review": {
+    "reviewer": "User/domain expert",
+    "decision": "accepted",
+    "notes": "Approved in session and requested implementation after feedback loop closeout."
+  },
+  "completion": {
+    "implemented_utc": "2026-09-14T17:52:35Z",
+    "verified_utc": "2026-09-14T17:52:35Z",
+    "implementation_ref": "tools/retrieve_context.py"
+  }
+}
