@@ -72,6 +72,35 @@ class ComponentCoverageTests(unittest.TestCase):
             with self.subTest(kw=kw),self.assertRaises(cs.GeometryRuleError):
                 cs.Boss(cs.STD_PIPELINE,**kw)
 
+    def test_base_structure_inherits_the_connector_span_checks(self):
+        """GD-SB must call super().validate().
+
+        It did not until 14 Sep 2026. The skip was once deliberate -- the
+        parent required P_vt >= 0, wrong here where P_vt is a signed position
+        -- but that rule was retired on 23 Aug 2026, leaving the skip
+        discarding only the P_c1/P_c2/P_gap checks. It became reachable when
+        P_c1/P_c2 were promoted to FREE on 24 Aug 2026.
+
+        A negative P_c1 puts inL right of inR and places the outer slots
+        relative to the swapped pair, so the result is a DIFFERENT, SMALLER
+        structure rather than a relabelling -- and one a downstream mesher
+        silently straightens out, because sorting the stations erases the
+        crossing and leaves only connectors in the wrong places.
+        """
+        for kw in (dict(P_c1=-1.0), dict(P_c2=-0.5), dict(P_gap=-0.01),
+                   dict(P_c1=0.0)):
+            for code, cls in (('GD-SB', cs.BaseStructure),
+                              ('GD-ST', cs.TopStructure)):
+                with self.subTest(code=code, kw=kw), \
+                        self.assertRaises(cs.GeometryRuleError):
+                    cls(cs.STD_PIPELINE, centre_x=0.0, **kw)
+
+        # and the healthy component is untouched
+        sb = cs.BaseStructure(cs.STD_PIPELINE, centre_x=0.0, P_vt=0.0)
+        self.assertGreater(sb.P_c1, 0)
+        xs = cs.connector_slot_xs(0.0, sb.P_c1, sb.P_c2)
+        self.assertEqual(list(xs), sorted(xs))
+
     def test_source_reference_order_and_roundtrip(self):
         spec=self.definition([{'id':'boss','code':'GD-BOSS','centre_x':3,'source_pip':'pip'},
                               {'id':'pip','code':'GD-PIP','centre_x':0,'x_interior_R':0.1,'t_outer':0.015}])
