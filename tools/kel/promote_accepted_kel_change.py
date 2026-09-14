@@ -74,8 +74,8 @@ def status_from_review(review: dict[str, Any], requested_status: str | None) -> 
 
 
 def build_promoted_change(change_request: dict[str, Any], review: dict[str, Any], status: str) -> dict[str, Any]:
-    if change_request.get("schema") != "kel-graph-change-request/0.1":
-        raise ValueError("Change request must be kel-graph-change-request/0.1")
+    if change_request.get("schema") not in {"kel-graph-change-request/0.1", "kel-graph-change-request/0.2"}:
+        raise ValueError("Change request must be kel-graph-change-request/0.1 or /0.2")
     if review.get("schema") != "kel-expert-review/0.1":
         raise ValueError("Review must be kel-expert-review/0.1")
     if review.get("status") != "final":

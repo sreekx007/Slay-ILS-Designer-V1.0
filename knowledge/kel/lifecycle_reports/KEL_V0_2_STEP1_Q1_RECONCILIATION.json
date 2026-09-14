@@ -1,0 +1,72 @@
+{
+  "schema": "kel-lifecycle-reconciliation/0.2",
+  "created_utc": "2026-09-13T17:27:41Z",
+  "mode": "applied",
+  "lifecycle_root": "knowledge/kel/graph_change_requests",
+  "authoritative_records": [
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_connector_east_default",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_03_BRANCH_CONNECTOR_EAST_DEFAULT.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:branch_direction",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_01_BRANCH_DIRECTION.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:easb_shape_from_edes",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_10_EASB_SHAPE_FROM_EDES.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_connections_labelled",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_05_EAST_CONNECTIONS_LABELLED.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:east_parameters_connections",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_11_EAST_PARAMETERS_CONNECTIONS.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+      "status": "implemented",
+      "repo_path": "implemented/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:piping_connections_scope",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_06_PIPING_CONNECTIONS_SCOPE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:plot_scale",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_04_PLOT_SCALE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:stress_strain_objective",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_07_STRESS_STRAIN_OBJECTIVE.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:valve_easb_default",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_02_VALVE_EASB_DEFAULT.json"
+    },
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:z_branch_for_vertical_connector",
+      "status": "pending",
+      "repo_path": "pending/Q1_GCR_09_Z_BRANCH_FOR_VERTICAL_CONNECTOR.json"
+    }
+  ],
+  "actions": [
+    {
+      "change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+      "source": "pending/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json",
+      "destination": "superseded/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json",
+      "reason": "authoritative status is implemented"
+    }
+  ],
+  "conflicts": []
+}

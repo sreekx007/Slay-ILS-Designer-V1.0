@@ -239,6 +239,14 @@ def assembly_parameters(ils, deepest=None, ambiguous=None, paths=None):
         rows.append(('CONTACT CLASH', f'{min(ambiguous):+.3f} .. '
                                        f'{max(ambiguous):+.3f} m'))
 
+    gate = getattr(ils, 'design_workflow_report', lambda: {})()
+    if gate:
+        rows.append(('EA exposure gate', gate.get('status', 'unknown')))
+        for link in gate.get('branch_structure_associations', []):
+            a = link.get('association', {})
+            left, right = a.get('from', {}), a.get('to', {})
+            rows.append(('  association', f"{left.get('component')}.{left.get('feature')} -> {right.get('component')}.{right.get('feature')} [{a.get('connection', '--')}]"))
+
     prov = getattr(getattr(ils, 'assembly', None), 'provenance', None)
     if prov is not None:
         rows.append(('provenance', getattr(prov, 'name', str(prov))))
@@ -284,6 +292,15 @@ def assembly_parameters(ils, deepest=None, ambiguous=None, paths=None):
                 if gap is not None:
                     detail += f', gap {gap:.4f} m'
                 rows.append((f'  slot {slot} [{t}]', detail))
+                record = next((entry for entry in gate.get('ea_structures', [])
+                               if entry.get('component_id') == cid), {})
+                exposed = next((entry for entry in record.get('active_connectors', [])
+                                if entry.get('slot') == slot), {})
+                if exposed.get('connector_id'):
+                    rows.append(('    model', f"{exposed['connector_id']} -> {exposed.get('pipe_landing') or 'UNRESOLVED'}"))
+                if exposed.get('associations'):
+                    indices = ', '.join(str(item['index']) for item in exposed['associations'])
+                    rows.append(('    associations', indices))
         if c.code == 'GD-B':
             ends = [n for n in c.structural_nodes()
                     if n.node_id.endswith(':send')]

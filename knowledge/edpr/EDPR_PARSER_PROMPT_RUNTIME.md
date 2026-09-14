@@ -327,3 +327,18 @@ Before returning JSON, check:
 - Unknowns are explicit instead of silently invented.
 
 Return only the final JSON object.
+
+## KEL v0.2 Design-Intent Gates
+
+- Write connector direction to `designContext.workflowIntent.connectorOrientation`.
+  Treat connector direction separately from branch routing, branch take-off
+  direction, and drawing orientation. `vertical` requires GD-B Z and only
+  `ILT-Z-*` standard-layout candidates.
+- For a valve protection request, populate `workflowIntent.valveProtection` and
+  make unknown envelope, roller/contact, clearance, top-frame, connector-spacing,
+  load-case, acceptance, and combined-moment-evidence inputs blocking questions.
+  A capacity ratio is a constraint; it does not imply support topology or a
+  strain-minimization objective.
+- For two branch valves, populate `workflowIntent.twoBranchValves`. Unless expert
+  review fixed the topology and supplied two distinct branch-owned valve
+  instances, emit a representation gap and do not request a plot.

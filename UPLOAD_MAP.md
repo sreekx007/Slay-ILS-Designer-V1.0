@@ -1,17 +1,92 @@
 # Manual Upload Map
 
-Updated: 2026-09-13
+Updated: 2026-09-14
 Repository: sreekx007/Slay-ILS-Designer-V1.0
 Target branch: main
 Latest GitHub review: 2026-09-13
 Phase 1 and 2 baseline: `20e1c07abe98bb42881d03e205fcec86b5275575`
 Phases 3 through 7 implementation: `4f0d3116f11fb6ba473a78a99d6e871dc5c64372`
 Push-status record: `07f12357affa17d90458cbb2ee6311a62b780211`
-Pending manual uploads: none.
+Pending manual uploads: 0.
 
-GitHub `main` contains Phases 1 through 7. This update refreshes the root
-README for the current toolchain and workflow principles. Local environments,
-generated `runs/` artifacts, Python caches, and `.git/` remain excluded.
+GitHub `main` contains KEL v0.1, Plotter Phases 1 through 7, and the KEL v0.2 release batch listed below. Generated `runs/` artifacts,
+the local virtual environment, Python caches, staging files, and `.git/` remain
+excluded.
+
+## KEL v0.2 Steps 1 through 6 - release batch
+
+| Action | Repository path |
+| --- | --- |
+| Update | `framework_manifest.json` |
+| Update | `knowledge/edas/EDAS_SHARED_KNOWLEDGE.json` |
+| Update | `knowledge/edpr/EDPR_APF_PARSER_PROMPT.md` |
+| Update | `knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md` |
+| Add | `knowledge/kel/atomic_feedback_records/candidates/KEL_V0_2_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json` |
+| Add | `knowledge/kel/atomic_feedback_records/candidates/README.md` |
+| Add | `knowledge/kel/feedback_groups/candidates/KEL_V0_2_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json` |
+| Add | `knowledge/kel/feedback_groups/candidates/README.md` |
+| Add | `knowledge/kel/graph_change_requests/pending/KEL_V0_2_GCR_TWO_BRANCH_VALVE_REPRESENTATION_GAP.json` |
+| Delete | `knowledge/kel/graph_change_requests/pending/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/graph_change_requests/superseded/Q1_GCR_08_MUST_USE_REPO_PLOTTER.json` |
+| Add | `knowledge/kel/graph_change_requests/superseded/README.md` |
+| Add | `knowledge/kel/implementation_plans/implemented/Q1_GCR_08_MUST_USE_REPO_PLOTTER.plan.json` |
+| Add | `knowledge/kel/implementation_plans/implemented/README.md` |
+| Update | `knowledge/kel/KEL_ARCHITECTURE.md` |
+| Update | `knowledge/kel/KEL_TERMINOLOGY.md` |
+| Add | `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` |
+| Add | `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` |
+| Update | `knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md` |
+| Update | `knowledge/kel/KEL_WORKFLOW.md` |
+| Add | `knowledge/kel/lifecycle_reports/KEL_V0_2_STEP1_Q1_RECONCILIATION.json` |
+| Add | `knowledge/kel/lifecycle_reports/README.md` |
+| Update | `knowledge/kel/README.md` |
+| Add | `knowledge/kel/schemas/KEL_ATOMIC_FEEDBACK_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_FEEDBACK_GROUP_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_GRAPH_CHANGE_REQUEST_V0_2_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_IMPLEMENTATION_PLAN_SCHEMA.json` |
+| Add | `knowledge/kel/schemas/KEL_LIFECYCLE_RECONCILIATION_SCHEMA.json` |
+| Add | `knowledge/kel/templates/KEL_ATOMIC_FEEDBACK_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_FEEDBACK_GROUP_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_GRAPH_CHANGE_REQUEST_V0_2_TEMPLATE.json` |
+| Add | `knowledge/kel/templates/KEL_IMPLEMENTATION_PLAN_TEMPLATE.json` |
+| Update | `plotters/ils_builder.py` |
+| Update | `plotters/ils_plotter.py` |
+| Update | `README.md` |
+| Update | `schemas/EDPR_METASCHEMA.json` |
+| Add | `tests/kel/fixtures/EDPR_Q1_VERTICAL_CONNECTOR.json` |
+| Add | `tests/kel/fixtures/EDPR_VALVE_12IN_80PCT_INCOMPLETE.json` |
+| Add | `tests/kel/fixtures/VALVE_EASB_COMPLETE_DESIGN.json` |
+| Add | `tests/kel/fixtures/VALVE_EASB_COMPOUND_FEEDBACK.json` |
+| Add | `tests/kel/test_design_workflow_v02.py` |
+| Add | `tests/kel/test_feedback_v02.py` |
+| Add | `tests/kel/test_release_tools_v02.py` |
+| Update | `tests/kel/test_run_kel_cycle.py` |
+| Update | `tools/_plot_cli.py` |
+| Add | `tools/design_rules_v02.py` |
+| Update | `tools/kel/create_expert_review_record.py` |
+| Add | `tools/kel/create_implementation_plan.py` |
+| Add | `tools/kel/decompose_feedback.py` |
+| Add | `tools/kel/feedback_v02.py` |
+| Update | `tools/kel/generate_graph_change_request.py` |
+| Add | `tools/kel/group_feedback.py` |
+| Add | `tools/kel/migrate_v01_to_v02.py` |
+| Update | `tools/kel/promote_accepted_kel_change.py` |
+| Add | `tools/kel/reconcile_lifecycle.py` |
+| Update | `tools/kel/run_kel_cycle.py` |
+| Add | `tools/kel/summarize_kel_status.py` |
+| Update | `tools/kel/validate_kel_record.py` |
+| Update | `tools/retrieve_context.py` |
+| Update | `tools/solution_to_layout.py` |
+| Update | `tools/solve_problem.py` |
+| Update | `UPLOAD_MAP.md` |
+
+This release batch implements atomic feedback grouping and lifecycle repair,
+vertical-connector Z selection, the EA-ST complete-design exposure gate, the
+EA-SB valve clarification/evidence gate with canonical GD-SB geometry, and the
+implementation-plan, migration, and lifecycle status tools. The two-branch-valve
+case is deliberately retained as a machine-readable representation gap pending
+expert topology review. Generated `runs/`, `.venv/`, Python caches, staging
+scripts, and `.git/` stay local.
 
 ## KEL v0.1 governance toolchain - confirmed
 

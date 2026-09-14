@@ -1,0 +1,19 @@
+{
+  "schema": "kel-feedback-group/0.2",
+  "feedback_group_id": "kel:feedback-group:two_branch_valve_representation_gap:01",
+  "created_utc": "2026-09-14T00:00:00Z",
+  "canonical_issue": "Two-valve branch ownership and topology are unresolved and cannot be plotted without guessing.",
+  "canonical_action": "Fix the topology by expert review, then add stable valve instances, branch ownership, piping associations and plot/report checks.",
+  "target_layer": "Tools",
+  "change_type": "new_tool_capability",
+  "priority": "high",
+  "fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "group_key": "two_branch_valve_representation_gap",
+  "member_feedback_ids": ["kel:feedback-atomic:two_branch_valve_representation_gap:01"],
+  "member_fingerprints": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+  "source_feedback_ids": ["kel:feedback:two_branch_valve_representation_gap"],
+  "linked_experience_ids": ["kel:experience:two_branch_valve_representation_gap"],
+  "evidence_refs": ["knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md#phase-5---two-branch-valve-representation-gap"],
+  "grouping": {"method": "deterministic_topic_key_v0.2", "exact_fingerprint_match": true, "review_required": true},
+  "status": "pending"
+}

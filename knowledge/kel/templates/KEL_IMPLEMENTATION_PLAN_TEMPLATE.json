@@ -1,0 +1,17 @@
+{
+  "schema": "kel-implementation-plan/0.2",
+  "implementation_plan_id": "kel:implementation-plan:change_id",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "status": "planned",
+  "source_change_request_id": "kel:change:change_id",
+  "source_change_request_status": "accepted",
+  "expert_review_ref": {"id": "kel:review:review_id", "repo_path": null},
+  "target_layer": "EDAS",
+  "requirements": ["State the accepted change as a testable requirement."],
+  "changed_paths": [],
+  "evidence": [],
+  "checklist": [{"id": "scope", "action": "Confirm target-layer scope and repository paths.", "status": "pending"}],
+  "tests": ["Add a focused regression test for the accepted requirement."],
+  "review": {"reviewer": null, "decision": null, "notes": null},
+  "completion": {"implemented_utc": null, "verified_utc": null, "implementation_ref": null}
+}

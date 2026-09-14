@@ -17,6 +17,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from design_rules_v02 import extract_design_intent
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST_NAMES = ("framework_manifest.json", "framework_manifest_v0_2.json")
@@ -347,6 +349,7 @@ def build_context_package(args: argparse.Namespace) -> dict[str, Any]:
             "title": edpr.get("problemIdentity", {}).get("title"),
             "raw_text": edpr.get("sourceRequest", {}).get("rawText"),
         },
+        "design_intent": extract_design_intent(edpr),
         "retrieval_terms": {key: sorted(value) for key, value in terms.items()},
         "component_context": load_component_context(terms["component_ids"], repo_root),
         "assembly_context": assembly_context,

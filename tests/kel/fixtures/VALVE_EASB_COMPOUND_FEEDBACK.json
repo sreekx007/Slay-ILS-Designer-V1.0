@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:valve_easb:compound_review",
+  "linked_experience_id": "kel:experience:valve_easb:test",
+  "created_utc": "2026-09-14T00:00:00Z",
+  "raw_feedback_text": "- There was no aim of strain optimization. The Base Structure had a higher depth compared to the Valve. The EDIKB shows evidence that increasing vertical offset increases strain.\n- Base Structure is longer than required. Correlation between strain results and EA-BS length was not done.\n- Basis of selecting P-S supports was not given. Is there evidence that the region between P-S supports experiences a bending moment below 90 percent of the pipeline, including the stiff object in that space?\n- It was not asked whether a Top Frame is required to protect the Valve.\n- Basis of the spacing between connectors was not provided.",
+  "feedback_type": "design_objective_requirement",
+  "structured_feedback": {
+    "affected_requirement": null,
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": null,
+    "affected_constraint": null,
+    "pmap_issue": "Compound valve and EA-SB design feedback.",
+    "apf_action": "revise_solution_or_knowledge_item_after_expert_review",
+    "priority": "high"
+  }
+}

@@ -79,8 +79,8 @@ def default_implementation_target(change_request: dict[str, Any]) -> str | None:
 
 def build_review(args: argparse.Namespace) -> dict[str, Any]:
     change_request = load_json(Path(args.change_request))
-    if change_request.get("schema") != "kel-graph-change-request/0.1":
-        raise ValueError("Input must be a kel-graph-change-request/0.1 record")
+    if change_request.get("schema") not in {"kel-graph-change-request/0.1", "kel-graph-change-request/0.2"}:
+        raise ValueError("Input must be a kel-graph-change-request/0.1 or /0.2 record")
 
     decision = args.decision
     status = args.status or ("final" if decision else "draft")

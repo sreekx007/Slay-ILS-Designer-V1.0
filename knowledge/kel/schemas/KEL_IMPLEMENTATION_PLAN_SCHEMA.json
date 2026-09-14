@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-implementation-plan/0.2",
+  "title": "KEL Target-Layer Implementation Plan Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "implementation_plan_id", "created_utc", "status",
+    "source_change_request_id", "source_change_request_status",
+    "expert_review_ref", "target_layer", "requirements", "changed_paths",
+    "evidence", "checklist", "tests", "review", "completion"
+  ],
+  "properties": {
+    "schema": {"const": "kel-implementation-plan/0.2"},
+    "implementation_plan_id": {"type": "string", "pattern": "^kel:implementation-plan:[A-Za-z0-9_\\-:.]+$"},
+    "created_utc": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["planned", "in_progress", "blocked", "implemented", "verified"]},
+    "source_change_request_id": {"type": "string"},
+    "source_change_request_status": {"type": "string", "enum": ["accepted", "implemented"]},
+    "expert_review_ref": {"type": "object"},
+    "target_layer": {"type": "string", "enum": ["EDPR", "EDES", "EDAS", "EDIKB", "KEL", "Dataset", "Plotters", "Tools", "Docs", "StandardLayouts"]},
+    "requirements": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "changed_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "checklist": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "action", "status"],
+        "properties": {
+          "id": {"type": "string"}, "action": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["pending", "in_progress", "blocked", "complete"]}
+        }
+      }
+    },
+    "tests": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reviewer", "decision", "notes"],
+      "properties": {
+        "reviewer": {"type": ["string", "null"]},
+        "decision": {"type": ["string", "null"], "enum": [null, "accepted", "rejected", "needs_revision"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "completion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["implemented_utc", "verified_utc", "implementation_ref"],
+      "properties": {
+        "implemented_utc": {"type": ["string", "null"]},
+        "verified_utc": {"type": ["string", "null"]},
+        "implementation_ref": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

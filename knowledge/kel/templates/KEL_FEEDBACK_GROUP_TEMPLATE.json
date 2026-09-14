@@ -1,0 +1,23 @@
+{
+  "schema": "kel-feedback-group/0.2",
+  "feedback_group_id": "kel:feedback-group:template:000000000000",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "canonical_issue": "One canonical grouped issue.",
+  "canonical_action": "review_feedback_and_clarify_problem_representation",
+  "target_layer": "EDPR",
+  "change_type": "new_design_guidance",
+  "priority": "low",
+  "fingerprint": "0000000000000000000000000000000000000000000000000000000000000000",
+  "group_key": "template_feedback",
+  "member_feedback_ids": ["kel:feedback-atomic:template:01:000000000000"],
+  "member_fingerprints": ["0000000000000000000000000000000000000000000000000000000000000000"],
+  "source_feedback_ids": ["kel:feedback:template"],
+  "linked_experience_ids": ["kel:experience:template"],
+  "evidence_refs": [],
+  "grouping": {
+    "method": "deterministic_topic_key_v0.2",
+    "exact_fingerprint_match": true,
+    "review_required": false
+  },
+  "status": "candidate"
+}

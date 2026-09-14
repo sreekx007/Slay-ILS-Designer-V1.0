@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-lifecycle-reconciliation/0.2",
+  "title": "KEL Lifecycle Reconciliation Report Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "created_utc", "mode", "lifecycle_root", "authoritative_records", "actions", "conflicts"],
+  "properties": {
+    "schema": {"const": "kel-lifecycle-reconciliation/0.2"},
+    "created_utc": {"type": "string"},
+    "mode": {"type": "string", "enum": ["dry_run", "applied"]},
+    "lifecycle_root": {"type": "string"},
+    "authoritative_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["change_request_id", "status", "repo_path"],
+        "properties": {
+          "change_request_id": {"type": "string"},
+          "status": {"type": "string"},
+          "repo_path": {"type": "string"}
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["change_request_id", "source", "destination", "reason"],
+        "properties": {
+          "change_request_id": {"type": "string"},
+          "source": {"type": "string"},
+          "destination": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "conflicts": {"type": "array", "items": {"type": "string"}}
+  }
+}

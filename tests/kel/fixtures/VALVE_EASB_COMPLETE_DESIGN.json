@@ -1,0 +1,39 @@
+{
+  "sourceRequest": {"rawText": "Provide underside valve protection for installation roller passage.", "language": "en"},
+  "designContext": {
+    "workflowIntent": {
+      "valveProtection": {
+        "capacityRatio": 0.8,
+        "rollerPassageInScope": true,
+        "protectionMode": "underside",
+        "valveEnvelope": {"length_m": 1.2, "depth_m": 0.9},
+        "actuatorEnvelope": {"height_m": 1.1, "width_m": 0.5},
+        "flangeEnvelope": {"od_m": 0.62},
+        "localThickSectionEnvelope": {"od_m": 0.64, "length_m": 2.0},
+        "rollerGeometry": {"roller_radius_m": 0.4, "spacing_m": 2.5},
+        "requiredClearance": {"vertical_m": 0.15, "service_axial_m": 0.3},
+        "loadCases": ["overbend roller passage"],
+        "acceptanceMeasure": "valve bending moment utilization <= 1.0",
+        "connectorSpacingBasis": "Connector stations clear the valve transitions and resolve the roller load path.",
+        "connectorSystem": "F2",
+        "connectorEvidenceRefs": ["project:fea:valve_gdsb_f2"],
+        "momentEvidence": {"maximum_valve_moment_kNm": 400, "pipeline_allowable_moment_kNm": 625}
+      }
+    }
+  },
+  "layout": {
+    "schema_version": 1,
+    "ils": {"name": "Complete EA-SB valve fixture", "frame": "local", "connection_system": "F2", "ownership": "lowest", "purpose": "concept_design", "design_gate": "advisory"},
+    "pipeline": {"OD_pipe": 0.3239, "t_pipe": 0.0175, "provenance": "DESIGN"},
+    "components": [
+      {"id": "V1", "code": "GD-VLV", "centre_x": 0.0, "L_body": 1.2, "OD_body": 0.82, "t_body": 0.07, "L_trans": 0.45, "t_trans": 0.035, "L_stem": 1.1, "OD_stem": 0.35, "t_stem": 0.03},
+      {"id": "SB1", "code": "GD-SB", "centre_x": 0.0, "P_vt": -0.55, "P_v": 1.5, "P_l1": 2.6, "P_l2": 0.6, "P_c1": 1.8, "P_c2": 0.3}
+    ],
+    "design_basis": {
+      "base_depth": "valve body depth + roller clearance",
+      "base_length": "valve/local-thick-section envelope + service clearance",
+      "connector_spacing": "clear transitions and resolve the roller load path",
+      "evidence": ["project:fea:valve_gdsb_f2"]
+    }
+  }
+}

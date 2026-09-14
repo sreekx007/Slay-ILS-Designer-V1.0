@@ -1,5 +1,8 @@
 # KEL v0.2 Recommendations
 
+Implementation status: Step 1 feedback decomposition, grouping,
+de-duplication, and lifecycle reconciliation is complete locally.
+
 ## Purpose
 
 KEL v0.1 establishes the governance loop:
@@ -11,6 +14,9 @@ experience -> sufficiency -> feedback -> graph change request
 
 KEL v0.2 should improve automation quality, reduce duplicate records, and begin
 closing the gap between reviewed change requests and actual framework updates.
+
+The implementation-ready sequence, file touchpoints, regression fixtures, and
+exit gates are defined in `KEL_V0_2_IMPLEMENTATION_PLAN.md`.
 
 ## Recommended Build Items
 

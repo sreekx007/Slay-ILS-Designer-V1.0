@@ -19,11 +19,13 @@ Before running this workflow, an LLM should read
 7. Create a KEL experience record.
 8. Evaluate LLM confidence and knowledge sufficiency.
 9. Capture querier feedback in natural language.
-10. Convert feedback into P-map/APF issue/action form.
-11. Generate one or more graph change requests.
-12. Send the change requests for expert review.
-13. Promote expert-accepted changes into official framework layers.
-14. Keep rejected and superseded records for traceability.
+10. Convert feedback into the v0.1 P-map/APF capture form.
+11. Decompose compound feedback into v0.2 atomic issues.
+12. Group exact or topic-equivalent issues without losing source IDs.
+13. Generate one graph change request per feedback group.
+14. Send grouped change requests for expert review.
+15. Promote expert-accepted changes into official framework layers.
+16. Reconcile duplicate lifecycle states and retain superseded records.
 ```
 
 ## Workflow Gate
@@ -57,7 +59,7 @@ Default presentation requirements:
 | Plot question | Ask the human whether a plot is needed unless the human directly asks for one. |
 | Connections | State connection type, location, and count; distinguish piping connections from support/structural connections. |
 | Assumptions | State default assumptions used in the proposed design. |
-| Stress/strain | Prefer layouts that minimize strain and stress; mark likely maximum stress/strain locations and identify missing analysis when values are not available. |
+| Stress/strain | Optimize strain or stress only when the user requests that objective. Always identify applicable limits, likely governing locations, and missing analysis. |
 | Plot readability | Use a scale and resolution that supports zooming and inspection. |
 | Plot authority | Use the repository plotter for framework-backed components; label any fallback sketch as non-authoritative. |
 
@@ -74,7 +76,9 @@ flowchart TD
   G --> H["Confidence + KG Sufficiency"]
   H --> I["Querier Feedback"]
   I --> J["Feedback to P-map / APF"]
-  J --> K["Graph Change Request"]
+  J --> J1["Atomic Feedback"]
+  J1 --> J2["Group and De-duplicate"]
+  J2 --> K["Grouped Graph Change Request"]
   K --> L["Expert Review"]
   L --> M["Accepted Update Promotion"]
 ```
@@ -100,6 +104,26 @@ candidate
 querier_confirmed
 expert_accepted
 expert_rejected
+implemented
+superseded
+```
+
+### Atomic Feedback Records
+
+```text
+candidate
+grouped
+superseded
+```
+
+### Feedback Groups
+
+```text
+candidate
+pending
+accepted
+rejected
+needs_evidence
 implemented
 superseded
 ```

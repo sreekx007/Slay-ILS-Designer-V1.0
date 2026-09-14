@@ -73,10 +73,11 @@
     },
     "KEL": {
       "name": "Knowledge Evolution Loop",
-      "role": "Closed-loop experience and governance layer that records design-query experience, querier feedback, knowledge sufficiency, graph change requests, expert review, and promotion into EDPR, EDES, EDAS, EDIKB, datasets, tools, plotters, or documentation.",
+      "role": "Closed-loop governance plus deterministic v0.2 design gates: atomic/grouped feedback, lifecycle reconciliation, connector/layout rules, evidence gaps, expert review, implementation planning, and promotion.",
       "primary_paths": [
         "knowledge/kel/README.md",
         "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+        "knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md",
         "knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md",
         "knowledge/kel/schemas/",
         "knowledge/kel/templates/",
@@ -90,7 +91,22 @@
         "tools/kel/generate_graph_change_request.py",
         "tools/kel/create_expert_review_record.py",
         "tools/kel/promote_accepted_kel_change.py",
-        "tools/kel/run_kel_cycle.py"
+        "tools/kel/run_kel_cycle.py",
+        "knowledge/kel/schemas/KEL_ATOMIC_FEEDBACK_SCHEMA.json",
+        "knowledge/kel/schemas/KEL_FEEDBACK_GROUP_SCHEMA.json",
+        "knowledge/kel/schemas/KEL_GRAPH_CHANGE_REQUEST_V0_2_SCHEMA.json",
+        "knowledge/kel/schemas/KEL_LIFECYCLE_RECONCILIATION_SCHEMA.json",
+        "knowledge/kel/atomic_feedback_records/",
+        "knowledge/kel/feedback_groups/",
+        "knowledge/kel/lifecycle_reports/",
+        "tools/kel/decompose_feedback.py",
+        "tools/kel/group_feedback.py",
+        "tools/kel/reconcile_lifecycle.py",
+        "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
+        "tools/design_rules_v02.py",
+        "tools/kel/create_implementation_plan.py",
+        "tools/kel/summarize_kel_status.py",
+        "tools/kel/migrate_v01_to_v02.py"
       ]
     }
   },
@@ -466,6 +482,27 @@
         "repo_path": "tools/test_plot_components.py",
         "status": "present",
         "description": "All twelve EDES component builds/renders plus Boss clearance, mass, source-reference and header-preservation tests"
+      },
+      {
+        "id": "tool:kel_decompose_feedback",
+        "repo_path": "tools/kel/decompose_feedback.py",
+        "status": "present",
+        "required": true,
+        "description": "Splits v0.1 feedback into deterministic atomic v0.2 issues with source spans, classifications, targets, and fingerprints."
+      },
+      {
+        "id": "tool:kel_group_feedback",
+        "repo_path": "tools/kel/group_feedback.py",
+        "status": "present",
+        "required": true,
+        "description": "Groups exact or topic-equivalent atomic issues while preserving every member, source, experience, fingerprint, and evidence link."
+      },
+      {
+        "id": "tool:kel_reconcile_lifecycle",
+        "repo_path": "tools/kel/reconcile_lifecycle.py",
+        "status": "present",
+        "required": true,
+        "description": "Selects one authoritative lifecycle state per change-request ID and moves stale copies to superseded with an authority pointer."
       }
     ],
     "docs": [
@@ -522,6 +559,13 @@
         "status": "present",
         "required": false,
         "description": "Terminology for KEL records, sufficiency ratings, graph change requests, reviews, and promotion."
+      },
+      {
+        "id": "doc:kel_v0_2_implementation_plan",
+        "repo_path": "knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md",
+        "status": "present",
+        "required": false,
+        "description": "Ordered KEL v0.2 code, schema, migration, regression, and acceptance plan driven by Q1 and inline-valve feedback."
       },
       {
         "id": "doc:upload_map",
@@ -684,6 +728,13 @@
     ],
     "kel": [
       {
+        "id": "kel:plan:v0_2",
+        "repo_path": "knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md",
+        "status": "present",
+        "required": false,
+        "description": "Implementation sequence and definition of done for KEL v0.2."
+      },
+      {
         "id": "kel:schema:experience_record",
         "repo_path": "knowledge/kel/schemas/KEL_EXPERIENCE_RECORD_SCHEMA.json",
         "status": "present",
@@ -745,6 +796,76 @@
         "status": "present",
         "required": true,
         "description": "Lifecycle folders for pending, accepted, rejected, and implemented KEL graph change requests."
+      },
+      {
+        "id": "kel:schema:atomic_feedback",
+        "repo_path": "knowledge/kel/schemas/KEL_ATOMIC_FEEDBACK_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for one traceable v0.2 feedback issue."
+      },
+      {
+        "id": "kel:schema:feedback_group",
+        "repo_path": "knowledge/kel/schemas/KEL_FEEDBACK_GROUP_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for de-duplicated v0.2 feedback groups."
+      },
+      {
+        "id": "kel:schema:graph_change_request_v0_2",
+        "repo_path": "knowledge/kel/schemas/KEL_GRAPH_CHANGE_REQUEST_V0_2_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for grouped graph requests with multiple feedback and experience IDs."
+      },
+      {
+        "id": "kel:schema:lifecycle_reconciliation",
+        "repo_path": "knowledge/kel/schemas/KEL_LIFECYCLE_RECONCILIATION_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for authoritative lifecycle audit and supersession reports."
+      },
+      {
+        "id": "kel:atomic_feedback_records",
+        "repo_path": "knowledge/kel/atomic_feedback_records/",
+        "status": "present",
+        "required": true,
+        "description": "Lifecycle location for atomic v0.2 feedback."
+      },
+      {
+        "id": "kel:feedback_groups",
+        "repo_path": "knowledge/kel/feedback_groups/",
+        "status": "present",
+        "required": true,
+        "description": "Lifecycle location for grouped and de-duplicated feedback."
+      },
+      {
+        "id": "kel:lifecycle_reports",
+        "repo_path": "knowledge/kel/lifecycle_reports/",
+        "status": "present",
+        "required": true,
+        "description": "Machine-readable lifecycle reconciliation audits."
+      },
+      {
+        "id": "kel:schema:implementation_plan",
+        "repo_path": "knowledge/kel/schemas/KEL_IMPLEMENTATION_PLAN_SCHEMA.json",
+        "status": "present",
+        "required": true,
+        "description": "Schema for expert-accepted target-layer implementation checklists."
+      },
+      {
+        "id": "kel:design_gates:v0_2",
+        "repo_path": "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
+        "status": "present",
+        "required": true,
+        "description": "Authoritative vertical-connector, EA-ST exposure, EA-SB valve-protection, and topology-gap behavior."
+      },
+      {
+        "id": "kel:implementation_plans",
+        "repo_path": "knowledge/kel/implementation_plans/",
+        "status": "present",
+        "required": true,
+        "description": "Lifecycle location for target-layer implementation plans."
       }
     ]
   },
@@ -777,28 +898,33 @@
     },
     {
       "step": 6,
+      "name": "apply_kel_v0_2_design_gates",
+      "action": "Normalize explicit connector/valve/topology intent. Block unsupported valve-protection or two-valve concepts; restrict vertical connectors to GD-B Z and ILT-Z-* anchors."
+    },
+    {
+      "step": 7,
       "name": "reason_over_design_candidates",
       "action": "Use EDAS for topology, EDES for component constraints, EDIKB graph for behavior, and EDIKB dataset for quantitative evidence."
     },
     {
-      "step": 7,
+      "step": 8,
       "name": "handle_feature_interactions",
       "action": "Check EDIKB interaction nodes and numeric evidence. Do not assume simple superposition unless evidence supports it."
     },
     {
-      "step": 8,
+      "step": 9,
       "name": "solve_and_explain",
       "action": "Rank options against EDPR objectives/constraints, cite evidence, and identify assumptions/future study needs."
     },
     {
-      "step": 9,
+      "step": 10,
       "name": "emit_knowloop_candidate",
       "action": "Always run tools/generate_knowloop_candidate.py after the query, whether the outcome is successful, partial, or failed."
     },
     {
-      "step": 10,
+      "step": 11,
       "name": "run_kel_governance",
-      "action": "Optionally run tools/kel/run_kel_cycle.py after the design run. Emit experience and sufficiency records; create feedback, review, and promotion records only from supplied human or expert input."
+      "action": "Optionally run tools/kel/run_kel_cycle.py after the design run. The default v0.2 flow captures v0.1 feedback, decomposes atomic issues, groups duplicates, and emits one graph request per group; review and promotion still require explicit human input."
     }
   ],
   "validator_commands": {
@@ -810,7 +936,11 @@
     "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py",
     "test_plotters": "python -m unittest discover -s tools -p 'test_plot*.py'",
     "test_kel": "python -m pytest -q tests/kel",
-    "kel_dry_run": "python tools/kel/run_kel_cycle.py --label smoke --output-dir runs/kel/smoke --feedback-text \"Plot must use the repository plotter.\" --dry-run"
+    "kel_dry_run": "python tools/kel/run_kel_cycle.py --label smoke --output-dir runs/kel/smoke --feedback-text \"Plot must use the repository plotter.\" --dry-run",
+    "kel_lifecycle_audit": "python tools/kel/reconcile_lifecycle.py --lifecycle-root knowledge/kel/graph_change_requests",
+    "kel_status": "python tools/kel/summarize_kel_status.py --format json",
+    "kel_v01_migration": "python tools/kel/migrate_v01_to_v02.py knowledge/kel/feedback_records/candidates/Q1_*.json --output-root runs/kel/migration",
+    "test_kel_v0_2": "python -m pytest -q tests/kel"
   },
   "llm_bootstrap_instructions": [
     "Read this manifest first.",
@@ -821,7 +951,9 @@
     "Use EDIKB graph for semantic behavior rules, guidance, uncertainty, and feature-interaction candidates.",
     "Use EDIKB dataset for quantitative comparison when numeric evidence is needed.",
     "If no reliable dataset supports a proposed comparison, state that the behavior is a future ML/FEA study candidate.",
-    "After every design query, emit a Knowloop candidate JSON. Candidate knowledge is exploratory until human/expert review."
+    "After every design query, emit a Knowloop candidate JSON. Candidate knowledge is exploratory until human/expert review.",
+    "When human feedback contains several issues, use the KEL v0.2 atomic decomposition and grouping flow before generating graph change requests.",
+    "Apply tools/design_rules_v02.py intent and representation gates before emitting a layout or plot."
   ],
   "known_gaps_and_next_updates": [
     "Add vector-index retrieval as an enhancement after P-map/APF and Knowloop behavior are stable.",
@@ -868,5 +1000,35 @@
     "documentation": "docs/PHASE7_SOLVER_PLOTTING.md",
     "example": "plotters/examples/example_edpr_ilt_layout.json",
     "scope": "EDAS study reconstruction; expert review required."
+  },
+  "kel_v0_2_step1_update": {
+    "date": "2026-09-14",
+    "status": "implemented_locally_pending_upload",
+    "scope": "Atomic feedback decomposition, deterministic grouping and de-duplication, grouped graph requests, and lifecycle reconciliation.",
+    "verification": [
+      "15 KEL tests passed.",
+      "Compound valve feedback produced five stable atomic records, five groups, and five grouped graph requests.",
+      "Q1 EA-ST feedback 03, 05, and 11 produced one group retaining all three source IDs.",
+      "Q1 GCR 08 pending duplicate moved to superseded with the implemented record authoritative.",
+      "A real grouped v0.2 cycle completed with one source feedback, five atomic records, five groups, and five graph requests."
+    ]
+  },
+  "kel_v0_2_release": {
+    "date": "2026-09-14",
+    "status": "implemented_locally_pending_upload",
+    "scope": "Steps 1-4 and 6 implemented; Step 5 remains a machine-readable gap pending expert topology review.",
+    "rules": [
+      "vertical connector -> GD-B Z -> ILT-Z-*",
+      "complete EA-ST reports expose canonical parameters/connectors/landings/associations",
+      "EA-SB valve protection requires GD-SB geometry and compatible combined evidence",
+      "two branch valves fail closed until topology is accepted"
+    ],
+    "verification": [
+      "23 KEL tests passed",
+      "29 plotter/solver tests passed",
+      "all four EDPR examples validated",
+      "Q1 vertical scenario emitted ILT-Z-FT-PS",
+      "12-inch valve scenario emitted VALVE_PROTECTION_INPUTS_MISSING and no misleading plot"
+    ]
   }
 }

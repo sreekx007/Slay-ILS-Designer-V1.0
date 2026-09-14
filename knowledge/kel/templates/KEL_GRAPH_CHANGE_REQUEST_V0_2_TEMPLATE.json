@@ -1,0 +1,18 @@
+{
+  "schema": "kel-graph-change-request/0.2",
+  "change_request_id": "kel:change:template_group",
+  "status": "pending",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "linked_experience_ids": ["kel:experience:template"],
+  "linked_feedback_ids": ["kel:feedback-atomic:template:01:000000000000"],
+  "feedback_group_id": "kel:feedback-group:template:000000000000",
+  "target_layer": "EDPR",
+  "change_type": "new_design_guidance",
+  "problem_observed": "Template grouped knowledge gap.",
+  "proposed_change": "Template grouped proposed change.",
+  "evidence_requirement": "Template grouped evidence requirement.",
+  "priority": "low",
+  "expert_review_ref": null,
+  "implementation_ref": null,
+  "superseded_by": null
+}

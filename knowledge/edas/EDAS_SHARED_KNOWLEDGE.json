@@ -280,5 +280,46 @@
       "dimensions": "Optional source_pip refers to a GD-PIP for matching OD_outer/t_outer; otherwise supply boss OD/wall explicitly.",
       "attachment": "Do not infer sleeve-to-header welds or constraints from coaxial coordinates. Declare the actual attachment separately when known."
     }
+  },
+  "kelV02DesignRules": {
+    "status": "active",
+    "version": "0.2",
+    "verticalConnector": {
+      "requiredInput": "EDPR designContext.workflowIntent.connectorOrientation",
+      "rule": "vertical -> GD-B variant Z -> eligible standard anchors ILT-Z-*",
+      "failure": "Emit representation gap; do not substitute GD-B L or ILT-L-*.",
+      "implementation": "tools/design_rules_v02.py"
+    },
+    "eaStExposure": {
+      "completeDesignRequires": [
+        "canonical GD-ST parameters",
+        "active connector slots and types",
+        "GD-Con instances",
+        "pipe-side landings",
+        "connector associations",
+        "branch-to-frame association when GD-B is present"
+      ],
+      "studyOnly": "Simplified paper reconstructions may omit explicit GD-Con but cannot pass the complete-design gate.",
+      "implementation": "plotters/ils_builder.py#design_workflow_report"
+    },
+    "eaSbValveProtection": {
+      "geometry": "Use EDES GD-SB geometry/contact ownership; a generic rectangle is invalid.",
+      "topProtection": "Use a separate GD-ST when a protective top frame is required.",
+      "evidence": "Do not infer combined GD-VLV + GD-SB moment compliance from isolated 16-inch EA-SB strain evidence.",
+      "acceptance": "max_valve_moment / (capacity_ratio * pipeline_allowable_moment) <= 1 for every load case.",
+      "failure": "Missing envelope, roller, clearance, connector or moment evidence returns needs_clarification or needs_evidence."
+    },
+    "twoBranchValves": {
+      "status": "representation_gap_pending_expert_topology",
+      "required": [
+        "stable valve instance IDs",
+        "parent branch ownership",
+        "branch-local station and orientation",
+        "upstream/downstream associations",
+        "independent envelopes",
+        "collision checks"
+      ],
+      "failure": "Emit TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED and no plot."
+    }
   }
 }

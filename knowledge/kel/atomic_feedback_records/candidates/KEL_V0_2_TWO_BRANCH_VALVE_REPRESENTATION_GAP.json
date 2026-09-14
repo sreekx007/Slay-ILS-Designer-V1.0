@@ -1,0 +1,21 @@
+{
+  "schema": "kel-atomic-feedback/0.2",
+  "atomic_feedback_id": "kel:feedback-atomic:two_branch_valve_representation_gap:01",
+  "source_feedback_id": "kel:feedback:two_branch_valve_representation_gap",
+  "linked_experience_id": "kel:experience:two_branch_valve_representation_gap",
+  "created_utc": "2026-09-14T00:00:00Z",
+  "source_text": "Two branch valves cannot be represented until expert review confirms whether both valves lie on one branch or one valve lies on each of two branches.",
+  "source_span": {"start": 0, "end": 149},
+  "feedback_type": "missing_constraint",
+  "classification": {"method": "manual", "confidence": 1.0, "reasons": ["The required branch ownership and topology are ambiguous."]},
+  "observed_issue": "The existing layout format cannot assign two valve instances to unambiguous branch-local pipe chains.",
+  "requested_action": "Require expert-accepted topology, stable valve IDs, parent-branch ownership, local station, orientation, piping associations, envelopes and collision checks before plotting.",
+  "affected_components": ["GD-B", "GD-VLV"],
+  "target_layers": ["EDPR", "EDAS", "Plotters", "Tools"],
+  "change_type": "new_tool_capability",
+  "evidence_refs": ["knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md#phase-5---two-branch-valve-representation-gap"],
+  "priority": "high",
+  "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "group_key": "two_branch_valve_representation_gap",
+  "status": "grouped"
+}

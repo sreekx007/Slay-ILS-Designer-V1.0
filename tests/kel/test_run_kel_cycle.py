@@ -25,7 +25,8 @@ def test_run_kel_cycle_dry_run(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert payload["status"] == "dry_run"
-    assert payload["step_count"] == 4
+    assert payload["step_count"] == 6
+    assert payload["feedback_flow"] == "grouped_v0.2"
 
 
 def test_run_kel_cycle_requires_complete_review_metadata(tmp_path: Path) -> None:

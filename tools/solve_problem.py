@@ -18,6 +18,8 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
+from design_rules_v02 import workflow_blockers
+
 
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
@@ -131,6 +133,8 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
     rows = context.get("numeric_evidence", {}).get("rows", [])
     numeric_ranking = summarize_numeric_rows(rows) if isinstance(rows, list) else []
     graph_cues = collect_graph_cues(context)
+    design_intent = context.get("design_intent", {})
+    blockers = workflow_blockers(design_intent)
 
     recommendation = None
     if numeric_ranking and numeric_ranking[0].get("score_lower_is_better") is not None:
@@ -146,10 +150,19 @@ def build_solution(context: dict[str, Any]) -> dict[str, Any]:
             "confidence": "qualitative_only",
         }
 
+    if blockers:
+        recommendation = {
+            "recommended_candidate": None,
+            "basis": "Design emission is blocked by KEL v0.2 clarification or representation gates.",
+            "confidence": "blocked_pending_input",
+        }
+
     return {
         "solution_package_type": "edpr_first_pass_solution",
         "schema_version": "0.1",
         "problem": context.get("problem", {}),
+        "design_intent": design_intent,
+        "workflow_gates": {"status": "blocked" if blockers else "passed", "blockers": blockers},
         "recommendation": recommendation,
         "numeric_ranking": numeric_ranking,
         "graph_cues": graph_cues,

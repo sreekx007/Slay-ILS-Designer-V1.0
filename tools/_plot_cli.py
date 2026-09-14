@@ -88,6 +88,7 @@ def execute(args, make_spec, component=False):
         report['archetype'] = getattr(args, 'archetype', None)
         report['resolved_assembly_settings'] = {'header_half_length': ils.header_half, 'header_auto_extended': ils.header_auto, 'connection_system': ils.connection_system, 'ownership': ils.ownership.value}
         report['findings'] = [dataclasses.asdict(f) for f in ils.findings]
+        report['design_workflow'] = ils.design_workflow_report()
         for f in ils.findings:
             if f.severity in ('error', 'warning'):
                 report[f.severity + 's'].append(str(f))
@@ -101,6 +102,8 @@ def execute(args, make_spec, component=False):
                     value = getattr(obj, field.name)
                     report['defaulted_parameters'].append({'path': f'{prefix}.{field.name}', 'value': getattr(value, 'name', value)})
         report['checks'].append({'id': 'assembly_validation', 'status': 'failed' if report['errors'] else ('warning' if report['warnings'] else 'passed')})
+        gate = report['design_workflow']
+        report['checks'].append({'id': 'ea_exposure_gate', 'status': gate['status'], 'missing': gate['unresolved_or_inactive_slots']})
         if report['errors']:
             raise ValueError('Assembly validation failed; no image exported')
         if output.suffix.lower() not in ('.png', '.svg', '.pdf'):

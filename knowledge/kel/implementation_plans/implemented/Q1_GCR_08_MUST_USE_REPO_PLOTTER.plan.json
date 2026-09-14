@@ -1,0 +1,46 @@
+{
+  "schema": "kel-implementation-plan/0.2",
+  "implementation_plan_id": "kel:implementation-plan:q1_ilt_layout:must_use_repo_plotter",
+  "created_utc": "2026-09-14T00:00:00Z",
+  "status": "implemented",
+  "source_change_request_id": "kel:change:q1_ilt_layout:must_use_repo_plotter",
+  "source_change_request_status": "implemented",
+  "expert_review_ref": {
+    "id": "kel:review:q1_ilt_layout:must_use_repo_plotter",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q1_REVIEW_08_MUST_USE_REPO_PLOTTER.json"
+  },
+  "target_layer": "KEL",
+  "requirements": [
+    "Add a KEL/LLM gate requiring EDPR/P-map/APF, EDES/EDAS/EDIKB retrieval, buildable EDAS layout JSON, builder findings, and repository plotter use before presenting design geometry."
+  ],
+  "changed_paths": [],
+  "evidence": [
+    "Demonstrate one design query executed through EDPR/P-map/APF, retrieval, EDAS layout build, builder findings, and repository plotter output or explicit representability gap."
+  ],
+  "checklist": [
+    {
+      "id": "step_1",
+      "action": "Update schema, lifecycle and governance tooling.",
+      "status": "complete"
+    },
+    {
+      "id": "step_2",
+      "action": "Run idempotency and policy tests.",
+      "status": "complete"
+    }
+  ],
+  "tests": [
+    "Focused KEL regression test",
+    "KEL schema and governance validation"
+  ],
+  "review": {
+    "reviewer": null,
+    "decision": null,
+    "notes": null
+  },
+  "completion": {
+    "implemented_utc": "2026-09-14T00:00:00Z",
+    "verified_utc": null,
+    "implementation_ref": "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md"
+  }
+}

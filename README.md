@@ -17,7 +17,8 @@ The current repository supports a complete run from an existing EDPR JSON file. 
 - Corrects bounded presentation issues such as label placement while preserving engineering geometry.
 - Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
 - Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
-- Packages the completed run as a KEL experience and can turn supplied human feedback into a governed graph-change request.
+- Packages the completed run as a KEL experience and can turn supplied human feedback into atomic, grouped, governed graph-change requests.
+- Applies KEL v0.2 gates for vertical connectors, EA-ST report coverage, valve-protection evidence, and unresolved two-valve topology.
 
 The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 
@@ -97,14 +98,18 @@ See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [prob
 | `tools/check_pmap_apf.py` | Semantic gate for usable P-map/APF content |
 | `tools/retrieve_context.py` | Builds a traceable EDES/EDAS/EDIKB context package |
 | `tools/solve_problem.py` | First-pass ranking of retrieved numeric study candidates |
-| `tools/solution_to_layout.py` | Materializes a known solver candidate from EDAS anchors |
+| `tools/solution_to_layout.py` | Materializes a known solver candidate from EDAS anchors and enforces v0.2 representation gates |
+| `tools/design_rules_v02.py` | Shares explicit connector, valve-protection, and topology intent across retrieval, solver, and layout emission |
 | `tools/plot_design.py` | Builds, renders, corrects, checks, and reports an assembly |
 | `tools/plot_component.py` | Builds and reports an individual EDES component |
 | `plotters/checkers/label_overlap_checker.py` | Bounded label, legend, margin, title, and table corrections |
 | `plotters/checkers/plot_checker.py` | Export, content, bounds, clipping, and scale checks |
 | `tools/generate_knowloop_candidate.py` | Records solution/layout/plot evidence for review |
 | `tools/run_edpr_pipeline.py` | Orchestrates the deterministic workflow |
-| `tools/kel/run_kel_cycle.py` | Packages run artifacts and optional human feedback through the KEL lifecycle |
+| `tools/kel/run_kel_cycle.py` | Packages run artifacts and optional human feedback through the grouped KEL lifecycle |
+| `tools/kel/create_implementation_plan.py` | Creates target-layer checklists from expert-accepted changes |
+| `tools/kel/summarize_kel_status.py` | Reports v0.2 record/lifecycle counts and conflicts in JSON or Markdown |
+| `tools/kel/migrate_v01_to_v02.py` | Generates byte-stable atomic/group records without modifying v0.1 sources |
 | `tools/kel/validate_kel_record.py` | Validates KEL schemas and governance rules |
 | `tools/kel/create_expert_review_record.py` | Records a named expert decision and rationale |
 | `tools/kel/promote_accepted_kel_change.py` | Promotes a change only when its review decision and implementation evidence permit it |
@@ -153,7 +158,7 @@ python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output run
 python tools/plot_design.py --input plotters/examples/example_boss_layout.json --output runs/boss.png
 ```
 
-PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, and output paths. Input definitions are never rewritten.
+PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, and the KEL v0.2 EA exposure gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, and both associations. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
 
 Presentation lives in:
 
@@ -258,7 +263,7 @@ Run the KEL suite:
 python -m pytest -q tests/kel
 ```
 
-The current framework release is manifest schema/version 0.4 with plotter migration Phases 1 through 7 and KEL v0.1 integrated on `main`.
+The local framework remains manifest schema/version 0.4 with plotter migration Phases 1 through 7. KEL v0.2 Steps 1 through 6 are implemented locally; the two-branch-valve item remains an explicit expert-review representation gap instead of a guessed topology.
 
 ## Current limitations
 

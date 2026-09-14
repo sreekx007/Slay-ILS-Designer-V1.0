@@ -4,6 +4,11 @@ import copy
 import json
 from pathlib import Path
 
+from design_rules_v02 import (
+    choose_vertical_anchor, eligible_anchor_ids, validate_layout_against_intent,
+    workflow_blockers,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 LIBRARY = ROOT / "knowledge/edas/standard_ils_layouts.json"
 
@@ -16,10 +21,23 @@ def patch(target, values):
 
 def materialize(solution, library=None):
     library = library or json.loads(LIBRARY.read_text(encoding="utf-8"))
+    intent = solution.get("design_intent", {})
+    blockers = workflow_blockers(intent)
+    if blockers:
+        detail = ", ".join(item["code"] for item in blockers)
+        raise ValueError(f"KEL v0.2 workflow gate blocked layout emission: {detail}")
     name = solution.get("recommendation", {}).get("recommended_candidate")
     anchors = {a["id"]: a for a in library["anchors"]}
     archetypes = {a["id"]: a for a in library["archetypes"]}
     key = name if name in anchors else "ILT-" + str(name)
+    rule_trace = []
+    if intent.get("connector", {}).get("required_orientation") == "vertical":
+        eligible = eligible_anchor_ids(library, intent)
+        key = choose_vertical_anchor(key, eligible)
+        if key is None:
+            raise ValueError("No ILT-Z-* anchor satisfies the vertical connector rule")
+        name = key
+        rule_trace.append({"rule": "vertical connector -> GD-B Z -> ILT-Z-*", "eligible_anchors": eligible, "selected_anchor": key})
     derived = name in ("L-ST-PS", "ILT-L-ST-PS")
     if derived:
         key = "ILT-L-FT-PS"
@@ -44,6 +62,11 @@ def materialize(solution, library=None):
                 association["connection"] = "S"
                 association["note"] = "Slotted branch support derived from EDAS FT/ST taxonomy."
     spec["ils"]["name"] = str(name) + " - EDAS study reconstruction"
+    spec["ils"]["purpose"] = "study_reconstruction"
+    spec["ils"]["design_gate"] = "study_only"
+    gaps = validate_layout_against_intent(spec, intent)
+    if gaps:
+        raise ValueError("; ".join(item["message"] for item in gaps))
     report = {
         "status": "emitted", "candidate": name, "source_anchor": key,
         "source_library": "knowledge/edas/standard_ils_layouts.json",
@@ -53,6 +76,7 @@ def materialize(solution, library=None):
                      "Implicit study connectors are retained; this is not a detailed fabrication assembly.",
                      "Solver evidence ranking is not a new structural analysis or design approval."],
         "errors": [], "recommendation": solution.get("recommendation"),
+        "design_intent": intent, "rule_trace": rule_trace,
         "residual_risk": solution.get("residual_risk", [])
     }
     return spec, report

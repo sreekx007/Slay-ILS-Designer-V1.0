@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-feedback-group/0.2",
+  "title": "KEL Feedback Group Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "feedback_group_id",
+    "created_utc",
+    "canonical_issue",
+    "canonical_action",
+    "target_layer",
+    "change_type",
+    "priority",
+    "fingerprint",
+    "group_key",
+    "member_feedback_ids",
+    "member_fingerprints",
+    "source_feedback_ids",
+    "linked_experience_ids",
+    "evidence_refs",
+    "grouping",
+    "status"
+  ],
+  "properties": {
+    "schema": {"const": "kel-feedback-group/0.2"},
+    "feedback_group_id": {
+      "type": "string",
+      "pattern": "^kel:feedback-group:[A-Za-z0-9_\\-:.]+$"
+    },
+    "created_utc": {"type": "string"},
+    "canonical_issue": {"type": "string", "minLength": 1},
+    "canonical_action": {"type": "string", "minLength": 1},
+    "target_layer": {
+      "type": "string",
+      "enum": ["EDPR", "EDES", "EDAS", "EDIKB", "KEL", "Dataset", "Plotters", "Tools", "Docs", "StandardLayouts"]
+    },
+    "change_type": {"type": "string"},
+    "priority": {"type": "string", "enum": ["low", "medium", "high"]},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "group_key": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "member_feedback_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "member_fingerprints": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "source_feedback_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "linked_experience_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "grouping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "exact_fingerprint_match", "review_required"],
+      "properties": {
+        "method": {"const": "deterministic_topic_key_v0.2"},
+        "exact_fingerprint_match": {"type": "boolean"},
+        "review_required": {"type": "boolean"}
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate", "pending", "accepted", "rejected", "needs_evidence", "implemented", "superseded"]
+    }
+  }
+}

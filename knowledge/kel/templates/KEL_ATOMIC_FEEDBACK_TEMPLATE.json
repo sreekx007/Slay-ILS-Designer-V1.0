@@ -1,0 +1,25 @@
+{
+  "schema": "kel-atomic-feedback/0.2",
+  "atomic_feedback_id": "kel:feedback-atomic:template:01:000000000000",
+  "source_feedback_id": "kel:feedback:template",
+  "linked_experience_id": "kel:experience:template",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "source_text": "One atomic feedback issue.",
+  "source_span": {"start": 0, "end": 26},
+  "feedback_type": "clarification",
+  "classification": {
+    "method": "manual",
+    "confidence": 1.0,
+    "reasons": ["Template classification."]
+  },
+  "observed_issue": "One atomic feedback issue.",
+  "requested_action": "review_feedback_and_clarify_problem_representation",
+  "affected_components": [],
+  "target_layers": ["EDPR"],
+  "change_type": "new_design_guidance",
+  "evidence_refs": [],
+  "priority": "low",
+  "fingerprint": "0000000000000000000000000000000000000000000000000000000000000000",
+  "group_key": "template_feedback",
+  "status": "candidate"
+}

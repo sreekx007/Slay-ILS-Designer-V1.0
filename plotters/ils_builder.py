@@ -143,7 +143,9 @@ def ils_schema() -> dict:
         'schema_version': SCHEMA_VERSION,
         'ils': {'name': 'str', 'frame': 'local',
                 'connection_system': sorted(cs.NAMED_CONNECTION_SYSTEMS),
-                'ownership': ['strict', 'lowest']},
+                'ownership': ['strict', 'lowest'],
+                'purpose': ['study_reconstruction', 'concept_design', 'detailed_design'],
+                'design_gate': ['study_only', 'advisory', 'complete']},
         'header': {'half_length': 'float (omit for auto)'},
         'pipeline': {f.name: 'float' for f in dc.fields(cs.BasePipeline)
                       if f.init and f.name != 'provenance'} |
@@ -347,6 +349,9 @@ class ILS:
         out.extend(self._check_header_chain())
         out.extend(self._check_connectors_modelled())
         out.extend(self._check_connector_landing())
+        if self.definition.get('ils', {}).get('design_gate') == 'complete':
+            for item in self.design_workflow_report()['unresolved_or_inactive_slots']:
+                out.append(Finding('error', 'design_gate', f'missing required EA exposure: {item}'))
 
         provs = {c.provenance for c in self.components} | {self.pipe.provenance}
         if len(provs) > 1:
@@ -899,6 +904,97 @@ class ILS:
         doc.update(self.definition)
         return json.dumps(doc, indent=indent, sort_keys=False)
 
+    def design_workflow_report(self) -> dict:
+        """Machine-readable KEL v0.2 exposure and representation gates."""
+        meta = self.definition.get('ils', {})
+        mode = meta.get('design_gate', 'advisory')
+        assocs = self.definition.get('associations', []) or []
+        structures = []
+        missing = []
+        for cid, c in zip(self.ids, self.components):
+            if c.code not in EA_CODES:
+                continue
+            canonical = {}
+            for f in dc.fields(c):
+                if f.init and f.name not in ('pipe', 'provenance'):
+                    value = getattr(c, f.name)
+                    canonical[f.name] = list(value) if isinstance(value, tuple) else value
+            slots = []
+            for slot, x, ctype, arm, gap in self.connectors_of(c):
+                feature = f'slot{slot}'
+                connector = next(((con_id, con) for con_id, con in zip(self.ids, self.components)
+                                  if con.code == 'GD-Con' and abs(con.centre_x - x) <= ADJACENCY_TOL
+                                  and abs(con.y_struct - c.P_vt) <= ADJACENCY_TOL), None)
+                item = {'slot': slot, 'feature': feature, 'x_m': x, 'type': ctype,
+                        'arm_m': arm, 'gap_m': gap, 'connector_id': connector[0] if connector else None,
+                        'pipe_landing': None, 'associations': []}
+                if connector:
+                    con_id, _ = connector
+                    item['pipe_landing'] = next((host_id for host_id, host in zip(self.ids, self.components)
+                                                 if host.code in CONNECTOR_HOST_CODES
+                                                 and (xy := self.feature_xy(host_id, 'conMid')) is not None
+                                                 and abs(xy[0] - x) <= ADJACENCY_TOL), None)
+                    for index, assoc in enumerate(assocs):
+                        ends = [assoc.get('from') or {}, assoc.get('to') or {}]
+                        if any(end.get('component') == con_id for end in ends):
+                            item['associations'].append({'index': index, 'association': assoc})
+                    has_pipe = any(
+                        assoc.get('type') == 'Connection' and
+                        {(assoc.get('from') or {}).get('component'), (assoc.get('to') or {}).get('component')} == {con_id, item['pipe_landing']}
+                        for assoc in assocs) if item['pipe_landing'] else False
+                    has_structure = any(
+                        assoc.get('type') == 'Connection' and
+                        {(assoc.get('from') or {}).get('component'), (assoc.get('to') or {}).get('component')} == {con_id, cid}
+                        for assoc in assocs)
+                else:
+                    has_pipe = has_structure = False
+                item['coverage'] = {'connector_modelled': connector is not None,
+                                    'pipe_landing_modelled': item['pipe_landing'] is not None,
+                                    'pipe_association': has_pipe,
+                                    'structure_association': has_structure}
+                for name, ok in item['coverage'].items():
+                    if not ok:
+                        missing.append(f'{cid}.{feature}.{name}')
+                slots.append(item)
+            active_numbers = {item['slot'] for item in slots}
+            inactive = [{'slot': number, 'x_m': x, 'status': 'inactive'}
+                        for number, x in enumerate(c.connector_xs, 1) if number not in active_numbers]
+            structures.append({'component_id': cid, 'code': c.code,
+                               'canonical_parameters': canonical, 'active_connectors': slots,
+                               'inactive_connectors': inactive})
+
+        branch_links = []
+        for index, assoc in enumerate(assocs):
+            ends = [assoc.get('from') or {}, assoc.get('to') or {}]
+            ids = {end.get('component') for end in ends}
+            if any(self.codes[self.ids.index(value)] == 'GD-B' for value in ids if value in self.ids):
+                branch_links.append({'association_index': index, 'association': assoc})
+        if 'GD-B' in self.codes and 'GD-ST' in self.codes and not branch_links:
+            missing.append('GD-B.to.GD-ST.association')
+
+        basis = self.definition.get('design_basis', {}) or {}
+        valve_base = 'GD-VLV' in self.codes and 'GD-SB' in self.codes
+        basis_required = ('base_depth', 'base_length', 'connector_spacing', 'evidence')
+        basis_missing = [name for name in basis_required if basis.get(name) in (None, '', [], {})] if valve_base else []
+        if mode == 'complete':
+            missing.extend(f'design_basis.{name}' for name in basis_missing)
+
+        if not structures:
+            status = 'not_applicable'
+        elif mode == 'study_only':
+            status = 'study_only'
+        elif missing:
+            status = 'failed'
+        else:
+            status = 'passed'
+        return {'schema': 'ils-design-workflow-report/0.2', 'gate_mode': mode,
+                'purpose': meta.get('purpose', 'unspecified'), 'status': status,
+                'ea_structures': structures, 'branch_structure_associations': branch_links,
+                'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
+                                        'design_basis': basis, 'missing_basis': basis_missing},
+                'unresolved_or_inactive_slots': missing,
+                'complete_design_claim_allowed': status == 'passed' and mode == 'complete'}
+
     def report(self) -> dict:
         """DERIVED values, for a human or an agent to read. Never consumed
         by any module -- keeping mass and CoG out of the definition is what
@@ -933,6 +1029,7 @@ class ILS:
             'cog_m': {'x': cx, 'y': cy, 'frame': 'ILS-local, y positive DOWN'},
             'lumped_mass_kg': self.lumped_mass,
             'modelling_boundaries': self.modelling_boundaries(),
+            'design_workflow': self.design_workflow_report(),
             'findings': [str(f) for f in self.findings],
         }
 

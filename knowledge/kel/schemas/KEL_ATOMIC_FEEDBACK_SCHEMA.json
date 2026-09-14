@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai4d.local/schemas/kel-atomic-feedback/0.2",
+  "title": "KEL Atomic Feedback Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "atomic_feedback_id",
+    "source_feedback_id",
+    "linked_experience_id",
+    "created_utc",
+    "source_text",
+    "source_span",
+    "feedback_type",
+    "classification",
+    "observed_issue",
+    "requested_action",
+    "affected_components",
+    "target_layers",
+    "evidence_refs",
+    "priority",
+    "fingerprint",
+    "group_key",
+    "status"
+  ],
+  "properties": {
+    "schema": {"const": "kel-atomic-feedback/0.2"},
+    "atomic_feedback_id": {
+      "type": "string",
+      "pattern": "^kel:feedback-atomic:[A-Za-z0-9_\\-:.]+$"
+    },
+    "source_feedback_id": {"type": "string"},
+    "linked_experience_id": {"type": "string"},
+    "created_utc": {"type": "string"},
+    "source_text": {"type": "string", "minLength": 1},
+    "source_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1}
+      }
+    },
+    "feedback_type": {
+      "type": "string",
+      "enum": [
+        "clarification",
+        "correction",
+        "missing_constraint",
+        "missing_component",
+        "incorrect_behavior",
+        "wrong_assumption",
+        "insufficient_evidence",
+        "poor_plot",
+        "plot_correction",
+        "answer_format_requirement",
+        "default_assumption",
+        "design_objective_requirement",
+        "better_design_alternative",
+        "future_study"
+      ]
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "confidence", "reasons"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["deterministic_rules", "manual", "llm_assisted"]
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "reasons": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        }
+      }
+    },
+    "observed_issue": {"type": "string", "minLength": 1},
+    "requested_action": {"type": "string", "minLength": 1},
+    "affected_components": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "target_layers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["EDPR", "EDES", "EDAS", "EDIKB", "KEL", "Dataset", "Plotters", "Tools", "Docs", "StandardLayouts"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "change_type": {"type": "string"},
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "priority": {"type": "string", "enum": ["low", "medium", "high"]},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "group_key": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "status": {"type": "string", "enum": ["candidate", "grouped", "superseded"]}
+  }
+}

@@ -207,6 +207,84 @@
           "items": {
             "type": "string"
           }
+        },
+        "workflowIntent": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "connectorOrientation": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                "vertical",
+                "horizontal",
+                null
+              ]
+            },
+            "valveProtection": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "capacityRatio": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "rollerPassageInScope": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "protectionMode": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "underside",
+                    "top_and_underside",
+                    "none",
+                    null
+                  ]
+                },
+                "connectorSystem": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "twoBranchValves": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "topology": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "two_on_one_branch",
+                    "one_on_each_of_two_branches",
+                    null
+                  ]
+                },
+                "instances": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

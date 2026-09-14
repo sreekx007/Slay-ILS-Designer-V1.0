@@ -1,0 +1,18 @@
+{
+  "schema": "kel-graph-change-request/0.2",
+  "change_request_id": "kel:change:two_branch_valve_representation_gap",
+  "status": "pending",
+  "created_utc": "2026-09-14T00:00:00Z",
+  "linked_experience_ids": ["kel:experience:two_branch_valve_representation_gap"],
+  "linked_feedback_ids": ["kel:feedback-atomic:two_branch_valve_representation_gap:01"],
+  "feedback_group_id": "kel:feedback-group:two_branch_valve_representation_gap:01",
+  "target_layer": "Tools",
+  "change_type": "new_tool_capability",
+  "problem_observed": "Two requested branch valves have no accepted topology or unambiguous parent piping path in the current EDPR-to-layout representation.",
+  "proposed_change": "After expert topology review, represent two stable GD-VLV instances with branch ownership, local station/orientation, upstream/downstream associations, independent envelopes and collision checks across EDPR, EDAS, plotter and report layers.",
+  "evidence_requirement": "Expert must decide between two valves on one branch, one valve on each of two branches, or a separately defined topology before implementation. Until then emit TWO_BRANCH_VALVE_TOPOLOGY_UNRESOLVED and no plot.",
+  "priority": "high",
+  "expert_review_ref": null,
+  "implementation_ref": null,
+  "superseded_by": null
+}
