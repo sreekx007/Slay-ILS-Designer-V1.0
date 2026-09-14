@@ -238,3 +238,42 @@ def test_valve_shroud_missing_shtp_evidence_flags_judgement_failure() -> None:
     assert flags
     assert flags[0]["code"] == "EDIKB_USEFULNESS_JUDGEMENT_FAILURE"
     assert "edikb:p1_c1_shtp_location_01" in flags[0]["missing_edikb_refs"]
+
+
+def test_valve_shroud_layout_must_apply_retrieved_c1_evidence() -> None:
+    intent = extract_design_intent({
+        "sourceRequest": {"rawText": "Valve on header line with tapered shroud. The valve can take roller reaction at base but cannot ride rollers."},
+        "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}},
+    })
+    vague_layout = {
+        "schema_version": 1,
+        "ils": {"design_gate": "advisory"},
+        "pipeline": {"OD_pipe": 0.3048, "t_pipe": 0.0159},
+        "components": [
+            {"id": "VLV1", "code": "GD-VLV", "centre_x": 0.0},
+            {"id": "SH1", "code": "GD-SH", "centre_x": 0.0, "V": 0.46, "L1": 1.9, "L2": 0.9},
+        ],
+        "design_basis": {"shroud_stiff_component_gate": "C1 evidence should be checked later."},
+    }
+    gaps = validate_layout_against_intent(vague_layout, intent)
+    assert any(gap["code"] == "SHROUD_STIFF_EVIDENCE_NOT_APPLIED" for gap in gaps)
+    report = build_ils(vague_layout).design_workflow_report()
+    assert report["shroud_stiff_evidence_gate"]["status"] == "failed"
+    assert "GD-VLV.GD-SH.evidence_not_applied" in report["unresolved_or_inactive_slots"]
+
+    evidence_applied = json.loads(json.dumps(vague_layout))
+    evidence_applied["design_basis"] = {
+        "shroud_stiff_evidence_refs": [
+            "edikb:p1_c1_shtp_location_01",
+            "edikb:p1_c1_shtp_size_01",
+            "edikb:p1_c1_shtp_nonadditive_01",
+        ],
+        "shroud_dimensions_basis": "Set GD-SH.V to the minimum clearance-compatible value; select L1/L2 after checking shroud run-matrix and C1 size rows instead of valve-fit only.",
+        "stiff_component_position_basis": "Keep the GD-VLV stiff body away from the X2/catenary-side high-strain region where possible; centered placement is allowed only when the installation region mapping shows it is not at X2.",
+        "shroud_regions_basis": "Map valve body, shroud flat, and taper limits to X2/X3/X4 or equivalent installation curvature regions before accepting placement.",
+        "applicability_limits": "C1 evidence is by analogy from GD-SH+GD-TP/GD-TT, so final valve acceptance still needs project-specific FEA/load cases.",
+    }
+    gaps = validate_layout_against_intent(evidence_applied, intent)
+    assert not [gap for gap in gaps if gap["code"] == "SHROUD_STIFF_EVIDENCE_NOT_APPLIED"]
+    report = build_ils(evidence_applied).design_workflow_report()
+    assert report["shroud_stiff_evidence_gate"]["status"] == "passed"

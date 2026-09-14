@@ -1193,6 +1193,7 @@ Recommended next artifacts:
 - For every layout concept, consider reduction of high strain and bending moment by default. Treat this as an engineering screening duty; formal optimization still requires an explicit objective and applicable evidence.
 - When `GD-ST` or `GD-SB` is introduced to support or protect another component, do not leave its dimensions at generic EDAS defaults. Ask for the supported/protected component envelope and clearance basis, or mark the structure dimensions as explicit preliminary placeholders fitted to that component.
 - When `GD-VLV` is combined with `GD-SH`, classify the layout as a stiff inline component inside an offset shroud. Retrieve the analogous `ILS-SHTP` / `GD-SH + GD-TP/GD-TT` C1 EDIKB evidence for non-additive response, stiff-component placement, peak region, and shroud length before recommending placement or dimensions. If those evidence nodes are not selected, flag an EDIKB usefulness judgement failure.
+- Retrieval alone is insufficient for `GD-VLV + GD-SH`: any emitted layout must state the C1 evidence refs used, the shroud `V/L1/L2` basis, stiff-component position basis, shroud region mapping such as X2/X3/X4, and applicability limits. If missing, flag `SHROUD_STIFF_EVIDENCE_NOT_APPLIED`.
 - For two branch valves, populate `workflowIntent.twoBranchValves`. Unless expert
   review fixed the topology and supplied two distinct branch-owned valve
   instances, emit a representation gap and do not request a plot.

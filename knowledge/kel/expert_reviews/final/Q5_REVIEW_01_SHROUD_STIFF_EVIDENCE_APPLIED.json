@@ -1,0 +1,16 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:q5_valve_shroud:evidence_application_gate",
+  "linked_change_request_id": "kel:change:q5_valve_shroud:evidence_application_gate",
+  "status": "final",
+  "decision": "implemented",
+  "reviewer": "User/domain expert",
+  "reviewed_utc": "2026-09-14T18:12:53Z",
+  "decision_reason": "User accepted the review proposal and requested implementation of the evidence-application gate after the previous KEL retrieval rule still allowed a plot-valid but evidence-not-applied layout.",
+  "required_evidence": [
+    "Regression test that vague GD-VLV + GD-SH basis fails SHROUD_STIFF_EVIDENCE_NOT_APPLIED.",
+    "Regression test that explicit C1 evidence refs, dimensions basis, position basis, region mapping, and applicability limits pass."
+  ],
+  "implementation_target": "Tools; Plotters; EDPR; KEL",
+  "implementation_reference": "plotters/ils_builder.py; tools/design_rules_v02.py; tests/kel/test_design_workflow_v02.py"
+}

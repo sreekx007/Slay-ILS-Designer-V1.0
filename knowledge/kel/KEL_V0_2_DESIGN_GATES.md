@@ -79,6 +79,13 @@ EDIKB rows before recommending a placement. The solver must flag
 `EDIKB_USEFULNESS_JUDGEMENT_FAILURE` when this interaction is present but those
 useful EDIKB nodes or numeric rows are not selected.
 
+Retrieval alone is not enough. A layout that contains `GD-VLV + GD-SH` must show
+how the C1 evidence was applied to `GD-SH.V`, `GD-SH.L1`, `GD-SH.L2`, the stiff
+component position relative to X2/X3/X4 or equivalent curvature regions, and
+the evidence applicability limits. If these basis fields are absent, the report
+raises `SHROUD_STIFF_EVIDENCE_NOT_APPLIED` and the layout remains a preliminary
+geometry sketch.
+
 ## Two branch valves
 
 The current accepted topology is unresolved. EDPR emits

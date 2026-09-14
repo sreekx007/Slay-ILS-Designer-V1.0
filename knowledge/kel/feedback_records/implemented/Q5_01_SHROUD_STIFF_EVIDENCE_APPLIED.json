@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q5_valve_shroud:evidence_application_gate",
+  "linked_experience_id": "kel:experience:q5_inline_valve_shroud_top_structure_review:20260915",
+  "created_utc": "2026-09-14T18:12:53Z",
+  "raw_feedback_text": "The plotted GD-VLV + GD-SH + GD-ST layout retrieved the latest KEL evidence path only after review, but the layout itself did not apply the GD-TT/GD-TP + GD-SH C1 evidence to valve placement or shroud dimensions. Retrieval alone is insufficient; the layout/report must show the evidence basis or be marked evidence-not-applied.",
+  "feedback_type": "insufficient_evidence",
+  "structured_feedback": {
+    "affected_requirement": "GD-VLV + GD-SH layouts must apply retrieved C1 shroud-plus-stiff-component evidence to placement and dimensions.",
+    "affected_function": "convert retrieved EDIKB evidence into layout-basis checks for shroud V/L1/L2 and stiff-component position",
+    "affected_behavior": "prevent plot-valid layouts from appearing design-valid when evidence was retrieved but not used",
+    "affected_structure": "GD-VLV; GD-SH; GD-ST top-structure layout context",
+    "affected_constraint": "Require evidence refs, shroud dimension basis, stiff-component position basis, shroud region mapping, and applicability limits in design_basis.",
+    "pmap_issue": "The previous plot centered the valve and selected shroud dimensions without applying available C1 placement/length evidence.",
+    "apf_action": "add_shroud_stiff_evidence_application_gate",
+    "priority": "high"
+  }
+}

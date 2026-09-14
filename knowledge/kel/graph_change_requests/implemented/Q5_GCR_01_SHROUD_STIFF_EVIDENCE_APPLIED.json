@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q5_valve_shroud:evidence_application_gate",
+  "status": "implemented",
+  "created_utc": "2026-09-14T18:12:53Z",
+  "linked_experience_id": "kel:experience:q5_inline_valve_shroud_top_structure_review:20260915",
+  "linked_feedback_id": "kel:feedback:q5_valve_shroud:evidence_application_gate",
+  "target_layer": "Tools",
+  "change_type": "new_workflow_gate",
+  "problem_observed": "The toolchain could retrieve analogous C1 GD-SH + stiff-component evidence for GD-VLV + GD-SH, but still allow a layout whose shroud dimensions and valve placement did not apply that evidence.",
+  "proposed_change": "Add SHROUD_STIFF_EVIDENCE_NOT_APPLIED validation and report gates requiring explicit design_basis fields for evidence refs, shroud dimensions, stiff-component position, shroud region mapping, and applicability limits.",
+  "evidence_requirement": "Focused regression tests for failing vague evidence basis and passing explicit evidence-applied basis.",
+  "priority": "high",
+  "expert_review_ref": {
+    "id": "kel:review:q5_valve_shroud:evidence_application_gate",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q5_REVIEW_01_SHROUD_STIFF_EVIDENCE_APPLIED.json"
+  },
+  "implementation_ref": {
+    "target": "plotters/ils_builder.py; tools/design_rules_v02.py",
+    "repo_path": "plotters/ils_builder.py",
+    "notes": "Implemented shroud_stiff_evidence_gate and SHROUD_STIFF_EVIDENCE_NOT_APPLIED validation."
+  }
+}

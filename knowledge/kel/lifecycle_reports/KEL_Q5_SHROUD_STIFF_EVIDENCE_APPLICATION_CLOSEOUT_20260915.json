@@ -1,0 +1,22 @@
+{
+  "schema": "kel-lifecycle-reconciliation/0.2",
+  "created_utc": "2026-09-14T18:12:53Z",
+  "mode": "applied",
+  "lifecycle_root": "knowledge/kel/graph_change_requests",
+  "authoritative_records": [
+    {
+      "change_request_id": "kel:change:q5_valve_shroud:evidence_application_gate",
+      "status": "implemented",
+      "repo_path": "implemented/Q5_GCR_01_SHROUD_STIFF_EVIDENCE_APPLIED.json"
+    }
+  ],
+  "actions": [
+    {
+      "change_request_id": "kel:change:q5_valve_shroud:evidence_application_gate",
+      "source": "expert-approved session feedback",
+      "destination": "implemented/Q5_GCR_01_SHROUD_STIFF_EVIDENCE_APPLIED.json",
+      "reason": "expert-approved KEL lesson implemented and closed in the implemented lifecycle folder"
+    }
+  ],
+  "conflicts": []
+}

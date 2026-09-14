@@ -996,6 +996,19 @@ class ILS:
         basis_required = ('base_depth', 'base_length', 'connector_spacing', 'evidence')
         basis_missing = [name for name in basis_required if basis.get(name) in (None, '', [], {})] if valve_base else []
 
+        shroud_stiff_active = 'GD-VLV' in self.codes and 'GD-SH' in self.codes
+        shroud_basis_required = (
+            'shroud_stiff_evidence_refs',
+            'shroud_dimensions_basis',
+            'stiff_component_position_basis',
+            'shroud_regions_basis',
+            'applicability_limits',
+        )
+        shroud_basis_missing = [name for name in shroud_basis_required
+                                if basis.get(name) in (None, '', [], {})] if shroud_stiff_active else []
+        if shroud_basis_missing:
+            missing.append('GD-VLV.GD-SH.evidence_not_applied')
+
         support_sizing = []
         component_defs = {entry.get('id', f'C{index+1}'): entry
                           for index, entry in enumerate(self.definition.get('components', []))
@@ -1054,6 +1067,13 @@ class ILS:
                 },
                 'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
                                         'design_basis': basis, 'missing_basis': basis_missing},
+                'shroud_stiff_evidence_gate': {
+                    'required': shroud_stiff_active,
+                    'status': 'not_applicable' if not shroud_stiff_active else 'passed' if not shroud_basis_missing else 'failed',
+                    'missing_basis': shroud_basis_missing,
+                    'required_basis_fields': list(shroud_basis_required),
+                    'rule': 'A GD-VLV inside/with GD-SH must apply analogous C1 GD-SH plus stiff-component EDIKB evidence to valve placement and shroud dimensions before the layout can be treated as evidence-applied.'
+                },
                 'unresolved_or_inactive_slots': missing,
                 'complete_design_claim_allowed': status == 'passed' and mode == 'complete'}
 

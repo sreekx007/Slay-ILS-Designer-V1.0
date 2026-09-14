@@ -329,6 +329,24 @@ def validate_layout_against_intent(spec: dict[str, Any], intent: dict[str, Any])
     if intent.get("connector", {}).get("required_orientation") == "vertical":
         if not branches or any(c.get("variant", "L") != "Z" for c in branches):
             gaps.append({"code": "VERTICAL_CONNECTOR_REQUIRES_GD_B_Z", "message": "A vertical connector requires every selected branch to use GD-B variant Z and an ILT-Z-* anchor."})
+    has_valve_shroud = any(c.get("code") == "GD-VLV" for c in components) and any(c.get("code") == "GD-SH" for c in components)
+    if has_valve_shroud or intent.get("shroud_stiff_component", {}).get("required"):
+        basis = spec.get("design_basis", {}) if isinstance(spec.get("design_basis", {}), dict) else {}
+        required_basis = {
+            "shroud_stiff_evidence_refs",
+            "shroud_dimensions_basis",
+            "stiff_component_position_basis",
+            "shroud_regions_basis",
+            "applicability_limits",
+        }
+        missing_basis = sorted(name for name in required_basis if basis.get(name) in (None, "", [], {}))
+        if missing_basis:
+            gaps.append({
+                "code": "SHROUD_STIFF_EVIDENCE_NOT_APPLIED",
+                "message": "GD-VLV + GD-SH layouts must apply analogous C1 GD-SH + stiff-component EDIKB evidence to shroud V/L1/L2 and valve placement; retrieval alone is insufficient.",
+                "missing_basis": missing_basis,
+                "required_evidence_refs": intent.get("shroud_stiff_component", {}).get("required_knowledge_refs", []),
+            })
     valve = intent.get("valve_protection", {})
     if valve.get("gate_required"):
         bases = [c for c in spec.get("components", []) if c.get("code") == "GD-SB"]
