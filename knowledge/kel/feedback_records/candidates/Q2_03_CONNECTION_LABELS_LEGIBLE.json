@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q2_option_layout:connection_labels_legible",
+  "linked_experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "created_utc": "2026-09-14T16:15:45.430Z",
+  "raw_feedback_text": "Issue - Plotter issue. Connection types were not labelled in the PLOT. Connection between EA-ST Pipeline , connection between EA-ST and branch pipe. None were labelled. If they were labelled, the size was too small to be visible",
+  "feedback_type": "plot_correction",
+  "structured_feedback": {
+    "affected_requirement": "Expose active structural-to-piping connection types in the plot",
+    "affected_function": null,
+    "affected_behavior": null,
+    "affected_structure": "GD-ST",
+    "affected_constraint": "Label the GD-ST-to-header and GD-ST-to-branch connection types at a legible plotted size.",
+    "pmap_issue": "The plot omitted or rendered illegibly the connection types between GD-ST and the header and between GD-ST and the branch pipe.",
+    "apf_action": "correct_plot_geometry_labels_or_scale_and_add_regression_case",
+    "priority": "high"
+  }
+}

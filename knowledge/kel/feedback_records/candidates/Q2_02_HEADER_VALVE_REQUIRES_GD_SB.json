@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q2_option_layout:header_valve_requires_gd_sb",
+  "linked_experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "created_utc": "2026-09-14T16:15:45.430Z",
+  "raw_feedback_text": "Issue - Valve was added on the Header line, but a Base Structure (GS-SB) was not provided. When a Valve or a component that cannot bear roller contact is provided on header line, a Base Structure need to be provided. This is compulsory. Looks like EDAS was not followed",
+  "feedback_type": "missing_constraint",
+  "structured_feedback": {
+    "affected_requirement": "Protect header components that cannot bear roller contact",
+    "affected_function": "support and protect the header valve during roller contact",
+    "affected_behavior": null,
+    "affected_structure": "GD-SB",
+    "affected_constraint": "A header valve or other component unable to bear roller contact requires a GD-SB.",
+    "pmap_issue": "The concept placed a valve on the header without the compulsory GD-SB, contrary to the EDAS rule.",
+    "apf_action": "add_or_strengthen_constraint_in_edpr_and_solution_checks",
+    "priority": "high"
+  }
+}

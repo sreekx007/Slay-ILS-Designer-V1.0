@@ -1,0 +1,63 @@
+{
+  "schema": "kel-experience-record/0.1",
+  "experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "status": "querier_reviewed",
+  "created_utc": "2026-09-14T16:15:45.430Z",
+  "source_query": {
+    "query_id": "paper01a_case02_option2",
+    "raw_text": "Option 2 - Pipeline 12 inch OD; branch line 6 inch OD; horizontal connector on the branch; valve on the header line; top frame required.",
+    "problem_title": "Paper 01A worked example - Option 2"
+  },
+  "edpr_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "No EDPR/problem-understanding artifact was emitted for user review or confirmed before concept generation."
+  },
+  "retrieval_trace": {
+    "artifact_id": null,
+    "repo_path": null,
+    "summary": "No persistent retrieval trace was emitted for this conversational trial."
+  },
+  "solution_trace": {
+    "artifact_id": "paper01a_case02_option2_concept",
+    "repo_path": null,
+    "summary": "Conversational concept generation produced an Option 2 layout and plot before explicit user confirmation of the problem understanding."
+  },
+  "plot_trace": {
+    "artifact_id": "paper01a_case02_option2_plot",
+    "repo_path": null,
+    "summary": "Local study plot was generated from runs/paper01a_case02/option2.layout.json with report runs/paper01a_case02/option2.plot.report.json; run artifacts are not repository evidence."
+  },
+  "ratings": {
+    "llm_confidence": "low",
+    "knowledge_sufficiency": "insufficient",
+    "evidence_strength": 1,
+    "rationale": "The trial lacked a confirmed EDPR, omitted the compulsory GD-SB under the header valve, did not expose legible GD-ST connection types, and did not demonstrate strain/bending-moment reduction."
+  },
+  "limitations": [
+    "The problem understanding was not confirmed before design work.",
+    "The plotted concept omitted the compulsory GD-SB for a header valve that cannot bear roller contact.",
+    "GD-ST-to-header and GD-ST-to-branch connection types were absent or illegible.",
+    "No strain or bending-moment screening, analysis, or optimization evidence was emitted."
+  ],
+  "feedback_refs": [
+    {
+      "id": "kel:feedback:q2_option_layout:edpr_confirmation_before_design",
+      "repo_path": "knowledge/kel/feedback_records/candidates/Q2_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json"
+    },
+    {
+      "id": "kel:feedback:q2_option_layout:header_valve_requires_gd_sb",
+      "repo_path": "knowledge/kel/feedback_records/candidates/Q2_02_HEADER_VALVE_REQUIRES_GD_SB.json"
+    },
+    {
+      "id": "kel:feedback:q2_option_layout:connection_labels_legible",
+      "repo_path": "knowledge/kel/feedback_records/candidates/Q2_03_CONNECTION_LABELS_LEGIBLE.json"
+    },
+    {
+      "id": "kel:feedback:q2_option_layout:default_strain_moment_reduction",
+      "repo_path": "knowledge/kel/feedback_records/candidates/Q2_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json"
+    }
+  ],
+  "graph_change_request_refs": [],
+  "expert_review_refs": []
+}

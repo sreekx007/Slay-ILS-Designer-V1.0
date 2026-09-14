@@ -459,3 +459,16 @@ Both papers now introduce the ten established GD component classes used in these
 The core gate is implemented in commit `31a57d378a70f4aa8f232ed8a50130f85b3bfbea`. Every `GD-B` branch in an emitted ILS now requires `GD-ST` and a declared terminal association. The regression covers an L branch with a horizontal terminal, a Z branch with a vertical terminal, a missing association, and a missing top frame. A branch-only component study may remain `study_only` but cannot claim a complete ILS layout.
 
 Both manuscripts now use `GD-ST` and `GD-SB` consistently after an opening note maps the source papers' `EA-ST` and `EA-SB` notation. The mapping is terminological and does not change the source concepts or evidence meaning. Validation baseline: 24 KEL tests and 29 plotter/solver tests pass.
+
+## Paper 01A case 02 Option 2 KEL feedback - local candidate records
+
+| Action | Repository path |
+| --- | --- |
+| Add | `knowledge/kel/experience_records/candidates/PAPER01A_CASE02_OPTION2.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q2_01_EDPR_CONFIRMATION_BEFORE_DESIGN.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q2_02_HEADER_VALVE_REQUIRES_GD_SB.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q2_03_CONNECTION_LABELS_LEGIBLE.json` |
+| Add | `knowledge/kel/feedback_records/candidates/Q2_04_DEFAULT_STRAIN_MOMENT_REDUCTION.json` |
+| Update | `UPLOAD_MAP.md` |
+
+The four records preserve the user's wording and link it to one querier-reviewed experience record. Structured fields use the current manuscript notation `GD-SB` and `GD-ST`; the raw feedback retains `GS-SB` and `EA-ST`. They remain KEL candidates and do not modify authoritative EDAS, EDPR, plotter, or graph rules until grouping and expert review.

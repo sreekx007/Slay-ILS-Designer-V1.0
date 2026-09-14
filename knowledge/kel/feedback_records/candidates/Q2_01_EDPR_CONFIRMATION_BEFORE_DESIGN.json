@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q2_option_layout:edpr_confirmation_before_design",
+  "linked_experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "created_utc": "2026-09-14T16:15:45.430Z",
+  "raw_feedback_text": "Issue - LLM did not provide the EDPR or problem understanding for review after receiving user query. Did not wait for User to confirm the LLM understanding of the question before proceeding to work. This need to be implemented",
+  "feedback_type": "answer_format_requirement",
+  "structured_feedback": {
+    "affected_requirement": "EDPR problem-understanding review and confirmation",
+    "affected_function": "concept-generation workflow gate",
+    "affected_behavior": null,
+    "affected_structure": null,
+    "affected_constraint": "Do not begin design generation until the user confirms the emitted EDPR/problem understanding.",
+    "pmap_issue": "The workflow generated a concept before emitting the EDPR interpretation and receiving user confirmation.",
+    "apf_action": "add_or_update_kel_output_presentation_policy",
+    "priority": "high"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q2_option_layout:default_strain_moment_reduction",
+  "linked_experience_id": "kel:experience:paper01a_case02_option2:20260915",
+  "created_utc": "2026-09-14T16:15:45.430Z",
+  "raw_feedback_text": "Issue - No attempt to minimize the strain have been considered. By default the design should consider to reduce high strains and bending moments on pipeline",
+  "feedback_type": "design_objective_requirement",
+  "structured_feedback": {
+    "affected_requirement": "Reduce high pipeline and branch response",
+    "affected_function": "rank and screen candidate layouts",
+    "affected_behavior": "header and branch strain and bending moment",
+    "affected_structure": "GD-HP and GD-B",
+    "affected_constraint": "By default, layout generation must consider reduction of high strains and bending moments on the header and branch lines.",
+    "pmap_issue": "The concept did not emit any strain or bending-moment reduction rationale, screening result, or analysis evidence.",
+    "apf_action": "add_design_objective_or_ranking_rule_for_stress_strain_minimization",
+    "priority": "high"
+  }
+}
