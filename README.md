@@ -18,7 +18,7 @@ The current repository supports a complete run from an existing EDPR JSON file. 
 - Checks exported plots for missing content, clipping, scale, bounds, and unresolved layout problems.
 - Records solution, layout, and visual findings as a Knowloop candidate for human/expert review.
 - Packages the completed run as a KEL experience and can turn supplied human feedback into atomic, grouped, governed graph-change requests.
-- Applies KEL v0.2 gates for vertical connectors, EA-ST report coverage, valve-protection evidence, and unresolved two-valve topology.
+- Applies KEL v0.2 gates for L/Z branch anchoring to GD-ST, connector orientation, GD-ST report coverage, valve-protection evidence, and unresolved two-valve topology.
 
 The framework supports conceptual design inspection and evidence tracing. It does not replace project-specific calculations, FEA, fatigue assessment, installation analysis, or engineering approval.
 

@@ -31,6 +31,45 @@ def test_vertical_connector_is_distinct_and_selects_z_anchor() -> None:
     assert unrelated["connector"]["required_orientation"] is None
 
 
+def test_l_and_z_branches_require_declared_gdst_anchors() -> None:
+    cases = (
+        ("horizontal", "ILT-L-FT-F2", "L", "right1"),
+        ("vertical", "ILT-Z-FT-F2", "Z", "top1"),
+    )
+    for orientation, candidate, variant, structure_feature in cases:
+        intent = extract_design_intent({"sourceRequest": {"rawText": f"The branch connector shall be {orientation}."}})
+        spec, _ = materialize({"design_intent": intent, "recommendation": {"recommended_candidate": candidate}})
+        branch = next(c for c in spec["components"] if c["code"] == "GD-B")
+        assert branch["variant"] == variant
+        association = next(
+            a for a in spec["associations"]
+            if {a["from"]["component"], a["to"]["component"]} == {"B", "ST"}
+        )
+        assert association["to"]["feature"] == structure_feature
+        gate = build_ils(spec).design_workflow_report()["branch_gd_st_gate"]
+        assert gate["status"] == "passed"
+        assert gate["unanchored_branch_ids"] == []
+
+        missing_link = json.loads(json.dumps(spec))
+        missing_link["associations"] = [
+            a for a in missing_link["associations"]
+            if {a["from"]["component"], a["to"]["component"]} != {"B", "ST"}
+        ]
+        gaps = validate_layout_against_intent(missing_link, intent)
+        assert any(gap["code"] == "BRANCH_GD_ST_ASSOCIATION_REQUIRED" for gap in gaps)
+        assert build_ils(missing_link).design_workflow_report()["branch_gd_st_gate"]["status"] == "failed"
+
+    branch_only = json.loads(json.dumps(spec))
+    branch_only["components"] = [c for c in branch_only["components"] if c["code"] != "GD-ST"]
+    branch_only["associations"] = []
+    branch_only["ils"]["design_gate"] = "advisory"
+    gaps = validate_layout_against_intent(branch_only, intent)
+    assert any(gap["code"] == "BRANCH_REQUIRES_GD_ST" for gap in gaps)
+    report = build_ils(branch_only).design_workflow_report()
+    assert report["status"] == "failed"
+    assert "GD-B.requires.GD-ST" in report["unresolved_or_inactive_slots"]
+
+
 def test_east_complete_gate_reports_parameters_slots_landings_and_associations() -> None:
     spec = {
         "schema_version": 1,

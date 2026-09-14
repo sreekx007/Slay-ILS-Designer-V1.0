@@ -4,15 +4,26 @@ KEL v0.2 turns accepted feedback into deterministic checks used by EDPR,
 the evidence solver, EDAS layout materialization, and the repository plotter.
 Generated outputs remain concept-screening artifacts until expert review.
 
-## Vertical connector
+## Branch-to-GD-ST anchoring
+
+Every `GD-B` branch emitted as part of an ILS must terminate at a declared
+`GD-ST` feature. An L branch uses its horizontal terminal and a `GD-ST` side
+feature; a Z branch uses its vertical terminal and a `GD-ST` top feature. A
+regression trial first exposed the omission on a Z branch, but the same
+visually-adjacent-without-association failure applies to L branches. Missing
+`GD-ST` or a missing terminal association fails the complete-design gate. A
+branch-only component study must be marked `study_only`.
+
+## Connector orientation and branch family
 
 EDPR records connector orientation separately from branch routing, branch
 take-off direction, and page orientation. A required vertical connector limits
 the standard-layout candidate set to `ILT-Z-*` and requires `GD-B.variant = Z`.
 If no compatible Z anchor remains, layout emission returns a representation gap.
-It never substitutes an L branch.
+It never substitutes an L branch. This orientation gate is separate from the
+branch-to-`GD-ST` anchoring gate, which applies to both L and Z branches.
 
-## EA-ST exposure
+## GD-ST exposure
 
 An assembly report containing GD-ST emits canonical GD-ST parameters, active
 connector slots and types, corresponding GD-Con instances, GD-TP/GD-TT/GD-PIP/
@@ -26,13 +37,13 @@ implicit connectors; those plots cannot claim complete-design status.
 
 ## Valve protection
 
-The workflow stops before selecting EA-SB until it knows whether roller passage
+The workflow stops before selecting GD-SB until it knows whether roller passage
 is in scope, underside or top protection, equipment and thick-section envelopes,
 roller geometry, clearance, load cases, acceptance measure, connector spacing
 and system basis, compatible connector evidence, valve capacity ratio, and
 combined valve moment evidence.
 
-An EA-SB concept must contain the repository's GD-SB geometry and contact model.
+A GD-SB concept must contain the repository's GD-SB geometry and contact model.
 A top frame is a separate GD-ST. Connector choice without compatible evidence
 has status `needs_evidence`. Valve moment acceptance is:
 

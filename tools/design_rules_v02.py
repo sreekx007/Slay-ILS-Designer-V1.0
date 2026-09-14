@@ -247,7 +247,34 @@ def choose_vertical_anchor(recommended: str | None, eligible: list[str]) -> str 
 
 def validate_layout_against_intent(spec: dict[str, Any], intent: dict[str, Any]) -> list[dict[str, str]]:
     gaps: list[dict[str, str]] = []
-    branches = [c for c in spec.get("components", []) if c.get("code") == "GD-B"]
+    components = spec.get("components", [])
+    branches = [c for c in components if c.get("code") == "GD-B"]
+    tops = [c for c in components if c.get("code") == "GD-ST"]
+    if branches:
+        if not tops:
+            gaps.append({
+                "code": "BRANCH_REQUIRES_GD_ST",
+                "message": "Every GD-B branch assembly must terminate at a GD-ST top-frame feature.",
+            })
+        else:
+            branch_ids = {str(c.get("id") or f"branch_{index}") for index, c in enumerate(branches, 1)}
+            top_ids = {str(c.get("id") or f"top_{index}") for index, c in enumerate(tops, 1)}
+            anchored = set()
+            for association in spec.get("associations", []) or []:
+                if association.get("type") != "Connection":
+                    continue
+                ends = {
+                    str((association.get("from") or {}).get("component")),
+                    str((association.get("to") or {}).get("component")),
+                }
+                if ends & branch_ids and ends & top_ids:
+                    anchored.update(ends & branch_ids)
+            unanchored = sorted(branch_ids - anchored)
+            if unanchored:
+                gaps.append({
+                    "code": "BRANCH_GD_ST_ASSOCIATION_REQUIRED",
+                    "message": "Every GD-B branch requires a declared terminal association to GD-ST; unanchored branches: " + ", ".join(unanchored),
+                })
     if intent.get("connector", {}).get("required_orientation") == "vertical":
         if not branches or any(c.get("variant", "L") != "Z" for c in branches):
             gaps.append({"code": "VERTICAL_CONNECTOR_REQUIRES_GD_B_Z", "message": "A vertical connector requires every selected branch to use GD-B variant Z and an ILT-Z-* anchor."})

@@ -5,7 +5,7 @@
 Steps 1 through 4 and Step 6 were implemented locally on 2026-09-14. Step 5
 is implemented as a fail-closed representation gap because expert review has
 not yet selected the intended two-valve topology. The grouped cycle, design
-intent gates, Z-anchor selection, EA-ST report coverage, EA-SB evidence gate,
+intent gates, L/Z branch anchoring to GD-ST, Z-anchor selection, GD-ST report coverage, GD-SB evidence gate,
 implementation plans, migration, status reporting, and lifecycle reconciliation
 are active. Q1 GCR 08 has one implemented authority and one superseded trace.
 
@@ -24,8 +24,8 @@ traceability and grouping introduced by the earlier work:
 
 1. Feedback decomposition, grouping, de-duplication, and lifecycle repair.
 2. EDPR/EDAS vertical-connector rule.
-3. EA-ST plotter/report exposure gate.
-4. EA-SB valve-protection rule using real GD-SB geometry.
+3. GD-B-to-GD-ST anchoring and GD-ST plotter/report exposure gate.
+4. GD-SB valve-protection rule using real GD-SB geometry.
 5. Two-branch-valve representation gap.
 6. Implementation planning, migration, reporting, and release validation.
 
@@ -118,7 +118,7 @@ operation must be idempotent and must never overwrite a conflicting record.
 ### Required regression behavior
 
 - The valve feedback fixture produces five atomic feedback records.
-- Q1 EA-ST feedback records 03, 05, and 11 can be grouped while preserving all
+- Q1 GD-ST feedback records 03, 05, and 11 can be grouped while preserving all
   three source IDs and their distinct requirements.
 - Q1 GCR 08 resolves to the implemented record; the pending copy is moved or
   explicitly superseded.
@@ -164,14 +164,18 @@ unresolved layout/representation gap. Do not substitute an L-shaped branch.
 Q1 vertical-connector input deterministically produces a Z candidate or an
 explicit gap, never an L candidate.
 
-## Phase 3 - EA-ST plotter and report exposure gate
+## Phase 3 - GD-B anchoring and GD-ST plotter/report exposure gate
 
 ### Required output
 
-Whenever EA-ST/GD-ST is active, the machine-readable report and the plotted
-design must expose:
+Every GD-B branch in an emitted ILS must terminate at GD-ST through an
+explicit association. An L branch terminates at a side feature through its
+horizontal connector; a Z branch terminates at a top feature through its
+vertical connector. The issue first surfaced in a Z-branch trial, but the gate
+is branch-family independent. Whenever GD-ST is active, the machine-readable
+report and plotted design must expose:
 
-- the GD-ST parameters that realize EA-ST, including applicable centre position,
+- the canonical GD-ST parameters, including applicable centre position,
   top-frame length, top-frame height, and connector positions;
 - every active connector slot and its connector type;
 - every pipe-side GD-Con/GD-TP landing;
@@ -193,7 +197,10 @@ keys.
 
 ### Tests
 
-- Complete EA-ST example passes and lists each parameter, slot, connector,
+- Reviewed L-horizontal and Z-vertical anchors each pass with a declared
+  GD-B-to-GD-ST terminal association.
+- Removing GD-ST or the terminal association fails the branch gate.
+- Complete GD-ST example passes and lists each parameter, slot, connector,
   landing, and association.
 - Removing one association fails the gate with its component/slot ID.
 - A label-overlap regression verifies that required labels do not obscure the
@@ -203,9 +210,9 @@ keys.
 
 ### Exit gate
 
-Q1 feedback 03, 05, and 11 is satisfied by one traceable EA-ST report and plot.
+Q1 feedback 03, 05, and 11 is satisfied by one traceable GD-ST report and plot, and both L and Z branches satisfy the generalized anchoring gate.
 
-## Phase 4 - EA-SB valve protection using GD-SB geometry
+## Phase 4 - GD-SB valve protection using GD-SB geometry
 
 ### EDPR clarification gate
 
@@ -224,12 +231,12 @@ support topology or a strain-optimization objective.
 ### EDAS geometry rule
 
 When a valve cannot pass over the installation rollers and protection is in
-scope, select an EA-SB candidate or emit an unresolved assumption. A valid EA-SB
+scope, select a GD-SB candidate or emit an unresolved assumption. A valid GD-SB
 candidate must use the EDES GD-SB component geometry, contact ownership,
 connections, and associations. A generic rectangle or freehand frame cannot
 satisfy the rule.
 
-If a protective top frame is required, represent it with EA-ST/GD-ST and its
+If a protective top frame is required, represent it with GD-ST and its
 declared associations; do not distort GD-SB to stand in for a top structure.
 
 Derive base depth and length from the equipment envelope, roller clearance,
@@ -239,7 +246,7 @@ default dimension.
 
 ### Evidence and acceptance rule
 
-Do not infer valve bending-moment compliance from the existing 16-inch EA-SB
+Do not infer valve bending-moment compliance from the existing 16-inch GD-SB
 strain study. That evidence does not contain a combined GD-VLV + GD-SB valve
 moment result. P-S, F, D, or mixed connector selection must cite in-domain EDIKB
 evidence or create a `needs_evidence` FEA candidate.
@@ -260,14 +267,14 @@ required load case.
   envelope, roller, top-frame, connector-spacing, and moment evidence are absent.
 - A complete fixture builds actual GD-SB geometry and reports every dimensional
   basis.
-- A generic frame fails the EA-SB gate.
+- A generic frame fails the GD-SB gate.
 - P-S selection without compatible evidence emits `needs_evidence` and an FEA
   study candidate.
 - No strain-minimization objective is added unless the user requested it.
 
 ### Exit gate
 
-The workflow can issue a supported EA-SB concept or a precise evidence gap. It
+The workflow can issue a supported GD-SB concept or a precise evidence gap. It
 cannot emit the earlier unsupported P-S concept as a suitable design.
 
 ## Phase 5 - Two-branch-valve representation gap
@@ -354,8 +361,8 @@ Use small reviewable changes in this order:
 2. Atomic decomposition, grouping, and de-duplication.
 3. Lifecycle reconciliation and idempotency.
 4. Vertical connector EDPR/EDAS rule.
-5. EA-ST completeness gate.
-6. EA-SB valve-protection clarification, geometry, and evidence gate.
+5. GD-B-to-GD-ST anchoring and GD-ST completeness gate.
+6. GD-SB valve-protection clarification, geometry, and evidence gate.
 7. Two-branch-valve gap record and accepted representation.
 8. Implementation-plan/status tools, migration, docs, and full release run.
 
@@ -370,10 +377,11 @@ KEL v0.2 is complete when:
 - compound feedback is decomposed into atomic traceable issues;
 - equivalent feedback is grouped without losing source IDs or evidence;
 - one change-request ID has one authoritative lifecycle state;
+- every GD-B branch terminates at GD-ST through the correct L-side or Z-top association;
 - a vertical connector selects GD-B Z and `ILT-Z-*` or emits a gap;
-- EA-ST plots and reports expose all parameters, active connectors, and
+- GD-ST plots and reports expose all parameters, active connectors, and
   associations;
-- EA-SB valve protection uses real GD-SB geometry and a documented dimensional
+- GD-SB valve protection uses real GD-SB geometry and a documented dimensional
   and evidence basis;
 - the accepted two-branch-valve topology is represented end to end, or remains a
   machine-readable gap;

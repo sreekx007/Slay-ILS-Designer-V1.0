@@ -985,7 +985,7 @@
         "repo_path": "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
         "status": "present",
         "required": true,
-        "description": "Authoritative vertical-connector, EA-ST exposure, EA-SB valve-protection, and topology-gap behavior."
+        "description": "Authoritative GD-B-to-GD-ST anchoring, connector-orientation, GD-ST exposure, GD-SB valve-protection, and topology-gap behavior."
       },
       {
         "id": "kel:implementation_plans",
@@ -1026,7 +1026,7 @@
     {
       "step": 6,
       "name": "apply_kel_v0_2_design_gates",
-      "action": "Normalize explicit connector/valve/topology intent. Block unsupported valve-protection or two-valve concepts; restrict vertical connectors to GD-B Z and ILT-Z-* anchors."
+      "action": "Require every GD-B branch to terminate at GD-ST through a declared L-side or Z-top association. Normalize explicit connector/valve/topology intent, block unsupported valve-protection or two-valve concepts, and restrict vertical connectors to GD-B Z and ILT-Z-* anchors."
     },
     {
       "step": 7,
@@ -1135,7 +1135,7 @@
     "verification": [
       "15 KEL tests passed.",
       "Compound valve feedback produced five stable atomic records, five groups, and five grouped graph requests.",
-      "Q1 EA-ST feedback 03, 05, and 11 produced one group retaining all three source IDs.",
+      "Q1 GD-ST feedback 03, 05, and 11 produced one group retaining all three source IDs.",
       "Q1 GCR 08 pending duplicate moved to superseded with the implemented record authoritative.",
       "A real grouped v0.2 cycle completed with one source feedback, five atomic records, five groups, and five graph requests."
     ]
@@ -1145,13 +1145,14 @@
     "status": "implemented_locally_pending_upload",
     "scope": "Steps 1-4 and 6 implemented; Step 5 remains a machine-readable gap pending expert topology review.",
     "rules": [
+      "every GD-B branch -> declared GD-ST terminal association for L and Z",
       "vertical connector -> GD-B Z -> ILT-Z-*",
-      "complete EA-ST reports expose canonical parameters/connectors/landings/associations",
-      "EA-SB valve protection requires GD-SB geometry and compatible combined evidence",
+      "complete GD-ST reports expose canonical parameters/connectors/landings/associations",
+      "GD-SB valve protection requires canonical geometry and compatible combined evidence",
       "two branch valves fail closed until topology is accepted"
     ],
     "verification": [
-      "23 KEL tests passed",
+      "24 KEL tests passed",
       "29 plotter/solver tests passed",
       "all four EDPR examples validated",
       "Q1 vertical scenario emitted ILT-Z-FT-PS",

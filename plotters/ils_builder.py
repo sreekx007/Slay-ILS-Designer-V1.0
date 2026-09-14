@@ -963,14 +963,32 @@ class ILS:
                                'canonical_parameters': canonical, 'active_connectors': slots,
                                'inactive_connectors': inactive})
 
+        branch_ids = [cid for cid, code in zip(self.ids, self.codes) if code == 'GD-B']
+        top_ids = {cid for cid, code in zip(self.ids, self.codes) if code == 'GD-ST'}
         branch_links = []
+        anchored_branches = set()
         for index, assoc in enumerate(assocs):
+            if assoc.get('type') != 'Connection':
+                continue
             ends = [assoc.get('from') or {}, assoc.get('to') or {}]
             ids = {end.get('component') for end in ends}
-            if any(self.codes[self.ids.index(value)] == 'GD-B' for value in ids if value in self.ids):
+            linked_branches = ids.intersection(branch_ids)
+            if linked_branches and ids.intersection(top_ids):
                 branch_links.append({'association_index': index, 'association': assoc})
-        if 'GD-B' in self.codes and 'GD-ST' in self.codes and not branch_links:
+                anchored_branches.update(linked_branches)
+        unanchored_branches = sorted(set(branch_ids) - anchored_branches)
+        if branch_ids and not top_ids:
+            missing.append('GD-B.requires.GD-ST')
+        elif unanchored_branches:
             missing.append('GD-B.to.GD-ST.association')
+        branch_gate = {
+            'required': bool(branch_ids),
+            'status': 'not_applicable' if not branch_ids else 'passed' if not unanchored_branches else 'failed',
+            'branch_ids': branch_ids,
+            'gd_st_ids': sorted(top_ids),
+            'unanchored_branch_ids': unanchored_branches,
+            'rule': 'Every GD-B branch terminates at GD-ST: L uses a horizontal side feature and Z uses a vertical top feature.'
+        }
 
         basis = self.definition.get('design_basis', {}) or {}
         valve_base = 'GD-VLV' in self.codes and 'GD-SB' in self.codes
@@ -979,17 +997,18 @@ class ILS:
         if mode == 'complete':
             missing.extend(f'design_basis.{name}' for name in basis_missing)
 
-        if not structures:
-            status = 'not_applicable'
-        elif mode == 'study_only':
+        if mode == 'study_only':
             status = 'study_only'
         elif missing:
             status = 'failed'
+        elif not structures:
+            status = 'not_applicable'
         else:
             status = 'passed'
         return {'schema': 'ils-design-workflow-report/0.2', 'gate_mode': mode,
                 'purpose': meta.get('purpose', 'unspecified'), 'status': status,
-                'ea_structures': structures, 'branch_structure_associations': branch_links,
+                'ea_structures': structures, 'branch_gd_st_gate': branch_gate,
+                'branch_structure_associations': branch_links,
                 'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
                                         'design_basis': basis, 'missing_basis': basis_missing},
                 'unresolved_or_inactive_slots': missing,
