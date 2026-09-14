@@ -15,6 +15,18 @@ excluded.
 
 
 
+## Paper 01A manuscript draft - confirmed
+
+The engineering-professional manuscript draft and its claim/evidence register are included. The draft explains the S-lay ILT ontology, engineering data management, the EDES/EDAS/EDIKB/EDPR architecture, LLM/tool responsibilities, the valve-layout feedback case, KEL governance, preliminary repository verification, limitations, and the path to a controlled evaluation.
+
+| Action | Repository path |
+| --- | --- |
+| Add | `papers/PAPER_01A_MANUSCRIPT_DRAFT.md` |
+| Add | `papers/PAPER_01A_CLAIM_EVIDENCE_REGISTER.md` |
+| Update | `papers/README.md` |
+| Update | `framework_manifest.json` |
+| Update | `UPLOAD_MAP.md` |
+
 ## Paper 01A and 01B drafting plans - confirmed
 
 Audience-specific action plans and a shared ontology/figure storyboard are included. Paper 01A targets engineering professionals and engrXiv; Paper 01B targets AI researchers and arXiv. The shared figure plan maps temporary figures from the two author papers to final repository-backed redraws.

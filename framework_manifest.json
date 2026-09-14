@@ -616,6 +616,20 @@
         "status": "present",
         "required": false,
         "role": "Shared source-paper placeholder map and realistic-to-schematic-to-ontology figure plan"
+      },
+      {
+        "id": "doc:paper_01a_manuscript_draft",
+        "repo_path": "papers/PAPER_01A_MANUSCRIPT_DRAFT.md",
+        "status": "present",
+        "required": false,
+        "role": "Full engineering-professional manuscript draft for Paper 01A and planned engrXiv submission"
+      },
+      {
+        "id": "doc:paper_01a_claim_evidence_register",
+        "repo_path": "papers/PAPER_01A_CLAIM_EVIDENCE_REGISTER.md",
+        "status": "present",
+        "required": false,
+        "role": "Claim-level evidence class, status, and release-action register for Paper 01A"
       }
     ],
     "reference_papers": [
