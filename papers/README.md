@@ -34,6 +34,7 @@ The reviewed PDFs remain outside the Git repository. `REFERENCE_LIBRARY.md` reco
 - PAPER_01A_MANUSCRIPT_DRAFT.md - engineering-professional draft with explanatory workflow figures.
 - PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture, benchmark and case analysis.
 - figures/generate_preliminary_figures.py - reproducible generator for workflow and component-ontology diagrams.
+- figures/generate_repository_schematic.py - reproducible ILS-Plotter export with manuscript-scale fonts and a geometry-focused image; companion reports retain the complete design-workflow payload.
 - figures/figure_sources.json - figure source and status register.
-- figures/preliminary/shared_component_ontology_primer.svg - shared twelve-component visual vocabulary used before the EDES/EDAS discussion.
-- figures/preliminary/ - SVG and PNG previews plus the ILS-Plotter schematic and reports.
+- figures/preliminary/shared_component_ontology_primer.svg - shared ten-component visual vocabulary used before the EDES/EDAS discussion.
+- figures/preliminary/ - SVG and PNG previews plus the ILS-Plotter schematic and machine-readable reports.

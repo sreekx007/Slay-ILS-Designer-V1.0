@@ -29,7 +29,7 @@ Industrial AI for conceptual engineering is primarily a data and knowledge-manag
 | Engineering data-management model | Show how documents and tacit experience become governed EDES, EDAS, EDIKB, and EDPR records. |
 | Accessible AI workflow | Explain ontology, knowledge graph, retrieval, LLM, validation gate, and feedback loop in engineering language. |
 | Repository-backed case study | Demonstrate the Q1 ILT request, the initial failure modes, the corrected workflow, and the fail-closed boundary. |
-| Human-governed learning | Explain KnowLoop and KEL as controlled engineering change processes. |
+| Human-governed learning | Explain KEL as the controlled evolutionary loop for graph change. |
 
 ## Opening Ontology Sequence
 
@@ -73,7 +73,7 @@ State that R7 supplies the physical IW/EA classification, Type A/B/C mechanical 
 | 1. Introduction | Explain why experienced engineering organizations still struggle to reuse design knowledge. Define the problem without assuming AI expertise. | Examples of reports, drawings, calculations, and tacit review knowledge. |
 | 2. S-Lay ILTs and Their Ontology | Introduce the physical assembly, installation challenge, component/assembly classifications, realistic-to-schematic mapping, parameters, and connections. | Shared Figures S1–S4; R7 and R8. |
 | 3. Why Engineering AI Starts With Data Management | Explain identifiers, controlled terms, parameters, relationships, evidence, provenance, versioning, and missing-data handling. | Before/after example: document fragment versus structured record. |
-| 4. Knowledge Architecture | Explain EDES, EDAS, EDIKB, EDPR, KnowLoop, and KEL using an engineering document-control analogy. | Layer diagram and one traceable design fact. |
+| 4. Knowledge Architecture | Explain EDES, EDAS, EDIKB, EDPR, and KEL using an engineering document-control analogy. | Layer diagram and one traceable design fact. |
 | 5. Role of the LLM and Deterministic Tools | Separate language interpretation and explanation from validation, retrieval, layout construction, plotting, and tests. | Workflow diagram with human review points. |
 | 6. Case Study: Q1 ILT Layout | Walk through request, problem interpretation, retrieval, layout selection, plot, feedback, KEL changes, and current topology gap. | Q1 evidence package and repository-generated plots. |
 | 7. Evaluation | Report whether the governed workflow exposes parameters, connections, assumptions, evidence, and representation gaps more reliably than an unconstrained response. | Completeness and traceability matrix. |

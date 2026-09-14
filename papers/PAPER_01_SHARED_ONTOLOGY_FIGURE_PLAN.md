@@ -76,7 +76,7 @@ Show F1, F2, PS, and deadband systems alongside L and Z branch families. Identif
 
 ### S6. Governed AI Architecture
 
-Show human request -> EDPR -> EDES/EDAS retrieval -> EDIKB evidence -> deterministic tools -> candidate/clarification/gap -> plot/report -> KnowLoop/KEL -> expert review.
+Show human request -> EDPR -> EDES/EDAS retrieval -> EDIKB evidence -> deterministic tools -> candidate/clarification/gap -> plot/report -> KEL graph evolution -> expert review.
 
 Paper 01A labels should use plain-language subtitles. Paper 01B may add formal graph and transition symbols.
 

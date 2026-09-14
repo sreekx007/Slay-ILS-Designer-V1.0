@@ -44,11 +44,11 @@ The first domain study classifies physical items as inline-welded or externally 
 
 ![Preliminary repository-generated ILT schematic](figures/preliminary/shared_repository_ilt_schematic.svg)
 
-**Figure 1. Preliminary repository-generated ILT schematic.** The image is emitted from the canonical ILS-ILT archetype and includes component labels, resolved parameters, connectors, associations, and findings. Its retained warning state illustrates that successful export is not equivalent to a valid design or complete evidence package.
+**Figure 1. Preliminary repository-generated ILT schematic.** The image shows the canonical ILS-ILT geometry, component identities and connector topology at manuscript-readable scale. The companion machine-readable report retains the resolved parameters, active connectors, associations and warning findings; successful export is not equivalent to a valid design or complete evidence package.
 
 ### 2.2 Canonical component vocabulary
 
-Before formalizing the knowledge layers, the domain symbols must be grounded in physical objects. The implementation uses twelve canonical `GD-` identifiers. These are stable local ontology IDs rather than universal industry abbreviations. Human-readable labels remain attached to every ID. When the source-paper taxonomy is being discussed, EA-ST and EA-SB denote external top- and base-structure classes; when the executable repository object is meant, the corresponding IDs are `GD-ST` and `GD-SB`.
+Before formalizing the knowledge layers, the domain symbols must be grounded in physical objects. The papers use ten established `GD-` identifiers from the current implementation. These are stable local ontology IDs rather than universal industry abbreviations. Human-readable labels remain attached to every ID. When the source-paper taxonomy is being discussed, EA-ST and EA-SB denote external top- and base-structure classes; when the executable repository object is meant, the corresponding IDs are `GD-ST` and `GD-SB`.
 
 ![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
 
@@ -60,16 +60,14 @@ Before formalizing the knowledge layers, the domain symbols must be grounded in 
 | `GD-BrPipe` | Branch pipe part | Owns a uniform branch section; belongs to a branch context and owns no roller contact |
 | `GD-TP` | Reduced-order thick-section part | Represents a square-shouldered thick body for concept studies and exposes length, thickness, position, stiffness and mass effects |
 | `GD-TT` | Tapered thick-section part | Adds explicit taper stations between the header and thick body so section transitions are represented |
-| `GD-PIP` | Concentric bulkhead part | Specializes the tapered thick-section model with inner and fabricated outer members and declared outer-member junctions |
 | `GD-VLV` | Inline equipment part | Contributes valve-body/stem geometry, mass and a non-passable direct roller envelope on its parent line |
-| `GD-BOSS` | Coaxial sleeve part | Adds separate sleeve steel around an intact header; clearance is checked against every enclosed header section |
 | `GD-B` | Branch subassembly | Owns an L or Z multi-member path, a header tee junction and an external terminal tie to a structure connector |
 | `GD-SH` | Contact-envelope component | Changes the accessible roller-contact surface without owning or replacing the pipeline structural section |
 | `GD-ST` | External top-structure subassembly | Owns a closed frame and selectable connector features above the header; it does not own roller contact |
 | `GD-SB` | External base-structure subassembly | Owns a closed lower frame, contact-capable bottom/slope members and selectable connector features |
 | `GD-Con` | Connection part | Associates two features through typed F, P, S, D or W behavior, explicit degrees of freedom and stiffness data |
 
-Several pairs are intentionally non-interchangeable. `GD-TP` is a simplified concept object while `GD-TT` contains explicit tapered transitions. `GD-BrPipe` is a pipe part while `GD-B` is a connected branch assembly. `GD-PIP` owns fabricated concentric outer members, while `GD-BOSS` is a distinct sleeve whose header attachment remains unresolved unless declared. `GD-SH` contributes contact geometry without becoming the structural pipeline line. These distinctions give topology validators and evidence retrieval specific node and relation types instead of relying on lexical similarity.
+Several classes are intentionally non-interchangeable. `GD-TP` is a simplified concept object while `GD-TT` contains explicit tapered transitions. `GD-BrPipe` is a straight pipe part while `GD-B` is a connected L- or Z-shaped branch assembly. `GD-SH` contributes contact geometry without becoming the structural pipeline line. These distinctions give topology validators and evidence retrieval specific node and relation types instead of relying on lexical similarity.
 
 ### 2.3 Abstraction ladder
 
@@ -100,7 +98,7 @@ P-map represents engineering problem formulation through requirements, functions
 
 The Core Product Model and Open Assembly Model separate reusable product information from application-specific views and represent hierarchy, assembly features, and associations [2], [3]. EDES and EDAS follow the same motivation while specializing it for structural and piping components, topology, contact, and layout emission.
 
-KnowLoop combines LLM and knowledge-graph operations with expert supervision in conceptual design [5]. KEL shares the human-governance premise and adds persistent lifecycle artifacts: atomic feedback, grouping and fingerprints, graph-change requests, expert review, implementation plans, promotion, supersession, and conflict reconciliation.
+Prior human-in-the-loop conceptual-design work combines LLM and knowledge-graph operations with expert supervision [5]. KEL is the repository's authoritative evolutionary loop and extends this area with persistent graph-evolution artifacts: atomic feedback, grouping and fingerprints, graph-change requests, expert review, implementation plans, promotion, supersession, and conflict reconciliation.
 
 Solver-independent automated problem formulation uses LLMs to translate requirements into executable objectives and constraints without repeatedly invoking expensive simulations [6]. The present architecture similarly separates formulation from downstream solvers, but additionally represents assembly topology, evidence applicability, plotting, and persistent knowledge governance.
 

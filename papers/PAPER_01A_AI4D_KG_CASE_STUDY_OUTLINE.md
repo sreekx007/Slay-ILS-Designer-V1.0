@@ -95,8 +95,7 @@ Use the repo's actual layer names:
 | EDES | Stores component knowledge: geometry, parameters, constraints, functions, interfaces, and local structure-derived behavior. |
 | EDAS | Stores assembly knowledge: topology rules, layout anchors, connection logic, section/contact ownership, and emit/build rules. |
 | EDIKB | Stores behavior and evidence knowledge: study rows, trends, uncertainty, evidence anchors, and behavior guidance. |
-| Knowloop | Captures front-end feedback candidates. |
-| KEL | Converts experience and feedback into expert-reviewed graph evolution. |
+| KEL | Captures experience and feedback, groups issues, and governs expert-reviewed graph evolution through implementation and knowledge release. |
 | Plotter/toolchain | Ensures visual outputs come from the repository's component/assembly definitions rather than freehand LLM sketches. |
 
 ### 5. FBS-OAM Ontology for Structural Assemblies
@@ -195,7 +194,6 @@ KEL is the paper's strongest differentiator.
 
 Explain:
 
-- Knowloop captures the front half: candidate feedback and human review signal.
 - KEL closes the loop by converting experience into governed graph evolution.
 - The system records the query, parsed EDPR, retrieval context, proposed solution, plot, assumptions, confidence, sufficiency rating, human feedback, graph change request, expert review, and implementation trace.
 
@@ -332,7 +330,7 @@ Include:
 
 ## Remaining Citation Needs Before Preprint
 
-The supplied set now covers OAM/CPM, P-map, KnowLoop, APF, and the two EDIKB domain papers. The outline still needs direct citation support for:
+The supplied set now covers OAM/CPM, P-map, human-in-the-loop LLM/KG design, APF, and the two EDIKB domain papers. The outline still needs direct citation support for:
 
 - AI4D / AI for design principles;
 - knowledge graphs in engineering design;
@@ -349,7 +347,7 @@ Use the stable citation IDs in `REFERENCE_LIBRARY.md` while drafting:
 |---|---|
 | P-map representation and problem-space evolution | R1; use R4 for ontology granularity and annotation challenges. |
 | OAM/CPM assembly objects, hierarchy, features, and associations | R2 and R3. |
-| KnowLoop as the front-half human/expert-supervised conceptual-design precedent | R5. |
+| Human-in-the-loop LLM/KG conceptual-design precedent | R5. |
 | Solver-independent APF for high-cost simulation-driven design | R6. |
 | EDIKB Paper 1 classifications and isolated-component behavior | R7. |
 | EDIKB Paper 2 EA-ST, EA-SB, connector, branch, and mass-position behavior | R8. |

@@ -2,7 +2,7 @@
 
 ## Supplied and Registered
 
-Eight papers have been reviewed and registered in `REFERENCE_LIBRARY.md`. The set now covers P-map problem formulation, OAM/CPM product and assembly models, ontology-development challenges, KnowLoop human-in-the-loop conceptual design, solver-independent APF, and the two domain papers underlying EDIKB.
+Eight papers have been reviewed and registered in `REFERENCE_LIBRARY.md`. The set now covers P-map problem formulation, OAM/CPM product and assembly models, ontology-development challenges, human-in-the-loop LLM/KG conceptual design, solver-independent APF, and the two domain papers underlying EDIKB.
 
 The two author-supplied subsea papers are primary domain evidence:
 
@@ -28,7 +28,7 @@ Their machine-readable mapping is in `EDIKB_SOURCE_PROVENANCE.json`. The PDFs re
 |---|---|---|
 | Design theory and formulation | R1, R4, R6 | P-map, ontology annotation, and APF problem formulation. |
 | Product and assembly ontology | R2, R3 | OAM/CPM objects, associations, hierarchy, and lifecycle information. |
-| Human-in-the-loop AI design | R5 | KnowLoop precedent and expert-supervision comparison. |
+| Human-in-the-loop AI design | R5 | LLM/KG design precedent and expert-supervision comparison. |
 | Domain evidence | R7, R8 | EDIKB classifications, S-lay strain behavior, structures, connections, and branch-layout evidence. |
 
 ## Evidence Discipline

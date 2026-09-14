@@ -20,7 +20,7 @@ The following sketches are generated from the current repository architecture an
 
 ![Repository-generated ILT schematic](figures/preliminary/shared_repository_ilt_schematic.svg)
 
-**Preliminary Figure A.** ILS-Plotter output showing geometry, labels and the parameter/report panel. Its warning state is deliberately retained.
+**Preliminary Figure A.** ILS-Plotter output showing the canonical geometry and connector topology at manuscript-readable scale. The companion JSON report retains the resolved parameters, active connectors, associations and warning findings.
 
 ![S-lay ILT abstraction ladder](figures/preliminary/shared_ilt_abstraction_ladder.svg)
 
@@ -75,7 +75,7 @@ The repository gives every reusable component class a stable identifier beginnin
 
 ![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
 
-**Figure 2. Canonical GD component vocabulary (preliminary).** The symbols introduce the twelve component classes currently available to the plotter and assembly model. They communicate identity and mechanical role; they are not fabrication drawings or proof of design adequacy.
+**Figure 2. Canonical GD component vocabulary (preliminary).** The symbols introduce the ten established component classes used in these papers. They communicate identity and mechanical role; they are not fabrication drawings or proof of design adequacy.
 
 | Code | Readable component | What it represents in the engineering model | Key data or relationship |
 |---|---|---|---|
@@ -83,16 +83,14 @@ The repository gives every reusable component class a stable identifier beginnin
 | `GD-BrPipe` | Branch pipe | One uniform pipe segment within a branch run | Branch section and length; it does not own roller contact |
 | `GD-TP` | Thick pipe | A square-shouldered reduced-order thick section for concept studies | Body length, thickness, center position, stiffness and mass ratios |
 | `GD-TT` | Tapered thick pipe | A thick body connected to the header through explicit tapered transitions | Thick-body and taper dimensions, section continuity, center position |
-| `GD-PIP` | Pipe-in-pipe bulkhead | A concentric inner load path with one or more fabricated outer members | Inner/outer geometry, bulkhead location, inherited thick-section relations |
 | `GD-VLV` | Valve | An enlarged inline valve body with stem and installation envelope | Body length and diameter, stem envelope, mass, parent line; direct roller passage is prohibited |
-| `GD-BOSS` | Boss | A separate sleeve lying coaxially around an intact header or thick section | Sleeve length, outside diameter and wall; bore must clear the largest enclosed outside diameter |
 | `GD-B` | Branch piping assembly | A multi-member L or Z branch from the header tee toward a supported endpoint | Branch dimensions, orientation, valve position, terminal support connector |
 | `GD-SH` | Shroud | An offset protective/contact envelope around an inline component | Offset and end dimensions; it can own contact but does not replace the pipe section |
 | `GD-ST` | Top structure | A closed structural frame above the header for support or protection | Frame length/height, stiffness, active connector slots and associations |
 | `GD-SB` | Base structure | A structural frame below the header whose lower surface can contact rollers | Base length/depth, slopes, stiffness, contact geometry and active connectors |
 | `GD-Con` | Connector | The interface through which two component features transfer load | Endpoints, fixed/pinned/slotted/deadband/welded type, degrees of freedom and stiffness |
 
-Four distinctions prevent common interpretation errors. `GD-TP` is the deliberately simplified square-shouldered concept representation, whereas `GD-TT` makes the tapered transitions explicit. `GD-BrPipe` is one pipe part, whereas `GD-B` is the complete branch assembly. `GD-SH` and `GD-SB` may alter the roller-contact path without becoming the header structural section. `GD-BOSS` surrounds the header as separate steel; it does not replace or consume the header within its span, and its attachment/load-transfer detail remains an explicit unresolved input when not supplied.
+Three distinctions prevent common interpretation errors. `GD-TP` is the deliberately simplified square-shouldered concept representation, whereas `GD-TT` makes the tapered transitions explicit. `GD-BrPipe` is one straight pipe part, whereas `GD-B` is the complete L- or Z-shaped branch assembly. `GD-SH` and `GD-SB` may alter the roller-contact path without becoming the header structural section.
 
 EDES defines these reusable component objects, their parameters, interfaces, and local constraints. EDAS then states how selected instances may be positioned, nested, chained, and connected in a complete ILS. This separation lets a drawing show the same component vocabulary while an assembly record distinguishes valid and invalid combinations.
 
@@ -166,7 +164,7 @@ This is data management in the engineering sense. It includes naming, units, doc
 
 Engineering documents often use local names: base frame, lower frame, protection frame, sled base, and lower structure may refer to related objects but not always the same object. An ontology does not eliminate project language. It maps that language to stable concepts and keeps the original phrase as provenance.
 
-In Slay-ILS-Designer, component codes such as GD-ST, GD-SB, GD-VLV, GD-B, GD-BrPipe, and GD-BOSS provide stable identities. The label visible in a report can change without changing the identifier used by tools. This is similar to using a tag number rather than relying only on an equipment description.
+In Slay-ILS-Designer, component codes such as GD-ST, GD-SB, GD-VLV, GD-B, and GD-BrPipe provide stable identities. The label visible in a report can change without changing the identifier used by tools. This is similar to using a tag number rather than relying only on an equipment description.
 
 Stable identity also applies to relations. "Near the valve" is not an adequate assembly association. The record must state whether a structure contains the valve envelope, whether a connector joins the structure to the header, whether a support joins the branch to EA-ST, and which feature is active. These relations allow the same facts to be checked in a JSON report and displayed in a plot.
 
@@ -211,7 +209,7 @@ The framework uses four principal layers and two supporting lifecycle mechanisms
 
 **EDPR - Engineering Design Problem Representation.** EDPR is the current problem instance. It records the source request, objectives, constraints, functions, artifacts, behaviors, issues, known and unknown inputs, candidate components, candidate assemblies, retrieval plan, ranking criteria, and verification needs. It uses the other ontologies but does not redefine them.
 
-**KnowLoop and KEL.** KnowLoop captures front-end feedback candidates. KEL extends feedback into a governed lifecycle that can preserve an experience record, atomic feedback, grouped issues, graph-change requests, expert review, implementation plans, and promotion or supersession.
+**KEL evolutionary loop.** KEL is the project's authoritative mechanism for governed knowledge evolution. It preserves an experience record, decomposes feedback into atomic and grouped issues, proposes graph-change requests, records expert review, links implementation evidence, and controls promotion or supersession.
 
 **Plotter and deterministic tools.** The layout builder, validators, solver bridge, plotter, and plot checkers operate on the governed records. They make the output reproducible and expose errors that should not depend on language-model judgment.
 
@@ -270,11 +268,11 @@ The implemented workflow is:
       -> layout materialization
       -> repository plot and machine-readable report
       -> human review
-      -> KnowLoop/KEL change lifecycle
+      -> KEL evolutionary lifecycle
 
 > **Figure 6 placeholder - governed workflow.** Draw the sequence above with separate visual lanes for the engineer, LLM, governed knowledge, deterministic tools, and KEL review. Mark every point that can emit a clarification, evidence gap, or representation gap.
 
-Human-supervised conceptual design using linked LLM and knowledge-graph operations has a published precedent in KnowLoop [5]. KEL adopts the need for expert supervision and adds repository-level records for decomposition, grouping, review, implementation, promotion, and lifecycle reconciliation.
+Prior human-supervised conceptual-design research links LLM and knowledge-graph operations with expert review [5]. KEL is the repository's evolutionary loop: it adds explicit graph-change requests and repository-level records for decomposition, grouping, review, implementation, promotion, supersession, and lifecycle reconciliation.
 
 A key property is that a gap is a valid output. If a two-branch-valve request does not identify whether two valves lie on one branch or one valve lies on each of two branches, and the assembly language lacks reviewed instances and parent-branch associations, the workflow reports a representation gap. It does not select a visually plausible topology.
 
@@ -617,8 +615,7 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 | EDAS | Assembly topology and construction knowledge |
 | EDIKB | Behavior evidence and design-intuition knowledge |
 | EDPR | Structured representation of one current design problem |
-| KnowLoop | Front-end capture of human feedback candidates |
-| KEL | Governed lifecycle for turning experience and feedback into reviewed knowledge changes |
+| KEL | Governed evolutionary loop for turning experience and feedback into reviewed graph changes |
 | Fail closed | Stop with an explicit gap or clarification rather than inventing missing design information |
 | Provenance | Trace from a record or claim to its source and revision |
 | Applicability | Conditions under which evidence may support a new problem |

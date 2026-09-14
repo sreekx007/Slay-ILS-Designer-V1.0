@@ -413,10 +413,15 @@ Added the Paper 01B manuscript and reproducible preliminary SVG/PNG figures. Pap
 | Update | `papers/PAPER_01B_MANUSCRIPT_DRAFT.md` |
 | Update | `papers/README.md` |
 | Update | `papers/figures/generate_preliminary_figures.py` |
+| Add | `papers/figures/generate_repository_schematic.py` |
 | Update | `papers/figures/figure_sources.json` |
 | Add | `papers/figures/preliminary/shared_component_ontology_primer.svg` |
 | Add | `papers/figures/preliminary/shared_component_ontology_primer.png` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.svg` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.png` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.svg.report.json` |
+| Update | `papers/figures/preliminary/shared_repository_ilt_schematic.png.report.json` |
 | Update | `framework_manifest.json` |
 | Update | `UPLOAD_MAP.md` |
 
-Both papers now introduce all twelve canonical GD component classes before using them in EDES/EDAS reasoning. The shared preliminary figure distinguishes pipe parts, thick-section representations, inline equipment, branch assemblies, external structures, contact envelopes and connector behavior. No source-paper PDFs are added to Git.
+Both papers now introduce the ten established GD component classes used in these manuscripts before using them in EDES/EDAS reasoning. The shared preliminary figure distinguishes pipe parts, thick-section representations, inline equipment, branch assemblies, external structures, contact envelopes and connector behavior. The repository-generated schematic now uses manuscript-scale fonts and a geometry-focused image while retaining the complete design-workflow payload in its companion reports. No source-paper PDFs are added to Git.

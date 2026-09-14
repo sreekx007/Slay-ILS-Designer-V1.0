@@ -266,7 +266,7 @@ Use the stable citation IDs in `REFERENCE_LIBRARY.md` while drafting:
 |---|---|
 | P-map representation and problem-space evolution | R1; use R4 for ontology granularity and annotation challenges. |
 | OAM/CPM assembly objects, hierarchy, features, and associations | R2 and R3. |
-| KnowLoop as the front-half human/expert-supervised conceptual-design precedent | R5. |
+| Human-in-the-loop LLM/KG conceptual-design precedent | R5. |
 | Solver-independent APF for high-cost simulation-driven design | R6. |
 | EDIKB Paper 1 classifications and isolated-component behavior | R7. |
 | EDIKB Paper 2 EA-ST, EA-SB, connector, branch, and mass-position behavior | R8. |

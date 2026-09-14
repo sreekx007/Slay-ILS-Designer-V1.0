@@ -42,6 +42,7 @@
       "type": "ils_plotter_output",
       "status": "preliminary_warning",
       "source": "standard_ils_layouts.json archetype ILS-ILT",
+      "generator": "generate_repository_schematic.py",
       "report": "preliminary/shared_repository_ilt_schematic.svg.report.json"
     }
   ]

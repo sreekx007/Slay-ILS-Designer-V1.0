@@ -20,7 +20,7 @@ This document lists the figures, tables, repository artifacts, and evidence need
 
 | Table | Title | Purpose |
 |---|---|---|
-| 1 | Framework layer responsibilities | Defines EDPR, EDES, EDAS, EDIKB, Knowloop, KEL. |
+| 1 | Framework layer responsibilities | Defines EDPR, EDES, EDAS, EDIKB, and KEL. |
 | 2 | FBS-OAM mapping for subsea inline structures | Shows why assemblies, geometry, parameters, and connections must be graph nodes. |
 | 3 | P-map/APF contribution beyond FBS | Clarifies why P-map/APF is a problem formulation gate. |
 | 4 | Q1 failure-to-KEL update mapping | Demonstrates practical knowledge evolution. |
@@ -35,7 +35,7 @@ This document lists the figures, tables, repository artifacts, and evidence need
 | `README.md` | Current user-facing workflow and toolchain claims. |
 | `docs/ONTOLOGY_CROSSWALK.md` | EDES/EDAS/EDIKB/EDPR boundaries and FBS-OAM split. |
 | `docs/EDPR_PMAP_APF_IMPLEMENTATION.md` | P-map/APF explanation and parser workflow. |
-| `knowledge/kel/README.md` | KEL purpose and position relative to Knowloop. |
+| `knowledge/kel/README.md` | KEL purpose, graph-evolution scope, and governance lifecycle. |
 | `knowledge/kel/KEL_ARCHITECTURE.md` | Traceability chain and toolchain list. |
 | `knowledge/kel/KEL_V0_2_IMPLEMENTATION_PLAN.md` | Scope, ordering, completion state, and current Step 5 representation-gap boundary. |
 | `knowledge/kel/KEL_V0_2_DESIGN_GATES.md` | Authoritative description of implemented connector, EA-ST, valve-protection, and topology gates. |
@@ -62,7 +62,7 @@ To make the Q1 case study publication-ready, collect:
 |---|---|---|
 | P-map/problem formulation | R1 and R4 | Supplied. Use for representation and ontology-annotation limitations. |
 | OAM / assembly ontology | R2 and R3 | Supplied. Use for object, hierarchy, association, and product-information claims. |
-| Human-in-the-loop KG design | R5 | Supplied. Use as the KnowLoop comparison and expert-supervision precedent. |
+| Human-in-the-loop KG design | R5 | Supplied. Use as a human-in-the-loop LLM/KG comparison and expert-supervision precedent. |
 | APF for high-cost simulation design | R6 | Supplied. Use for requirement-to-formulation context; distinguish its solver-independent evaluation from this repository's P-map/APF implementation. |
 | EDIKB Paper 1 | R7 | Supplied primary source for IW/EA, Type A/B/C, and isolated-component behavior. |
 | EDIKB Paper 2 | R8 | Supplied primary source for EA-ST, EA-SB, connection systems, branch assemblies, and mass-position behavior. |
