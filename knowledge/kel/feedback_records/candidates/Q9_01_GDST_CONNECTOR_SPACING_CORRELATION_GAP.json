@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q9_gdst_connector_spacing:correlation_gap",
+  "linked_experience_id": "kel:experience:q9_ilt_l_branch_valve_low_strain_review:20260915",
+  "created_utc": "2026-09-15T00:00:00Z",
+  "raw_feedback_text": "In the ILT-L branch-valve low-strain concept, GD-ST frame length and P-S connector spacing were selected from reviewed EDAS precedent and containment rules rather than a correlation/covariance analysis between GD-ST length, connector spacing, connector stiffness and pipeline strain. Record that the workflow must explicitly state whether available EDIKB correlation data was checked and used. Also record the current lack of sufficient correlation data for GD-ST length / P-S connector spacing versus header and branch peak strain in this branch-valve configuration.",
+  "feedback_type": "insufficient_evidence",
+  "structured_feedback": {
+    "affected_requirement": "Low-strain GD-ST layouts must state whether frame length and P-S connector spacing are correlation-optimized, evidence/precedent-based, or only containment-based.",
+    "affected_function": "size GD-ST frame length and P-S connector spacing under a low-strain objective",
+    "affected_behavior": "correlate GD-ST length, P-S connector spacing, connector stiffness, header strain, branch strain, and strain peak location before claiming optimized low-strain sizing",
+    "affected_structure": "GD-ST; GD-B; GD-Con; P-S connector system; branch valve on ILT-L layout",
+    "affected_constraint": "If sufficient EDIKB correlation/covariance evidence is absent, mark sizing as concept-screening only and create a future FEA/ML correlation study candidate.",
+    "pmap_issue": "The concept satisfied standard-layout precedent and branch-valve containment, but did not use correlation evidence to size GD-ST length or P-S connector spacing for minimum strain.",
+    "apf_action": "create_future_correlation_study_candidate_for_gdst_length_ps_spacing_vs_pipeline_strain",
+    "priority": "high"
+  }
+}
