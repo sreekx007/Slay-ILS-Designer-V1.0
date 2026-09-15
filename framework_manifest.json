@@ -5,7 +5,7 @@
     "title": "Ontology-grounded RAG-enabled expert design framework for subsea inline structures",
     "version": "0.4",
     "status": "prototype-working-batch",
-    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, legacy Knowloop feedback candidates, KEL knowledge evolution records, governed design workflow stamps, standard ILS layouts, validators, documents, examples, and runtime pipeline tools.",
+    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, legacy Knowloop feedback candidates, KEL knowledge evolution records, governed design workflow stamps, standard ILS layouts, validators, documents, examples, and runtime pipeline tools, and a governed hybrid vector-search index.",
     "classification": [
       "neuro-symbolic engineering design assistant",
       "RAG-enabled expert system",
@@ -13,7 +13,8 @@
       "Knowloop-expandable FEA/ML workflow",
       "human-in-the-loop engineering knowledge framework",
       "Knowloop feedback candidate KB",
-      "KEL knowledge evolution loop"
+      "KEL knowledge evolution loop",
+      "hybrid RAG with symbolic grounding"
     ]
   },
   "repository": {
@@ -109,6 +110,23 @@
         "tools/kel/summarize_kel_status.py",
         "tools/kel/migrate_v01_to_v02.py"
       ]
+    },
+    "HybridVectorIndex": {
+      "name": "Hybrid RAG Vector Search Index",
+      "role": "Builds no-network searchable chunks from EDPR, EDES, EDAS, EDIKB, KEL, docs, README, and manifest records; retrieves semantically related candidate knowledge; and grounds results back to symbolic framework identifiers before governed use.",
+      "authority_rule": "Vector or lexical retrieval is advisory only. Symbolic grounding, EDPR/EDAS/EDIKB applicability checks, plot gates, and KEL governance decide whether retrieved candidates may be used.",
+      "primary_paths": [
+        "HYBRID_RAG_VECTOR_INDEX_PLAN.md",
+        "tools/vector_index/build_chunks.py",
+        "tools/vector_index/build_vector_index.py",
+        "tools/vector_index/query_vector_index.py",
+        "tools/vector_index/ground_retrieval.py",
+        "tests/vector_index/"
+      ],
+      "generated_paths": [
+        "indexes/vector/"
+      ],
+      "status": "implemented_no_network_lexical_fallback"
     }
   },
   "recommended_repo_structure": {
@@ -127,15 +145,56 @@
     "tools_kel": "tools/kel/",
     "tests_kel": "tests/kel/",
     "superseded": "superseded/",
-    "papers": "papers/"
+    "papers": "papers/",
+    "tools_vector_index": "tools/vector_index/",
+    "tests_vector_index": "tests/vector_index/",
+    "generated_vector_indexes": "indexes/vector/ (local generated artifacts; Git-ignored)"
   },
   "repo_review": {
-    "summary": "Core knowledge, schemas, runtime tools, plotters, paper plans, and archived manifests are present. Eight supplied publications are registered by citation and checksum; source PDFs remain outside the checkout.",
+    "summary": "Core knowledge, schemas, runtime tools, hybrid vector-search tools, plotters, paper plans, and archived manifests are present. Eight supplied publications are registered by citation and checksum; source PDFs remain outside the checkout.",
     "json_parse_status": "All discovered JSON files in schemas/, knowledge/edes/, knowledge/edas/, knowledge/edikb/, and framework_manifest.json parsed successfully during review.",
     "naming_notes": [
       "Repository currently uses stable filenames without version suffixes, for example schemas/EDPR_METASCHEMA.json. Versioning should be carried inside the JSON metadata and this manifest.",
       "Use EDPR consistently in filenames and code. The phrase EPDR appears to be a typo and should not be used for new files.",
       "Plotter and builder modules are in plotters/. See plotters/README.md for repository-root execution."
+    ],
+    "tools": [
+      {
+        "id": "tool:vector_build_chunks",
+        "repo_path": "tools/vector_index/build_chunks.py",
+        "status": "present",
+        "required": false,
+        "description": "Builds source-backed chunks from EDPR, EDES, EDAS, EDIKB, KEL, docs, README, and manifest records."
+      },
+      {
+        "id": "tool:vector_build_index",
+        "repo_path": "tools/vector_index/build_vector_index.py",
+        "status": "present",
+        "required": false,
+        "description": "Builds the deterministic no-network lexical fallback index."
+      },
+      {
+        "id": "tool:vector_query_index",
+        "repo_path": "tools/vector_index/query_vector_index.py",
+        "status": "present",
+        "required": false,
+        "description": "Returns ranked candidate chunks for natural-language engineering queries."
+      },
+      {
+        "id": "tool:vector_ground_retrieval",
+        "repo_path": "tools/vector_index/ground_retrieval.py",
+        "status": "present",
+        "required": false,
+        "description": "Groups retrieved candidate chunks by symbolic framework layer and unresolved source status."
+      }
+    ],
+    "documents": [
+      {
+        "id": "doc:hybrid_rag_vector_index_plan",
+        "repo_path": "HYBRID_RAG_VECTOR_INDEX_PLAN.md",
+        "status": "present",
+        "description": "Plan and governance rules for hybrid vector retrieval with symbolic grounding."
+      }
     ]
   },
   "artifacts": {
@@ -1190,3 +1249,4 @@
     ]
   }
 }
+

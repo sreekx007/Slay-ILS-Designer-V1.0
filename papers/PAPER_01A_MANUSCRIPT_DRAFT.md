@@ -140,6 +140,8 @@ A Standard ILS Layout Library sits beside EDAS as reusable starting arrangements
 
 The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evidence on distributed stiffness, elevation, and selected combined cases [7]. The second extends the basis to GD-ST, GD-SB, connector systems, branch assemblies, and added-mass position [8]. A paper citation establishes lineage; a quantitative design statement still requires the precise figure or table, case, parameter range, response location, and limitation.
 
+This is where the FBS-OAM view is useful. A subsea ILT is not only a set of shapes; it is an object, action, and mechanism system. A valve may function as an inline flow-control object, but its assembly action may require support, roller-contact protection, shroud transition, or branch-frame containment. A GD-ST and GD-SB may both be called support structures in ordinary language, while their OAM roles differ because one sits above the header and one may interact with installation rollers. FBS-OAM therefore gives the repository a way to represent function, behavior, structure, object identity, assembly action, and mechanism/load-path role without collapsing them into a drawing label.
+
 
 ## 3. Why Engineering AI Starts With Data Management
 
@@ -235,6 +237,8 @@ A human request often combines several kinds of statement. "Design an ILT with a
 
 The repository implementation combines P-map concepts [1] with an automated problem-formulation pattern inspired by [6]. A requirement can be interpreted as a tuple containing the evaluation region or condition, the metric or variable, and the comparison or threshold. The purpose is not to make every engineering sentence mathematical. It is to expose whether "minimize strain" means a ranking objective, whether "80% capacity" means a hard limit, and whether the required data exist.
 
+P-map and APF are especially important for this assembly class because the same component can be involved in several linked issues at once: topology, roller contact, stiffness, connector location, peak-strain location, and evidence sufficiency. The P-map keeps requirements, artifacts, functions, behaviors, and issues connected; APF states the evaluation region, metric, and criterion. Without those links, a retrieved statement about a connector or support length can be relevant in language but wrong for the active design decision.
+
 An EDPR record should therefore answer:
 
 1. What was explicitly requested?
@@ -254,7 +258,10 @@ The pipeline uses several forms of retrieval:
 - ontology retrieval identifies components, interfaces, and assembly patterns;
 - structured-data retrieval selects compatible behavior records and numeric rows;
 - source-evidence retrieval provides the publication or analysis anchor;
-- problem retrieval carries the current EDPR requirements and unknowns.
+- problem retrieval carries the current EDPR requirements and unknowns;
+- hybrid vector retrieval provides semantic recall for varied human terms, review comments, root-cause records, and future-study candidates.
+
+The implemented vector-search layer is deliberately limited. It builds source-backed chunks from EDPR, EDES, EDAS, EDIKB, KEL, documents, the README, and the manifest, then uses a deterministic no-network lexical fallback for first-pass retrieval. The important step is not the similarity score itself. Each retrieved chunk is grounded back to symbolic targets such as GD-VLV, GD-SB, a KEL feedback record, or a future-study candidate before the workflow can use it. This prevents semantic retrieval from becoming unchecked engineering authority.
 
 Candidate layouts can begin with a standard anchor, but EDAS must still validate the constructed definition. EDIKB then determines whether direct combined evidence, an accepted superposition rule, a cautious conceptual assumption, or a future FEA study is appropriate. Direct combined-case evidence has priority because assembly response may be non-additive [7].
 
@@ -265,6 +272,7 @@ The implemented workflow is:
     human request
       -> LLM-assisted EDPR draft
       -> EDPR validation
+      -> hybrid retrieval and symbolic grounding where useful
       -> EDES and standard-layout retrieval
       -> EDAS construction and topology checks
       -> EDIKB behavior and evidence retrieval
@@ -302,7 +310,8 @@ The following operations should give the same result for the same repository sta
 - known representation-gap detection;
 - plot generation from the accepted component definitions;
 - plot export checks, scale checks, clipping checks, and overlap correction;
-- KEL fingerprinting, grouping, lifecycle validation, and conflict reporting.
+- KEL fingerprinting, grouping, lifecycle validation, and conflict reporting;
+- vector-index chunk generation, local lexical index building, retrieval result ranking, and symbolic grounding.
 
 The plotter is particularly important. An LLM should not draw the engineering concept freehand. It should instruct the repository tool to build the layout from EDES/EDAS objects. The resulting image, parameter panel, connector state, association report, warnings, and source definition can then be reviewed together.
 
@@ -343,6 +352,11 @@ The workflow should consider reduction of high strain and bending moment by defa
 ### 6.4 Plot and report gates
 
 Plots must be generated through the repository ILS plotter when repository geometry is available. The plot and its JSON report must expose component parameters, active connectors, connection types, GD-ST/GD-SB associations, branch anchoring, resolved defaults, warnings, and plot-quality findings. Labels must be large enough for review and must not hide required structure or connection information.
+
+### 6.5 KEL implementation and root-cause gates
+
+KEL implementation records should not only state that a lesson was accepted. They should identify which source error led to the lesson, which layer or tool was changed, and what evidence shows that the update is active. Root-cause logging is required per implemented KEL candidate because repeated failures can arise from different causes: a missing EDAS constraint, available EDIKB evidence not being retrieved, inadequate EDPR/APF expression, a plotter/report visibility gap, or an LLM bypass of a required gate. Recording the cause per candidate turns feedback into a workflow-improvement signal rather than a general complaint.
+
 ## 7. Planned Example and Evaluation Program
 
 The research paper will need a controlled final section containing three or four examples only after the workflow performs reliably. The examples should be selected before execution, run with frozen prompts and tool versions, and reviewed by independent engineering reviewers.
@@ -403,7 +417,7 @@ At each stage, the organization should define who may create, review, accept, an
 
 ### 9.1 Current technical limitations
 
-The natural-language parser and main reasoning step still require an external or manually operated LLM. The repository contains schemas, prompts, tools, and examples rather than a fully deployed multi-user application.
+The natural-language parser and main reasoning step still require an external or manually operated LLM. The repository contains schemas, prompts, tools, and examples rather than a fully deployed multi-user application. The vector-search index is implemented as a local deterministic fallback, not as a production embedding service. It improves recall for repository terminology and review records, but it does not validate engineering applicability.
 
 The solver performs first-pass grouping and ranking. It does not yet implement complete objective-specific weighting, and heterogeneous responses must not be compared without engineering interpretation. The current EDIKB covers a bounded set of S-lay studies. Its evidence cannot be generalized automatically across pipe sizes, stinger configurations, component geometries, top tensions, contact models, or omitted assembly features.
 
@@ -512,3 +526,4 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 - [ ] Verify every acronym, term, cross-reference, number, caption, and citation.
 - [ ] Conduct independent mechanical-domain and non-AI-reader reviews.
 - [ ] Build and inspect the final engrXiv PDF and complete the venue metadata.
+

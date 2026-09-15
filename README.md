@@ -97,6 +97,10 @@ See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [prob
 | `tools/EDPR_VALIDATOR.py` | JSON Schema and EDPR-specific validation |
 | `tools/check_pmap_apf.py` | Semantic gate for usable P-map/APF content |
 | `tools/retrieve_context.py` | Builds a traceable EDES/EDAS/EDIKB context package |
+| `tools/vector_index/build_chunks.py` | Generates source-backed searchable chunks from EDPR, EDES, EDAS, EDIKB, KEL, docs, README, and manifest records |
+| `tools/vector_index/build_vector_index.py` | Builds the no-network lexical fallback index used by the first hybrid RAG implementation |
+| `tools/vector_index/query_vector_index.py` | Retrieves semantically related candidate chunks for varied engineering language |
+| `tools/vector_index/ground_retrieval.py` | Grounds retrieval results to EDPR/EDES/EDAS/EDIKB/KEL identifiers before any governed use |
 | `tools/solve_problem.py` | First-pass ranking of retrieved numeric study candidates |
 | `tools/solution_to_layout.py` | Materializes a known solver candidate from EDAS anchors and enforces v0.2 representation gates |
 | `tools/design_rules_v02.py` | Shares explicit connector, valve-protection, shroud-stiff-component, and topology intent across retrieval, solver, and layout emission |
@@ -209,6 +213,18 @@ python tools/kel/promote_accepted_kel_change.py --change-request path/to/change.
 
 `implemented` promotion additionally requires `--implementation-reference` on the expert-review record. See [KEL workflow](knowledge/kel/README.md), [LLM workflow instructions](knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md), [v0.2 recommendations](knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md), and [KEL implementation update log](knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md). See [KEL root-cause error log](knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md) for the current failure-mode strategy.
 
+## Hybrid RAG vector search index
+
+The first vector-search implementation is a deterministic no-network lexical fallback. It generates searchable views from EDPR, EDES, EDAS, EDIKB, KEL, docs, the README, and the manifest, then returns candidate chunks for varied human language. The retrieval result is a hint, not engineering authority. `ground_retrieval.py` maps each candidate back to source files, framework layers, and symbolic targets; EDPR, EDAS, EDIKB, plot, and KEL gates still decide whether the candidate may be used.
+
+```bash
+python tools/vector_index/build_chunks.py --index-dir indexes/vector
+python tools/vector_index/build_vector_index.py --index-dir indexes/vector
+python tools/vector_index/query_vector_index.py --query "valve cannot ride rollers" --top-k 8 --json
+python tools/vector_index/ground_retrieval.py --query "strongback support for branch connector" --top-k 8
+```
+
+Generated index artifacts are local build outputs under `indexes/vector/` and are ignored by Git. Rebuild them after source knowledge, KEL records, root-cause logs, or future-study candidates change.
 ## Engineering model notes
 
 All 12 current EDES component codes have component and assembly rendering coverage. `GD-BrPipe` is a branch pipe part; `GD-B` is the multi-member branch subassembly.
@@ -273,6 +289,7 @@ The local framework remains manifest schema/version 0.4 with plotter migration P
 - KEL cannot complete feedback or expert-review stages until a human provides those inputs.
 - The first-pass solver groups retrieved rows by candidate and treats lower strain, moment, bending, or curvature responses as better. It does not yet apply full objective-specific weighting from EDPR `rankingCriteria`, and heterogeneous response values must not be treated as directly comparable without engineering review.
 - EDIKB numeric evidence covers a bounded study domain. Recommendations outside that domain require project-specific evidence.
-- Structured retrieval is implemented; vector-index retrieval is a future enhancement.
+- Structured retrieval and first-pass no-network vector-index retrieval are implemented; retrieved vector candidates remain advisory until symbolically grounded and checked by deterministic gates.
 - Plot QA supports inspection and catches obvious presentation/export problems, but does not certify physical validity.
 - Source-paper files referenced by knowledge provenance are not included in the current checkout.
+
