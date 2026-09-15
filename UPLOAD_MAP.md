@@ -1,5 +1,21 @@
 # Manual Upload Map
 
+## README Knowloop correction and KEL implementation update log - 2026-09-15
+
+This documentation batch corrects stale Knowloop wording. Knowloop is now described as a legacy/front-end candidate export path only; KEL is the active governed knowledge-evolution loop. The batch also adds a compact machine-style update log for prior implemented KEL batches.
+
+Files to upload or verify in Git:
+
+- `README.md`
+- `knowledge/kel/README.md`
+- `knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md`
+- `UPLOAD_MAP.md`
+
+Validation to run:
+
+- Documentation-only change; no code test required.
+- `rg "Knowloop|KnowLoop" README.md knowledge/kel/README.md` should show only legacy/export-context wording.
+
 ## Q6 branch-valve top-frame containment KEL closeout - 2026-09-15
 
 This batch implements the expert-approved KEL from the vertical-connector branch-valve review: branch-owned valves must use a compatible `ILT-L-*`/`ILT-Z-*` standard anchor, keep branch tee/entry, branch valve, and branch end inside the associated `GD-ST` span, and avoid `F2`/`F2D` unless explicit evidence justifies the low-strain branch pocket and header-strain penalty.
@@ -684,3 +700,5 @@ Both manuscripts now use `GD-ST` and `GD-SB` consistently after an opening note 
 | Update | `UPLOAD_MAP.md` |
 
 These four Q2 records have now been promoted into the implemented feedback-record folder and converted into implemented graph-change requests in the latest local batch. The raw feedback still preserves the original `GS-SB` and `EA-ST` wording while structured fields use `GD-SB` and `GD-ST`.
+
+
