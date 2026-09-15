@@ -39,7 +39,7 @@ def test_implementation_plan_requires_acceptance_and_validates(tmp_path: Path) -
 
 
 def test_migration_is_idempotent_and_preserves_sources(tmp_path: Path) -> None:
-    sources = sorted((ROOT / "knowledge/kel/feedback_records/candidates").glob("Q1_*.json"))
+    sources = sorted((ROOT / "knowledge/kel/feedback_records/implemented").glob("Q1_*.json"))
     before = {path: path.read_bytes() for path in sources}
     atomic, groups = migrate(sources, tmp_path)
     first = {path.relative_to(tmp_path): path.read_bytes() for path in [*atomic, *groups]}

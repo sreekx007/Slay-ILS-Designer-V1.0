@@ -69,7 +69,8 @@ def output_arguments(parser):
 def execute(args, make_spec, component=False):
     report = {'plot_status': 'failed', 'plot_qa_status': 'not_applicable',
               'output_image': None, 'checks': [], 'corrections': [],
-              'warnings': [], 'errors': [], 'defaulted_parameters': []}
+              'warnings': [], 'errors': [], 'defaulted_parameters': [],
+              'parameter_csv': None}
     output = Path(args.output)
     report_path = Path(args.report) if args.report else output.with_suffix('.report.json')
     protected = [Path(args.input).resolve()] if getattr(args, 'input', None) else []
@@ -112,6 +113,12 @@ def execute(args, make_spec, component=False):
         import matplotlib.pyplot as plt
         from plot_settings import STYLE
         try:
+            if not component:
+                import ils_plotter
+                parameter_csv = output.with_suffix('.parameters.csv')
+                ils_plotter.write_parameter_csv(ils, parameter_csv)
+                report['parameter_csv'] = str(parameter_csv)
+                report['checks'].append({'id': 'parameter_csv_export', 'status': 'passed', 'path': str(parameter_csv)})
             fig = ils.plot_component(0, title=args.title) if component else ils.plot(title=args.title)
             from checkers.label_overlap_checker import correct_layout
             report['plot_qa_status'] = 'failed'

@@ -71,7 +71,7 @@ class LabelLayoutTests(unittest.TestCase):
         fig = ils.plot()
         labels = getattr(fig, '_connection_labels', [])
         self.assertGreaterEqual(len(labels), 1)
-        self.assertTrue(any('F GD-Con->GD-ST' == item['text'] for item in labels))
+        self.assertTrue(any('F' == item['text'] for item in labels))
 
     def test_model_and_anchor_coordinates_preserved(self):
         spec={'schema_version':1,'pipeline':{'OD_pipe':0.4064,'t_pipe':0.021},

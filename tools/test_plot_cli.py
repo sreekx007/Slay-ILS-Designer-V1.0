@@ -50,7 +50,11 @@ class PlotCommands(unittest.TestCase):
         self.run_cli('plot_design.py', '--input', ROOT / 'plotters/examples/example_valve_layout.json',
                      '--output', output, '--report', report)
         self.assertIn('<svg', output.read_text())
-        self.assertEqual(json.loads(report.read_text())['errors'], [])
+        payload = json.loads(report.read_text())
+        self.assertEqual(payload['errors'], [])
+        parameter_csv = Path(payload['parameter_csv'])
+        self.assertTrue(parameter_csv.is_file())
+        self.assertIn('parameter,value', parameter_csv.read_text(encoding='utf-8').splitlines()[0])
 
     def test_invalid_requests_fail_without_images(self):
         cases = [

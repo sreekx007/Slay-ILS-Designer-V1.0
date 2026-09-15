@@ -27,7 +27,7 @@ WHAT THIS ADDS over `component_plotter`, which it imports and reuses:
   * the HEADER PIPELINE the assembly sits on
   * the CONTACT ENVELOPE resolved ACROSS components by `Assembly.contact_at`
   * the DEEPEST POINT, which is what governs clearance
-  * the ASSEMBLY-LEVEL parameter panel -- mass, CoG, extent, system
+  * the ASSEMBLY-LEVEL parameter export -- mass, CoG, extent, system
 
 DIVISION OF THE TWO PANELS. This module shows what only an ASSEMBLY can
 know: total mass and where it acts, overall extent against the header, the
@@ -55,6 +55,9 @@ the ILS is duck-typed on `.components`, `.assembly`, `.header`, `.pipe`,
 so this can be exercised without the builder.
 """
 from __future__ import annotations
+
+import csv
+from pathlib import Path
 
 import numpy as np
 
@@ -310,6 +313,24 @@ def assembly_parameters(ils, deepest=None, ambiguous=None, paths=None):
     return rows
 
 
+def write_parameter_csv(ils, path, deepest=None, ambiguous=None, paths=None):
+    """Write assembly/component parameters to CSV instead of shrinking the figure.
+
+    The plot remains a readable geometry figure. The CSV carries the long
+    parameter list, connector-slot details, gate summaries and component free
+    parameters for review, paper appendices, and agent handoff.
+    """
+    destination = Path(path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    rows = assembly_parameters(ils, deepest=deepest, ambiguous=ambiguous, paths=paths)
+    with destination.open('w', newline='', encoding='utf-8') as handle:
+        writer = csv.writer(handle)
+        writer.writerow(['parameter', 'value'])
+        for key, value in rows:
+            writer.writerow([key, value])
+    return destination
+
+
 def _param_panel(ax, rows):
     ax.axis('off')
     if not rows:
@@ -382,7 +403,7 @@ def _draw_connection_labels(ax, ils):
             y -= 0.16
         used.append((x, y))
         label = f"{ctype}: {a_id}.{left.get('feature')} -> {b_id}.{right.get('feature')}"
-        short = f"{ctype} {code_by_id.get(a_id, a_id)}->{code_by_id.get(b_id, b_id)}"
+        short = str(ctype)
         ax.plot([a_xy[0], b_xy[0]], [a_xy[1], b_xy[1]], color='0.28', lw=0.8,
                 ls=(0, (2, 2)), zorder=11)
         ax.annotate(short, xy=(x, y), textcoords='offset points', xytext=(8, 8),
@@ -400,7 +421,7 @@ def _draw_connection_labels(ax, ils):
 # ---------------------------------------------------------------------------
 
 def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['assembly_width'], n=800,
-             label_components=True, panel=True, show_exclusions=True,
+             label_components=True, panel=False, show_exclusions=True,
              xlim=None):
     """An ILS on its header, with the contact envelope and the
     assembly-level parameters.
@@ -443,7 +464,7 @@ def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['ass
     y_lo, y_hi = min(ys) - marg, max(ys) + marg
     x_span, y_span = hi - lo, max(y_hi - y_lo, 0.3)
 
-    ax_frac = 0.68 if panel else 0.97
+    ax_frac = 0.97 if not panel else 0.68
     # Equal aspect is the tool standard (Sec.0.3), so a 12 m header holding
     # a 0.5 m assembly IS a thin strip -- that is the honest shape and is
     # not corrected. What must adapt is everything AROUND it.

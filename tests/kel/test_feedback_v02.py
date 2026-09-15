@@ -48,7 +48,7 @@ def test_compound_valve_feedback_decomposes_into_five_stable_records(tmp_path: P
 
 def test_q1_east_feedback_groups_into_one_traceable_change_request(tmp_path: Path) -> None:
     sources = [
-        REPO_ROOT / "knowledge" / "kel" / "feedback_records" / "candidates" / name
+        REPO_ROOT / "knowledge" / "kel" / "feedback_records" / "implemented" / name
         for name in (
             "Q1_03_BRANCH_CONNECTOR_EAST_DEFAULT.json",
             "Q1_05_EAST_CONNECTIONS_LABELLED.json",

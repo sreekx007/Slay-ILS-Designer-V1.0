@@ -70,3 +70,17 @@ edpr/kel docs :: branch valve uses compatible ILT-L/ILT-Z anchor; prefer PS unle
 records :: Q6 feedback/review/GCR/plan/closeout added
 validation :: KEL record validation + 11 KEL tests + 32 tool unittests passed
 ```
+
+## Q7 root-cause strategy and plot-output readability update - 2026-09-15
+
+```text
+trigger :: repeated KEL lessons showed basic design errors plus paper-unusable plots compressed by parameter tables
+knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md :: added root-cause review separating workflow failures from EDIKB data gaps
+analysis :: primary cause = fail-closed workflow/evidence-application gaps; secondary cause = missing coupled stiffness/covariance data
+plotters/ils_plotter.py :: assembly plot defaults to geometry-only figure
+plotters/ils_plotter.py :: added write_parameter_csv for assembly/component parameters and connector slot context
+tools/_plot_cli.py :: emits *.parameters.csv and records parameter_csv path in plot report
+plotters/ils_plotter.py :: plot connection labels now show only F/P/S/D letter; W remains omitted
+tests :: updated label/CLI tests and stale KEL lifecycle tests
+validation :: 10 affected plot tests + 32 plot/tool tests + 29 KEL tests + 32 full tool unittests passed
+```

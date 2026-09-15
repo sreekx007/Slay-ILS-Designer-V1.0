@@ -143,7 +143,8 @@ The run writes artifacts using the EDPR filename stem:
 | `*.layout.json` | Materialized EDAS study definition |
 | `*.layout.report.json` | Source anchor, derivation, warnings, and review requirement |
 | `*.png` | Rendered assembly |
-| `*.plot.report.json` | Build, correction, export, and visual QA findings |
+| `*.plot.report.json` | Build, correction, export, CSV sidecar, and visual QA findings |
+| `*.parameters.csv` | Assembly parameters, component free parameters, connector slots, and gate context kept outside the figure |
 | `*.knowloop_candidate.json` | Legacy combined feedback candidate for review |
 
 Using `--solution-format md --plot` also creates a structured JSON solution sidecar because layout generation consumes the solver JSON contract. Omit `--plot` to run validation, retrieval, solving, and any legacy candidate export without layout rendering.
@@ -157,7 +158,7 @@ python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output run
 python tools/plot_design.py --input plotters/examples/example_boss_layout.json --output runs/boss.png
 ```
 
-PNG, SVG, and PDF output are supported. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, the KEL v0.2 EA exposure gate, the support-sizing gate, and the branch-valve top-frame gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, both associations, and any GD-SB/GD-ST dimensions needed to fit a protected or supported component. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
+PNG, SVG, and PDF output are supported. Assembly plots are geometry-focused by default; the long parameter list is exported beside the image as `*.parameters.csv` and referenced from the plot report. Connection labels on the plot show only non-weld connection types (`F`, `P`, `S`, `D`); `W` weld connections are omitted from plot labels. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, the parameter CSV path, the KEL v0.2 EA exposure gate, the support-sizing gate, and the branch-valve top-frame gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, both associations, and any GD-SB/GD-ST dimensions needed to fit a protected or supported component. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
 
 Presentation lives in:
 
@@ -185,7 +186,7 @@ CLI exit codes are 0 for a produced image, including warnings; 1 for validation,
 
 Plot and layout reports can still be passed to `tools/generate_knowloop_candidate.py` with `--layout-report` and `--plot-report`. This is a legacy compatibility export for reviewable evidence bundles. It does not perform graph evolution and it is not the current governed learning loop.
 
-KEL supersedes Knowloop for active feedback handling, expert review, implementation records, and knowledge/toolchain evolution. Promotion to an official knowledge layer requires KEL expert acceptance and supporting implementation evidence. See [KEL workflow](knowledge/kel/README.md) and [KEL implementation update log](knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md).
+KEL supersedes Knowloop for active feedback handling, expert review, implementation records, and knowledge/toolchain evolution. Promotion to an official knowledge layer requires KEL expert acceptance and supporting implementation evidence. See [KEL workflow](knowledge/kel/README.md) and [KEL implementation update log](knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md). See [KEL root-cause error log](knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md) for the current failure-mode strategy.
 
 ## KEL governance and human feedback
 
@@ -204,7 +205,7 @@ python tools/kel/create_expert_review_record.py --change-request path/to/change.
 python tools/kel/promote_accepted_kel_change.py --change-request path/to/change.json --review path/to/review.json --status accepted
 ```
 
-`implemented` promotion additionally requires `--implementation-reference` on the expert-review record. See [KEL workflow](knowledge/kel/README.md), [LLM workflow instructions](knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md), [v0.2 recommendations](knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md), and [KEL implementation update log](knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md).
+`implemented` promotion additionally requires `--implementation-reference` on the expert-review record. See [KEL workflow](knowledge/kel/README.md), [LLM workflow instructions](knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md), [v0.2 recommendations](knowledge/kel/KEL_V0_2_RECOMMENDATIONS.md), and [KEL implementation update log](knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md). See [KEL root-cause error log](knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md) for the current failure-mode strategy.
 
 ## Engineering model notes
 

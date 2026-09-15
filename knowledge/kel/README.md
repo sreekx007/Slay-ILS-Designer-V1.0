@@ -31,6 +31,7 @@ Only expert-accepted and implemented KEL change requests may update EDPR, EDES, 
 | LLM workflow instructions | Defines how an LLM must run EDPR/retrieval/layout/plot/KEL gates before answering a design query |
 | KEL v0.2 implementation plan | Defines the ordered code, schema, migration, test, and acceptance work for the Q1-driven v0.2 release |
 | KEL implementation update log | Brief machine-style closeout notes for implemented KEL batches |
+| KEL root-cause error log | Reviews why KEL-triggering errors occurred and separates workflow failures from EDIKB data gaps |
 | Atomic feedback record | Stores one issue with its source span, classification, target, fingerprint, and original feedback link |
 | Feedback group | Groups exact or topic-equivalent atomic issues while preserving every member and source ID |
 | Lifecycle reconciliation report | Identifies one authoritative state per change-request ID and records supersession actions or conflicts |
@@ -51,6 +52,7 @@ knowledge/kel/
   KEL_V0_2_DESIGN_GATES.md
   KEL_V0_2_RECOMMENDATIONS.md
   KEL_IMPLEMENTATION_UPDATE_LOG.md
+  KEL_ROOT_CAUSE_ERROR_LOG.md
   schemas/
   templates/
   experience_records/

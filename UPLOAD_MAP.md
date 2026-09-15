@@ -1,5 +1,29 @@
 # Manual Upload Map
 
+## KEL root-cause log and paper-readable plot output - 2026-09-15
+
+This batch adds a root-cause error log for the implemented KEL lessons and updates assembly plot output for paper readability. Long assembly/component parameter detail is now exported as `*.parameters.csv` instead of occupying the plot canvas. Plot connection labels now show only non-weld connection letters (`F`, `P`, `S`, `D`); `W` weld labels are omitted.
+
+Files to upload or verify in Git:
+
+- `README.md`
+- `UPLOAD_MAP.md`
+- `knowledge/kel/README.md`
+- `knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md`
+- `plotters/ils_plotter.py`
+- `tools/_plot_cli.py`
+- `tools/test_plot_cli.py`
+- `tools/test_plot_labels.py`
+- `tests/kel/test_feedback_v02.py`
+- `tests/kel/test_release_tools_v02.py`
+
+Validation completed:
+
+- `.\.venv\Scripts\python.exe -m unittest tools.test_plot_labels tools.test_plot_cli` -> 10 passed.
+- `.\.venv\Scripts\python.exe -m unittest discover tools "test_plot*.py"` -> 32 passed.
+- `.\.venv\Scripts\python.exe -m pytest tests\kel -q` -> 29 passed.
+- `.\.venv\Scripts\python.exe -m unittest discover tools "test_*.py"` -> 32 passed.
+
 ## README Knowloop correction and KEL implementation update log - 2026-09-15
 
 This documentation batch corrects stale Knowloop wording. Knowloop is now described as a legacy/front-end candidate export path only; KEL is the active governed knowledge-evolution loop. The batch also adds a compact machine-style update log for prior implemented KEL batches.
@@ -700,5 +724,6 @@ Both manuscripts now use `GD-ST` and `GD-SB` consistently after an opening note 
 | Update | `UPLOAD_MAP.md` |
 
 These four Q2 records have now been promoted into the implemented feedback-record folder and converted into implemented graph-change requests in the latest local batch. The raw feedback still preserves the original `GS-SB` and `EA-ST` wording while structured fields use `GD-SB` and `GD-ST`.
+
 
 
