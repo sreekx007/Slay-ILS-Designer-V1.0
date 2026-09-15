@@ -731,6 +731,3 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 - <u>[ ] Conduct independent mechanical-domain and non-AI-reader reviews.</u>
 - <u>[ ] Build and inspect the final engrXiv PDF and complete the venue metadata.</u>
 
-
-
-
