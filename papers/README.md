@@ -4,7 +4,7 @@ This folder contains the Paper 01A working manuscript, preprint planning materia
 
 Current status: the papers folder now treats the manuscripts as framework drafts. Validated example results, comparative evaluation, and publication-ready case evidence are deferred until the design workflow is stable and controlled examples have been reviewed.
 
-Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source papers' `EA-ST`/`EA-SB` notation to the repository identifiers. The mapping changes terminology only. The generalized assembly gate requires every `GD-B` branch to terminate at `GD-ST` through a declared association; this applies to L-horizontal and Z-vertical branch terminals.
+The manuscript family uses `GD-ST` and `GD-SB` after an opening note maps the source papers' `EA-ST`/`EA-SB` notation to the repository identifiers. The mapping changes terminology only. The generalized assembly gate requires every `GD-B` branch to terminate at `GD-ST` through a declared association; this applies to L-horizontal and Z-vertical branch terminals.
 
 ## Current Draft Set
 
@@ -18,6 +18,8 @@ Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source p
 | `PAPER_01_SHARED_ONTOLOGY_FIGURE_PLAN.md` | Shared realistic-to-schematic-to-ontology storyboard, source-paper placeholder map, and figure production method. |
 | `PAPER_01A_MANUSCRIPT_DRAFT.md` | Complete Paper 01A working manuscript for engineering-professional review and planned engrXiv submission. |
 | `PAPER_01B_MANUSCRIPT_DRAFT.md` | Complete Paper 01B working manuscript for AI-research review and planned arXiv submission. |
+| `PAPER_01C_MANUSCRIPT_DRAFT.md` | Engineering-audience manuscript variant for readers familiar with data science, AI, ML, RAG, knowledge graphs, retrieval, and model governance. |
+| `PAPER_01D_MANUSCRIPT_DRAFT.md` | Plain-language engineering-audience manuscript variant for readers unfamiliar with AI, ML, RAG, and knowledge-graph terminology. |
 | `PAPER_01A_CLAIM_EVIDENCE_REGISTER.md` | Claim classification, evidence source, draft status, and release action for Paper 01A. |
 | `PAPER_REFERENCE_REQUESTS.md` | Status of supplied references and the literature still needed before a citation-ready preprint. |
 | `REFERENCE_LIBRARY.md` | Citation-ready registry for the eight supplied papers, with checksums and manuscript roles. |
@@ -25,7 +27,7 @@ Both manuscripts use `GD-ST` and `GD-SB` after an opening note maps the source p
 
 ## Recommended Next Step
 
-Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology and authorship metadata. Then complete the R7/R8 row-level evidence matrix, final ontology/workflow figures, and a controlled example protocol before adding any results section. Paper 01B remains a separate AI-research manuscript.
+Review `PAPER_01A_MANUSCRIPT_DRAFT.md` for domain terminology and authorship metadata. Then complete the R7/R8 row-level evidence matrix, final ontology/workflow figures, and a controlled example protocol before adding any results section. Paper 01B remains a separate AI-research manuscript. Paper 01C and Paper 01D are additional engineering-audience variants: 01C assumes AI/ML familiarity, while 01D explains the same ideas in plain engineering language.
 
 ## Source-Paper Handling
 
@@ -35,8 +37,11 @@ The reviewed PDFs remain outside the Git repository. `REFERENCE_LIBRARY.md` reco
 
 - PAPER_01A_MANUSCRIPT_DRAFT.md - engineering-professional draft with explanatory workflow figures.
 - PAPER_01B_MANUSCRIPT_DRAFT.md - AI-research draft with formal architecture and planned benchmark design.
+- PAPER_01C_MANUSCRIPT_DRAFT.md - engineering-audience draft for AI/ML-familiar engineers.
+- PAPER_01D_MANUSCRIPT_DRAFT.md - plain-language engineering-audience draft for AI/ML-unfamiliar engineers.
 - figures/generate_preliminary_figures.py - reproducible generator for workflow and component-ontology diagrams.
 - figures/generate_repository_schematic.py - reproducible ILS-Plotter export with manuscript-scale fonts and a geometry-focused image; companion reports retain the complete design-workflow payload.
 - figures/figure_sources.json - figure source and status register.
 - figures/preliminary/shared_component_ontology_primer.svg - shared ten-component visual vocabulary used before the EDES/EDAS discussion.
 - figures/preliminary/ - SVG and PNG previews plus the ILS-Plotter schematic and machine-readable reports.
+
