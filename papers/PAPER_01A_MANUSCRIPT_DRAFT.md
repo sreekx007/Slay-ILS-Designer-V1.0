@@ -3,10 +3,12 @@
 **Working manuscript:** Paper 01A, Draft v0.1
 **Planned venue:** engrXiv
 **Authors:** Sreekanth Manakkattil Sivaraman; Jagannatha Venkataramana Reddy
-**Corresponding author:** [TO BE COMPLETED]
+**Corresponding author:** <u>[TO BE COMPLETED]</u>
 **Draft date:** 14 September 2026
 
-> **Draft status.** This manuscript is a framework draft for technical and narrative review. It is not submission-ready and does not yet present validated example results. Figures are represented by production notes or preliminary sketches, quantitative EDIKB statements still require claim-level checks, and the controlled example section remains to be produced after the workflow is verified through further trials. Bracketed [AUTHOR REVIEW] notes identify required decisions or evidence.
+> <u>**Draft status / originator note.** This manuscript is a framework draft for technical and narrative review. It is not submission-ready and does not yet present validated example results. Figures are represented by production notes or preliminary sketches, quantitative EDIKB statements still require claim-level checks, and the controlled example section remains to be produced after the workflow is verified through further trials. Bracketed [AUTHOR REVIEW] notes identify required decisions or evidence.</u>
+>
+> <u>**Editorial convention for this draft.** Underlined text marks pending author/originator work, figure-production instructions, or submission-preparation actions. These notes should be resolved, converted to normal prose, or removed before preprint submission.</u>
 
 ## Abstract
 
@@ -22,17 +24,54 @@ The following sketches are generated from the current repository architecture an
 
 **Preliminary Figure A.** ILS-Plotter output showing the canonical geometry and connector topology at manuscript-readable scale. The companion JSON report retains the resolved parameters, active connectors, associations and warning findings.
 
+```mermaid
+flowchart LR
+    Hd[GD-HdPipe header] --- V[GD-VLV / GD-TP inline body]
+    Hd --- B[GD-B branch assembly]
+    ST[GD-ST top frame] --- B
+    SB[GD-SB base structure] --- Hd
+    Con[GD-Con connectors] --- ST
+```
+
 ![S-lay ILT abstraction ladder](figures/preliminary/shared_ilt_abstraction_ladder.svg)
 
 **Preliminary Figure B.** Transformation from physical assembly to schematic, parameterized objects, typed knowledge and an executable outcome.
+
+```mermaid
+flowchart LR
+    A[Real ILT view] --> B[Schematic abstraction]
+    B --> C[GD components + parameters]
+    C --> D[EDES / EDAS / EDIKB records]
+    D --> E[Validated layout + report]
+```
 
 ![Engineering AI workflow](figures/preliminary/paper01a_engineering_workflow.svg)
 
 **Preliminary Figure C.** Engineering-facing request-to-review workflow, including explicit gap outcomes and human-governed knowledge change.
 
+```mermaid
+flowchart LR
+    Q[User prompt] --> EDPR[Confirmed EDPR]
+    EDPR --> R[Retrieval + symbolic grounding]
+    R --> G[Design gates]
+    G --> O[Concept / gap output]
+    O --> HR[Human review]
+    HR --> KEL[KEL candidate if needed]
+```
+
 ![Knowledge Evolution Loop](figures/preliminary/shared_kel_lifecycle.svg)
 
 **Preliminary Figure D.** Feedback decomposition, grouping, expert review, implementation and released-knowledge lifecycle.
+
+```mermaid
+flowchart LR
+    F[Human feedback] --> A[Atomic feedback]
+    A --> GR[Grouped issue]
+    GR --> CR[Graph-change request]
+    CR --> ER[Expert review]
+    ER --> IM[Implementation evidence]
+    IM --> KB[Released KB / tool update]
+```
 
 ## 1. Introduction
 
@@ -69,7 +108,15 @@ The first domain study [7] introduced two linked classifications. The physical c
 
 A base structure and top structure can use nominally similar connectors but behave differently because the base can contact the rollers and apply an offset load path [8]. An isolated thick section and the same section nested inside an elevated shroud likewise cannot be treated as interchangeable cases [7].
 
-> **Figure 1 placeholder - S-lay ILT physical context.** Redraw the vessel firing line, stinger rollers, overbend, pipeline travel direction, and a representative ILT. A temporary internal crop may use Figure 4 or Figure 7 of [7]. The final figure should be a rights-cleared vector reconstruction.
+> <u>**Figure 1 production note - S-lay ILT physical context.** Redraw the vessel firing line, stinger rollers, overbend, pipeline travel direction, and a representative ILT. A temporary internal crop may use Figure 4 or Figure 7 of [7]. The final figure should be a rights-cleared vector reconstruction.</u>
+
+```mermaid
+flowchart LR
+    Vessel[Vessel firing line] --> Overbend[Stinger overbend]
+    Overbend --> Rollers[Roller supports]
+    Rollers --> ILT[Representative ILT on pipeline]
+    ILT --> Direction[Pipeline travel direction]
+```
 
 ### 2.2 Component primer: what the GD codes represent
 
@@ -78,6 +125,15 @@ The repository gives every reusable component class a stable identifier beginnin
 ![Canonical GD component vocabulary](figures/preliminary/shared_component_ontology_primer.svg)
 
 **Figure 2. Canonical GD component vocabulary (preliminary).** The symbols introduce the ten established component classes used in these papers. They communicate identity and mechanical role; they are not fabrication drawings or proof of design adequacy.
+
+```mermaid
+flowchart TB
+    Pipe[GD-HdPipe / GD-BrPipe] --> Inline[GD-TP / GD-TT / GD-VLV]
+    Inline --> Protect[GD-SH / GD-SB]
+    Branch[GD-B] --> Top[GD-ST]
+    Con[GD-Con] --> Top
+    Con --> Pipe
+```
 
 | Code | Readable component | What it represents in the engineering model | Key data or relationship |
 |---|---|---|---|
@@ -102,7 +158,15 @@ A realistic ILT contains detail essential for fabrication but excessive for earl
 
 The second domain study [8] separates the main external structures into a top structure (GD-ST) and base structure (GD-SB). The top structure occupies the region above the header and can protect or support inline and branch equipment. The base structure occupies the underside, can protect equipment, and can contact installation rollers. Either may connect directly to the pipeline; a second structure can connect to the first. A mudmat may connect to either structure or remain independent. The same study introduces branch-layout and connector taxonomies and parameterized views for GD-ST, GD-SB, Z branches, and L branches.
 
-> **Figure 3 placeholder - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, GD-ST, GD-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.
+> <u>**Figure 3 production note - realistic assembly to parameterized schematic.** Four panels should show: (a) realistic ILT, (b) overall schematic, (c) separated header, valve, branch, GD-ST, GD-SB, connectors and supports, and (d) the objects labelled with design parameters and interfaces. Temporary references are Figure 7 of [7] and Figures 1-5 and 22-25 of [8]. Final geometry will be rebuilt as editable vector artwork using repository definitions.</u>
+
+```mermaid
+flowchart LR
+    A[Realistic ILT] --> B[Overall schematic]
+    B --> C[Separated GD objects]
+    C --> D[Parameters + interfaces]
+    D --> E[EDES / EDAS records]
+```
 
 The transformation can be read as:
 
@@ -136,7 +200,15 @@ Associations are equally important. A connector identifies both objects it joins
 
 A Standard ILS Layout Library sits beside EDAS as reusable starting arrangements. A standard layout remains subject to assembly validation, evidence checks, problem constraints, and project-specific verification.
 
-> **Figure 4 placeholder - ontology map.** Map objects visible in Figure 3 to function, component, parameter, connection, assembly, behavior/evidence, requirement, and issue nodes. Show EDES, EDAS, EDIKB, and EDPR ownership.
+> <u>**Figure 4 production note - ontology map.** Map objects visible in Figure 3 to function, component, parameter, connection, assembly, behavior/evidence, requirement, and issue nodes. Show EDES, EDAS, EDIKB, and EDPR ownership.</u>
+
+```mermaid
+flowchart TD
+    EDES[EDES: components + parameters] --> EDAS[EDAS: topology + associations]
+    EDIKB[EDIKB: behavior + evidence] --> EDPR[EDPR: current problem]
+    EDAS --> EDPR
+    EDPR --> KEL[KEL: issues + change records]
+```
 
 The first domain paper supplies the IW/EA taxonomy, Type A/B/C taxonomy, and evidence on distributed stiffness, elevation, and selected combined cases [7]. The second extends the basis to GD-ST, GD-SB, connector systems, branch assemblies, and added-mass position [8]. A paper citation establishes lineage; a quantitative design statement still requires the precise figure or table, case, parameter range, response location, and limitation.
 
@@ -193,7 +265,16 @@ Provenance answers, "Where did this claim come from?" Applicability answers, "Wh
 
 The EDIKB separates behavior rules from numeric evidence rows. A rule can indicate a trend, while an evidence row records a case and response. Each quantitative use should identify the publication, source family, table or figure, case, parameter range, response location, and limitation. The first and second domain papers explicitly frame their results as bounded studies [7], [8]. For example, [8] intentionally omitted the thick inline components needed to anchor the structures so that connection-layout effects could be isolated. Its strain results are therefore suitable for relative behavior interpretation within the stated model, not direct transfer to a complete project assembly.
 
-> **Figure 5 placeholder - one traceable engineering fact.** Show a source-paper case flowing into an EDIKB evidence row, then into an applicable behavior rule, an EDPR retrieval, and a qualified output statement. Include a visible branch where an applicability mismatch stops the claim.
+> <u>**Figure 5 production note - one traceable engineering fact.** Show a source-paper case flowing into an EDIKB evidence row, then into an applicable behavior rule, an EDPR retrieval, and a qualified output statement. Include a visible branch where an applicability mismatch stops the claim.</u>
+
+```mermaid
+flowchart LR
+    SP[Source paper case] --> ER[EDIKB evidence row]
+    ER --> BR[Behavior rule + limits]
+    BR --> APP{Applicable to EDPR?}
+    APP -->|yes| OUT[Qualified output statement]
+    APP -->|no| GAP[Gap / future study candidate]
+```
 
 ### 3.5 Versioning and governed change
 
@@ -282,7 +363,17 @@ The implemented workflow is:
       -> human review
       -> KEL evolutionary lifecycle
 
-> **Figure 6 placeholder - governed workflow.** Draw the sequence above with separate visual lanes for the engineer, LLM, governed knowledge, deterministic tools, and KEL review. Mark every point that can emit a clarification, evidence gap, or representation gap.
+> <u>**Figure 6 production note - governed workflow.** Draw the sequence above with separate visual lanes for the engineer, LLM, governed knowledge, deterministic tools, and KEL review. Mark every point that can emit a clarification, evidence gap, or representation gap.</u>
+
+```mermaid
+flowchart LR
+    U[Engineer] --> LLM[LLM EDPR draft]
+    LLM --> V[Validators + gates]
+    V --> KB[Governed KB retrieval]
+    KB --> P[Plot/report tools]
+    P --> R[Human review]
+    R --> K[KEL if correction or gap]
+```
 
 Prior human-supervised conceptual-design research links LLM and knowledge-graph operations with expert review [5]. KEL is the repository's evolutionary loop: it adds explicit graph-change requests and repository-level records for decomposition, grouping, review, implementation, promotion, supersession, and lifecycle reconciliation.
 
@@ -357,13 +448,116 @@ Plots must be generated through the repository ILS plotter when repository geome
 
 KEL implementation records should not only state that a lesson was accepted. They should identify which source error led to the lesson, which layer or tool was changed, and what evidence shows that the update is active. Root-cause logging is required per implemented KEL candidate because repeated failures can arise from different causes: a missing EDAS constraint, available EDIKB evidence not being retrieved, inadequate EDPR/APF expression, a plotter/report visibility gap, or an LLM bypass of a required gate. Recording the cause per candidate turns feedback into a workflow-improvement signal rather than a general complaint.
 
-## 7. Planned Example and Evaluation Program
+### 6.6 Experience coverage in principle
 
-The research paper will need a controlled final section containing three or four examples only after the workflow performs reliably. The examples should be selected before execution, run with frozen prompts and tool versions, and reviewed by independent engineering reviewers.
+The current KEL and knowledge-base update experience is covered in this manuscript as principle rather than as validated result. The covered experience classes are:
 
-The planned example set should cover a valid standard layout, a branch-layout case with explicit GD-ST anchoring, a header-component protection case requiring GD-SB, and one representation-gap case where the correct behavior is to stop. For each example, the paper should report the confirmed EDPR understanding, retrieved evidence, emitted layout or blocker, plot/report artifact, reviewer judgment, and any remaining engineering limitations.
+| Experience class from KEL work | Principle captured in Paper 01A | Main manuscript location |
+|---|---|---|
+| EDPR understanding not emitted before design | Problem-understanding confirmation must precede concept generation | Sections 4.2 and 6.1 |
+| Header valve or inline component plotted without required GD-SB/protection basis | EDAS and protection gates are compulsory before presenting a concept | Sections 6.2 and 6.4 |
+| Branch connector or branch valve outside the valid GD-ST association envelope | Branch assemblies require explicit GD-ST anchoring and association records | Sections 2.4, 6.2 and 7 template |
+| EDIKB evidence available but not retrieved or not applied | Retrieval must be grounded, evidence-scoped, and limited by applicability | Sections 3.4, 4.3 and 6.3 |
+| Plot/report visibility failures | The plot is an inspectable artifact with report gates, readable labels, parameters and associations | Sections 5.2 and 6.4 |
+| KEL implementation without root-cause trace | Each implemented KEL candidate needs per-candidate root-cause, changed layer/tool and evidence of implementation | Section 6.5 |
+| Missing correlation or covariance evidence | Evidence gaps should create ML/correlation/future-study candidates, not unsupported optimization claims | Sections 6.3, 7 template and 9.3 |
+| Vector retrieval added to reduce terminology mismatch | Semantic recall is advisory and must be symbolically grounded before use | Sections 4.3 and 9.1 |
+
+This coverage means the manuscript now explains the governance pattern behind the previous KEL updates. It still does not report those exploratory interactions as research evidence. Section 7 below is prepared to receive three controlled worked examples after the workflow trials are completed and reviewed.
+
+## 7. Controlled Worked Examples and Evaluation Template
+
+<u>**Originator note.** This section is prepared as a results template. Do not fill it with exploratory chat results. Add only the three controlled worked examples after the prompt, tool version, outputs, reviewer notes, KEL records, root-cause analysis, knowledge-base updates, and ML/correlation candidates are frozen.</u>
+
+The controlled example section will report three worked examples in a compact but traceable format. Each example should preserve the full user prompt, the LLM's confirmed EDPR/problem understanding, the main LLM response, subsequent user prompts, the generated plot, any KEL candidate, per-candidate root-cause analysis, knowledge-base or tool-chain update, and any ML/correlation or future-study candidate generated from evidence gaps.
+
+```mermaid
+flowchart LR
+    P[Full user prompt] --> U[Confirmed EDPR understanding]
+    U --> R[LLM response + assumptions]
+    R --> PL[Plot + report artifact]
+    PL --> FB[User feedback / reviewer comments]
+    FB --> KEL[KEL candidate]
+    KEL --> RCA[Root-cause analysis]
+    RCA --> KB[Knowledge-base / tool update]
+    RCA --> ML[ML / correlation study candidate]
+```
+
+> <u>**Figure 7 production note - controlled example reporting pattern.** Replace the symbolic workflow above with a compact lane diagram showing user prompt, EDPR confirmation, response, plot artifact, KEL candidate, root-cause record, implemented update, and future-study candidate.</u>
+
+### 7.1 Example selection and freeze protocol
+
+| Item | Example 1 | Example 2 | Example 3 |
+|---|---|---|---|
+| Example title | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Selection reason | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Repository commit / release tag | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Manifest version | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Toolchain mode | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Reviewer / review date | <u>To be inserted</u> | <u>To be inserted</u> | <u>To be inserted</u> |
+| Acceptance state | <u>pending / accepted / rejected / gap</u> | <u>pending / accepted / rejected / gap</u> | <u>pending / accepted / rejected / gap</u> |
+
+### 7.2 Worked example record template
+
+Repeat this table once for each of the three examples. Keep the table concise in the paper and place full JSON artifacts in the repository or supplementary material.
+
+| Record item | Content to insert |
+|---|---|
+| Example ID | <u>EX-01 / EX-02 / EX-03</u> |
+| Full user prompt | <u>Paste complete initial prompt</u> |
+| Confirmed EDPR / problem understanding | <u>Summarize confirmed artifacts, objectives, constraints, unknowns and retrieval plan</u> |
+| LLM response summary | <u>Summarize proposed layout, assumptions, evidence basis and limitations</u> |
+| Subsequent user prompts | <u>List follow-up prompts and corrections in order</u> |
+| Plot artifact | <u>Insert final plot path / figure reference and caption</u> |
+| Plot/report checks | <u>List plot validator status, visible labels, parameter CSV, association exposure and warnings</u> |
+| KEL candidate generated? | <u>Yes/no; include candidate ID and affected layer</u> |
+| Expert decision | <u>Accepted / rejected / deferred; include rationale</u> |
+| Root-cause analysis | <u>Identify the specific failure mode, not only the general issue</u> |
+| Knowledge-base/tool update | <u>List EDPR, EDES, EDAS, EDIKB, KEL, plotter or workflow files changed</u> |
+| ML/correlation/future-study candidate | <u>List candidate ID, target variables and reason</u> |
+| Remaining engineering limitations | <u>State missing FEA, code checks, project inputs or applicability limits</u> |
+
+### 7.3 Compact comparison table for the paper body
+
+| Evaluation criterion | Example 1 | Example 2 | Example 3 | Notes |
+|---|---|---|---|---|
+| EDPR emitted and confirmed before design | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Confirmation must precede concept generation |
+| Required GD components identified | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Include GD-ST/GD-SB/GD-B/GD-VLV where applicable |
+| EDAS topology and associations valid | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Branch-to-GD-ST and support associations must be explicit |
+| EDIKB evidence retrieved and scoped | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Include evidence limitations |
+| Default strain / bending-moment reduction considered | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Avoid unsupported optimization claims |
+| Plot and report readable | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Plot, parameter CSV and report should be reviewable |
+| KEL candidate generated where needed | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Include candidate IDs |
+| Root cause captured per KEL candidate | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Avoid only an overall RCA |
+| Knowledge/toolchain update implemented | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Link commit or file update |
+| ML/correlation/future-study candidate created if evidence is insufficient | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> | Include target correlation variables |
+
+### 7.4 Artifact index for supplementary material
+
+| Artifact type | Example 1 | Example 2 | Example 3 |
+|---|---|---|---|
+| Prompt transcript | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| EDPR JSON | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| Retrieval / vector grounding output | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| Solution JSON / Markdown | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| Plot image | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| Plot report / parameter CSV | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| KEL candidate and review record | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| RCA / implementation log | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+| ML/correlation/future-study candidate | <u>path/link TBD</u> | <u>path/link TBD</u> | <u>path/link TBD</u> |
+
+### 7.5 Reviewer scoring template
+
+| Score area | Definition | Example 1 | Example 2 | Example 3 |
+|---|---|---|---|---|
+| Requirement fidelity | The response preserves the user request and confirmed EDPR | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> |
+| Topology validity | The layout satisfies EDAS and required associations | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> |
+| Evidence precision | Evidence is retrieved, scoped and not overclaimed | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> |
+| Plot readability | The figure and report can be inspected without hidden critical data | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> |
+| Learning traceability | KEL, RCA, implementation and future-study records are linked | <u>TBD</u> | <u>TBD</u> | <u>TBD</u> |
 
 The evaluation should compare an unguided LLM, repository retrieval without enforced gates, and the governed workflow. Reviewers should score requirement fidelity, topology validity, parameter and association completeness, evidence precision, traceability, plot readability, and appropriate clarification or refusal. Until this protocol is executed, this manuscript should not claim validated design performance.
+
 ## 8. Application in an Engineering Organization
 
 ### 8.1 Start from a bounded use case
@@ -431,13 +625,13 @@ The current paper is a single-domain case study. The ontology has been shaped by
 
 The manuscript does not yet quantify LLM accuracy, reviewer agreement, time savings, design quality, or error reduction. The planned example and evaluation package in Section 7 must be completed before performance claims are made.
 
-The manuscript's literature base is sufficient for this draft's P-map, assembly-model, human-in-the-loop, APF, and domain framing [1]-[8]. A submission version should add canonical Function-Behavior-Structure sources, broader engineering knowledge-graph literature, tool-using and retrieval-augmented language-model research, engineering lessons-learned literature, and the project-relevant subsea design standards. [AUTHOR REVIEW: approve and supply the intended code editions before adding compliance language.]
+The manuscript's literature base is sufficient for this draft's P-map, assembly-model, human-in-the-loop, APF, and domain framing [1]-[8]. <u>A submission version should add canonical Function-Behavior-Structure sources, broader engineering knowledge-graph literature, tool-using and retrieval-augmented language-model research, engineering lessons-learned literature, and the project-relevant subsea design standards.</u> <u>[AUTHOR REVIEW: approve and supply the intended code editions before adding compliance language.]</u>
 
 ### 9.3 Parametric analysis and machine learning
 
 A knowledge graph built from historical projects will contain sparse regions and outliers. Even dozens of past designs may not cover the combinations created by pipe diameter, wall thickness, stinger radius, top tension, component stiffness, offset, length, connector position, gap, mass, and topology. Missing coverage should drive an analysis programme.
 
-A future loop can:
+<u>Pending future-study workflow to be completed after controlled examples and additional analyses:</u>
 
 1. query EDIKB for the applicable evidence domain;
 2. identify gaps around the proposed design;
@@ -449,7 +643,17 @@ A future loop can:
 
 Machine learning would then support behavior approximation, sensitivity analysis, gap detection, and optimization. It would not replace geometry, topology, provenance, or engineering acceptance.
 
-> **Figure 8 placeholder - evidence expansion loop.** Show historical designs and published studies feeding a coverage map, gaps generating parametric FEA cases, reviewed results extending EDIKB, and a bounded surrogate model serving the conceptual workflow with uncertainty and out-of-domain checks.
+> <u>**Figure 8 production note - evidence expansion loop.** Show historical designs and published studies feeding a coverage map, gaps generating parametric FEA cases, reviewed results extending EDIKB, and a bounded surrogate model serving the conceptual workflow with uncertainty and out-of-domain checks.</u>
+
+```mermaid
+flowchart LR
+    H[Historical designs + papers] --> C[Coverage map]
+    C --> G[Evidence gaps]
+    G --> FEA[Reviewed FEA / correlation studies]
+    FEA --> EDIKB[Updated EDIKB]
+    EDIKB --> SM[Bounded surrogate / uncertainty]
+    SM --> WF[Concept workflow]
+```
 
 ## 10. Conclusions
 
@@ -457,7 +661,7 @@ Slay-ILS-Designer demonstrates an engineering-centered approach to AI-assisted c
 
 This separation changes the role of the LLM. The model interprets language, proposes structured records, plans queries, and explains results. Deterministic tools validate schemas, enforce selected topology and evidence gates, compute defined checks, construct layouts, and produce inspectable plots and reports. Engineers confirm intent, judge evidence applicability, define project criteria, approve knowledge changes, and retain responsibility for verification.
 
-The next evidence step is a controlled set of reviewed examples across representative prompts. The longer-term step is to use knowledge gaps to direct parametric analysis and qualified surrogate modeling. The enduring requirement is that every recommendation remain connected to the design problem, assembly definition, evidence scope, tool result, and human decision that supports it.
+<u>The next evidence step is a controlled set of reviewed examples across representative prompts. The longer-term step is to use knowledge gaps to direct parametric analysis and qualified surrogate modeling.</u> The enduring requirement is that every recommendation remain connected to the design problem, assembly definition, evidence scope, tool result, and human decision that supports it.
 
 ## Data, Software, and Reproducibility Statement
 
@@ -465,7 +669,7 @@ The Slay-ILS-Designer source, schemas, knowledge records, validation tools, plot
 
 https://github.com/sreekx007/Slay-ILS-Designer-V1.0
 
-The two source-paper PDFs are not redistributed in the repository. Bibliographic records, checksums, and EDIKB source-family mappings identify the reviewed copies. Generated run artifacts should be curated and frozen before manuscript submission. [AUTHOR REVIEW: select a release tag and archival DOI for the submission package.]
+The two source-paper PDFs are not redistributed in the repository. Bibliographic records, checksums, and EDIKB source-family mappings identify the reviewed copies. <u>Generated run artifacts should be curated and frozen before manuscript submission.</u> <u>[AUTHOR REVIEW: select a release tag and archival DOI for the submission package.]</u>
 
 ## AI-Assistance Statement
 
@@ -473,11 +677,11 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 
 ## Conflict of Interest Statement
 
-[AUTHOR REVIEW: insert the authors' conflict-of-interest declaration.]
+<u>[AUTHOR REVIEW: insert the authors' conflict-of-interest declaration.]</u>
 
 ## Acknowledgments
 
-[AUTHOR REVIEW: insert acknowledgments, employer or institutional review information, and any required funding statement.]
+<u>[AUTHOR REVIEW: insert acknowledgments, employer or institutional review information, and any required funding statement.]</u>
 
 ## References
 
@@ -517,13 +721,16 @@ AI assistance was used to help organize the manuscript, draft and revise prose, 
 
 ## Appendix B. Submission-Readiness Register
 
-- [ ] Approve title, author order, affiliations, corresponding author, acknowledgments, and conflicts declaration.
-- [ ] Build the R7/R8 claim-to-evidence matrix at table/figure/case level.
-- [ ] Create final Figures 1-8 and verify reuse/redraw rights.
-- [ ] Freeze the controlled example protocol, run artifacts, reviewer rubric, and results after the workflow is stable.
-- [ ] Add canonical FBS, engineering KG, RAG/tool-use, lessons-learned, surrogate/active-learning, and applicable code references.
-- [ ] Replace the commit placeholder with a tagged release and archival DOI.
-- [ ] Verify every acronym, term, cross-reference, number, caption, and citation.
-- [ ] Conduct independent mechanical-domain and non-AI-reader reviews.
-- [ ] Build and inspect the final engrXiv PDF and complete the venue metadata.
+- <u>[ ] Approve title, author order, affiliations, corresponding author, acknowledgments, and conflicts declaration.</u>
+- <u>[ ] Build the R7/R8 claim-to-evidence matrix at table/figure/case level.</u>
+- <u>[ ] Create final Figures 1-8 and verify reuse/redraw rights.</u>
+- <u>[ ] Freeze the controlled example protocol, run artifacts, reviewer rubric, and results after the workflow is stable.</u>
+- <u>[ ] Add canonical FBS, engineering KG, RAG/tool-use, lessons-learned, surrogate/active-learning, and applicable code references.</u>
+- <u>[ ] Replace the commit placeholder with a tagged release and archival DOI.</u>
+- <u>[ ] Verify every acronym, term, cross-reference, number, caption, and citation.</u>
+- <u>[ ] Conduct independent mechanical-domain and non-AI-reader reviews.</u>
+- <u>[ ] Build and inspect the final engrXiv PDF and complete the venue metadata.</u>
+
+
+
 
