@@ -1,0 +1,37 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "edikb:future_study:gdsb_dimension_strain_covariance_01",
+  "title": "GD-SB/GD-ST support dimension versus pipeline strain covariance",
+  "source": "kel_root_cause",
+  "status": "candidate",
+  "study_type": "future_correlation_study",
+  "components": ["GD-SB", "GD-ST", "GD-VLV", "GD-B", "GD-Con", "GD-PIP"],
+  "variables": [
+    "support_structure_type",
+    "protected_or_supported_component_envelope",
+    "P_l1",
+    "P_l2",
+    "P_v",
+    "P_vt",
+    "L_top",
+    "H_top",
+    "connector_spacing",
+    "combined_structure_pipe_stiffness",
+    "contact_region",
+    "stinger_radius_m",
+    "top_tension_MT"
+  ],
+  "responses": [
+    "pipeline_peak_strain",
+    "peak_strain_location",
+    "component_bending_moment",
+    "connector_reaction",
+    "mass_penalty"
+  ],
+  "reason": "KEL support-sizing work prevents default oversizing, but current evidence is insufficient to quantify how support dimensions and stiffness covary with global strain and moment response.",
+  "required_before_claim": "Before claiming support dimensions are strain-optimal, add parametric evidence linking GD-SB/GD-ST dimensions and connector spacing to pipeline and component responses.",
+  "linked_records": [
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q3-support-structure-sized-to-component",
+    "knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md#q3-support-structure-sizing-kel-2026-09-15"
+  ]
+}

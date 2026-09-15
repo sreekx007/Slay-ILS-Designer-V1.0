@@ -1,0 +1,37 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "edikb:future_study:gdvlv_gdsb_contact_moment_01",
+  "title": "GD-VLV plus GD-SB contact, connector selection, and valve moment evidence",
+  "source": "kel_root_cause",
+  "status": "candidate",
+  "study_type": "future_fea_study",
+  "components": ["GD-VLV", "GD-SB", "GD-Con", "GD-PIP"],
+  "variables": [
+    "valve_capacity_ratio",
+    "valve_mass",
+    "valve_envelope",
+    "GD-SB_P_l1",
+    "GD-SB_P_l2",
+    "GD-SB_P_v",
+    "GD-SB_P_vt",
+    "connector_system",
+    "connector_spacing",
+    "roller_geometry",
+    "required_clearance",
+    "stinger_radius_m",
+    "top_tension_MT"
+  ],
+  "responses": [
+    "maximum_valve_bending_moment",
+    "pipeline_peak_strain",
+    "pipeline_bending_moment",
+    "connector_loads",
+    "roller_contact_status"
+  ],
+  "reason": "KEL valve-protection work identified that direct GD-VLV + GD-SB moment/contact evidence remains missing. The workflow can block unsafe concepts, but final connector and base selection still needs coupled evidence.",
+  "required_before_claim": "Before accepting GD-SB connector selection or valve moment utilization for final design, provide combined GD-VLV + GD-SB FEA/evidence rows for the relevant load cases.",
+  "linked_records": [
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q2-02-header-valve-requires-gd-sb",
+    "tools/design_rules_v02.py"
+  ]
+}

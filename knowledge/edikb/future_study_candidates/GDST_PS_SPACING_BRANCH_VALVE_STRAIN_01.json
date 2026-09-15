@@ -1,0 +1,39 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "edikb:future_study:gdst_ps_spacing_branch_valve_strain_01",
+  "title": "GD-ST length and P-S connector spacing correlation for ILT-L branch-valve layouts",
+  "source": "kel_review",
+  "status": "candidate",
+  "study_type": "future_correlation_study",
+  "components": ["GD-ST", "GD-B", "GD-Con", "GD-VLV", "GD-PIP"],
+  "variables": [
+    "GD-ST_L_top",
+    "GD-ST_H_top",
+    "GD-ST_P_vt",
+    "P-S_connector_spacing",
+    "P_c1",
+    "P_c2",
+    "connector_type_sequence",
+    "branch_valve_mass",
+    "branch_valve_station_P_bv",
+    "branch_length_P_b1",
+    "branch_support_connector",
+    "stinger_radius_m",
+    "top_tension_MT"
+  ],
+  "responses": [
+    "header_peak_strain",
+    "branch_peak_strain",
+    "peak_strain_location",
+    "connector_reaction",
+    "header_bending_moment",
+    "branch_bending_moment"
+  ],
+  "reason": "The reviewed low-strain ILT-L branch-valve concept used EDAS precedent and containment rules for GD-ST length and P-S connector spacing, not a verified correlation/covariance model. Sufficient data is missing to claim optimized sizing.",
+  "required_before_claim": "Before claiming GD-ST length or P-S connector spacing is low-strain optimized, retrieve or generate correlation evidence covering the selected branch-valve layout family and response locations.",
+  "linked_records": [
+    "knowledge/kel/feedback_records/candidates/Q9_01_GDST_CONNECTOR_SPACING_CORRELATION_GAP.json",
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q6-branch-valve-top-frame-containment",
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q9-correlation-gap"
+  ]
+}

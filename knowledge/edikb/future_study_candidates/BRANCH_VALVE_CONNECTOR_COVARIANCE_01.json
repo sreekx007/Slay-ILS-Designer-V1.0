@@ -1,0 +1,36 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "edikb:future_study:branch_valve_connector_covariance_01",
+  "title": "Branch valve mass, connector system, and header strain redistribution covariance",
+  "source": "kel_root_cause",
+  "status": "candidate",
+  "study_type": "future_ml_study",
+  "components": ["GD-B", "GD-ST", "GD-Con", "GD-VLV", "GD-PIP"],
+  "variables": [
+    "branch_variant_L_or_Z",
+    "branch_valve_mass",
+    "branch_valve_station_P_bv",
+    "branch_length_P_b1",
+    "branch_support_connector",
+    "connector_system_F1_F2_PS",
+    "GD-ST_span",
+    "connector_spacing",
+    "header_OD",
+    "branch_OD",
+    "stinger_radius_m",
+    "top_tension_MT"
+  ],
+  "responses": [
+    "header_peak_strain",
+    "branch_peak_strain",
+    "header_strain_penalty_outside_frame",
+    "branch_low_strain_pocket",
+    "peak_strain_location"
+  ],
+  "reason": "KEL branch-valve work prevents unjustified F2/F2D and enforces containment, but more covariance data is needed to rank PS/F1/F2 choices with branch valve mass and top-frame geometry.",
+  "required_before_claim": "Before claiming one branch-valve connector system is globally low-strain optimal, compare header and branch responses across connector systems and valve mass/station sweeps.",
+  "linked_records": [
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q6-branch-valve-top-frame-containment",
+    "knowledge/edikb/EDIKB_FULL_KNOWLEDGE_GRAPH.json#edikb:p2_branch_missing_z_slot_cases_01"
+  ]
+}

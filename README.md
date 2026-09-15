@@ -75,7 +75,7 @@ This writes `edpr_parser_input.prompt.md`. Give that prompt to an LLM, validate 
 | EDPR | Problem representation and retrieval/solver intent | `schemas/EDPR_METASCHEMA.json`, parser prompts, examples |
 | EDES | Component meaning, parameters, constraints, and behavior | `knowledge/edes/` |
 | EDAS | Assembly topology, interfaces, rules, and layout anchors | `knowledge/edas/` |
-| EDIKB | Behavior graph, uncertainty, guidance, and numeric evidence | `knowledge/edikb/` |
+| EDIKB | Behavior graph, uncertainty, guidance, numeric evidence, and future study candidates | `knowledge/edikb/` |
 | Knowloop | Legacy/front-end review candidate export pattern | `knowledge/knowloop/` |
 | KEL | Active closed-loop experience, feedback, expert-review, implementation, and promotion governance | `knowledge/kel/` |
 
@@ -215,6 +215,8 @@ All 12 current EDES component codes have component and assembly rendering covera
 
 `GD-BOSS` is modeled as a coaxial sleeve around the header. It does not replace the header. Its bore must be larger than the maximum enclosed header/thick-section OD across its full span. Boss steel contributes separately to mass and center of gravity. Sleeve-to-header attachment and load transfer remain unspecified, so every Boss assembly reports that limitation.
 
+Future FEA/ML/correlation study candidates are indexed in `knowledge/edikb/future_study_candidates/` when the current evidence base is not sufficient to support an optimized design claim.
+
 Solver-generated layouts are study reconstructions from EDAS anchors. They do not apply EDPR constraints to size a new design, create fabrication detail, or rerun structural analysis. Unknown candidate identifiers are rejected rather than matched heuristically.
 
 ## Repository layout
@@ -227,7 +229,7 @@ knowledge/
   edpr/                                 Parser prompts and validated examples
   edes/                                 Component knowledge
   edas/                                 Assembly knowledge and standard layouts
-  edikb/                                Behavior graph and numeric dataset
+  edikb/                                Behavior graph, numeric dataset, and future study candidates
   knowloop/                             Candidate schema, templates, and review folders
   kel/                                  Experience, feedback, review, and change lifecycles
 plotters/

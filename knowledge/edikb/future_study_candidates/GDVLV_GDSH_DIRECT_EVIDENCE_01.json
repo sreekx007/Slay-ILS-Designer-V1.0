@@ -1,0 +1,34 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "edikb:future_study:gdvlv_gdsh_direct_evidence_01",
+  "title": "Direct GD-VLV plus GD-SH stiff-component interaction evidence",
+  "source": "kel_root_cause",
+  "status": "candidate",
+  "study_type": "future_fea_study",
+  "components": ["GD-VLV", "GD-SH", "GD-PIP"],
+  "variables": [
+    "valve_mass",
+    "valve_length",
+    "valve_station_relative_to_shroud_regions",
+    "GD-SH_V",
+    "GD-SH_L1",
+    "GD-SH_L2",
+    "stiff_component_length",
+    "stiff_component_EI_ratio",
+    "response_region",
+    "stinger_radius_m",
+    "top_tension_MT"
+  ],
+  "responses": [
+    "pipeline_peak_strain",
+    "peak_strain_location",
+    "valve_bending_moment",
+    "shroud_transition_response"
+  ],
+  "reason": "KEL currently uses analogous GD-TP/GD-TT + GD-SH evidence for GD-VLV + GD-SH. Direct valve-plus-shroud evidence remains missing.",
+  "required_before_claim": "Before claiming valve-specific shroud placement is optimized, add direct GD-VLV + GD-SH rows or validated equivalence to existing stiff-component evidence.",
+  "linked_records": [
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q4-valve-shroud-stiff-component-edikb",
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md#q5-shroud-stiff-evidence-applied"
+  ]
+}
