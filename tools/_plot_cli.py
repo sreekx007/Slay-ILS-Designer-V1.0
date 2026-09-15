@@ -7,6 +7,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+def direct_plot_governance(component=False):
+    tool_name = Path(sys.argv[0]).name or ("plot_component.py" if component else "plot_design.py")
+    return {
+        "authority": f"tools/{tool_name}",
+        "status": "unstamped_direct_plot",
+        "allowed_output": "non_authoritative_plot",
+        "blocking_gates": ["GOVERNED_WORKFLOW_NOT_RUN"],
+        "human_remaining_actions": [
+            "If this plot supports a design decision, rerun the request through tools/run_design_workflow.py and use only the authority-stamped governed report.",
+            "Review the parameter CSV and plot report for warnings, defaulted dimensions, and unresolved gates before accepting the concept.",
+        ],
+    }
 
 def overrides(items):
     result = {}
@@ -70,7 +82,8 @@ def execute(args, make_spec, component=False):
     report = {'plot_status': 'failed', 'plot_qa_status': 'not_applicable',
               'output_image': None, 'checks': [], 'corrections': [],
               'warnings': [], 'errors': [], 'defaulted_parameters': [],
-              'parameter_csv': None}
+              'parameter_csv': None,
+              'design_governance': direct_plot_governance(component)}
     output = Path(args.output)
     report_path = Path(args.report) if args.report else output.with_suffix('.report.json')
     protected = [Path(args.input).resolve()] if getattr(args, 'input', None) else []

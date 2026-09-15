@@ -5,7 +5,7 @@
     "title": "Ontology-grounded RAG-enabled expert design framework for subsea inline structures",
     "version": "0.4",
     "status": "prototype-working-batch",
-    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, Knowloop feedback candidates, KEL knowledge evolution records, standard ILS layouts, validators, documents, examples, and runtime pipeline tools.",
+    "description": "Repository manifest for EDPR with explicit P-map/APF checks, EDES, EDAS, EDIKB, legacy Knowloop feedback candidates, KEL knowledge evolution records, governed design workflow stamps, standard ILS layouts, validators, documents, examples, and runtime pipeline tools.",
     "classification": [
       "neuro-symbolic engineering design assistant",
       "RAG-enabled expert system",
@@ -104,6 +104,7 @@
         "tools/kel/reconcile_lifecycle.py",
         "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
         "tools/design_rules_v02.py",
+        "tools/run_design_workflow.py",
         "tools/kel/create_implementation_plan.py",
         "tools/kel/summarize_kel_status.py",
         "tools/kel/migrate_v01_to_v02.py"
@@ -997,6 +998,26 @@
     ]
   },
   "pending_artifacts": [],
+  "governed_design_workflow": {
+    "authoritative_entrypoint": "tools/run_design_workflow.py",
+    "lower_level_executor": "tools/run_edpr_pipeline.py",
+    "policy": "Design, layout, and plot outputs are authoritative only when their report contains design_governance.authority = tools/run_design_workflow.py and design_governance.status = passed.",
+    "direct_plot_policy": "Direct tools/plot_design.py and tools/plot_component.py outputs are useful for inspection but remain non-authoritative unless rerun through the governed workflow.",
+    "required_stamp_fields": [
+      "authority",
+      "status",
+      "allowed_output",
+      "edpr_confirmed",
+      "retrieval_completed",
+      "solution_completed",
+      "layout_gate_checked",
+      "plot_gate_checked",
+      "blocking_gates",
+      "human_remaining_actions",
+      "stage_reports"
+    ],
+    "llm_user_action_rule": "At the start of the answer and after every governed stage, the LLM must state the human user's remaining actions from design_governance.stage_reports[*].human_remaining_actions. If a gate blocks progress, the LLM must present only the gap report and the required human actions, not a design or plot as if approved."
+  },
   "runtime_sequence": [
     {
       "step": 1,
@@ -1060,6 +1081,7 @@
     "validate_edas": "python tools/EDAS_VALIDATOR.py --schema schemas/EDAS_METASCHEMA.json knowledge/edas/EDAS_SHARED_KNOWLEDGE.json",
     "check_pmap_apf_examples": "python tools/check_pmap_apf.py --strict knowledge/edpr/examples/*.json",
     "run_pipeline_with_knowloop": "python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_ilt --solution-format md",
+    "run_governed_design_workflow": "python tools/run_design_workflow.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/test_governed_ilt --solution-format json --plot",
     "test_plot_cli": "python -m unittest discover -s tools -p test_plot_cli.py",
     "test_plotters": "python -m unittest discover -s tools -p 'test_plot*.py'",
     "test_kel": "python -m pytest -q tests/kel",
@@ -1080,7 +1102,9 @@
     "If no reliable dataset supports a proposed comparison, state that the behavior is a future ML/FEA study candidate.",
     "After every design query, emit a Knowloop candidate JSON. Candidate knowledge is exploratory until human/expert review.",
     "When human feedback contains several issues, use the KEL v0.2 atomic decomposition and grouping flow before generating graph change requests.",
-    "Apply tools/design_rules_v02.py intent and representation gates before emitting a layout or plot."
+    "Apply tools/design_rules_v02.py intent and representation gates before emitting a layout or plot.",
+    "For any design/layout/plot answer, use tools/run_design_workflow.py as the authoritative entry point; direct plotter outputs are non-authoritative unless stamped by that wrapper.",
+    "At the start and after each governed stage, explicitly tell the human user the remaining actions listed in design_governance.stage_reports."
   ],
   "known_gaps_and_next_updates": [
     "Add vector-index retrieval as an enhancement after P-map/APF and Knowloop behavior are stable.",
@@ -1119,8 +1143,9 @@
   },
   "plotter_commands": {
     "assembly": "python tools/plot_design.py --input knowledge/edas/standard_ils_layouts.json --archetype ILS-ILT --output runs/ilt.png --report runs/ilt.report.json",
+    "governed_assembly": "python tools/run_design_workflow.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/ilt --solution-format json --plot",
     "component": "python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output runs/gd_tp.png",
-    "report_scope": "Build, export, basic QA and rendered layout correction audit; bounded correction and vector export limitations are documented."
+    "report_scope": "Build, export, basic QA and rendered layout correction audit; bounded correction and vector export limitations are documented. Direct plot reports are stamped non-authoritative unless produced by the governed workflow."
   },
   "solver_plotting": {
     "bridge": "tools/solution_to_layout.py",

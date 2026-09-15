@@ -55,6 +55,10 @@ class PlotCommands(unittest.TestCase):
         parameter_csv = Path(payload['parameter_csv'])
         self.assertTrue(parameter_csv.is_file())
         self.assertIn('parameter,value', parameter_csv.read_text(encoding='utf-8').splitlines()[0])
+        governance = payload['design_governance']
+        self.assertEqual(governance['status'], 'unstamped_direct_plot')
+        self.assertEqual(governance['allowed_output'], 'non_authoritative_plot')
+        self.assertIn('GOVERNED_WORKFLOW_NOT_RUN', governance['blocking_gates'])
 
     def test_invalid_requests_fail_without_images(self):
         cases = [

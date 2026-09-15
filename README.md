@@ -58,7 +58,7 @@ flowchart LR
     K --> L[Accepted or implemented update]
 ```
 
-The deterministic orchestrator is `tools/run_edpr_pipeline.py`. For an existing EDPR it runs validation, P-map/APF checking, retrieval, solving, optional layout/plot generation, and optional legacy Knowloop candidate export. The separate `tools/kel/run_kel_cycle.py` wrapper packages those artifacts as downloadable JSON and only creates feedback, review, or promotion records when the corresponding human input is supplied.
+The authoritative design entry point is `tools/run_design_workflow.py`. It applies the EDPR confirmation gate, KEL v0.2 intent/layout/plot gates, and a `design_governance` stamp before a design, layout, or plot is treated as usable. The lower-level deterministic executor remains `tools/run_edpr_pipeline.py`; it runs validation, P-map/APF checking, retrieval, solving, optional layout/plot generation, and optional legacy Knowloop candidate export. The separate `tools/kel/run_kel_cycle.py` wrapper packages those artifacts as downloadable JSON and only creates feedback, review, or promotion records when the corresponding human input is supplied.
 
 Natural-language parsing remains outside the orchestrator. To prepare the parser input:
 
@@ -93,6 +93,7 @@ See [EDPR P-map/APF implementation](docs/EDPR_PMAP_APF_IMPLEMENTATION.md), [prob
 
 | Tool | Application |
 | --- | --- |
+| `tools/run_design_workflow.py` | Authoritative governed EDPR-to-solution/layout/plot wrapper with stage stamps, fail-closed gates, and human remaining actions |
 | `tools/EDPR_VALIDATOR.py` | JSON Schema and EDPR-specific validation |
 | `tools/check_pmap_apf.py` | Semantic gate for usable P-map/APF content |
 | `tools/retrieve_context.py` | Builds a traceable EDES/EDAS/EDIKB context package |
@@ -129,7 +130,7 @@ All commands below run from the repository root. Generated files under `runs/` a
 ## Run the complete EDPR-to-plot workflow
 
 ```bash
-python tools/run_edpr_pipeline.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/ilt --solution-format json --plot
+python tools/run_design_workflow.py --edpr-json knowledge/edpr/examples/EDPR_EXAMPLE_ILT_L_BRANCH_MIN_STRAIN.json --output-dir runs/ilt --solution-format json --plot
 ```
 
 For the supplied example, the retrieved numeric evidence recommends `L-ST-PS`. The bridge reconstructs it from the reviewed `ILT-L-FT-PS` EDAS anchor and changes the branch support and association from fixed (`F`) to slotted (`S`) according to the stored FT/ST taxonomy.
@@ -143,8 +144,9 @@ The run writes artifacts using the EDPR filename stem:
 | `*.layout.json` | Materialized EDAS study definition |
 | `*.layout.report.json` | Source anchor, derivation, warnings, and review requirement |
 | `*.png` | Rendered assembly |
-| `*.plot.report.json` | Build, correction, export, CSV sidecar, and visual QA findings |
+| `*.plot.report.json` | Build, correction, export, CSV sidecar, visual QA findings, and governed-design stamp |
 | `*.parameters.csv` | Assembly parameters, component free parameters, connector slots, and gate context kept outside the figure |
+| `*.design_governance.json` | Authoritative workflow status, blocking gates, allowed output, and human remaining actions at every stage |
 | `*.knowloop_candidate.json` | Legacy combined feedback candidate for review |
 
 Using `--solution-format md --plot` also creates a structured JSON solution sidecar because layout generation consumes the solver JSON contract. Omit `--plot` to run validation, retrieval, solving, and any legacy candidate export without layout rendering.
@@ -158,7 +160,7 @@ python tools/plot_component.py --component GD-TP --set t_comp=0.042 --output run
 python tools/plot_design.py --input plotters/examples/example_boss_layout.json --output runs/boss.png
 ```
 
-PNG, SVG, and PDF output are supported. Assembly plots are geometry-focused by default; the long parameter list is exported beside the image as `*.parameters.csv` and referenced from the plot report. Connection labels on the plot show only non-weld connection types (`F`, `P`, `S`, `D`); `W` weld connections are omitted from plot labels. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, the parameter CSV path, the KEL v0.2 EA exposure gate, the support-sizing gate, and the branch-valve top-frame gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, both associations, and any GD-SB/GD-ST dimensions needed to fit a protected or supported component. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
+PNG, SVG, and PDF output are supported. Direct plotter reports are stamped `unstamped_direct_plot` and are non-authoritative for design decisions unless rerun through `tools/run_design_workflow.py`. Assembly plots are geometry-focused by default; the long parameter list is exported beside the image as `*.parameters.csv` and referenced from the plot report. Connection labels on the plot show only non-weld connection types (`F`, `P`, `S`, `D`); `W` weld connections are omitted from plot labels. Reports preserve builder findings, defaulted parameters, corrections, warnings, errors, output paths, the parameter CSV path, the KEL v0.2 EA exposure gate, the support-sizing gate, and the branch-valve top-frame gate. A layout using `ils.design_gate = complete` must model every active GD-ST/GD-SB connector, its pipe landing, both associations, and any GD-SB/GD-ST dimensions needed to fit a protected or supported component. Paper reconstructions use `study_only` and cannot claim complete-design status. Input definitions are never rewritten.
 
 Presentation lives in:
 
