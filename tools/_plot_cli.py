@@ -20,6 +20,39 @@ def direct_plot_governance(component=False):
         ],
     }
 
+def required_connection_label_check(ils, labels):
+    ids = getattr(ils, 'ids', [])
+    codes = getattr(ils, 'codes', [])
+    code_by_id = dict(zip(ids, codes))
+    associations = getattr(ils, 'definition', {}).get('associations', []) or []
+    present = {item.get('index') for item in labels or []}
+    required = []
+    missing = []
+    for index, assoc in enumerate(associations):
+        if assoc.get('type') != 'Connection' or assoc.get('connection') == 'W':
+            continue
+        ends = [
+            (assoc.get('from') or {}).get('component'),
+            (assoc.get('to') or {}).get('component'),
+        ]
+        if not any(code_by_id.get(component) in {'GD-ST', 'GD-SB'} for component in ends):
+            continue
+        record = {
+            'index': index,
+            'connection': assoc.get('connection'),
+            'from': assoc.get('from'),
+            'to': assoc.get('to'),
+        }
+        required.append(record)
+        if index not in present:
+            missing.append(record)
+    return {
+        'id': 'required_structure_connection_labels',
+        'status': 'passed' if not missing else 'failed',
+        'required': required,
+        'missing': missing,
+        'rule': 'Show connection type labels only for required non-weld GD-ST/GD-SB structural connections; connector component labels are not required and W welds are omitted.',
+    }
 def overrides(items):
     result = {}
     for item in items:
@@ -143,6 +176,17 @@ def execute(args, make_spec, component=False):
             report['plot_qa_status'] = qa['plot_qa_status']
             report['layout_qa'] = getattr(fig, '_layout_qa', {})
             report['connection_labels'] = getattr(fig, '_connection_labels', [])
+            report['plot_annotations'] = getattr(fig, '_plot_annotations', [])
+            annotation_failures = [item for item in report['plot_annotations'] if item.get('status') == 'failed']
+            annotation_check = {'id': 'plot_annotation_anchors', 'status': 'passed' if not annotation_failures else 'failed', 'failed': annotation_failures}
+            report['checks'].append(annotation_check)
+            if annotation_failures:
+                report['errors'].append('Requested plot annotations must resolve to model coordinates; failed anchors: ' + ', '.join(str(item.get('id')) for item in annotation_failures))
+            required_label_check = required_connection_label_check(ils, report['connection_labels'])
+            report['required_connection_labels'] = required_label_check
+            report['checks'].append(required_label_check)
+            if required_label_check['status'] == 'failed':
+                report['errors'].append('Required GD-ST/GD-SB connection type labels are missing: ' + ', '.join(str(item.get('index')) for item in required_label_check['missing']))
             min_connection_font = getattr(__import__('plot_settings'), 'STYLE')['fonts'].get('connection_label', 0)
             label_check = {'id': 'connection_label_legibility', 'status': 'passed' if min_connection_font >= 9 else 'failed', 'minimum_font_pt': min_connection_font}
             report['checks'].append(label_check)

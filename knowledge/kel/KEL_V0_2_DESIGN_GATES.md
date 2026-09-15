@@ -100,6 +100,15 @@ the evidence applicability limits. If these basis fields are absent, the report
 raises `SHROUD_STIFF_EVIDENCE_NOT_APPLIED` and the layout remains a preliminary
 geometry sketch.
 
+
+## Plot annotation and connection-label review gate
+
+Likely high-strain or transition watch labels must be anchored to live model coordinates through layout `plot_annotations`. The preferred anchor is a declared component feature resolved by `ils.feature_xy`, such as `GD-B.tee`, `GD-B.end`, or a GD-ST/GD-SB connector feature. Pixel-based manual arrows are not accepted as review evidence because they can drift away from the physical feature.
+
+For connection labels, the plot only needs to expose the connection type between GD-ST/GD-SB and the connected feature or connector path. Connector component labels are not required. Non-weld connection types (`F`, `P`, `S`, `D`) must be visible for required GD-ST/GD-SB structural associations; `W` weld associations remain unlabelled.
+
+After emitting a plot, the LLM must ask the human user for feedback on the plotted component placement, connection-type labels, and strain-watch pointer locations.
+
 ## Two branch valves
 
 The current accepted topology is unresolved. EDPR emits

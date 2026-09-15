@@ -374,6 +374,66 @@ def _exclusion_note(ax, exclusions):
 
 
 
+def _resolve_annotation_anchor(ils, anchor):
+    if not isinstance(anchor, dict):
+        return None, 'anchor must be an object'
+    if 'component' in anchor and 'feature' in anchor:
+        xy = ils.feature_xy(anchor.get('component'), anchor.get('feature'))
+        if xy is None:
+            return None, f"cannot resolve {anchor.get('component')}.{anchor.get('feature')}"
+        return xy, None
+    if isinstance(anchor.get('x'), (int, float)) and isinstance(anchor.get('y'), (int, float)):
+        return (float(anchor['x']), float(anchor['y'])), None
+    return None, 'anchor must provide component+feature or numeric x+y'
+
+
+def _draw_plot_annotations(ax, ils):
+    """Draw optional model-coordinate annotations declared by the layout."""
+    annotations = getattr(ils, 'definition', {}).get('plot_annotations', []) or []
+    results = []
+    if not isinstance(annotations, list):
+        setattr(ax.figure, '_plot_annotations', [{
+            'id': 'plot_annotations', 'status': 'failed',
+            'message': 'plot_annotations must be a list'
+        }])
+        return
+    import itertools
+    default_offsets = itertools.cycle([(36, -30), (42, 28), (-120, -34), (-128, 30)])
+    for index, item in enumerate(annotations):
+        if not isinstance(item, dict):
+            results.append({'index': index, 'status': 'failed', 'message': 'annotation must be an object'})
+            continue
+        xy, message = _resolve_annotation_anchor(ils, item.get('anchor'))
+        record = {
+            'index': index,
+            'id': item.get('id', f'annotation_{index + 1}'),
+            'kind': item.get('kind', 'annotation'),
+            'text': str(item.get('text') or item.get('id') or f'annotation {index + 1}'),
+            'anchor': item.get('anchor'),
+            'status': 'passed' if xy is not None else 'failed',
+        }
+        if xy is None:
+            record['message'] = message
+            results.append(record)
+            continue
+        xytext = item.get('xytext') or next(default_offsets)
+        if not (isinstance(xytext, (list, tuple)) and len(xytext) == 2
+                and all(isinstance(v, (int, float)) for v in xytext)):
+            xytext = next(default_offsets)
+        color = item.get('color') or ('#B00020' if 'strain' in str(item.get('kind', '')).lower() else '#333333')
+        ax.plot([xy[0]], [xy[1]], marker='o', ms=7, color=color, zorder=18)
+        ax.annotate(record['text'], xy=xy, textcoords='offset points', xytext=tuple(xytext),
+                    ha='left' if xytext[0] >= 0 else 'right', va='center',
+                    fontsize=STYLE['fonts']['annotation'], color=color, weight='bold',
+                    bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=color,
+                              lw=STYLE['line_widths']['stroke_0_9'], alpha=0.94),
+                    arrowprops={'arrowstyle': '->', 'color': color, 'lw': 1.0},
+                    zorder=19)
+        record['xy'] = [xy[0], xy[1]]
+        record['xytext'] = list(xytext)
+        results.append(record)
+    if results:
+        setattr(ax.figure, '_plot_annotations', results)
 def _draw_connection_labels(ax, ils):
     """Annotate declared non-weld connections with their connector type."""
     assocs = getattr(ils, 'definition', {}).get('associations', []) or []
@@ -514,6 +574,9 @@ def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['ass
 
     # --- declared connection labels -------------------------------------
     _draw_connection_labels(ax, ils)
+
+    # --- optional model-coordinate plot annotations ----------------------
+    _draw_plot_annotations(ax, ils)
 
     # --- the assembly-level envelope -----------------------------------
     _, _, _, _paths, _, ambiguous, deepest = draw_contact_envelope(

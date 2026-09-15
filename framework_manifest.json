@@ -1104,7 +1104,10 @@
     "When human feedback contains several issues, use the KEL v0.2 atomic decomposition and grouping flow before generating graph change requests.",
     "Apply tools/design_rules_v02.py intent and representation gates before emitting a layout or plot.",
     "For any design/layout/plot answer, use tools/run_design_workflow.py as the authoritative entry point; direct plotter outputs are non-authoritative unless stamped by that wrapper.",
-    "At the start and after each governed stage, explicitly tell the human user the remaining actions listed in design_governance.stage_reports."
+    "At the start and after each governed stage, explicitly tell the human user the remaining actions listed in design_governance.stage_reports.",
+    "When a solution proposal is emitted, ask whether the user wants a plot unless already requested; after any plotted layout, ask for human feedback on component placement, connection-type labels, and strain-watch pointer locations.",
+    "If likely high-strain locations are shown, declare them as model-anchored plot_annotations and require plot_annotation_anchors to pass; do not use pixel-judged arrows as accepted review evidence.",
+    "For plot labels, require only non-weld GD-ST/GD-SB connection-type labels such as F, P, S, or D; connector component labels are not required and W welds are omitted."
   ],
   "known_gaps_and_next_updates": [
     "Add vector-index retrieval as an enhancement after P-map/APF and Knowloop behavior are stable.",

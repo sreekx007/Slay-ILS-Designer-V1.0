@@ -85,3 +85,15 @@ tests :: updated label/CLI tests and stale KEL lifecycle tests
 validation :: 10 affected plot tests + 32 plot/tool tests + 29 KEL tests + 32 full tool unittests passed
 ```
 
+## Q8 plot annotation and feedback prompt KEL - 2026-09-15
+
+```text
+trigger :: strain-watch arrows were placed by pixel judgement, required connection-type label scope was unclear, and LLM did not ask for feedback after plot emission
+plotters/ils_plotter.py :: added model-coordinate plot_annotations support resolved through live component features or explicit x/y data
+plotters/ils_plotter.py :: records plot annotation anchor resolution in figure metadata
+tools/_plot_cli.py :: reports plot_annotations and fails unresolved requested annotation anchors
+tools/_plot_cli.py :: added required_structure_connection_labels check for non-weld GD-ST/GD-SB structural connection type labels
+policy :: connector component labels are not required; required labels are F/P/S/D connection-type labels, W omitted
+manifest/kel docs :: LLM must ask whether plot is required after solution proposal and must ask for feedback after plotted layout
+validation :: tool unittest suite covers model-anchored annotations, invalid annotation failure, and required GD-ST connection-type label reporting
+```

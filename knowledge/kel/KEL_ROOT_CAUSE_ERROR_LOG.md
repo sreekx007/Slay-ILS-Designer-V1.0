@@ -251,3 +251,35 @@ candidate_group_q4_q5 :: improve analogous evidence retrieval and force evidence
 candidate_group_q6 :: add connector-system decision basis and branch-valve containment checks; later add coupled branch-valve/F2/PS covariance data
 candidate_group_q7 :: keep paper figures visual; move parameter detail to machine-readable sidecars
 ```
+## Q8.01 Model-anchored strain labels
+
+```text
+kel_record :: Q8_01_MODEL_ANCHORED_STRAIN_LABELS
+observed_error :: peak-strain and branch-transition label pointers did not land on the intended physical locations
+root_cause :: plot annotations were placed by approximate rendered-image coordinates instead of model geometry coordinates
+available_knowledge_missed :: live builder feature coordinates exposed by ils.feature_xy and EDAS association feature names
+edikb_gap :: none for plotting; actual strain magnitudes still require EDIKB/FEA evidence
+implemented_response :: plot_annotations contract with component-feature or numeric model-coordinate anchors; unresolved anchors fail plot report
+```
+
+## Q8.02 Structure connection label scope
+
+```text
+kel_record :: Q8_02_STRUCTURE_CONNECTION_LABEL_SCOPE
+observed_error :: label expectation was ambiguous between connector component labels and connection-type labels
+root_cause :: workflow did not distinguish component identification from required connection-type review information
+available_knowledge_missed :: association connection fields already encode F/P/S/D/W; prior plotter update already suppressed W
+edikb_gap :: none; reporting and QA scope issue
+implemented_response :: required_structure_connection_labels checks non-weld GD-ST/GD-SB structural connection type labels only; connector component labels are not required
+```
+
+## Q8.03 Post-plot feedback request
+
+```text
+kel_record :: Q8_03_POST_PLOT_FEEDBACK_REQUEST
+observed_error :: LLM emitted a plot without asking the human user for feedback afterward
+root_cause :: conversation workflow ended at artifact delivery instead of closing the human review loop
+available_knowledge_missed :: KEL human-feedback lifecycle requires explicit human review input for improvement capture
+edikb_gap :: none; workflow sequencing failure
+implemented_response :: manifest and KEL instructions require feedback request after any plotted layout, covering component placement, connection-type labels and strain-watch pointer locations
+```

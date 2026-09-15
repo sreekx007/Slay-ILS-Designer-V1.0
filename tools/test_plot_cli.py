@@ -60,6 +60,55 @@ class PlotCommands(unittest.TestCase):
         self.assertEqual(governance['allowed_output'], 'non_authoritative_plot')
         self.assertIn('GOVERNED_WORKFLOW_NOT_RUN', governance['blocking_gates'])
 
+    def test_model_anchored_plot_annotations_and_required_structure_connection_labels(self):
+        spec = json.loads((ROOT / 'plotters/examples/example_edpr_ilt_layout.json').read_text())
+        spec['plot_annotations'] = [
+            {
+                'id': 'peak_header_tee_watch',
+                'kind': 'strain_watch',
+                'text': 'Peak strain watch: header outer fibre near branch tee',
+                'anchor': {'component': 'B', 'feature': 'tee'},
+                'xytext': [36, -30],
+            },
+            {
+                'id': 'branch_support_transition_watch',
+                'kind': 'strain_watch',
+                'text': 'Branch support transition watch',
+                'anchor': {'component': 'B', 'feature': 'end'},
+                'xytext': [-128, 26],
+            },
+        ]
+        source = self.directory / 'annotated_ilt.json'
+        source.write_text(json.dumps(spec), encoding='utf-8')
+        output = self.directory / 'annotated_ilt.png'
+        self.run_cli('plot_design.py', '--input', source, '--output', output)
+        report = json.loads(output.with_suffix('.report.json').read_text())
+        annotations = {item['id']: item for item in report['plot_annotations']}
+        self.assertEqual(annotations['peak_header_tee_watch']['status'], 'passed')
+        self.assertEqual(annotations['branch_support_transition_watch']['status'], 'passed')
+        self.assertEqual(annotations['peak_header_tee_watch']['xy'], [0.0, 0.0])
+        required = report['required_connection_labels']
+        self.assertEqual(required['status'], 'passed')
+        self.assertEqual([item['connection'] for item in required['required']], ['S'])
+        self.assertEqual(report['connection_labels'][0]['text'], 'S')
+
+    def test_invalid_plot_annotation_anchor_fails(self):
+        spec = json.loads((ROOT / 'plotters/examples/example_edpr_ilt_layout.json').read_text())
+        spec['plot_annotations'] = [
+            {
+                'id': 'bad_strain_watch',
+                'kind': 'strain_watch',
+                'text': 'Bad pointer',
+                'anchor': {'component': 'B', 'feature': 'missing_feature'},
+            }
+        ]
+        source = self.directory / 'bad_annotation.json'
+        source.write_text(json.dumps(spec), encoding='utf-8')
+        output = self.directory / 'bad_annotation.png'
+        self.run_cli('plot_design.py', '--input', source, '--output', output, expected=1)
+        report = json.loads(output.with_suffix('.report.json').read_text())
+        self.assertEqual(report['plot_annotations'][0]['status'], 'failed')
+        self.assertIn('bad_strain_watch', report['errors'][0])
     def test_invalid_requests_fail_without_images(self):
         cases = [
             ('plot_component.py', ['--component', 'GD-BOSS']),

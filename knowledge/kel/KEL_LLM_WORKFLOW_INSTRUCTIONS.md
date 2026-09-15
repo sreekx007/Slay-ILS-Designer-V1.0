@@ -96,6 +96,13 @@ Every design response should include:
 | Support sizing | If a support/protection structure is added, state the supported component envelope and the explicit GD-ST/GD-SB dimensions used. |
 | Shroud + stiff component | If GD-SH is combined with GD-VLV, GD-TP, or GD-TT, retrieve C1 shroud-plus-stiff-body EDIKB evidence and state applicability limits before recommending placement or length. Layouts must show how evidence was applied or be marked evidence-not-applied. |
 | Branch valve + GD-ST | For branch-owned valves, state selected ILT-L/ILT-Z anchor, connection system basis, GD-ST span, and tee/valve/end containment. F2/F2D needs explicit evidence; otherwise prefer PS. |
-| Plot | Ask whether the user wants a plot unless the user directly requests one. If plotting, use the repository plotter when possible. |
+| Plot | Ask whether the user wants a plot unless the user directly requests one. If plotting, use the repository plotter when possible, declare any strain-watch labels through model-anchored `plot_annotations`, and ask the user for feedback after the plot is shown. |
 | Confidence | State confidence and knowledge sufficiency. |
 | KEL trace | Record feedback, gaps, and expert-review candidates when the interaction reveals missing knowledge or tooling. |
+## Plot annotation and feedback rule
+
+When a plot includes likely high-strain or transition watch locations, the LLM must not place arrows by image-pixel judgement. It must declare `plot_annotations` in the layout JSON and anchor each pointer to a model coordinate, preferably a component feature resolved by the builder, for example `{"component": "B", "feature": "tee"}` or `{"component": "ST", "feature": "right1"}`. The plot report must show `plot_annotation_anchors = passed`; otherwise the plot is not acceptable for review.
+
+After every plotted layout, the LLM must ask the human user for feedback. The feedback request should explicitly ask whether component placement, connection-type labels, and strain-watch pointer locations are acceptable.
+
+Connector component labels are not required. The required plot labels are connection-type labels for non-weld GD-ST/GD-SB structural connections, such as `F`, `P`, `S`, or `D`. `W` weld connections remain unlabelled.
