@@ -1,0 +1,17 @@
+{
+  "schema": "kel-expert-review/0.1",
+  "review_id": "kel:review:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "linked_change_request_id": "kel:change:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "status": "final",
+  "decision": "implemented",
+  "reviewer": "User/domain expert",
+  "reviewed_utc": "2026-09-15T00:00:00Z",
+  "decision_reason": "User rejected the F2/out-of-frame branch-valve concept, identified the standard-layout and strain-basis failures, and requested KEL implementation in the toolchain.",
+  "required_evidence": [
+    "Regression test that a branch valve outside GD-ST span fails BRANCH_VALVE_OUTSIDE_GD_ST_SPAN.",
+    "Regression test that F2/F2D without connection-system evidence fails UNJUSTIFIED_F2_FOR_BRANCH_VALVE.",
+    "Regression test that a PS ILT-Z anchor with tee, valve, and end inside GD-ST passes the new gate."
+  ],
+  "implementation_target": "Tools; Plotters; EDPR; KEL",
+  "implementation_reference": "tools/design_rules_v02.py; plotters/ils_builder.py; tests/kel/test_design_workflow_v02.py"
+}

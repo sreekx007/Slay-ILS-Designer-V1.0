@@ -277,3 +277,68 @@ def test_valve_shroud_layout_must_apply_retrieved_c1_evidence() -> None:
     assert not [gap for gap in gaps if gap["code"] == "SHROUD_STIFF_EVIDENCE_NOT_APPLIED"]
     report = build_ils(evidence_applied).design_workflow_report()
     assert report["shroud_stiff_evidence_gate"]["status"] == "passed"
+
+
+
+def test_branch_valve_requires_standard_anchor_containment_and_f2_basis() -> None:
+    intent = extract_design_intent({
+        "sourceRequest": {"rawText": "ILS with a branch line with vertical connector. There is a heavy valve on the branch line, on the horizontal leg."},
+        "designContext": {"workflowIntent": {"edprConfirmation": {"status": "confirmed"}}},
+    })
+    assert intent["branch_valve"]["requested"] is True
+    assert intent["valve_protection"]["gate_required"] is False
+    assert intent["branch_valve"]["preferred_standard_anchor"] == "ILT-Z-FT-PS"
+
+    bad_layout = {
+        "schema_version": 1,
+        "ils": {"name": "Rejected Z branch valve", "frame": "local", "connection_system": "F2", "ownership": "strict", "purpose": "concept", "design_gate": "advisory"},
+        "pipeline": {"OD_pipe": 0.3048, "t_pipe": 0.0159},
+        "components": [
+            {"id": "B1", "code": "GD-B", "variant": "Z", "centre_x": 0.0, "P_b1": 3.6, "P_b2": 1.35, "P_b3": 0.75, "P_bv": 1.8, "mass_valve": 6000.0, "support_connector": "F"},
+            {"id": "ST1", "code": "GD-ST", "centre_x": 3.6, "L_top": 3.0, "H_top": 0.85, "P_vt": -0.5, "P_c1": 1.2, "P_c2": 0.35, "top_connector_x": [3.6]},
+        ],
+        "associations": [
+            {"type": "Connection", "connection": "F", "from": {"component": "B1", "feature": "end"}, "to": {"component": "ST1", "feature": "top1"}},
+        ],
+    }
+    gaps = validate_layout_against_intent(bad_layout, intent)
+    assert {gap["code"] for gap in gaps} >= {"BRANCH_VALVE_OUTSIDE_GD_ST_SPAN", "UNJUSTIFIED_F2_FOR_BRANCH_VALVE"}
+    report = build_ils(bad_layout).design_workflow_report()
+    branch_gate = report["branch_valve_top_frame_gate"]
+    assert branch_gate["status"] == "failed"
+    assert branch_gate["items"][0]["containment_status"] == "failed"
+    assert branch_gate["items"][0]["connection_system_status"] == "failed"
+    assert "B1.branch_valve.outside_GD-ST_span" in report["unresolved_or_inactive_slots"]
+    assert "B1.branch_valve.F2_without_evidence" in report["unresolved_or_inactive_slots"]
+
+    corrected = {
+        "schema_version": 1,
+        "ils": {"name": "Corrected Z branch valve", "frame": "local", "connection_system": "PS", "ownership": "strict", "purpose": "concept", "design_gate": "advisory"},
+        "pipeline": {"OD_pipe": 0.3048, "t_pipe": 0.0159},
+        "components": [
+            {"id": "TP_ST_L", "code": "GD-TP", "centre_x": -0.4064},
+            {"id": "TP_ST_R", "code": "GD-TP", "centre_x": 4.4704},
+            {"id": "CON_ST_L", "code": "GD-Con", "centre_x": -0.4064, "conn_type": "P", "y_struct": -0.2032},
+            {"id": "CON_ST_R", "code": "GD-Con", "centre_x": 4.4704, "conn_type": "S", "y_struct": -0.2032},
+            {"id": "B1", "code": "GD-B", "variant": "Z", "centre_x": 0.0, "P_b1": 4.064, "P_b2": 1.4224, "P_b3": 0.7112, "P_bv": 2.032, "mass_valve": 6000.0, "support_connector": "F"},
+            {"id": "ST1", "code": "GD-ST", "centre_x": 2.032, "L_top": 5.6896, "H_top": 1.2192, "P_vt": -0.2032, "P_c1": 4.8768, "P_c2": 0.4064, "top_connector_x": [4.064]},
+        ],
+        "associations": [
+            {"type": "Connection", "connection": "P", "from": {"component": "TP_ST_L", "feature": "conMid"}, "to": {"component": "CON_ST_L", "feature": "pipeEnd"}},
+            {"type": "Connection", "connection": "P", "from": {"component": "CON_ST_L", "feature": "structEnd"}, "to": {"component": "ST1", "feature": "slot2"}},
+            {"type": "Connection", "connection": "S", "from": {"component": "TP_ST_R", "feature": "conMid"}, "to": {"component": "CON_ST_R", "feature": "pipeEnd"}},
+            {"type": "Connection", "connection": "S", "from": {"component": "CON_ST_R", "feature": "structEnd"}, "to": {"component": "ST1", "feature": "slot4"}},
+            {"type": "Connection", "connection": "F", "from": {"component": "B1", "feature": "end"}, "to": {"component": "ST1", "feature": "top1"}},
+        ],
+        "design_basis": {
+            "standard_layout_anchor": "ILT-Z-FT-PS",
+            "connection_system_basis": "PS selected from Z branch standard anchors because the branch valve only needs top-frame containment and there is no evidence requirement for an F2 low-strain pocket on the branch.",
+            "branch_valve_representation": "GD-B.P_bv and mass_valve model the valve on the horizontal Z-branch leg; tee, valve and end remain inside GD-ST span.",
+        },
+    }
+    corrected_gaps = validate_layout_against_intent(corrected, intent)
+    assert not [gap for gap in corrected_gaps if gap["code"] in {"BRANCH_VALVE_OUTSIDE_GD_ST_SPAN", "UNJUSTIFIED_F2_FOR_BRANCH_VALVE", "HEADER_VALVE_REQUIRES_GD_SB"}]
+    corrected_report = build_ils(corrected).design_workflow_report()
+    assert corrected_report["branch_valve_top_frame_gate"]["status"] == "passed"
+    assert "B1.branch_valve.outside_GD-ST_span" not in corrected_report["unresolved_or_inactive_slots"]
+    assert "B1.branch_valve.F2_without_evidence" not in corrected_report["unresolved_or_inactive_slots"]

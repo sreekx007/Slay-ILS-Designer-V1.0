@@ -93,9 +93,16 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(valve_cfg, dict):
         valve_cfg = {}
     valve_present = bool(re.search(r"\bvalve\b", lower)) or bool(valve_cfg)
+    branch_valve_cfg = workflow.get("branchValve", {})
+    if not isinstance(branch_valve_cfg, dict):
+        branch_valve_cfg = {}
+    branch_valve_requested = bool(branch_valve_cfg) or bool(re.search(
+        r"\b(?:branch(?:\s+line|\s+pipe)?|horizontal\s+leg)\b.{0,80}\bvalve\b|\bvalve\b.{0,80}\b(?:branch(?:\s+line|\s+pipe)?|horizontal\s+leg)\b",
+        lower,
+    ))
     capacity = _capacity_ratio(raw, valve_cfg.get("capacityRatio"))
     protection_requested = bool(valve_cfg) or bool(re.search(r"\b(protect|protection|support|base structure|ea-sb|gd-sb)\b", lower)) or capacity is not None
-    header_valve_requires_base = valve_present
+    header_valve_requires_base = bool(valve_cfg) or bool(valve_present and not branch_valve_requested)
 
     required = {
         "roller_passage_in_scope": valve_cfg.get("rollerPassageInScope"),
@@ -197,6 +204,16 @@ def extract_design_intent(edpr: dict[str, Any]) -> dict[str, Any]:
             "status": valve_status,
             "moment_check": moment_check,
             "rule": "A header valve or other header component that cannot bear roller contact requires GD-SB protection; an 80% valve capacity is a constraint, not a support selection.",
+        },
+        "branch_valve": {
+            "requested": branch_valve_requested,
+            "location": branch_valve_cfg.get("location") or ("horizontal_leg" if re.search(r"\bhorizontal\s+leg\b", lower) else "branch_line" if branch_valve_requested else None),
+            "top_frame_required": bool(branch_valve_requested),
+            "preferred_standard_anchor": "ILT-Z-FT-PS" if orientation == "vertical" else "ILT-L-FT-PS" if orientation == "horizontal" else None,
+            "avoid_connection_systems_without_basis": ["F2", "F2D"],
+            "default_connection_system": "PS",
+            "rule": "For a branch valve, keep the branch entry, branch valve and branch end inside the GD-ST span. Do not default to F2/F2D unless a strain/moment evidence basis justifies a low-strain pocket on the branch and accepts the header penalty.",
+            "status": "requires_top_frame_containment_gate" if branch_valve_requested else "not_applicable",
         },
         "shroud_stiff_component": {
             "required": shroud_interaction_required,
@@ -329,9 +346,63 @@ def validate_layout_against_intent(spec: dict[str, Any], intent: dict[str, Any])
     if intent.get("connector", {}).get("required_orientation") == "vertical":
         if not branches or any(c.get("variant", "L") != "Z" for c in branches):
             gaps.append({"code": "VERTICAL_CONNECTOR_REQUIRES_GD_B_Z", "message": "A vertical connector requires every selected branch to use GD-B variant Z and an ILT-Z-* anchor."})
+
+    basis = spec.get("design_basis", {}) if isinstance(spec.get("design_basis", {}), dict) else {}
+    branch_valve_intent = intent.get("branch_valve", {}) if isinstance(intent.get("branch_valve", {}), dict) else {}
+    branch_valve_required = bool(branch_valve_intent.get("requested"))
+    if branch_valve_required or any("P_bv" in c or "mass_valve" in c for c in branches):
+        top_by_id = {str(c.get("id") or f"top_{index}"): c for index, c in enumerate(tops, 1)}
+        branch_to_top: dict[str, str] = {}
+        branch_ids = {str(c.get("id") or f"branch_{index}") for index, c in enumerate(branches, 1)}
+        top_ids = set(top_by_id)
+        for association in spec.get("associations", []) or []:
+            if association.get("type") != "Connection":
+                continue
+            ends = [
+                str((association.get("from") or {}).get("component")),
+                str((association.get("to") or {}).get("component")),
+            ]
+            linked_branch = next((item for item in ends if item in branch_ids), None)
+            linked_top = next((item for item in ends if item in top_ids), None)
+            if linked_branch and linked_top:
+                branch_to_top[linked_branch] = linked_top
+        outside_messages = []
+        for index, branch in enumerate(branches, 1):
+            branch_id = str(branch.get("id") or f"branch_{index}")
+            explicit_branch_valve = branch_valve_required or "P_bv" in branch or "mass_valve" in branch
+            if not explicit_branch_valve:
+                continue
+            top = top_by_id.get(branch_to_top.get(branch_id, ""))
+            if not top:
+                continue
+            try:
+                tee_x = float(branch.get("centre_x", 0.0))
+                p_b1 = float(branch.get("P_b1"))
+                p_bv = float(branch.get("P_bv", p_b1 / 2.0))
+                st_cx = float(top.get("centre_x", 0.0))
+                st_len = float(top.get("L_top"))
+            except (TypeError, ValueError):
+                continue
+            span = (st_cx - st_len / 2.0, st_cx + st_len / 2.0)
+            points = {"tee": tee_x, "valve": tee_x + p_bv, "end": tee_x + p_b1}
+            outside = {name: value for name, value in points.items() if value < span[0] - 1e-6 or value > span[1] + 1e-6}
+            if outside:
+                outside_messages.append(f"{branch_id} outside GD-ST span {span}: " + ", ".join(f"{k}={v:.4f}" for k, v in outside.items()))
+        if outside_messages:
+            gaps.append({
+                "code": "BRANCH_VALVE_OUTSIDE_GD_ST_SPAN",
+                "message": "Branch-valve layouts must keep branch tee/entry, branch valve, and branch end inside the associated GD-ST top-frame span; " + "; ".join(outside_messages),
+            })
+        connection_system = str((spec.get("ils") or {}).get("connection_system") or "").upper()
+        f2_basis = basis.get("connection_system_basis") or basis.get("f2_evidence_refs")
+        if connection_system in {"F2", "F2D"} and f2_basis in (None, "", [], {}):
+            gaps.append({
+                "code": "UNJUSTIFIED_F2_FOR_BRANCH_VALVE",
+                "message": "F2/F2D shall not be selected by default for a branch-valve top-frame layout; provide strain/moment evidence for the low-strain branch pocket and the accepted header penalty, otherwise prefer the PS standard anchor.",
+            })
+
     has_valve_shroud = any(c.get("code") == "GD-VLV" for c in components) and any(c.get("code") == "GD-SH" for c in components)
     if has_valve_shroud or intent.get("shroud_stiff_component", {}).get("required"):
-        basis = spec.get("design_basis", {}) if isinstance(spec.get("design_basis", {}), dict) else {}
         required_basis = {
             "shroud_stiff_evidence_refs",
             "shroud_dimensions_basis",

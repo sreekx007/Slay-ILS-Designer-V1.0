@@ -1,5 +1,33 @@
 # Manual Upload Map
 
+## Q6 branch-valve top-frame containment KEL closeout - 2026-09-15
+
+This batch implements the expert-approved KEL from the vertical-connector branch-valve review: branch-owned valves must use a compatible `ILT-L-*`/`ILT-Z-*` standard anchor, keep branch tee/entry, branch valve, and branch end inside the associated `GD-ST` span, and avoid `F2`/`F2D` unless explicit evidence justifies the low-strain branch pocket and header-strain penalty.
+
+Files to upload or verify in Git:
+
+- `plotters/ils_builder.py`
+- `tools/design_rules_v02.py`
+- `knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md`
+- `knowledge/edpr/EDPR_APF_PARSER_PROMPT.md`
+- `knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md`
+- `knowledge/kel/KEL_V0_2_DESIGN_GATES.md`
+- `knowledge/kel/feedback_records/implemented/Q6_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json`
+- `knowledge/kel/expert_reviews/final/Q6_REVIEW_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json`
+- `knowledge/kel/graph_change_requests/implemented/Q6_GCR_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json`
+- `knowledge/kel/implementation_plans/implemented/Q6_GCR_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.plan.json`
+- `knowledge/kel/lifecycle_reports/KEL_Q6_BRANCH_VALVE_TOP_FRAME_CONTAINMENT_CLOSEOUT_20260915.json`
+- `tests/kel/test_design_workflow_v02.py`
+- `README.md`
+- `UPLOAD_MAP.md`
+
+Validation to run:
+
+- `.\.venv\Scripts\python.exe -m pytest tests\kel\test_design_workflow_v02.py`
+- `.\.venv\Scripts\python.exe -m unittest discover tools "test_*.py"`
+- `.\.venv\Scripts\python.exe tools\kel\validate_kel_record.py ...Q6...`
+
+
 
 
 

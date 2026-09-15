@@ -1,0 +1,67 @@
+{
+  "schema": "kel-implementation-plan/0.2",
+  "implementation_plan_id": "kel:implementation-plan:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "created_utc": "2026-09-15T00:00:00Z",
+  "status": "verified",
+  "source_change_request_id": "kel:change:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "source_change_request_status": "implemented",
+  "expert_review_ref": {
+    "id": "kel:review:q6_branch_valve:top_frame_containment_and_ps_basis",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q6_REVIEW_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json"
+  },
+  "target_layer": "Tools",
+  "requirements": [
+    "Distinguish branch-owned valve from header-valve GD-SB gate.",
+    "Fail branch-valve layouts where tee, valve, or branch end sits outside GD-ST span.",
+    "Fail F2/F2D branch-valve layouts without explicit strain/moment evidence basis.",
+    "Expose branch_valve_top_frame_gate in plotter design workflow reports."
+  ],
+  "changed_paths": [
+    "tools/design_rules_v02.py",
+    "plotters/ils_builder.py",
+    "knowledge/edpr/EDPR_PARSER_PROMPT_RUNTIME.md",
+    "knowledge/edpr/EDPR_APF_PARSER_PROMPT.md",
+    "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+    "knowledge/kel/KEL_V0_2_DESIGN_GATES.md",
+    "tests/kel/test_design_workflow_v02.py"
+  ],
+  "evidence": [
+    "tests/kel/test_design_workflow_v02.py::test_branch_valve_requires_standard_anchor_containment_and_f2_basis"
+  ],
+  "checklist": [
+    {
+      "id": "step_1",
+      "action": "Add EDPR branchValve intent extraction and prevent branch valve from triggering header GD-SB gate.",
+      "status": "complete"
+    },
+    {
+      "id": "step_2",
+      "action": "Add layout validation gaps for GD-ST span containment and F2/F2D evidence basis.",
+      "status": "complete"
+    },
+    {
+      "id": "step_3",
+      "action": "Add plotter/report branch_valve_top_frame_gate.",
+      "status": "complete"
+    },
+    {
+      "id": "step_4",
+      "action": "Update EDPR/KEL workflow documentation and add regression coverage.",
+      "status": "complete"
+    }
+  ],
+  "tests": [
+    "pytest tests/kel/test_design_workflow_v02.py",
+    "python -m unittest discover tools \"test_*.py\""
+  ],
+  "review": {
+    "reviewer": "User/domain expert",
+    "decision": "accepted",
+    "notes": "Approved in session and requested implementation."
+  },
+  "completion": {
+    "implemented_utc": "2026-09-15T00:00:00Z",
+    "verified_utc": "2026-09-15T00:00:00Z",
+    "implementation_ref": "tools/design_rules_v02.py; plotters/ils_builder.py"
+  }
+}

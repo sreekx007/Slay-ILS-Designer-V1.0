@@ -1045,6 +1045,58 @@ class ILS:
                     'rule': 'When GD-ST is provided to support GD-B, its frame dimensions must be fitted to the branch terminal and connector geometry before claiming a complete layout.'
                 })
 
+        branch_valve_items = []
+        branch_to_top = {}
+        for item in branch_links:
+            assoc = item['association']
+            ends = [assoc.get('from') or {}, assoc.get('to') or {}]
+            branch = next((end.get('component') for end in ends if end.get('component') in branch_ids), None)
+            top = next((end.get('component') for end in ends if end.get('component') in top_ids), None)
+            if branch and top:
+                branch_to_top[branch] = top
+        top_objects = {cid: comp for cid, comp in zip(self.ids, self.components) if comp.code == 'GD-ST'}
+        branch_valve_basis = basis.get('connection_system_basis') or basis.get('f2_evidence_refs')
+        connection_system = str(self.connection_system or '').upper()
+        for cid, comp in zip(self.ids, self.components):
+            if comp.code != 'GD-B':
+                continue
+            supplied = component_defs.get(cid, {})
+            active = 'P_bv' in supplied or 'mass_valve' in supplied or basis.get('branch_valve_representation') not in (None, '', [], {})
+            if not active:
+                continue
+            top_id = branch_to_top.get(cid)
+            top = top_objects.get(top_id)
+            item = {
+                'component_id': cid,
+                'code': comp.code,
+                'gd_st_id': top_id,
+                'connection_system': connection_system,
+                'connection_system_status': 'passed',
+                'containment_status': 'unknown',
+                'outside_points': [],
+                'rule': 'For a branch valve, keep branch tee/entry, branch valve and branch end inside GD-ST span; prefer PS unless F2/F2D has an explicit evidence basis.'
+            }
+            if connection_system in {'F2', 'F2D'} and branch_valve_basis in (None, '', [], {}):
+                item['connection_system_status'] = 'failed'
+                item['missing_basis'] = ['connection_system_basis or f2_evidence_refs']
+                missing.append(f'{cid}.branch_valve.F2_without_evidence')
+            if top is not None:
+                span = (top.centre_x - top.L_top / 2.0, top.centre_x + top.L_top / 2.0)
+                points = {label: (x, y) for label, x, y in comp.path if label in {'tee', 'valve', 'end'}}
+                outside = {name: xy[0] for name, xy in points.items()
+                           if xy[0] < span[0] - ADJACENCY_TOL or xy[0] > span[1] + ADJACENCY_TOL}
+                item.update({
+                    'tee_x_m': points.get('tee', (None, None))[0],
+                    'valve_x_m': points.get('valve', (None, None))[0],
+                    'end_x_m': points.get('end', (None, None))[0],
+                    'gd_st_span_m': list(span),
+                    'containment_status': 'passed' if not outside else 'failed',
+                    'outside_points': [{'name': name, 'x_m': x} for name, x in outside.items()],
+                })
+                if outside:
+                    missing.append(f'{cid}.branch_valve.outside_GD-ST_span')
+            branch_valve_items.append(item)
+
         if mode == 'complete':
             missing.extend(f'design_basis.{name}' for name in basis_missing)
 
@@ -1064,6 +1116,12 @@ class ILS:
                     'required': bool(support_sizing),
                     'status': 'not_applicable' if not support_sizing else 'passed' if all(item['status'] == 'passed' for item in support_sizing) else 'failed',
                     'items': support_sizing,
+                },
+                'branch_valve_top_frame_gate': {
+                    'required': bool(branch_valve_items),
+                    'status': 'not_applicable' if not branch_valve_items else 'passed' if all(item.get('containment_status') == 'passed' and item.get('connection_system_status') == 'passed' for item in branch_valve_items) else 'failed',
+                    'items': branch_valve_items,
+                    'rule': 'Branch-valve layouts must use a compatible ILT-L/ILT-Z standard anchor, keep the branch tee/entry, valve and end inside GD-ST, and avoid F2/F2D unless evidence justifies the header-strain penalty.'
                 },
                 'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
                                         'design_basis': basis, 'missing_basis': basis_missing},

@@ -1,0 +1,23 @@
+{
+  "schema": "kel-graph-change-request/0.1",
+  "change_request_id": "kel:change:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "status": "implemented",
+  "created_utc": "2026-09-15T00:00:00Z",
+  "linked_experience_id": "kel:experience:q6_z_branch_heavy_branch_valve_review:20260915",
+  "linked_feedback_id": "kel:feedback:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "target_layer": "Tools",
+  "change_type": "new_workflow_gate",
+  "problem_observed": "The toolchain allowed a vertical-connector branch-valve layout to use F2 without evidence and to place the branch tee/valve outside the GD-ST span.",
+  "proposed_change": "Add deterministic validation/report gates for branch-valve GD-ST containment and F2/F2D evidence basis; update EDPR/KEL instructions to prefer PS unless low-strain-pocket evidence is required.",
+  "evidence_requirement": "Focused regression tests for failing F2/out-of-span branch-valve layout and passing PS/in-span corrected layout.",
+  "priority": "high",
+  "expert_review_ref": {
+    "id": "kel:review:q6_branch_valve:top_frame_containment_and_ps_basis",
+    "repo_path": "knowledge/kel/expert_reviews/final/Q6_REVIEW_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json"
+  },
+  "implementation_ref": {
+    "target": "tools/design_rules_v02.py; plotters/ils_builder.py",
+    "repo_path": "tools/design_rules_v02.py",
+    "notes": "Implemented BRANCH_VALVE_OUTSIDE_GD_ST_SPAN, UNJUSTIFIED_F2_FOR_BRANCH_VALVE, and branch_valve_top_frame_gate."
+  }
+}

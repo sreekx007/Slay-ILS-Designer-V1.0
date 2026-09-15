@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q6_branch_valve:top_frame_containment_and_ps_basis",
+  "linked_experience_id": "kel:experience:q6_z_branch_heavy_branch_valve_review:20260915",
+  "created_utc": "2026-09-15T00:00:00Z",
+  "raw_feedback_text": "A Z-branch layout with a heavy valve on the branch horizontal leg selected F2 without a specific evidence basis and placed the branch entry/valve outside the top-frame span. By default the branch connection and branch valve must be inside GD-ST, and F2/F2D must not be selected unless evidence justifies the low-strain pocket and header-strain penalty.",
+  "feedback_type": "incorrect_behavior",
+  "structured_feedback": {
+    "affected_requirement": "Branch-owned valve layouts must use compatible ILT-L/ILT-Z anchors and keep tee, valve, and end inside GD-ST.",
+    "affected_function": "select top-frame connection system and branch geometry using standard-layout precedent and strain/moment evidence",
+    "affected_behavior": "avoid unjustified F2/F2D stiffness paths that create header strain penalties when no low-strain pocket is required",
+    "affected_structure": "GD-B; GD-ST; GD-Con; branch valve on horizontal leg",
+    "affected_constraint": "Require connection-system basis for F2/F2D and require GD-ST span containment for branch tee, valve, and end.",
+    "pmap_issue": "The previous plotted concept was buildable but not workflow-valid because standard ILT-Z anchor precedent and branch-valve containment were not enforced.",
+    "apf_action": "add_branch_valve_top_frame_containment_gate",
+    "priority": "high"
+  }
+}

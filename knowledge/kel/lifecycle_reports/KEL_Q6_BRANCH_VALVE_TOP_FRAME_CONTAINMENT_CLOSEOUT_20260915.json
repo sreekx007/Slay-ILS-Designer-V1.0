@@ -1,0 +1,22 @@
+{
+  "schema": "kel-lifecycle-reconciliation/0.2",
+  "created_utc": "2026-09-15T00:00:00Z",
+  "mode": "applied",
+  "lifecycle_root": "knowledge/kel/graph_change_requests",
+  "authoritative_records": [
+    {
+      "change_request_id": "kel:change:q6_branch_valve:top_frame_containment_and_ps_basis",
+      "status": "implemented",
+      "repo_path": "implemented/Q6_GCR_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json"
+    }
+  ],
+  "actions": [
+    {
+      "change_request_id": "kel:change:q6_branch_valve:top_frame_containment_and_ps_basis",
+      "source": "expert-approved session feedback",
+      "destination": "implemented/Q6_GCR_01_BRANCH_VALVE_TOP_FRAME_CONTAINMENT.json",
+      "reason": "expert-approved branch-valve KEL lesson implemented and closed in the implemented lifecycle folder"
+    }
+  ],
+  "conflicts": []
+}

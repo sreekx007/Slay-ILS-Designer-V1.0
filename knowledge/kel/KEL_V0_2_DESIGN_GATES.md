@@ -15,6 +15,20 @@ visually-adjacent-without-association failure applies to L branches. Missing
 `GD-ST` or a missing terminal association fails the complete-design gate. A
 branch-only component study must be marked `study_only`.
 
+## Branch-valve top-frame containment and connector system basis
+
+When a valve is on a branch line, the branch valve is a branch-owned feature of
+`GD-B`, not a header valve that triggers `GD-SB`. The layout must start from a
+compatible `ILT-L-*` or `ILT-Z-*` standard anchor, place the branch tee/entry,
+branch valve, and branch end inside the associated `GD-ST` span, and expose this
+through the report as `branch_valve_top_frame_gate`.
+
+`F2` and `F2D` are not default choices for this case. They may be used only when
+the design basis provides strain or moment evidence that a low-strain pocket is
+needed on the branch and that the header-strain penalty is accepted. Without
+that basis, `PS` is the preferred standard-anchor family. Violations raise
+`BRANCH_VALVE_OUTSIDE_GD_ST_SPAN` or `UNJUSTIFIED_F2_FOR_BRANCH_VALVE`.
+
 ## Connector orientation and branch family
 
 EDPR records connector orientation separately from branch routing, branch
