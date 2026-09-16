@@ -1,6 +1,6 @@
 # Knowledge-Graph-Governed AI4D as a Continuation of S-Lay Inline Structure Research: An Industrial Structural Design Case Study
 
-**Working manuscript:** Paper 01A, Draft v0.4
+**Working manuscript:** Paper 01A, Draft v0.5
 **Planned venue:** engrXiv
 **Authors:** Sreekanth Manakkattil Sivaraman; Jagannatha Venkataramana Reddy
 **Corresponding author:** <u>[TO BE COMPLETED]</u>
@@ -73,16 +73,101 @@ Associations are as important as components. A branch connector must terminate a
 
 ## 4. Transferable AI4D toolchain and knowledge architecture
 
-The proposed AI4D toolchain separates knowledge by responsibility. The layers may be implemented in files, databases, graph stores, document stores, or enterprise engineering systems; the paper does not depend on a particular repository structure.
+The proposed AI4D toolchain separates knowledge by responsibility. The layers may be implemented in files, databases, graph stores, document stores, or enterprise engineering systems; the paper does not depend on a particular repository structure. In the present case study, simple human-readable files are useful because they make every engineering rule, evidence note, feedback record, and validation step auditable by a professional engineer.
 
-| Layer | Responsibility |
-|---|---|
-| EDES | Component identity, geometry, parameters, interfaces, local constraints |
-| EDAS | Assembly topology, valid layout anchors, associations, contact and section ownership |
-| EDIKB | Behavior rules, numeric evidence, uncertainty, guidance, future study candidates |
-| EDPR | Current problem, objectives, constraints, unknowns, retrieval plan, solver intent |
-| Governed tools | Validation, retrieval, solving, layout materialization, plotting, governance stamps |
-| KEL | Experience, feedback, root cause, expert review, implementation, promotion |
+```mermaid
+flowchart TD
+    A[Human design request] --> B[EDPR problem record]
+    B --> C[Retrieval and grounding]
+    C --> D[EDES component knowledge]
+    C --> E[EDAS assembly knowledge]
+    C --> F[EDIKB behaviour evidence]
+    C --> G[KEL reviewed lessons]
+    D --> H[Deterministic gates and tools]
+    E --> H
+    F --> H
+    G --> H
+    H --> I[Layout, plot, report, or explicit gap]
+    I --> J[Human review]
+    J --> G
+```
+
+> <u>**Figure production note.** Replace the nested toolchain drawing with a publication-quality diagram showing EDPR at the entry point, EDES/EDAS/EDIKB/KEL as knowledge sources, deterministic tools as gates, and human review feeding KEL.</u>
+
+| Layer | Engineering responsibility | Typical implementation file types | Example records or tools |
+|---|---|---|---|
+| EDES | Component identity, geometry, parameters, interfaces, local constraints | JSON knowledge records; JSON schemas | Component records for `GD-HdPipe`, `GD-BrPipe`, `GD-VLV`, `GD-SH`, `GD-ST`, `GD-SB`, `GD-Con`; EDES metaschema; EDES validator |
+| EDAS | Assembly topology, valid anchors, associations, contact ownership, section ownership | JSON assembly rules; JSON schemas; validator scripts | Shared assembly rules; EDAS metaschema; topology and association validators |
+| EDIKB | Behaviour evidence, numeric response data, evidence limits, uncertainty, future-study candidates | CSV datasets; JSON graph records; Markdown evidence notes | Installation response dataset; claim-to-evidence records; source provenance; correlation-study candidates |
+| EDPR | Current problem statement, objectives, constraints, unknowns, APF/P-map interpretation | Markdown prompts; JSON problem records; example EDPR files | Problem-understanding prompt; runtime parser prompt; example problem records |
+| Governed tools | Validation, retrieval, design gates, layout materialization, plotting, reporting | Python scripts; YAML settings; generated JSON/CSV/PNG/PDF reports | EDPR/EDES/EDAS validators; design workflow runner; plotter; plot checker; plot-style configuration |
+| KEL | Human feedback, root cause, expert review, graph-change request, implementation evidence, promotion state | Markdown records; JSON schemas; templates; lifecycle reports; Python utilities | Experience records; feedback groups; root-cause logs; expert-review records; graph-change requests; KEL validation and promotion scripts |
+
+### 4.1 EDES: component knowledge
+
+EDES is the component-definition layer. It records what each engineering object is before it is placed in an assembly. For S-lay inline structures, EDES records include the header pipe, branch pipe, valve, shroud, top structure, base structure, connector, thick pipe, and tapered pipe concepts. Each component record should state the component name, identifier, geometric parameters, interfaces, contact limitations, and any local constraints. In a file-based implementation this is naturally represented as JSON because component attributes can be validated against a schema and reused by retrieval, plotting, and checking tools.
+
+| EDES content | Purpose | Example file type |
+|---|---|---|
+| Component identifier and plain name | Prevents the same object being described by multiple inconsistent names | JSON |
+| Geometry and parameters | Provides dimensions and editable variables for layout and plotting | JSON |
+| Interfaces and contact constraints | States what can connect, support, touch rollers, or require protection | JSON plus schema |
+| Component validation rules | Checks whether required fields are present before use | Python validator plus JSON schema |
+
+### 4.2 EDAS: assembly and association knowledge
+
+EDAS describes how valid components may be assembled. This layer is needed because engineering behaviour depends on relationships, not only individual parts. A branch line near a top structure is not automatically supported by it; the association must be explicit. A base structure may own roller contact while the pipe or valve remains the structural item being protected. EDAS therefore records topology, permitted anchors, required associations, support/protection rules, and contact ownership. JSON is suitable for the rule records, while Python validators are useful for checking whether a proposed layout satisfies the rules.
+
+| EDAS content | Purpose | Example file type |
+|---|---|---|
+| Assembly topology | Defines L-branch, Z-branch, inline-valve, shroud, and support variants | JSON |
+| Required associations | Ensures branch-to-header, branch-to-GD-ST, valve-to-protection, and support-to-pipe links are explicit | JSON plus schema |
+| Contact and section ownership | Distinguishes the object that rides rollers from the object being protected | JSON |
+| Topology and association gates | Blocks layouts that omit compulsory supports, anchors, or protection | Python validator |
+
+### 4.3 EDIKB: behaviour evidence and engineering knowledge base
+
+EDIKB stores behaviour knowledge: strain trends, bending-moment observations, stiffness effects, installation-response evidence, and evidence limitations. This layer should also record whether a statement is a numerical result, a qualitative trend, a reviewed lesson, or a future-study candidate. CSV files are useful for tabular response data, while JSON graph records are useful for linking claims to components, load cases, response locations, and source documents. Markdown can be used for explanatory notes and claim-to-evidence matrices that require engineering review.
+
+| EDIKB content | Purpose | Example file type |
+|---|---|---|
+| Numerical response dataset | Stores strain, moment, parameter, and case-study values | CSV |
+| Knowledge graph records | Links claims to components, load cases, evidence limits, and sources | JSON |
+| Source provenance | Tracks which paper, model, analysis, or review note supports a claim | JSON or Markdown |
+| Correlation and ML-study candidates | Records gaps that need parametric FEA, surrogate models, or future ML work | Markdown or JSON |
+
+### 4.4 EDPR: current problem representation
+
+EDPR is the current-problem layer. It converts a natural-language request into an explicit problem record before the workflow generates a layout. EDPR should state the action, product, function, known inputs, missing inputs, assumptions, optimization target, required outputs, and planned retrieval. Markdown prompts are practical for describing how the LLM should parse a request. JSON records are practical for the resulting structured problem statement because they can be validated and passed to downstream tools.
+
+| EDPR content | Purpose | Example file type |
+|---|---|---|
+| Problem-understanding prompt | Guides the LLM to state the design basis before solution | Markdown |
+| Structured problem record | Captures APF/P-map fields, assumptions, unknowns, and requested outputs | JSON |
+| Example problems | Tests whether the workflow interprets recurring design requests consistently | JSON or Markdown |
+| EDPR validation | Checks completeness before retrieval, layout, or plotting | Python validator plus JSON schema |
+
+### 4.5 Governed tools: validators, retrieval, plotting, and reporting
+
+The tool layer is deterministic. It should not replace engineering judgement; it should enforce checks that should not depend on the wording of a prompt. Typical tools include validators for EDES, EDAS, and EDPR; a governed workflow runner; design-rule checks; plot generation; plot readability checks; and report packaging. Python is suitable for these tools because it can read JSON/CSV/YAML inputs, apply deterministic rules, and emit review artifacts. YAML is useful for plot style settings because it separates figure styling from engineering logic.
+
+| Tool function | Purpose | Example file type |
+|---|---|---|
+| Validators | Check schemas, required fields, topology, and associations | Python |
+| Workflow runner | Executes EDPR confirmation, retrieval, gates, layout, plot, and report sequence | Python |
+| Plotter and plot checker | Creates reviewable drawings and checks visibility/readability gates | Python plus YAML style file |
+| Review artifacts | Gives the engineer the layout, parameters, assumptions, and gaps | JSON, CSV, PNG, PDF, Markdown |
+
+### 4.6 KEL: reviewed feedback and graph evolution
+
+KEL is the controlled learning layer. It prevents ad hoc feedback from becoming official knowledge without review. A KEL cycle records the observed issue, grouped feedback, root cause, expert decision, proposed graph or tool change, implementation evidence, and closeout state. Markdown is useful for human-readable records; JSON schemas are useful for enforcing required fields; Python utilities are useful for validating records and promoting accepted changes. This is the layer that allows the workflow to improve after expert review while preserving traceability.
+
+| KEL content | Purpose | Example file type |
+|---|---|---|
+| Experience and feedback records | Captures what happened, what was wrong, and who reviewed it | Markdown plus JSON schema |
+| Root-cause log | Separates missing knowledge, missed retrieval, weak gate, plot failure, or workflow bypass | Markdown |
+| Graph-change request | States exactly what knowledge or rule should be changed | Markdown or JSON |
+| Lifecycle and promotion utilities | Validates, promotes, and closes accepted lessons | Python scripts plus lifecycle reports |
 
 This separation supports failure diagnosis. A weak output may be caused by problem parsing, component definition, assembly representation, evidence retrieval, evidence applicability, tool execution, visualization, workflow bypass, or missing study data. KEL uses that diagnosis to improve the workflow without turning unreviewed comments into official knowledge. The same architecture can be implemented with different software choices as long as the gates, records, and human-review responsibilities are preserved.
 
