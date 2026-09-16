@@ -14,13 +14,11 @@
       .subtitle { font-family: Arial, Helvetica, sans-serif; font-size: 19px; fill: #374151; }
       .stage-title { font-family: Arial, Helvetica, sans-serif; font-size: 21px; font-weight: 700; fill: #111827; }
       .stage-body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; fill: #1F2937; }
-      .small-title { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; fill: #111827; }
-      .small-body { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #1F2937; }
       .label { font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 600; fill: #374151; }
       .caption { font-family: Arial, Helvetica, sans-serif; font-size: 15px; fill: #374151; }
-      .edge { stroke: #374151; stroke-width: 2.6; fill: none; marker-end: url(#arrow); }
+      .edge { stroke: #374151; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
       .edge-soft { stroke: #6B7280; stroke-width: 2.1; stroke-dasharray: 8 6; fill: none; marker-end: url(#arrow); }
-      .edge-blue { stroke: #2563EB; stroke-width: 2.8; fill: none; marker-end: url(#arrowBlue); }
+      .edge-blue { stroke: #2563EB; stroke-width: 2.7; fill: none; marker-end: url(#arrowBlue); }
       .group-label { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; fill: #374151; }
     </style>
   </defs>
@@ -29,7 +27,6 @@
   <text x="850" y="55" text-anchor="middle" class="title">Nested AI4D Toolchain Architecture</text>
   <text x="850" y="86" text-anchor="middle" class="subtitle">EDPR drives retrieval from EDES, EDAS, EDIKB, and KEL; deterministic tools emit review artifacts and human feedback evolves the graph</text>
 
-  <!-- swimlane background -->
   <rect x="65" y="130" width="1570" height="220" rx="24" fill="#F8FAFC" stroke="#E5E7EB" stroke-width="2"/>
   <rect x="65" y="385" width="1570" height="300" rx="24" fill="#FAFAFA" stroke="#E5E7EB" stroke-width="2"/>
   <rect x="65" y="720" width="1570" height="220" rx="24" fill="#F8FAFC" stroke="#E5E7EB" stroke-width="2"/>
@@ -38,7 +35,7 @@
   <text x="100" y="415" class="group-label">Governed knowledge layers and deterministic tools</text>
   <text x="100" y="750" class="group-label">Review artifacts, human judgement, and graph evolution</text>
 
-  <!-- main upper flow -->
+  <!-- top flow nodes -->
   <g filter="url(#shadow)">
     <rect x="95" y="190" width="215" height="105" rx="18" fill="#DBEAFE" stroke="#2563EB" stroke-width="2.2"/>
     <text x="202.5" y="226" text-anchor="middle" class="stage-title">Human query</text>
@@ -66,101 +63,103 @@
     <text x="1470" y="274" text-anchor="middle" class="stage-body">or explicit gap</text>
   </g>
 
-  <path class="edge" d="M310 242 C340 242 360 242 390 242"/>
-  <path class="edge" d="M625 242 C655 242 675 242 705 242"/>
-  <path class="edge" d="M950 242 C980 242 1000 242 1030 242"/>
-  <path class="edge" d="M1275 242 C1305 242 1330 242 1360 242"/>
+  <!-- top horizontal arrows in gaps only -->
+  <path class="edge" d="M310 242 L390 242"/>
+  <path class="edge" d="M625 242 L705 242"/>
+  <path class="edge" d="M950 242 L1030 242"/>
+  <path class="edge" d="M1275 242 L1360 242"/>
 
-  <!-- knowledge layer nodes -->
+  <!-- knowledge nodes -->
   <g filter="url(#shadow)">
-    <rect x="135" y="465" width="210" height="120" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2.2"/>
-    <text x="240" y="500" text-anchor="middle" class="stage-title">EDES</text>
-    <text x="240" y="527" text-anchor="middle" class="stage-body">Component definitions</text>
-    <text x="240" y="548" text-anchor="middle" class="stage-body">geometry, interfaces,</text>
-    <text x="240" y="569" text-anchor="middle" class="stage-body">local constraints</text>
+    <rect x="120" y="470" width="210" height="115" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2.2"/>
+    <text x="225" y="505" text-anchor="middle" class="stage-title">EDES</text>
+    <text x="225" y="532" text-anchor="middle" class="stage-body">Component definitions</text>
+    <text x="225" y="553" text-anchor="middle" class="stage-body">geometry, interfaces,</text>
+    <text x="225" y="574" text-anchor="middle" class="stage-body">local constraints</text>
 
-    <rect x="400" y="465" width="210" height="120" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.2"/>
-    <text x="505" y="500" text-anchor="middle" class="stage-title">EDAS</text>
-    <text x="505" y="527" text-anchor="middle" class="stage-body">Assembly topology</text>
-    <text x="505" y="548" text-anchor="middle" class="stage-body">anchors, contact,</text>
-    <text x="505" y="569" text-anchor="middle" class="stage-body">associations</text>
+    <rect x="385" y="470" width="210" height="115" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.2"/>
+    <text x="490" y="505" text-anchor="middle" class="stage-title">EDAS</text>
+    <text x="490" y="532" text-anchor="middle" class="stage-body">Assembly topology</text>
+    <text x="490" y="553" text-anchor="middle" class="stage-body">anchors, contact,</text>
+    <text x="490" y="574" text-anchor="middle" class="stage-body">associations</text>
 
-    <rect x="665" y="465" width="230" height="120" rx="18" fill="#FEE2E2" stroke="#DC2626" stroke-width="2.2"/>
-    <text x="780" y="500" text-anchor="middle" class="stage-title">EDIKB</text>
-    <text x="780" y="527" text-anchor="middle" class="stage-body">Evidence graph</text>
-    <text x="780" y="548" text-anchor="middle" class="stage-body">strain, moment, rules,</text>
-    <text x="780" y="569" text-anchor="middle" class="stage-body">limits, study gaps</text>
+    <rect x="650" y="470" width="230" height="115" rx="18" fill="#FEE2E2" stroke="#DC2626" stroke-width="2.2"/>
+    <text x="765" y="505" text-anchor="middle" class="stage-title">EDIKB</text>
+    <text x="765" y="532" text-anchor="middle" class="stage-body">Evidence graph</text>
+    <text x="765" y="553" text-anchor="middle" class="stage-body">strain, moment, rules,</text>
+    <text x="765" y="574" text-anchor="middle" class="stage-body">limits, study gaps</text>
 
-    <rect x="950" y="465" width="210" height="120" rx="18" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2.2"/>
-    <text x="1055" y="500" text-anchor="middle" class="stage-title">KEL</text>
-    <text x="1055" y="527" text-anchor="middle" class="stage-body">Reviewed lessons</text>
-    <text x="1055" y="548" text-anchor="middle" class="stage-body">root cause, changes,</text>
-    <text x="1055" y="569" text-anchor="middle" class="stage-body">closeout state</text>
+    <rect x="935" y="470" width="210" height="115" rx="18" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2.2"/>
+    <text x="1040" y="505" text-anchor="middle" class="stage-title">KEL</text>
+    <text x="1040" y="532" text-anchor="middle" class="stage-body">Reviewed lessons</text>
+    <text x="1040" y="553" text-anchor="middle" class="stage-body">root cause, changes,</text>
+    <text x="1040" y="574" text-anchor="middle" class="stage-body">closeout state</text>
 
-    <rect x="1220" y="465" width="260" height="120" rx="18" fill="#CCFBF1" stroke="#0D9488" stroke-width="2.2"/>
-    <text x="1350" y="500" text-anchor="middle" class="stage-title">Deterministic tools</text>
-    <text x="1350" y="527" text-anchor="middle" class="stage-body">Validators, solver,</text>
-    <text x="1350" y="548" text-anchor="middle" class="stage-body">plotter, report builder,</text>
-    <text x="1350" y="569" text-anchor="middle" class="stage-body">FEA/ML bridge records</text>
+    <rect x="1250" y="470" width="260" height="115" rx="18" fill="#CCFBF1" stroke="#0D9488" stroke-width="2.2"/>
+    <text x="1380" y="505" text-anchor="middle" class="stage-title">Deterministic tools</text>
+    <text x="1380" y="532" text-anchor="middle" class="stage-body">Validators, solver,</text>
+    <text x="1380" y="553" text-anchor="middle" class="stage-body">plotter, report builder,</text>
+    <text x="1380" y="574" text-anchor="middle" class="stage-body">FEA/ML bridge records</text>
   </g>
 
-  <!-- vector layer around EDES/EDAS/EDIKB/KEL -->
-  <rect x="110" y="435" width="1080" height="180" rx="28" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="10 8"/>
-  <text x="650" y="635" text-anchor="middle" class="label" fill="#2563EB">Vectorised retrieval layer indexes selected EDES, EDAS, EDIKB, and KEL text fields for semantic recall; symbolic records remain authoritative</text>
+  <!-- vector layer outline and label placed below nodes -->
+  <rect x="95" y="445" width="1080" height="165" rx="28" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="10 8"/>
+  <text x="635" y="640" text-anchor="middle" class="label" fill="#2563EB">Vectorised retrieval layer indexes selected EDES, EDAS, EDIKB, and KEL text fields for semantic recall; symbolic records remain authoritative</text>
 
-  <!-- retrieval to knowledge layers -->
-  <path class="edge-blue" d="M827 295 C820 350 780 400 780 465"/>
-  <text x="840" y="382" class="label">retrieve evidence</text>
-  <path class="edge-blue" d="M795 295 C650 355 500 395 505 465"/>
-  <text x="585" y="380" class="label">ground assembly</text>
-  <path class="edge-blue" d="M760 295 C560 335 245 385 240 465"/>
-  <text x="385" y="372" class="label">ground components</text>
-  <path class="edge-blue" d="M865 295 C945 355 1050 390 1055 465"/>
-  <text x="980" y="378" class="label">retrieve lessons</text>
+  <!-- retrieval to knowledge: routed down to a bus, then up/down into nodes; avoids text -->
+  <path class="edge-blue" d="M827 295 L827 365 L225 365 L225 470"/>
+  <path class="edge-blue" d="M827 365 L490 365 L490 470"/>
+  <path class="edge-blue" d="M827 365 L765 365 L765 470"/>
+  <path class="edge-blue" d="M827 365 L1040 365 L1040 470"/>
+  <text x="655" y="354" text-anchor="middle" class="label">retrieve and ground against governed knowledge</text>
 
-  <!-- knowledge to tools -->
-  <path class="edge" d="M345 525 C700 645 1030 645 1220 545"/>
-  <path class="edge" d="M610 525 C820 625 1050 625 1220 545"/>
-  <path class="edge" d="M895 525 C1030 600 1130 595 1220 545"/>
-  <path class="edge" d="M1160 525 C1185 525 1198 525 1220 525"/>
-  <text x="930" y="653" text-anchor="middle" class="label">structured records feed validators, layout emission, deterministic plotter, and reports</text>
+  <!-- gates to tools: clean right-side route -->
+  <path class="edge" d="M1152 295 L1152 380 L1380 380 L1380 470"/>
+  <text x="1285" y="365" text-anchor="middle" class="label">execute checks</text>
 
-  <!-- gates to tools -->
-  <path class="edge" d="M1152 295 C1160 365 1220 420 1285 465"/>
-  <text x="1228" y="365" class="label">execute checks</text>
+  <!-- knowledge to tools: route from bottoms to lower bus then into tools, not through labels -->
+  <path class="edge" d="M225 585 L225 665 L1380 665 L1380 585"/>
+  <path class="edge" d="M490 585 L490 665"/>
+  <path class="edge" d="M765 585 L765 665"/>
+  <path class="edge" d="M1040 585 L1040 665"/>
+  <text x="803" y="686" text-anchor="middle" class="label">structured records feed validators, layout emission, deterministic plotter, and reports</text>
 
-  <!-- bottom artifacts -->
+  <!-- lower nodes -->
   <g filter="url(#shadow)">
-    <rect x="235" y="790" width="260" height="105" rx="18" fill="#FEF9C3" stroke="#CA8A04" stroke-width="2.2"/>
-    <text x="365" y="824" text-anchor="middle" class="stage-title">Review artifacts</text>
-    <text x="365" y="852" text-anchor="middle" class="stage-body">Layout JSON, plot,</text>
-    <text x="365" y="873" text-anchor="middle" class="stage-body">CSV parameters, report</text>
+    <rect x="230" y="790" width="265" height="105" rx="18" fill="#FEF9C3" stroke="#CA8A04" stroke-width="2.2"/>
+    <text x="362.5" y="824" text-anchor="middle" class="stage-title">Review artifacts</text>
+    <text x="362.5" y="852" text-anchor="middle" class="stage-body">Layout JSON, plot,</text>
+    <text x="362.5" y="873" text-anchor="middle" class="stage-body">CSV parameters, report</text>
 
-    <rect x="700" y="790" width="260" height="105" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.2"/>
-    <text x="830" y="824" text-anchor="middle" class="stage-title">Human review</text>
-    <text x="830" y="852" text-anchor="middle" class="stage-body">Accept, reject, correct,</text>
-    <text x="830" y="873" text-anchor="middle" class="stage-body">or request more evidence</text>
+    <rect x="705" y="790" width="265" height="105" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.2"/>
+    <text x="837.5" y="824" text-anchor="middle" class="stage-title">Human review</text>
+    <text x="837.5" y="852" text-anchor="middle" class="stage-body">Accept, reject, correct,</text>
+    <text x="837.5" y="873" text-anchor="middle" class="stage-body">or request more evidence</text>
 
-    <rect x="1165" y="790" width="270" height="105" rx="18" fill="#FCE7F3" stroke="#DB2777" stroke-width="2.2"/>
-    <text x="1300" y="824" text-anchor="middle" class="stage-title">Graph evolution</text>
-    <text x="1300" y="852" text-anchor="middle" class="stage-body">KEL promotes reviewed</text>
-    <text x="1300" y="873" text-anchor="middle" class="stage-body">updates into knowledge</text>
+    <rect x="1180" y="790" width="275" height="105" rx="18" fill="#FCE7F3" stroke="#DB2777" stroke-width="2.2"/>
+    <text x="1317.5" y="824" text-anchor="middle" class="stage-title">Graph evolution</text>
+    <text x="1317.5" y="852" text-anchor="middle" class="stage-body">KEL promotes reviewed</text>
+    <text x="1317.5" y="873" text-anchor="middle" class="stage-body">updates into knowledge</text>
   </g>
 
-  <path class="edge" d="M1350 585 C1235 720 665 720 495 810"/>
-  <text x="870" y="730" text-anchor="middle" class="label">emit review package</text>
-  <path class="edge" d="M495 842 C570 842 625 842 700 842"/>
-  <text x="598" y="827" text-anchor="middle" class="label">review</text>
-  <path class="edge" d="M960 842 C1030 842 1095 842 1165 842"/>
-  <text x="1062" y="827" text-anchor="middle" class="label">feedback</text>
-  <path class="edge-soft" d="M1300 790 C1330 705 1280 625 1160 555"/>
-  <text x="1390" y="690" text-anchor="middle" class="label">approved update</text>
+  <!-- tools to review artifacts: route around boxes -->
+  <path class="edge" d="M1380 585 L1380 710 L362 710 L362 790"/>
+  <text x="870" y="733" text-anchor="middle" class="label">emit review package</text>
 
-  <!-- output decision to artifacts -->
-  <path class="edge" d="M1470 295 C1515 520 1530 720 1435 805"/>
-  <text x="1530" y="555" text-anchor="middle" class="label">layout or gap</text>
+  <!-- output decision to artifacts: far right edge then bottom, avoids boxes -->
+  <path class="edge" d="M1470 295 L1585 295 L1585 710 L495 710 L495 820"/>
+  <text x="1596" y="525" text-anchor="middle" class="label" transform="rotate(90 1596 525)">layout or explicit gap</text>
 
-  <!-- notes -->
+  <!-- review and feedback arrows in gaps -->
+  <path class="edge" d="M495 842 L705 842"/>
+  <text x="600" y="827" text-anchor="middle" class="label">review</text>
+  <path class="edge" d="M970 842 L1180 842"/>
+  <text x="1075" y="827" text-anchor="middle" class="label">feedback</text>
+
+  <!-- graph evolution back to KEL: route outside, no text crossing -->
+  <path class="edge-soft" d="M1318 790 L1318 735 L1540 735 L1540 430 L1040 430 L1040 470"/>
+  <text x="1456" y="720" text-anchor="middle" class="label">approved update</text>
+
   <rect x="90" y="958" width="1520" height="58" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
   <text x="118" y="993" class="caption"><tspan font-weight="700">Key principle:</tspan> the LLM helps interpret and explain; authoritative engineering meaning remains in EDES, EDAS, EDIKB, KEL, and deterministic gate outputs.</text>
 </svg>
