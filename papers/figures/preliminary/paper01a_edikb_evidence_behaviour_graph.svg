@@ -22,56 +22,55 @@
   <text x="800" y="54" text-anchor="middle" class="title">Representative EDIKB Evidence and Behaviour Graph</text>
   <text x="800" y="86" text-anchor="middle" class="subtitle">Design evidence is stored as linked source, component, parameter, response, rule, guidance, and future-study records</text>
 
-  <!-- helper: nodes are rounded rectangles with light fills -->
   <g filter="url(#shadow)">
-    <rect x="70" y="170" width="210" height="100" rx="18" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
-    <text x="175" y="205" text-anchor="middle" class="node-title">Source study</text>
-    <text x="175" y="232" text-anchor="middle" class="node-body">Paper / FEA case</text>
-    <text x="175" y="253" text-anchor="middle" class="node-body">expert review</text>
+    <rect x="65" y="170" width="205" height="100" rx="18" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="167.5" y="205" text-anchor="middle" class="node-title">Source study</text>
+    <text x="167.5" y="232" text-anchor="middle" class="node-body">Paper / FEA case</text>
+    <text x="167.5" y="253" text-anchor="middle" class="node-body">expert review</text>
 
-    <rect x="345" y="170" width="215" height="100" rx="18" fill="#E0F2FE" stroke="#0284C7" stroke-width="2"/>
-    <text x="452.5" y="205" text-anchor="middle" class="node-title">Evidence anchor</text>
-    <text x="452.5" y="232" text-anchor="middle" class="node-body">Table / figure /</text>
-    <text x="452.5" y="253" text-anchor="middle" class="node-body">paragraph location</text>
+    <rect x="335" y="170" width="210" height="100" rx="18" fill="#E0F2FE" stroke="#0284C7" stroke-width="2"/>
+    <text x="440" y="205" text-anchor="middle" class="node-title">Evidence anchor</text>
+    <text x="440" y="232" text-anchor="middle" class="node-body">Table / figure /</text>
+    <text x="440" y="253" text-anchor="middle" class="node-body">paragraph location</text>
 
-    <rect x="625" y="170" width="215" height="100" rx="18" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
-    <text x="732.5" y="205" text-anchor="middle" class="node-title">Evidence data row</text>
-    <text x="732.5" y="232" text-anchor="middle" class="node-body">Normalized numeric</text>
-    <text x="732.5" y="253" text-anchor="middle" class="node-body">or qualitative record</text>
+    <rect x="610" y="170" width="220" height="100" rx="18" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+    <text x="720" y="205" text-anchor="middle" class="node-title">Evidence data row</text>
+    <text x="720" y="232" text-anchor="middle" class="node-body">Normalized numeric</text>
+    <text x="720" y="253" text-anchor="middle" class="node-body">or qualitative record</text>
 
-    <rect x="905" y="170" width="220" height="100" rx="18" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
-    <text x="1015" y="205" text-anchor="middle" class="node-title">Response metric</text>
-    <text x="1015" y="232" text-anchor="middle" class="node-body">Peak strain / moment</text>
-    <text x="1015" y="253" text-anchor="middle" class="node-body">reaction / location</text>
+    <rect x="895" y="170" width="220" height="100" rx="18" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+    <text x="1005" y="205" text-anchor="middle" class="node-title">Response metric</text>
+    <text x="1005" y="232" text-anchor="middle" class="node-body">Peak strain / moment</text>
+    <text x="1005" y="253" text-anchor="middle" class="node-body">reaction / location</text>
 
-    <rect x="1205" y="170" width="240" height="100" rx="18" fill="#FCE7F3" stroke="#DB2777" stroke-width="2"/>
-    <text x="1325" y="205" text-anchor="middle" class="node-title">Behaviour rule</text>
-    <text x="1325" y="232" text-anchor="middle" class="node-body">Reviewed trend or</text>
-    <text x="1325" y="253" text-anchor="middle" class="node-body">component behaviour</text>
+    <rect x="1190" y="170" width="240" height="100" rx="18" fill="#FCE7F3" stroke="#DB2777" stroke-width="2"/>
+    <text x="1310" y="205" text-anchor="middle" class="node-title">Behaviour rule</text>
+    <text x="1310" y="232" text-anchor="middle" class="node-body">Reviewed trend or</text>
+    <text x="1310" y="253" text-anchor="middle" class="node-body">component behaviour</text>
 
-    <rect x="345" y="405" width="215" height="110" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/>
-    <text x="452.5" y="440" text-anchor="middle" class="node-title">Component /</text>
-    <text x="452.5" y="464" text-anchor="middle" class="node-title">assembly</text>
-    <text x="452.5" y="491" text-anchor="middle" class="node-body">GD-SH, GD-TP,</text>
-    <text x="452.5" y="512" text-anchor="middle" class="node-body">GD-ST, GD-B...</text>
+    <rect x="335" y="405" width="210" height="110" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="440" y="440" text-anchor="middle" class="node-title">Component /</text>
+    <text x="440" y="464" text-anchor="middle" class="node-title">assembly</text>
+    <text x="440" y="491" text-anchor="middle" class="node-body">GD-SH, GD-TP,</text>
+    <text x="440" y="512" text-anchor="middle" class="node-body">GD-ST, GD-B...</text>
 
-    <rect x="625" y="405" width="215" height="110" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
-    <text x="732.5" y="440" text-anchor="middle" class="node-title">Design parameter</text>
-    <text x="732.5" y="469" text-anchor="middle" class="node-body">Length, offset,</text>
-    <text x="732.5" y="490" text-anchor="middle" class="node-body">spacing, stiffness,</text>
-    <text x="732.5" y="511" text-anchor="middle" class="node-body">mass, load case</text>
+    <rect x="610" y="405" width="220" height="110" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+    <text x="720" y="440" text-anchor="middle" class="node-title">Design parameter</text>
+    <text x="720" y="469" text-anchor="middle" class="node-body">Length, offset,</text>
+    <text x="720" y="490" text-anchor="middle" class="node-body">spacing, stiffness,</text>
+    <text x="720" y="511" text-anchor="middle" class="node-body">mass, load case</text>
 
-    <rect x="905" y="405" width="220" height="110" rx="18" fill="#FFEDD5" stroke="#EA580C" stroke-width="2"/>
-    <text x="1015" y="440" text-anchor="middle" class="node-title">Response region</text>
-    <text x="1015" y="469" text-anchor="middle" class="node-body">X2 / X3 / X4,</text>
-    <text x="1015" y="490" text-anchor="middle" class="node-body">component body,</text>
-    <text x="1015" y="511" text-anchor="middle" class="node-body">pipe junction</text>
+    <rect x="895" y="405" width="220" height="110" rx="18" fill="#FFEDD5" stroke="#EA580C" stroke-width="2"/>
+    <text x="1005" y="440" text-anchor="middle" class="node-title">Response region</text>
+    <text x="1005" y="469" text-anchor="middle" class="node-body">X2 / X3 / X4,</text>
+    <text x="1005" y="490" text-anchor="middle" class="node-body">component body,</text>
+    <text x="1005" y="511" text-anchor="middle" class="node-body">pipe junction</text>
 
-    <rect x="1205" y="405" width="240" height="110" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2"/>
-    <text x="1325" y="440" text-anchor="middle" class="node-title">Design guidance</text>
-    <text x="1325" y="469" text-anchor="middle" class="node-body">Use, avoid, check,</text>
-    <text x="1325" y="490" text-anchor="middle" class="node-body">or ask for missing</text>
-    <text x="1325" y="511" text-anchor="middle" class="node-body">design inputs</text>
+    <rect x="1190" y="405" width="240" height="110" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2"/>
+    <text x="1310" y="440" text-anchor="middle" class="node-title">Design guidance</text>
+    <text x="1310" y="469" text-anchor="middle" class="node-body">Use, avoid, check,</text>
+    <text x="1310" y="490" text-anchor="middle" class="node-body">or ask for missing</text>
+    <text x="1310" y="511" text-anchor="middle" class="node-body">design inputs</text>
 
     <rect x="760" y="680" width="230" height="105" rx="18" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
     <text x="875" y="715" text-anchor="middle" class="node-title">Evidence limit</text>
@@ -84,65 +83,66 @@
     <text x="1182.5" y="766" text-anchor="middle" class="node-body">Parametric FEA,</text>
     <text x="1182.5" y="787" text-anchor="middle" class="node-body">correlation, surrogate</text>
 
-    <rect x="1355" y="680" width="185" height="105" rx="18" fill="#CCFBF1" stroke="#0D9488" stroke-width="2"/>
-    <text x="1447.5" y="715" text-anchor="middle" class="node-title">EDIKB update</text>
-    <text x="1447.5" y="742" text-anchor="middle" class="node-body">New evidence,</text>
-    <text x="1447.5" y="763" text-anchor="middle" class="node-body">rule, or limit</text>
+    <rect x="1360" y="680" width="180" height="105" rx="18" fill="#CCFBF1" stroke="#0D9488" stroke-width="2"/>
+    <text x="1450" y="715" text-anchor="middle" class="node-title">EDIKB update</text>
+    <text x="1450" y="742" text-anchor="middle" class="node-body">New evidence,</text>
+    <text x="1450" y="763" text-anchor="middle" class="node-body">rule, or limit</text>
   </g>
 
-  <!-- edges -->
-  <path class="edge" d="M280 220 C305 220 320 220 345 220"/>
-  <text x="312" y="205" text-anchor="middle" class="edge-label">contains</text>
+  <!-- top sequence arrows: horizontal only between boxes -->
+  <path class="edge" d="M270 220 L335 220"/>
+  <text x="302" y="204" text-anchor="middle" class="edge-label">contains</text>
 
-  <path class="edge" d="M560 220 C585 220 600 220 625 220"/>
-  <text x="592" y="205" text-anchor="middle" class="edge-label">has row</text>
+  <path class="edge" d="M545 220 L610 220"/>
+  <text x="578" y="204" text-anchor="middle" class="edge-label">has row</text>
 
-  <path class="edge" d="M840 220 C865 220 880 220 905 220"/>
-  <text x="872" y="205" text-anchor="middle" class="edge-label">measures</text>
+  <path class="edge" d="M830 220 L895 220"/>
+  <text x="862" y="204" text-anchor="middle" class="edge-label">measures</text>
 
-  <path class="edge" d="M1125 220 C1155 220 1175 220 1205 220"/>
-  <text x="1165" y="205" text-anchor="middle" class="edge-label">supports</text>
+  <path class="edge" d="M1115 220 L1190 220"/>
+  <text x="1152" y="204" text-anchor="middle" class="edge-label">supports</text>
 
-  <path class="edge" d="M700 270 C650 340 560 360 500 405"/>
-  <text x="625" y="350" text-anchor="middle" class="edge-label">applies to</text>
+  <!-- data row to lower attribute nodes: clean vertical/horizontal routes in whitespace -->
+  <path class="edge" d="M665 270 L665 335 L440 335 L440 405"/>
+  <text x="540" y="320" text-anchor="middle" class="edge-label">applies to</text>
 
-  <path class="edge" d="M733 270 C733 315 733 360 733 405"/>
-  <text x="773" y="342" text-anchor="middle" class="edge-label">varies</text>
+  <path class="edge" d="M720 270 L720 405"/>
+  <text x="760" y="342" text-anchor="middle" class="edge-label">varies</text>
 
-  <path class="edge" d="M1015 270 C1015 315 1015 360 1015 405"/>
-  <text x="1064" y="342" text-anchor="middle" class="edge-label">located at</text>
+  <path class="edge" d="M1005 270 L1005 405"/>
+  <text x="1054" y="342" text-anchor="middle" class="edge-label">located at</text>
 
-  <path class="edge" d="M1325 270 C1325 315 1325 360 1325 405"/>
-  <text x="1374" y="342" text-anchor="middle" class="edge-label">produces</text>
+  <path class="edge" d="M1310 270 L1310 405"/>
+  <text x="1360" y="342" text-anchor="middle" class="edge-label">produces</text>
 
-  <path class="edge" d="M1210 405 C1135 350 1075 305 1040 270"/>
-  <text x="1122" y="352" text-anchor="middle" class="edge-label">bounded by</text>
+  <!-- rule/guidance to limits/future/update: route around boxes -->
+  <path class="edge" d="M1310 515 L1310 610 L875 610 L875 680"/>
+  <text x="1090" y="595" text-anchor="middle" class="edge-label">has evidence limit</text>
 
-  <path class="edge" d="M1210 515 C1100 615 990 650 910 680"/>
-  <text x="1070" y="620" text-anchor="middle" class="edge-label">has limit</text>
+  <path class="edge" d="M990 733 L1055 733"/>
+  <text x="1022" y="717" text-anchor="middle" class="edge-label">creates</text>
 
-  <path class="edge" d="M990 733 C1012 733 1032 733 1055 733"/>
-  <text x="1022" y="718" text-anchor="middle" class="edge-label">creates</text>
+  <path class="edge" d="M1310 733 L1360 733"/>
+  <text x="1335" y="717" text-anchor="middle" class="edge-label">feeds</text>
 
-  <path class="edge" d="M1310 733 C1328 733 1338 733 1355 733"/>
-  <text x="1332" y="718" text-anchor="middle" class="edge-label">feeds</text>
+  <!-- update loop back to guidance/rule routed on far right margin -->
+  <path class="edge-soft" d="M1450 680 L1450 610 L1565 610 L1565 330 L1310 330 L1310 405"/>
+  <text x="1510" y="595" text-anchor="middle" class="edge-label">reviewed update</text>
 
-  <path class="edge-soft" d="M1447 680 C1430 600 1395 555 1355 515"/>
-  <text x="1450" y="595" text-anchor="middle" class="edge-label">reviewed update</text>
-
-  <path class="edge-soft" d="M1182 785 C1040 865 605 860 190 270"/>
-  <text x="620" y="865" text-anchor="middle" class="edge-label">future FEA / correlation / physics-informed ML becomes new source evidence</text>
+  <!-- future study loop to source routed bottom and left margin, avoids all nodes -->
+  <path class="edge-soft" d="M1182 785 L1182 825 L40 825 L40 220 L65 220"/>
+  <text x="620" y="850" text-anchor="middle" class="edge-label">future FEA / correlation / physics-informed ML becomes new source evidence</text>
 
   <!-- legend -->
-  <rect x="70" y="842" width="395" height="70" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
-  <text x="88" y="870" class="caption"><tspan font-weight="700">Interpretation:</tspan> EDIKB stores evidence as linked records,</text>
-  <text x="88" y="894" class="caption">not as isolated design notes or ungrounded text snippets.</text>
+  <rect x="70" y="872" width="395" height="58" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="88" y="898" class="caption"><tspan font-weight="700">Interpretation:</tspan> EDIKB stores evidence as linked records,</text>
+  <text x="88" y="918" class="caption">not isolated design notes or ungrounded text snippets.</text>
 
-  <rect x="505" y="842" width="520" height="70" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
-  <text x="523" y="870" class="caption"><tspan font-weight="700">Engineering use:</tspan> retrieve strain and bending behaviour,</text>
-  <text x="523" y="894" class="caption">then check source limits before applying guidance to EDPR.</text>
+  <rect x="505" y="872" width="520" height="58" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="523" y="898" class="caption"><tspan font-weight="700">Engineering use:</tspan> retrieve strain and bending behaviour,</text>
+  <text x="523" y="918" class="caption">then check source limits before applying guidance to EDPR.</text>
 
-  <rect x="1065" y="842" width="475" height="70" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
-  <text x="1083" y="870" class="caption"><tspan font-weight="700">Growth path:</tspan> evidence gaps become FEA, correlation,</text>
-  <text x="1083" y="894" class="caption">surrogate, or physics-informed ML study candidates.</text>
+  <rect x="1065" y="872" width="475" height="58" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="1083" y="898" class="caption"><tspan font-weight="700">Growth path:</tspan> evidence gaps become FEA, correlation,</text>
+  <text x="1083" y="918" class="caption">surrogate, or physics-informed ML study candidates.</text>
 </svg>
