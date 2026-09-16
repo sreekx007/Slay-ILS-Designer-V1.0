@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1650" height="900" viewBox="0 0 1650 900">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#374151"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#2563EB"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.16"/>
+    </filter>
+    <style>
+      .title { font-family: Arial, Helvetica, sans-serif; font-size: 34px; font-weight: 700; fill: #111827; }
+      .subtitle { font-family: Arial, Helvetica, sans-serif; font-size: 19px; fill: #374151; }
+      .node-title { font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; fill: #111827; }
+      .node-body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; fill: #1F2937; }
+      .edge { stroke: #374151; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .edge-blue { stroke: #2563EB; stroke-width: 2.7; fill: none; marker-end: url(#arrowBlue); }
+      .edge-soft { stroke: #6B7280; stroke-width: 2.1; stroke-dasharray: 8 6; fill: none; marker-end: url(#arrow); }
+      .edge-label { font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 600; fill: #374151; }
+      .group-label { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; fill: #374151; }
+      .caption { font-family: Arial, Helvetica, sans-serif; font-size: 15px; fill: #374151; }
+    </style>
+  </defs>
+
+  <rect width="1650" height="900" fill="#FFFFFF"/>
+  <text x="825" y="55" text-anchor="middle" class="title">Hybrid RAG Pipeline for Governed ILT Reasoning</text>
+  <text x="825" y="86" text-anchor="middle" class="subtitle">Semantic recall retrieves candidates; symbolic grounding and deterministic gates decide whether they can be used</text>
+
+  <rect x="55" y="125" width="1540" height="195" rx="24" fill="#F8FAFC" stroke="#E5E7EB" stroke-width="2"/>
+  <rect x="55" y="355" width="1540" height="235" rx="24" fill="#FAFAFA" stroke="#E5E7EB" stroke-width="2"/>
+  <rect x="55" y="625" width="1540" height="185" rx="24" fill="#F8FAFC" stroke="#E5E7EB" stroke-width="2"/>
+
+  <text x="88" y="155" class="group-label">Query and retrieval</text>
+  <text x="88" y="385" class="group-label">Symbolic grounding and engineering gates</text>
+  <text x="88" y="655" class="group-label">Governed response</text>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="185" width="215" height="95" rx="18" fill="#DBEAFE" stroke="#2563EB" stroke-width="2.2"/>
+    <text x="197.5" y="220" text-anchor="middle" class="node-title">Human query</text>
+    <text x="197.5" y="247" text-anchor="middle" class="node-body">Natural language</text>
+    <text x="197.5" y="268" text-anchor="middle" class="node-body">design request</text>
+
+    <rect x="380" y="185" width="235" height="95" rx="18" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.2"/>
+    <text x="497.5" y="220" text-anchor="middle" class="node-title">EDPR parsing</text>
+    <text x="497.5" y="247" text-anchor="middle" class="node-body">Action, product,</text>
+    <text x="497.5" y="268" text-anchor="middle" class="node-body">function, unknowns</text>
+
+    <rect x="690" y="185" width="255" height="95" rx="18" fill="#ECFDF5" stroke="#059669" stroke-width="2.2"/>
+    <text x="817.5" y="220" text-anchor="middle" class="node-title">Vector + lexical recall</text>
+    <text x="817.5" y="247" text-anchor="middle" class="node-body">Find semantically and</text>
+    <text x="817.5" y="268" text-anchor="middle" class="node-body">textually similar records</text>
+
+    <rect x="1020" y="185" width="255" height="95" rx="18" fill="#FEF3C7" stroke="#D97706" stroke-width="2.2"/>
+    <text x="1147.5" y="220" text-anchor="middle" class="node-title">Candidate records</text>
+    <text x="1147.5" y="247" text-anchor="middle" class="node-body">EDES, EDAS, EDIKB,</text>
+    <text x="1147.5" y="268" text-anchor="middle" class="node-body">KEL, documents</text>
+
+    <rect x="1350" y="185" width="205" height="95" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2.2"/>
+    <text x="1452.5" y="220" text-anchor="middle" class="node-title">Retrieve set</text>
+    <text x="1452.5" y="247" text-anchor="middle" class="node-body">Ranked candidates</text>
+    <text x="1452.5" y="268" text-anchor="middle" class="node-body">with provenance</text>
+  </g>
+
+  <path class="edge" d="M305 232 L380 232"/>
+  <path class="edge" d="M615 232 L690 232"/>
+  <path class="edge" d="M945 232 L1020 232"/>
+  <path class="edge" d="M1275 232 L1350 232"/>
+
+  <g filter="url(#shadow)">
+    <rect x="125" y="430" width="245" height="105" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.2"/>
+    <text x="247.5" y="466" text-anchor="middle" class="node-title">Symbolic grounding</text>
+    <text x="247.5" y="493" text-anchor="middle" class="node-body">Map phrases to IDs:</text>
+    <text x="247.5" y="514" text-anchor="middle" class="node-body">GD-VLV, GD-ST, GD-B...</text>
+
+    <rect x="445" y="430" width="245" height="105" rx="18" fill="#FEE2E2" stroke="#DC2626" stroke-width="2.2"/>
+    <text x="567.5" y="466" text-anchor="middle" class="node-title">Schema gate</text>
+    <text x="567.5" y="493" text-anchor="middle" class="node-body">Required fields,</text>
+    <text x="567.5" y="514" text-anchor="middle" class="node-body">units, allowed values</text>
+
+    <rect x="765" y="430" width="245" height="105" rx="18" fill="#FFEDD5" stroke="#EA580C" stroke-width="2.2"/>
+    <text x="887.5" y="466" text-anchor="middle" class="node-title">Evidence gate</text>
+    <text x="887.5" y="493" text-anchor="middle" class="node-body">Source, load case,</text>
+    <text x="887.5" y="514" text-anchor="middle" class="node-body">range, limitations</text>
+
+    <rect x="1085" y="430" width="245" height="105" rx="18" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2.2"/>
+    <text x="1207.5" y="466" text-anchor="middle" class="node-title">Design gate</text>
+    <text x="1207.5" y="493" text-anchor="middle" class="node-body">Topology, support,</text>
+    <text x="1207.5" y="514" text-anchor="middle" class="node-body">protection, plot rules</text>
+
+    <rect x="1405" y="430" width="150" height="105" rx="18" fill="#CCFBF1" stroke="#0D9488" stroke-width="2.2"/>
+    <text x="1480" y="466" text-anchor="middle" class="node-title">Decision</text>
+    <text x="1480" y="493" text-anchor="middle" class="node-body">Use evidence</text>
+    <text x="1480" y="514" text-anchor="middle" class="node-body">or declare gap</text>
+  </g>
+
+  <!-- retrieval set down to grounding, routed with orthogonal lines -->
+  <path class="edge-blue" d="M1452 280 L1452 345 L247 345 L247 430"/>
+  <text x="845" y="334" text-anchor="middle" class="edge-label">retrieved candidates are not authoritative until grounded and checked</text>
+
+  <path class="edge" d="M370 482 L445 482"/>
+  <path class="edge" d="M690 482 L765 482"/>
+  <path class="edge" d="M1010 482 L1085 482"/>
+  <path class="edge" d="M1330 482 L1405 482"/>
+
+  <g filter="url(#shadow)">
+    <rect x="155" y="690" width="250" height="90" rx="18" fill="#FEF9C3" stroke="#CA8A04" stroke-width="2.2"/>
+    <text x="280" y="725" text-anchor="middle" class="node-title">Grounded answer</text>
+    <text x="280" y="752" text-anchor="middle" class="node-body">Evidence-bounded text</text>
+    <text x="280" y="773" text-anchor="middle" class="node-body">with assumptions</text>
+
+    <rect x="505" y="690" width="250" height="90" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.2"/>
+    <text x="630" y="725" text-anchor="middle" class="node-title">Layout + plot</text>
+    <text x="630" y="752" text-anchor="middle" class="node-body">Deterministic drawing</text>
+    <text x="630" y="773" text-anchor="middle" class="node-body">and parameter file</text>
+
+    <rect x="855" y="690" width="250" height="90" rx="18" fill="#FCE7F3" stroke="#DB2777" stroke-width="2.2"/>
+    <text x="980" y="725" text-anchor="middle" class="node-title">Explicit gap</text>
+    <text x="980" y="752" text-anchor="middle" class="node-body">Ask for missing data</text>
+    <text x="980" y="773" text-anchor="middle" class="node-body">or refuse unsupported claim</text>
+
+    <rect x="1205" y="690" width="250" height="90" rx="18" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2.2"/>
+    <text x="1330" y="725" text-anchor="middle" class="node-title">KEL candidate</text>
+    <text x="1330" y="752" text-anchor="middle" class="node-body">If feedback reveals</text>
+    <text x="1330" y="773" text-anchor="middle" class="node-body">knowledge or gate gap</text>
+  </g>
+
+  <!-- decision to output options via lower bus -->
+  <path class="edge" d="M1480 535 L1480 625 L280 625 L280 690"/>
+  <path class="edge" d="M630 625 L630 690"/>
+  <path class="edge" d="M980 625 L980 690"/>
+  <path class="edge" d="M1330 625 L1330 690"/>
+  <text x="880" y="614" text-anchor="middle" class="edge-label">governed output selected after gates pass or fail</text>
+
+  <!-- KEL feedback loop routed on right margin -->
+  <path class="edge-soft" d="M1330 780 L1330 825 L1580 825 L1580 482 L1555 482"/>
+  <text x="1460" y="810" text-anchor="middle" class="edge-label">review feedback can update KEL</text>
+
+  <rect x="90" y="828" width="1470" height="48" rx="14" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="118" y="858" class="caption"><tspan font-weight="700">Key principle:</tspan> Hybrid RAG improves recall, but engineering authority remains with symbolic records, evidence applicability checks, deterministic tools, and human review.</text>
+</svg>
