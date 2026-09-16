@@ -256,7 +256,7 @@ def draw_contact_envelope(ax, comp, n=241, label=True, lw=STYLE['line_widths']['
     return bool(runs)
 
 
-def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
+def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13, label_text=True):
     """The TYPED connector symbol, per Fig 16 / Fig 17.
 
         F  filled black square                -- fixed, all DOF restrained
@@ -283,8 +283,10 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
         ax.add_patch(mpatches.Rectangle((x - size/2, ym - size/2), size, size,
                                         facecolor=STYLE['connector']['foreground'], edgecolor=STYLE['connector']['foreground'],
                                         zorder=13))
-        ax.annotate(connector_symbol('F'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
-                    va='center', zorder=14, fontweight='bold')
+        
+        if label_text:
+            ax.annotate(connector_symbol('F'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
+                        va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'P':
         ax.add_patch(mpatches.Circle((x, ym), size * 0.50, facecolor='none',
@@ -292,8 +294,10 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
                                      zorder=12))
         ax.add_patch(mpatches.Circle((x, ym), size * 0.34, facecolor=STYLE['connector']['foreground'],
                                      edgecolor='none', zorder=13))
-        ax.annotate(connector_symbol('P'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
-                    va='center', zorder=14, fontweight='bold')
+        
+        if label_text:
+            ax.annotate(connector_symbol('P'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
+                        va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'S':
         w, h = size * 1.18, size
@@ -306,8 +310,10 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
             (x - wi/2, ym - hi/2), wi, hi,
             boxstyle=f'round,pad=0,rounding_size={hi/2}', facecolor=STYLE['connector']['foreground'],
             edgecolor='none', zorder=13))
-        ax.annotate(connector_symbol('S'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
-                    va='center', zorder=14, fontweight='bold')
+        
+        if label_text:
+            ax.annotate(connector_symbol('S'), (x, ym), fontsize=fs, color=STYLE['connector']['background'], ha='center',
+                        va='center', zorder=14, fontweight='bold')
 
     elif ctype == 'D':
         b = size
@@ -320,8 +326,10 @@ def draw_connector_symbol(ax, x, y_pipe, y_struct, ctype, size=0.13):
             ax.add_patch(mpatches.Rectangle((x - b/2, y0), b, bh,
                                             facecolor=STYLE['connector']['foreground'],
                                             edgecolor='none', zorder=13))
-        ax.annotate(connector_symbol('D'), (x, ym), fontsize=fs*0.9, color=STYLE['connector']['foreground'], ha='center',
-                    va='center', zorder=14, fontweight='bold')
+        
+        if label_text:
+            ax.annotate(connector_symbol('D'), (x, ym), fontsize=fs*0.9, color=STYLE['connector']['foreground'], ha='center',
+                        va='center', zorder=14, fontweight='bold')
 
 
 def connector_legend_handles(kinds):
@@ -380,12 +388,16 @@ def draw_connectors(ax, comp, system=None, label=True):
             ax.plot([x, x], [0.0, y_face], lw=STYLE['line_widths']['stroke_2_0'], color=CONN, zorder=11,
                     label='connector element (2-node)'
                     if (label and first) else None)
-            ax.plot([x], [0.0], 'o', ms=5, mfc='white', mec=CONN, mew=1.6,
-                    zorder=12)
-        draw_connector_symbol(ax, x, 0.0, y_face, ctype, size=size)
-        ax.annotate(f'{slot}', (x, y_face), textcoords='offset points',
-                    xytext=(0, 15), ha='center', fontsize=STYLE['fonts']['small'], color='0.35',
-                    zorder=12)
+        # Do not draw connector-body symbols on the structure connector.
+        # Review requires the connection type label, not an extra black body.
+        ax.annotate(connector_symbol(ctype), (x, y_face), textcoords='offset points',
+                    xytext=(0, -24 if y_face < 0 else 24), ha='center', va='center',
+                    fontsize=max(STYLE['fonts']['connection_label'], 12),
+                    color='0.05', fontweight='bold', zorder=18,
+                    bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=CONN,
+                              lw=STYLE['line_widths']['stroke_1_1'], alpha=0.96),
+                    arrowprops={'arrowstyle': '-', 'color': CONN,
+                                'lw': STYLE['line_widths']['stroke_1_1']})
         first = False
     if label and conns:
         # Symbols are patches, so they carry no automatic legend entry.
@@ -415,12 +427,18 @@ def draw_branch_support(ax, comp, label=True):
         return None
     e = ends[0]
     ctype = comp.support_connector
-    span = abs(comp.extent[1] - comp.extent[0])
-    draw_connector_symbol(ax, e.x, e.y, e.y, ctype,
-                          size=max(0.09, min(0.20, span * 0.028)))
-    ax.annotate('support', (e.x, e.y), textcoords='offset points',
-                xytext=(0, 15), ha='center', fontsize=STYLE['fonts']['small'], color='0.35',
-                zorder=14)
+    # Branch-end support is labelled through the declared association when
+    # present. Avoid a second S/F label at the same physical connector.
+    if getattr(ax.figure, '_branch_support_labels_via_association', False):
+        return ctype
+    ax.annotate(connector_symbol(ctype), (e.x, e.y), textcoords='offset points',
+                xytext=(0, -26), ha='center', va='center',
+                fontsize=max(STYLE['fonts']['connection_label'], 12),
+                color='0.05', fontweight='bold', zorder=18,
+                bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=CONN,
+                          lw=STYLE['line_widths']['stroke_1_1'], alpha=0.96),
+                arrowprops={'arrowstyle': '-', 'color': CONN,
+                            'lw': STYLE['line_widths']['stroke_1_1']})
     if label:
         prev = getattr(ax, '_connector_handles', [])
         have = {h.get_label()[0] for h in prev}
@@ -428,6 +446,66 @@ def draw_branch_support(ax, comp, label=True):
             ax._connector_handles = prev + connector_legend_handles({ctype})
     return ctype
 
+
+
+def draw_valve_symbol(ax, x, y, pipe=None, size=0.26, label='GD-VLV'):
+    """Draw a branch-mounted GD-VLV-style valve symbol.
+
+    A branch valve inside GD-B is not yet a separate GD-VLV component in the
+    schema, but it should use the established GD-VLV visual grammar: a larger
+    central body, smaller transition zones each side, and a stem rising from
+    the body midpoint. This keeps branch-valve review consistent with inline
+    GD-VLV plots while preserving the GD-B analysis representation.
+    """
+    if pipe is not None:
+        d = getattr(pipe, 'OD_pipe', size)
+        l_body = 2.5 * d
+        l_trans = 1.2 * d
+        od_body = 2.0 * d
+        od_trans = getattr(pipe, 'ID', max(0.0, d * 0.90)) + 2 * (2.0 * getattr(pipe, 't_pipe', d * 0.05))
+        l_stem = 2.5 * d
+        od_stem = d
+    else:
+        l_body = size * 2.5
+        l_trans = size * 1.2
+        od_body = size * 2.0
+        od_trans = size * 1.25
+        l_stem = size * 2.5
+        od_stem = size
+    # Keep the symbol readable but not dominant on long branch plots.
+    scale = min(1.0, max(0.45, size / max(l_body, 1e-9)))
+    l_body *= scale; l_trans *= scale; od_body *= scale; od_trans *= scale
+    l_stem *= scale; od_stem *= scale
+    x0 = x - (l_body / 2 + l_trans)
+    x1 = x - l_body / 2
+    x2 = x + l_body / 2
+    x3 = x + (l_body / 2 + l_trans)
+    color = body_color('GD-VLV', MASS)
+    # transitions and body as GD-VLV stepped profile
+    for xa, xb, od, alpha in [(x0, x1, od_trans, 0.16), (x1, x2, od_body, 0.24), (x2, x3, od_trans, 0.16)]:
+        ax.add_patch(mpatches.Rectangle((xa, y - od/2), xb - xa, od,
+                                        facecolor=color, edgecolor=color,
+                                        lw=STYLE['line_widths']['stroke_1_1'],
+                                        alpha=alpha, zorder=16))
+    ax.plot([x0, x1, x1, x2, x2, x3],
+            [y - od_trans/2, y - od_trans/2, y - od_body/2,
+             y - od_body/2, y - od_trans/2, y - od_trans/2],
+            color=color, lw=STYLE['line_widths']['stroke_1_9'], zorder=17)
+    ax.plot([x0, x1, x1, x2, x2, x3],
+            [y + od_trans/2, y + od_trans/2, y + od_body/2,
+             y + od_body/2, y + od_trans/2, y + od_trans/2],
+            color=color, lw=STYLE['line_widths']['stroke_1_9'], zorder=17)
+    ax.plot([x, x], [y - od_body/2, y - od_body/2 - l_stem],
+            color=color, lw=STYLE['line_widths']['stroke_2_4'], zorder=17)
+    ax.add_patch(mpatches.Rectangle((x - od_stem/2, y - od_body/2 - l_stem),
+                                    od_stem, od_stem * 0.40,
+                                    facecolor='white', edgecolor=color,
+                                    lw=STYLE['line_widths']['stroke_1_1'], zorder=17))
+    ax.annotate(label, (x, y - od_body/2 - l_stem), textcoords='offset points', xytext=(0, -14),
+                ha='center', va='top', fontsize=STYLE['fonts']['annotation'],
+                color=color, weight='bold', zorder=18,
+                bbox=dict(boxstyle='round,pad=0.16', fc='white', ec=color,
+                          lw=STYLE['line_widths']['stroke_0_9'], alpha=0.94))
 
 def draw_point_masses(ax, comp, label=True):
     """Inertia elements, positioned by resolving each declared node id
@@ -447,11 +525,24 @@ def draw_point_masses(ax, comp, label=True):
             missing.append(nid)
             continue
         x, y = coords[nid]
-        ax.plot([x], [y], '*', ms=15, mfc=MASS, mec='white', mew=1.0,
+        tail = nid.rsplit(':', 1)[-1]
+        if tail == 'svalve':
+            span = abs(comp.extent[1] - comp.extent[0]) if hasattr(comp, 'extent') else 1.0
+            draw_valve_symbol(ax, x, y, pipe=getattr(comp, 'pipe', None),
+                              size=max(0.20, min(0.42, span * 0.07)))
+            drawn.append((nid, m, x, y))
+            continue
+        if tail == 'send' and getattr(comp, 'code', None) == 'GD-B':
+            # The branch-end point mass is the connector hardware. The
+            # connection symbol drawn by draw_branch_support is the correct
+            # semantic representation; avoid a duplicate mass star/tonnage.
+            drawn.append((nid, m, x, y))
+            continue
+        # Generic point masses remain available for other component types,
+        # but are deliberately unlabeled on the geometry plot; the CSV/report
+        # carries the mass values without compressing the drawing.
+        ax.plot([x], [y], 'o', ms=7, mfc=MASS, mec='white', mew=1.0,
                 zorder=13, label='point mass' if (label and first) else None)
-        ax.annotate(f'{m/1000:.1f} t', (x, y), textcoords='offset points',
-                    xytext=(9, 6), fontsize=STYLE['fonts']['annotation'], color=MASS, weight='bold',
-                    zorder=13)
         drawn.append((nid, m, x, y))
         first = False
     return drawn, missing
@@ -470,8 +561,8 @@ def draw_junctions(ax, comp, label=True):
         if nid not in coords:
             continue
         x, y = coords[nid]
-        ax.plot([x], [y], 'X', ms=11, mfc='none', mec='black', mew=2.0,
-                zorder=14, label='junction (mandatory node)'
+        ax.plot([x], [y], 'o', ms=7.0, mfc='white', mec='black', mew=1.6,
+                zorder=14, label='junction node'
                 if (label and first) else None)
         first = False
 

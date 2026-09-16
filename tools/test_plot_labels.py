@@ -73,6 +73,45 @@ class LabelLayoutTests(unittest.TestCase):
         self.assertGreaterEqual(len(labels), 1)
         self.assertTrue(any('F' == item['text'] for item in labels))
 
+
+    def test_branch_valve_and_connections_use_review_symbols(self):
+        spec = {
+            'schema_version': 1,
+            'ils': {'connection_system': 'PS'},
+            'pipeline': {'OD_pipe': 0.4064, 't_pipe': 0.021},
+            'components': [
+                {'id': 'B', 'code': 'GD-B', 'centre_x': 0.0, 'variant': 'Z',
+                 'support_connector': 'S', 'P_b1': 4.064, 'P_b2': 1.4224,
+                 'P_b3': 0.7112, 'P_bc': 0.2032, 'P_bv': 2.032,
+                 'OD_branch': 0.2032, 't_branch': 0.0127},
+                {'id': 'ST', 'code': 'GD-ST', 'centre_x': 2.032, 'L_top': 5.6896,
+                 'H_top': 1.016, 'P_vt': -0.4064, 'P_c1': 3.6576,
+                 'P_c2': 0.4064, 'top_connector_x': [4.064]},
+            ],
+            'associations': [
+                {'type': 'Connection', 'connection': 'S',
+                 'from': {'component': 'B', 'feature': 'end'},
+                 'to': {'component': 'ST', 'feature': 'top1'}},
+            ],
+            'plot_annotations': [
+                {'id': 'probable_peak_strain_location', 'kind': 'strain_watch',
+                 'text': 'Probable high strain location',
+                 'anchor': {'component': 'B', 'feature': 'tee'}},
+            ],
+        }
+        ils = build_ils(spec)
+        fig = ils.plot()
+        texts = [text.get_text() for ax in fig.axes for text in ax.texts]
+        self.assertIn('GD-VLV', texts)
+        self.assertIn('Probable high strain location', texts)
+        self.assertNotIn('3.0 t', texts)
+        labels = getattr(fig, '_connection_labels', [])
+        self.assertTrue(any(item['text'] == 'S' for item in labels))
+        geometry_ax = fig.axes[0]
+        markers = [line.get_marker() for line in geometry_ax.lines]
+        self.assertNotIn('*', markers)
+        self.assertNotIn('X', markers)
+
     def test_model_and_anchor_coordinates_preserved(self):
         spec={'schema_version':1,'pipeline':{'OD_pipe':0.4064,'t_pipe':0.021},
               'components':[{'code':'GD-TP','centre_x':0}]}

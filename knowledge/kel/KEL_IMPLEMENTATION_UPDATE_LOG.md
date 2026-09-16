@@ -97,3 +97,28 @@ policy :: connector component labels are not required; required labels are F/P/S
 manifest/kel docs :: LLM must ask whether plot is required after solution proposal and must ask for feedback after plotted layout
 validation :: tool unittest suite covers model-anchored annotations, invalid annotation failure, and required GD-ST connection-type label reporting
 ```
+
+## Q9 plot semantic symbols and strain-location visibility - 2026-09-16
+
+```text
+trigger :: ILT-Z branch-valve plot showed point-mass stars/tonnage, unclear P/S labels, centre-anchored GD-ST label, X tee marker and no requested high-strain location label
+plotters/component_plotter.py :: branch valve point mass now draws a GD-VLV valve-body symbol and keeps mass only in CSV/report
+plotters/component_plotter.py :: branch-end connector mass no longer draws star/tonnage; branch support draws visible F/S connection label
+plotters/component_plotter.py :: GD-ST/GD-SB active connector labels draw clear F/P/S/D callouts at structure-side connection; pipe-side circular connector node suppressed
+plotters/component_plotter.py :: tee junction now draws as a regular node rather than an X symbol
+plotters/ils_plotter.py :: strain_watch plot annotations draw stronger marker/label; unresolved anchors remain report-blocking
+plotters/ils_plotter.py :: GD-ST component label anchors to top edge to avoid confusion with branch valve
+records :: Q9 implemented feedback record added
+validation :: py_compile + tools.test_plot_labels + tools.test_plot_cli passed
+```
+
+### Q9 refinement - 2026-09-16
+
+```text
+trigger :: review found duplicate S labels, remaining black connector-body symbol, verbose strain label, and branch valve symbol not aligned with GD-VLV visual grammar
+plotters/ils_plotter.py :: suppresses fallback GD-B support label when branch support is already declared by association
+plotters/component_plotter.py :: removes connector-body symbol drawing for GD-ST/GD-SB connector callouts and branch-end support fallback
+plotters/component_plotter.py :: branch valve symbol now follows GD-VLV transition/body/stem visual grammar while remaining placed on GD-B branch run
+layout record :: shortened strain annotation text to High strain
+validation :: py_compile + tools.test_plot_labels + tools.test_plot_cli passed
+```

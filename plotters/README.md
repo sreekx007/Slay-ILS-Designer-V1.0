@@ -243,3 +243,7 @@ and an outer wall that clears its thick inner body.
 ## Phase 7 solver plotting
 
 Use the pipeline --plot option. See [workflow](../docs/PHASE7_SOLVER_PLOTTING.md).
+
+## Semantic plot symbols for review
+
+Assembly plots are review artifacts, so they must show engineering semantics rather than analysis artifacts. Branch valves represented internally by `GD-B.point_masses()` are drawn as valve-body symbols; branch-end connector point masses are not shown as mass stars or tonnage labels. The mass values remain in the parameter CSV/report. Non-weld structure connections must expose visible `F`, `P`, `S`, or `D` labels at the structure-side connection, while `W` welds remain unlabelled. Tee junctions are regular nodes. When a design request asks for probable maximum strain or its location, declare a model-anchored `plot_annotations` item with `kind: strain_watch` so the marker is tied to a component feature such as `B.tee` rather than to image pixels.

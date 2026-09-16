@@ -106,3 +106,7 @@ When a plot includes likely high-strain or transition watch locations, the LLM m
 After every plotted layout, the LLM must ask the human user for feedback. The feedback request should explicitly ask whether component placement, connection-type labels, and strain-watch pointer locations are acceptable.
 
 Connector component labels are not required. The required plot labels are connection-type labels for non-weld GD-ST/GD-SB structural connections, such as `F`, `P`, `S`, or `D`. `W` weld connections remain unlabelled.
+
+## Q9 plot semantic-symbol rule
+
+For ILT plots, do not let analysis artifacts replace engineering symbols. Branch valves shall be drawn with a valve-body symbol even when represented internally as a `GD-B` point mass. Branch connector hardware shall be represented by the connection/support symbol, not by a mass star or tonnage label. Non-weld `GD-ST`/`GD-SB` connection labels (`F`, `P`, `S`, `D`) must be visibly labelled at the structure-side connection. Suppress unnecessary circular pipe-side connector node symbols. Anchor `GD-ST` labels to the top edge. Draw tee junctions as regular nodes. If the query asks for likely max strain or strain location, include a model-anchored `strain_watch` plot annotation before presenting the plot.

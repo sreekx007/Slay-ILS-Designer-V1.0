@@ -420,14 +420,25 @@ def _draw_plot_annotations(ax, ils):
         if not (isinstance(xytext, (list, tuple)) and len(xytext) == 2
                 and all(isinstance(v, (int, float)) for v in xytext)):
             xytext = next(default_offsets)
-        color = item.get('color') or ('#B00020' if 'strain' in str(item.get('kind', '')).lower() else '#333333')
-        ax.plot([xy[0]], [xy[1]], marker='o', ms=7, color=color, zorder=18)
+        is_strain = 'strain' in str(item.get('kind', '')).lower()
+        color = item.get('color') or ('#B00020' if is_strain else '#333333')
+        if is_strain:
+            ax.plot([xy[0]], [xy[1]], marker='D', ms=8.5, mfc=color,
+                    mec='white', mew=1.2, zorder=18)
+            text_fs = max(STYLE['fonts']['annotation'], 10.5)
+            box_pad = 0.28
+            lw = STYLE['line_widths']['stroke_1_1']
+        else:
+            ax.plot([xy[0]], [xy[1]], marker='o', ms=7, color=color, zorder=18)
+            text_fs = STYLE['fonts']['annotation']
+            box_pad = 0.24
+            lw = STYLE['line_widths']['stroke_0_9']
         ax.annotate(record['text'], xy=xy, textcoords='offset points', xytext=tuple(xytext),
                     ha='left' if xytext[0] >= 0 else 'right', va='center',
-                    fontsize=STYLE['fonts']['annotation'], color=color, weight='bold',
-                    bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=color,
-                              lw=STYLE['line_widths']['stroke_0_9'], alpha=0.94),
-                    arrowprops={'arrowstyle': '->', 'color': color, 'lw': 1.0},
+                    fontsize=text_fs, color=color, weight='bold',
+                    bbox=dict(boxstyle=f'round,pad={box_pad}', fc='white', ec=color,
+                              lw=lw, alpha=0.96),
+                    arrowprops={'arrowstyle': '->', 'color': color, 'lw': lw},
                     zorder=19)
         record['xy'] = [xy[0], xy[1]]
         record['xytext'] = list(xytext)
@@ -466,12 +477,13 @@ def _draw_connection_labels(ax, ils):
         short = str(ctype)
         ax.plot([a_xy[0], b_xy[0]], [a_xy[1], b_xy[1]], color='0.28', lw=0.8,
                 ls=(0, (2, 2)), zorder=11)
-        ax.annotate(short, xy=(x, y), textcoords='offset points', xytext=(8, 8),
-                    fontsize=STYLE['fonts']['connection_label'], ha='left', va='bottom',
-                    color='0.15', weight='bold', zorder=16,
-                    bbox=dict(boxstyle='round,pad=0.20', fc='white', ec='0.35',
-                              lw=STYLE['line_widths']['stroke_0_9'], alpha=0.94),
-                    arrowprops={'arrowstyle': '-', 'color': '0.35', 'lw': 0.7})
+        ax.annotate(short, xy=(x, y), textcoords='offset points', xytext=(16, -22),
+                    fontsize=max(STYLE['fonts']['connection_label'], 12), ha='left', va='center',
+                    color='0.05', weight='bold', zorder=18,
+                    bbox=dict(boxstyle='round,pad=0.26', fc='white', ec='0.20',
+                              lw=STYLE['line_widths']['stroke_1_1'], alpha=0.97),
+                    arrowprops={'arrowstyle': '-', 'color': '0.25',
+                                'lw': STYLE['line_widths']['stroke_1_1']})
         labels.append({'index': index, 'label': label, 'text': short, 'xy': [x, y]})
     if labels:
         setattr(ax.figure, '_connection_labels', labels)
@@ -540,6 +552,18 @@ def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['ass
         h = min(max(h, n_rows * 0.175 + 1.4), 20.0)
 
     fig = plt.figure(figsize=(width, h))
+    # If a branch support is declared by association, the association label is
+    # the single authoritative F/S callout. Suppress the fallback GD-B support
+    # label to avoid duplicate symbols at the same connector.
+    assocs = getattr(ils, 'definition', {}).get('associations', []) or []
+    ids = getattr(ils, 'ids', [])
+    codes = getattr(ils, 'codes', [])
+    code_by_id = dict(zip(ids, codes))
+    fig._branch_support_labels_via_association = any(
+        a.get('type') == 'Connection'
+        and (code_by_id.get((a.get('from') or {}).get('component')) == 'GD-B'
+             or code_by_id.get((a.get('to') or {}).get('component')) == 'GD-B')
+        for a in assocs)
     if panel:
         gs = fig.add_gridspec(1, 2, width_ratios=[2.7, 1.0], wspace=0.05)
         ax = fig.add_subplot(gs[0])
@@ -621,8 +645,15 @@ def plot_ils(ils, system=None, title=None, path=None, width=STYLE['figure']['ass
                           abs(comp.centre_x - ux) < x_tol for ux, uy in used):
                     y_anchor -= 0.26
                 used.append((comp.centre_x, y_anchor))
+            xytext = (0, 0)
+            va = 'center'
+            if code == 'GD-ST' and ys_n:
+                y_anchor = min(ys_n)
+                xytext = (0, -16)
+                va = 'bottom'
             ax.annotate(component_label(code), xy=(comp.centre_x, y_anchor),
-                        fontsize=STYLE['fonts']['component_label'], ha='center', va='center', zorder=15,
+                        textcoords='offset points', xytext=xytext,
+                        fontsize=STYLE['fonts']['component_label'], ha='center', va=va, zorder=15,
                         color=body_color(code, '0.25'), weight='bold',
                         bbox=dict(boxstyle='round,pad=0.22', fc='white',
                                   ec=body_color(code, '0.6'),

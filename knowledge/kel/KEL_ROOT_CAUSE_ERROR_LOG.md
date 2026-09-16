@@ -283,3 +283,22 @@ available_knowledge_missed :: KEL human-feedback lifecycle requires explicit hum
 edikb_gap :: none; workflow sequencing failure
 implemented_response :: manifest and KEL instructions require feedback request after any plotted layout, covering component placement, connection-type labels and strain-watch pointer locations
 ```
+
+## Q9 Plot semantic symbols and strain-location visibility
+
+```text
+kel_record :: Q9_01_PLOT_SEMANTIC_SYMBOLS_AND_STRAIN_LOCATION
+observed_error :: branch valve/connector were plotted as 3 t point-mass stars, P/S labels were hard to read, GD-ST label looked like it belonged to the valve, tee used an X marker, and requested probable high-strain location was not labelled
+root_cause :: plotter exposed analysis artifacts and internal node markers instead of human-review engineering semantics; strain-location request was not coupled to mandatory model-anchored plot annotation
+available_knowledge_missed :: GD-B.point_masses already distinguished valve node and branch-end connector node; plot_annotations already supported model-coordinate anchors; connection types existed in active connectors and associations
+edikb_gap :: none for visualization; actual strain magnitude still needs EDIKB/FEA evidence
+implemented_response :: semantic branch valve symbol, visible F/P/S/D connection callouts, no branch mass-star labels, no pipe-side connector circle, top-edge GD-ST label, regular tee node, stronger strain_watch annotation marker
+```
+
+### Q9 refinement root cause
+
+```text
+observed_error :: first Q9 implementation still duplicated the branch support label and mixed association labels with connector-body symbols
+root_cause :: label ownership was split between component fallback drawing and association drawing; branch valve symbol was semantically correct but not reused from the GD-VLV visual grammar
+implemented_response :: association label is authoritative where present; component fallback suppresses duplicate support label; connector body symbols removed for review plots; branch valve visual grammar aligned with GD-VLV profile/stem style
+```

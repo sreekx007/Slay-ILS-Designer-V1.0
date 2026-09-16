@@ -1,0 +1,18 @@
+{
+  "schema": "kel-feedback-to-pmap-apf/0.1",
+  "feedback_id": "kel:feedback:q9_plot_semantic_symbols_and_strain_location_visibility",
+  "linked_experience_id": "kel:experience:q9_ilt_z_branch_plot_review:20260916",
+  "created_utc": "2026-09-16T00:00:00Z",
+  "raw_feedback_text": "The plotted ILT-Z concept did not clearly label P/S connections between connector and top frame, showed branch valve and branch connector as 3 t star point masses, omitted the visible branch-valve body, showed an unnecessary circular connector node, anchored the GD-ST label at the frame centre, used an X at the tee junction, and did not label the probable high-strain location requested by the query.",
+  "feedback_type": "incorrect_behavior",
+  "structured_feedback": {
+    "affected_requirement": "All ILS plots must show engineering-review symbols and requested strain-location markers clearly.",
+    "affected_function": "deterministic plot rendering and plot QA",
+    "affected_behavior": "draw branch valves as valve bodies, draw branch/top-frame and structure connector labels as visible F/P/S/D connection labels, avoid point-mass star labels for branch valve/connector, avoid extra connector circular node symbols, anchor GD-ST label to the top edge, show tee as a regular node, and show probable high-strain marker when requested",
+    "affected_structure": "GD-B; GD-ST; GD-Con; GD-VLV; plot_annotations",
+    "affected_constraint": "Human-readable plot must expose connection semantics and requested strain-watch locations without confusing analysis artifacts for components.",
+    "pmap_issue": "The prior plot carried some machine information but failed the human-review representation expected for paper and expert review.",
+    "apf_action": "update_plotter_semantic_symbols_and_strain_marker_gate",
+    "priority": "high"
+  }
+}
