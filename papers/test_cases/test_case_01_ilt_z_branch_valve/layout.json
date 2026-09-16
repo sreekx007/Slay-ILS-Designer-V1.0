@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "ils": {
+    "name": "Paper test ILT-Z branch valve concept",
+    "frame": "local",
+    "ownership": "strict",
+    "connection_system": "PS",
+    "governance_state": "concept_plot_for_human_review",
+    "human_remaining_actions": [
+      "Review plotted branch valve placement and estimated valve dimensions.",
+      "Review P/S connection label visibility and connector locations.",
+      "Review high-strain marker location before accepting the concept for test recording.",
+      "Replace typical dimensions with project-specific branch valve, connector, and wall data before final engineering use.",
+      "Run FEA or validated strain model before treating strain estimate as design value."
+    ]
+  },
+  "pipeline": {
+    "OD_pipe": 0.4064,
+    "t_pipe": 0.021,
+    "provenance": "DESIGN"
+  },
+  "design_basis": {
+    "stinger_radius_m": 90.0,
+    "pipeline_tension_MT": 150.0,
+    "branch_nominal_od_m": 0.2032,
+    "branch_wall_typical_m": 0.0127,
+    "strain_estimate_basis": "screening estimate using EDIKB trend awareness; not FEA",
+    "optimization_target": "reduce header and branch strain by containing branch valve inside GD-ST and avoiding unjustified F2/F2D stiffness"
+  },
+  "components": [
+    {
+      "id": "B",
+      "code": "GD-B",
+      "centre_x": 0.0,
+      "variant": "Z",
+      "P_b1": 4.064,
+      "P_b2": 1.4224,
+      "P_b3": 0.7112,
+      "P_bc": 0.2032,
+      "P_bv": 2.032,
+      "OD_branch": 0.2032,
+      "t_branch": 0.0127,
+      "mass_valve": 3000.0,
+      "mass_connector": 3000.0,
+      "support_connector": "S",
+      "provenance": "DESIGN"
+    },
+    {
+      "id": "ST",
+      "code": "GD-ST",
+      "centre_x": 2.032,
+      "L_top": 5.6896,
+      "H_top": 1.016,
+      "P_vt": -0.4064,
+      "P_c1": 3.6576,
+      "P_c2": 0.4064,
+      "kT_ratio": 2.0,
+      "top_connector_x": [4.064],
+      "provenance": "DESIGN"
+    }
+  ],
+  "associations": [
+    {
+      "type": "Connection",
+      "connection": "S",
+      "from": {"component": "B", "feature": "end"},
+      "to": {"component": "ST", "feature": "top1"},
+      "purpose": "Vertical branch connector anchored to top frame using sliding support intent."
+    }
+  ],
+  "plot_annotations": [
+    {
+      "id": "probable_peak_strain_location",
+      "kind": "strain_watch",
+      "text": "High strain",
+      "anchor": {"component": "B", "feature": "tee"},
+      "xytext": [36, -28]
+    }
+  ]
+}

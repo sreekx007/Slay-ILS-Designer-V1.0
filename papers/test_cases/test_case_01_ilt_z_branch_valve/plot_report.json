@@ -1,0 +1,710 @@
+{
+  "plot_status": "warning",
+  "plot_qa_status": "passed_with_corrections",
+  "output_image": "runs\\paper_test_ilt_z_branch_valve\\layout.png",
+  "checks": [
+    {
+      "id": "assembly_validation",
+      "status": "warning"
+    },
+    {
+      "id": "ea_exposure_gate",
+      "status": "failed",
+      "missing": [
+        "ST.slot2.connector_modelled",
+        "ST.slot2.pipe_landing_modelled",
+        "ST.slot2.pipe_association",
+        "ST.slot2.structure_association",
+        "ST.slot4.connector_modelled",
+        "ST.slot4.pipe_landing_modelled",
+        "ST.slot4.pipe_association",
+        "ST.slot4.structure_association"
+      ]
+    },
+    {
+      "id": "parameter_csv_export",
+      "status": "passed",
+      "path": "runs\\paper_test_ilt_z_branch_valve\\layout.parameters.csv"
+    },
+    {
+      "id": "plot_annotation_anchors",
+      "status": "passed",
+      "failed": []
+    },
+    {
+      "id": "required_structure_connection_labels",
+      "status": "passed",
+      "required": [
+        {
+          "index": 0,
+          "connection": "S",
+          "from": {
+            "component": "B",
+            "feature": "end"
+          },
+          "to": {
+            "component": "ST",
+            "feature": "top1"
+          }
+        }
+      ],
+      "missing": [],
+      "rule": "Show connection type labels only for required non-weld GD-ST/GD-SB structural connections; connector component labels are not required and W welds are omitted."
+    },
+    {
+      "id": "connection_label_legibility",
+      "status": "passed",
+      "minimum_font_pt": 9
+    },
+    {
+      "id": "output_exists",
+      "status": "passed",
+      "message": "Export exists and is nonempty."
+    },
+    {
+      "id": "export_integrity",
+      "status": "passed",
+      "message": "PNG decoded successfully."
+    },
+    {
+      "id": "export_nonblank",
+      "status": "passed",
+      "message": "PNG contains pixel variation."
+    },
+    {
+      "id": "axis_bounds",
+      "status": "passed",
+      "message": "Axes require finite, nonzero x/y ranges."
+    },
+    {
+      "id": "figure_content",
+      "status": "passed",
+      "message": "Geometry axes contain visible artists and pixel variation."
+    },
+    {
+      "id": "geometry_clipping",
+      "status": "passed",
+      "message": "Accessor geometry and sampled contact surfaces fit the axes."
+    },
+    {
+      "id": "physical_scale",
+      "status": "passed",
+      "message": "Compared x/y physical scale with 1% tolerance; no correction applied."
+    },
+    {
+      "id": "whitespace_zoom",
+      "status": "passed",
+      "message": "Drawn data span uses 100.0% of x and 28.9% of y; header extent is retained."
+    },
+    {
+      "id": "label_legend_overlap",
+      "status": "corrected",
+      "message": "No detected layout collisions remain."
+    },
+    {
+      "id": "image_export",
+      "status": "passed"
+    }
+  ],
+  "corrections": [
+    {
+      "type": "view_margin",
+      "before": [
+        0.560832,
+        -1.7800320000000003
+      ],
+      "after": [
+        2.1994368,
+        -3.4186368000000007
+      ]
+    },
+    {
+      "type": "label_move",
+      "label": "GD-VLV",
+      "anchor": [
+        2.032,
+        -1.35128
+      ],
+      "before": [
+        0,
+        -14
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -102.43889999999992,
+        21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "P",
+      "anchor": [
+        0.20320000000000005,
+        -0.4064
+      ],
+      "before": [
+        0,
+        -24
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -45.50399999999987,
+        -49.22399999999999
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "S",
+      "anchor": [
+        3.8608000000000002,
+        -0.4064
+      ],
+      "before": [
+        0,
+        -24
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -45.50399999999987,
+        -49.22399999999999
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "S",
+      "anchor": [
+        4.064,
+        -1.4224
+      ],
+      "before": [
+        16,
+        -22
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -46.54079999999958,
+        21.6
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "GD-B",
+      "anchor": [
+        0.0,
+        -0.7112
+      ],
+      "before": [
+        0,
+        0
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -86.50079999999991,
+        21.59999999999998
+      ],
+      "after_coordinates": "offset points"
+    },
+    {
+      "type": "label_move",
+      "label": "GD-ST",
+      "anchor": [
+        2.032,
+        -1.4224
+      ],
+      "before": [
+        0,
+        -16
+      ],
+      "before_coordinates": "offset points",
+      "after": [
+        -50.248799999999974,
+        21.6
+      ],
+      "after_coordinates": "offset points"
+    }
+  ],
+  "warnings": [
+    "[WARNING] connectors: connection_system='PS' populates 2 slot(s), but the layout contains NO GD-Con parts, so nothing models where those connections meet the pipe. This is the SIMPLIFIED form used by the archetype library; a complete layout places a GD-Con at each slot, landing on a GD-TP, with associations at both ends -- see edas:shared#/connectorAttachment.twoModellingLevels."
+  ],
+  "errors": [],
+  "defaulted_parameters": [
+    {
+      "path": "pipeline.nu",
+      "value": 0.3
+    },
+    {
+      "path": "pipeline.E",
+      "value": 210000000000.0
+    },
+    {
+      "path": "components.ST.P_gap",
+      "value": null
+    },
+    {
+      "path": "components.ST.left_connector_y",
+      "value": [
+        -0.9144
+      ]
+    },
+    {
+      "path": "components.ST.right_connector_y",
+      "value": [
+        -0.9144
+      ]
+    }
+  ],
+  "parameter_csv": "runs\\paper_test_ilt_z_branch_valve\\layout.parameters.csv",
+  "design_governance": {
+    "authority": "tools/plot_design.py",
+    "status": "unstamped_direct_plot",
+    "allowed_output": "non_authoritative_plot",
+    "blocking_gates": [
+      "GOVERNED_WORKFLOW_NOT_RUN"
+    ],
+    "human_remaining_actions": [
+      "If this plot supports a design decision, rerun the request through tools/run_design_workflow.py and use only the authority-stamped governed report.",
+      "Review the parameter CSV and plot report for warnings, defaulted dimensions, and unresolved gates before accepting the concept."
+    ]
+  },
+  "input_file": "runs\\paper_test_ilt_z_branch_valve\\layout.json",
+  "archetype": null,
+  "resolved_assembly_settings": {
+    "header_half_length": 7.8768,
+    "header_auto_extended": true,
+    "connection_system": "PS",
+    "ownership": "strict"
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "where": "header",
+      "message": "auto-extended to +/-7.877 m: widest component reaches 4.877 m and the default +/-7.0 m leaves only 2.123 m for grading"
+    },
+    {
+      "severity": "warning",
+      "where": "connectors",
+      "message": "connection_system='PS' populates 2 slot(s), but the layout contains NO GD-Con parts, so nothing models where those connections meet the pipe. This is the SIMPLIFIED form used by the archetype library; a complete layout places a GD-Con at each slot, landing on a GD-TP, with associations at both ends -- see edas:shared#/connectorAttachment.twoModellingLevels."
+    }
+  ],
+  "design_workflow": {
+    "schema": "ils-design-workflow-report/0.2",
+    "gate_mode": "advisory",
+    "purpose": "unspecified",
+    "status": "failed",
+    "ea_structures": [
+      {
+        "component_id": "ST",
+        "code": "GD-ST",
+        "canonical_parameters": {
+          "centre_x": 2.032,
+          "P_vt": -0.4064,
+          "P_c1": 3.6576,
+          "P_c2": 0.4064,
+          "P_gap": null,
+          "top_connector_x": [
+            4.064
+          ],
+          "left_connector_y": [
+            -0.9144
+          ],
+          "right_connector_y": [
+            -0.9144
+          ],
+          "L_top": 5.6896,
+          "H_top": 1.016,
+          "kT_ratio": 2.0
+        },
+        "active_connectors": [
+          {
+            "slot": 2,
+            "feature": "slot2",
+            "x_m": 0.20320000000000005,
+            "type": "P",
+            "arm_m": 0.4064,
+            "gap_m": null,
+            "connector_id": null,
+            "pipe_landing": null,
+            "associations": [],
+            "coverage": {
+              "connector_modelled": false,
+              "pipe_landing_modelled": false,
+              "pipe_association": false,
+              "structure_association": false
+            }
+          },
+          {
+            "slot": 4,
+            "feature": "slot4",
+            "x_m": 3.8608000000000002,
+            "type": "S",
+            "arm_m": 0.4064,
+            "gap_m": null,
+            "connector_id": null,
+            "pipe_landing": null,
+            "associations": [],
+            "coverage": {
+              "connector_modelled": false,
+              "pipe_landing_modelled": false,
+              "pipe_association": false,
+              "structure_association": false
+            }
+          }
+        ],
+        "inactive_connectors": [
+          {
+            "slot": 1,
+            "x_m": -0.20319999999999994,
+            "status": "inactive"
+          },
+          {
+            "slot": 3,
+            "x_m": 2.032,
+            "status": "inactive"
+          },
+          {
+            "slot": 5,
+            "x_m": 4.2672,
+            "status": "inactive"
+          }
+        ]
+      }
+    ],
+    "branch_gd_st_gate": {
+      "required": true,
+      "status": "passed",
+      "branch_ids": [
+        "B"
+      ],
+      "gd_st_ids": [
+        "ST"
+      ],
+      "unanchored_branch_ids": [],
+      "rule": "Every GD-B branch terminates at GD-ST through the compatible feature defined by the selected anchor; L terminals are horizontal and Z terminals are vertical."
+    },
+    "branch_structure_associations": [
+      {
+        "association_index": 0,
+        "association": {
+          "type": "Connection",
+          "connection": "S",
+          "from": {
+            "component": "B",
+            "feature": "end"
+          },
+          "to": {
+            "component": "ST",
+            "feature": "top1"
+          },
+          "purpose": "Vertical branch connector anchored to top frame using sliding support intent."
+        }
+      }
+    ],
+    "support_sizing_gate": {
+      "required": true,
+      "status": "passed",
+      "items": [
+        {
+          "component_id": "ST",
+          "code": "GD-ST",
+          "sized_for": "GD-B",
+          "required_explicit_parameters": [
+            "L_top",
+            "H_top",
+            "P_vt"
+          ],
+          "defaulted_parameters": [],
+          "status": "passed",
+          "rule": "When GD-ST is provided to support GD-B, its frame dimensions must be fitted to the branch terminal and connector geometry before claiming a complete layout."
+        }
+      ]
+    },
+    "branch_valve_top_frame_gate": {
+      "required": true,
+      "status": "passed",
+      "items": [
+        {
+          "component_id": "B",
+          "code": "GD-B",
+          "gd_st_id": "ST",
+          "connection_system": "PS",
+          "connection_system_status": "passed",
+          "containment_status": "passed",
+          "outside_points": [],
+          "rule": "For a branch valve, keep branch tee/entry, branch valve and branch end inside GD-ST span; prefer PS unless F2/F2D has an explicit evidence basis.",
+          "tee_x_m": 0.0,
+          "valve_x_m": 2.032,
+          "end_x_m": 4.064,
+          "gd_st_span_m": [
+            -0.8128000000000002,
+            4.8768
+          ]
+        }
+      ],
+      "rule": "Branch-valve layouts must use a compatible ILT-L/ILT-Z standard anchor, keep the branch tee/entry, valve and end inside GD-ST, and avoid F2/F2D unless evidence justifies the header-strain penalty."
+    },
+    "valve_base_geometry": {
+      "active": false,
+      "component_code": null,
+      "design_basis": {
+        "stinger_radius_m": 90.0,
+        "pipeline_tension_MT": 150.0,
+        "branch_nominal_od_m": 0.2032,
+        "branch_wall_typical_m": 0.0127,
+        "strain_estimate_basis": "screening estimate using EDIKB trend awareness; not FEA",
+        "optimization_target": "reduce header and branch strain by containing branch valve inside GD-ST and avoiding unjustified F2/F2D stiffness"
+      },
+      "missing_basis": []
+    },
+    "shroud_stiff_evidence_gate": {
+      "required": false,
+      "status": "not_applicable",
+      "missing_basis": [],
+      "required_basis_fields": [
+        "shroud_stiff_evidence_refs",
+        "shroud_dimensions_basis",
+        "stiff_component_position_basis",
+        "shroud_regions_basis",
+        "applicability_limits"
+      ],
+      "rule": "A GD-VLV inside/with GD-SH must apply analogous C1 GD-SH plus stiff-component EDIKB evidence to valve placement and shroud dimensions before the layout can be treated as evidence-applied."
+    },
+    "unresolved_or_inactive_slots": [
+      "ST.slot2.connector_modelled",
+      "ST.slot2.pipe_landing_modelled",
+      "ST.slot2.pipe_association",
+      "ST.slot2.structure_association",
+      "ST.slot4.connector_modelled",
+      "ST.slot4.pipe_landing_modelled",
+      "ST.slot4.pipe_association",
+      "ST.slot4.structure_association"
+    ],
+    "complete_design_claim_allowed": false
+  },
+  "layout_qa": {
+    "corrections": [
+      {
+        "type": "view_margin",
+        "before": [
+          0.560832,
+          -1.7800320000000003
+        ],
+        "after": [
+          2.1994368,
+          -3.4186368000000007
+        ]
+      },
+      {
+        "type": "label_move",
+        "label": "GD-VLV",
+        "anchor": [
+          2.032,
+          -1.35128
+        ],
+        "before": [
+          0,
+          -14
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -102.43889999999992,
+          21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "P",
+        "anchor": [
+          0.20320000000000005,
+          -0.4064
+        ],
+        "before": [
+          0,
+          -24
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -45.50399999999987,
+          -49.22399999999999
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "S",
+        "anchor": [
+          3.8608000000000002,
+          -0.4064
+        ],
+        "before": [
+          0,
+          -24
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -45.50399999999987,
+          -49.22399999999999
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "S",
+        "anchor": [
+          4.064,
+          -1.4224
+        ],
+        "before": [
+          16,
+          -22
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -46.54079999999958,
+          21.6
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "GD-B",
+        "anchor": [
+          0.0,
+          -0.7112
+        ],
+        "before": [
+          0,
+          0
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -86.50079999999991,
+          21.59999999999998
+        ],
+        "after_coordinates": "offset points"
+      },
+      {
+        "type": "label_move",
+        "label": "GD-ST",
+        "anchor": [
+          2.032,
+          -1.4224
+        ],
+        "before": [
+          0,
+          -16
+        ],
+        "before_coordinates": "offset points",
+        "after": [
+          -50.248799999999974,
+          21.6
+        ],
+        "after_coordinates": "offset points"
+      }
+    ],
+    "initial_issues": [
+      {
+        "label": "GD-VLV",
+        "index": 0,
+        "reasons": [
+          "label_overlap",
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "P",
+        "index": 1,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "S",
+        "index": 2,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "S",
+        "index": 3,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "GD-B",
+        "index": 6,
+        "reasons": [
+          "structure_overlap"
+        ]
+      },
+      {
+        "label": "GD-ST",
+        "index": 7,
+        "reasons": [
+          "label_overlap",
+          "structure_overlap"
+        ]
+      }
+    ],
+    "remaining_issues": [],
+    "max_attempts_per_label": 100
+  },
+  "connection_labels": [
+    {
+      "index": 0,
+      "label": "S: B.end -> ST.top1",
+      "text": "S",
+      "xy": [
+        4.064,
+        -1.4224
+      ]
+    }
+  ],
+  "plot_annotations": [
+    {
+      "index": 0,
+      "id": "probable_peak_strain_location",
+      "kind": "strain_watch",
+      "text": "High strain",
+      "anchor": {
+        "component": "B",
+        "feature": "tee"
+      },
+      "status": "passed",
+      "xy": [
+        0.0,
+        0.0
+      ],
+      "xytext": [
+        36,
+        -28
+      ]
+    }
+  ],
+  "required_connection_labels": {
+    "id": "required_structure_connection_labels",
+    "status": "passed",
+    "required": [
+      {
+        "index": 0,
+        "connection": "S",
+        "from": {
+          "component": "B",
+          "feature": "end"
+        },
+        "to": {
+          "component": "ST",
+          "feature": "top1"
+        }
+      }
+    ],
+    "missing": [],
+    "rule": "Show connection type labels only for required non-weld GD-ST/GD-SB structural connections; connector component labels are not required and W welds are omitted."
+  }
+}

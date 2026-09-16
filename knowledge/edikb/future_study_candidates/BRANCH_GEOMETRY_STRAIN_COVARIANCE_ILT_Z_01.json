@@ -1,0 +1,34 @@
+{
+  "schema": "edikb-future-study-candidate/0.1",
+  "candidate_id": "future_study:branch_geometry_strain_covariance_ilt_z_01",
+  "title": "Branch pipe geometry influence on header strain for ILT-Z branch valve layouts",
+  "source": "manual_review",
+  "status": "candidate",
+  "study_type": "future_correlation_study",
+  "components": ["GD-B", "GD-ST", "GD-VLV", "GD-HdPipe"],
+  "variables": [
+    "GD-B.P_b1 branch horizontal length",
+    "GD-B.P_b2 vertical connector height",
+    "GD-B.P_b3 intermediate Z-branch rise",
+    "GD-B.P_bv branch valve station",
+    "GD-B.OD_branch and t_branch",
+    "GD-ST.L_top and H_top",
+    "GD-ST connector spacing and PS/F connection system",
+    "branch valve mass and connector mass",
+    "stinger radius and pipeline tension"
+  ],
+  "responses": [
+    "peak header strain",
+    "peak strain location",
+    "branch strain",
+    "connector reaction and moment transfer",
+    "strain redistribution outside GD-ST span"
+  ],
+  "reason": "During accepted paper test case 01, the concept used typical branch geometry. Expert review noted that geometrical parameters of the branch pipe could affect pipeline strains and should be studied further if sufficient data is unavailable.",
+  "required_before_claim": "Do not claim optimized branch geometry or connector spacing for minimum strain unless supported by EDIKB dataset rows, FEA DOE, or validated ML/correlation evidence covering the selected geometry range.",
+  "linked_records": [
+    "runs/paper_test_ilt_z_branch_valve/layout.json",
+    "runs/paper_test_ilt_z_branch_valve/report.json",
+    "knowledge/kel/feedback_records/implemented/Q9_01_PLOT_SEMANTIC_SYMBOLS_AND_STRAIN_LOCATION.json"
+  ]
+}

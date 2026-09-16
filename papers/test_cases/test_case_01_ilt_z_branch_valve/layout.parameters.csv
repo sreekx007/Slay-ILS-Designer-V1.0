@@ -1,0 +1,47 @@
+parameter,value
+name,Paper test ILT-Z branch valve concept
+components,2
+codes,"GD-B, GD-ST"
+connection system,PS
+ownership,strict
+header,-7.877 .. +7.877 m
+,AUTO-EXTENDED past 12 m
+assembly extent,-0.813 .. +4.877 m
+span,5.690 m
+mass (FLOOR),"9,144 kg"
+  pipe steel,"3,144 kg"
+  point masses,"6,000 kg"
+CoG x,+1.9999 m
+CoG y,-0.7000 m
+EA exposure gate,failed
+  association,B.end -> ST.top1 [S]
+provenance,DESIGN
+,
+-- B / GD-B,
+  centre_x,0.0000 m
+  variant,Z
+  P_b1,4.0640 m
+  P_b2,1.4224 m
+  P_bc,0.2032 m
+  P_b3,0.7112 m
+  P_bv,2.0320 m
+  OD_branch,0.2032 m
+  t_branch,0.0127 m
+  mass_valve,3000
+  mass_connector,3000
+  support_connector,S
+  support [S],"x = +4.0640, y = -1.4224 m"
+,
+-- ST / GD-ST,
+  centre_x,2.0320 m
+  P_vt,-0.4064 m
+  P_c1,3.6576 m
+  P_c2,0.4064 m
+  top_connector_x,4.0640
+  left_connector_y,-0.9144
+  right_connector_y,-0.9144
+  L_top,5.6896 m
+  H_top,1.0160 m
+  kT_ratio,2.0000 m
+  slot 2 [P],"x = +0.2032 m, arm 0.4064 m"
+  slot 4 [S],"x = +3.8608 m, arm 0.4064 m"
