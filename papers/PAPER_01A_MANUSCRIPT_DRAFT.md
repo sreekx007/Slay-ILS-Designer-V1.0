@@ -1,6 +1,6 @@
 # Knowledge-Graph-Governed AI4D as a Continuation of S-Lay Inline Structure Research: An Industrial Structural Design Case Study
 
-**Working manuscript:** Paper 01A, Draft v0.5
+**Working manuscript:** Paper 01A, Draft v0.6
 **Planned venue:** engrXiv
 **Authors:** Sreekanth Manakkattil Sivaraman; Jagannatha Venkataramana Reddy
 **Corresponding author:** <u>[TO BE COMPLETED]</u>
@@ -101,6 +101,7 @@ flowchart TD
 | EDIKB | Behaviour evidence, numeric response data, evidence limits, uncertainty, future-study candidates | CSV datasets; JSON graph records; Markdown evidence notes | Installation response dataset; claim-to-evidence records; source provenance; correlation-study candidates |
 | EDPR | Current problem statement, objectives, constraints, unknowns, APF/P-map interpretation | Markdown prompts; JSON problem records; example EDPR files | Problem-understanding prompt; runtime parser prompt; example problem records |
 | Governed tools | Validation, retrieval, design gates, layout materialization, plotting, reporting | Python scripts; YAML settings; generated JSON/CSV/PNG/PDF reports | EDPR/EDES/EDAS validators; design workflow runner; plotter; plot checker; plot-style configuration |
+| Deterministic plotter | Converts structured layout records into reviewable drawings without image-generation hallucination | JSON layout input; Python plotter; YAML style file; PNG/PDF output; CSV parameter output | Standard layout plot; readable labels; high-strain markers; connection labels; separate parameter table |
 | KEL | Human feedback, root cause, expert review, graph-change request, implementation evidence, promotion state | Markdown records; JSON schemas; templates; lifecycle reports; Python utilities | Experience records; feedback groups; root-cause logs; expert-review records; graph-change requests; KEL validation and promotion scripts |
 
 ### 4.1 EDES: component knowledge
@@ -158,7 +159,23 @@ The tool layer is deterministic. It should not replace engineering judgement; it
 | Plotter and plot checker | Creates reviewable drawings and checks visibility/readability gates | Python plus YAML style file |
 | Review artifacts | Gives the engineer the layout, parameters, assumptions, and gaps | JSON, CSV, PNG, PDF, Markdown |
 
-### 4.6 KEL: reviewed feedback and graph evolution
+### 4.6 Deterministic plotter and downstream model emission
+
+The plotter is an important governed tool because visual review is central to structural engineering. A text-only response can state that a valve is protected, a branch is supported, or a connector is attached to a top frame, but the engineer must be able to see whether the emitted layout actually shows that relationship. General image generation is not sufficient for this purpose because generated drawings can hallucinate geometry, omit small labels, invent connections, or visually imply associations that are not present in the engineering record. The plotter must therefore be deterministic: it should draw only from the structured layout data emitted from EDES and EDAS records.
+
+In the proposed workflow, EDES and EDAS should be usable to emit an intermediate layout file. That file is not only a plotting input; it is a reusable engineering object. The same component identities, coordinates, dimensions, connection types, support associations, contact ownership, and assumptions can be used to create a readable concept plot, export a parameter table, and later seed finite-element model generation. This is important for the next stage of the framework, where additional FEA results, correlation studies, surrogate models, and physics-informed machine-learning workflows can be linked back to the same component and assembly identifiers.
+
+| Plotter input or output | Engineering purpose | Example file type |
+|---|---|---|
+| Structured layout record | Captures components, coordinates, dimensions, associations, connection types, and assumptions | JSON |
+| Parameter export | Separates dimensions, weights, support spacing, and assumed values from the drawing | CSV or JSON |
+| Reviewable plot | Shows topology, support/protection logic, connection labels, and critical locations | PNG or PDF |
+| Plot validation report | Checks label visibility, required associations, missing outputs, and possible drawing ambiguity | JSON or Markdown |
+| FEA/ML bridge record | Preserves the same layout identifiers for meshing, load-case setup, response mapping, and future physics-informed ML | JSON, CSV, or model-builder input |
+
+The plotter therefore acts as a controlled translation layer between AI-assisted reasoning and engineering review. It also prepares the workflow for future model automation: a layout that can be plotted deterministically from EDES/EDAS data can also be converted, with additional rules and verification, into an FEA pre-processing record. Once FEA results are generated, the response fields can be mapped back into EDIKB and later used for physics-informed ML or bounded surrogate models.
+
+### 4.7 KEL: reviewed feedback and graph evolution
 
 KEL is the controlled learning layer. It prevents ad hoc feedback from becoming official knowledge without review. A KEL cycle records the observed issue, grouped feedback, root cause, expert decision, proposed graph or tool change, implementation evidence, and closeout state. Markdown is useful for human-readable records; JSON schemas are useful for enforcing required fields; Python utilities are useful for validating records and promoting accepted changes. This is the layer that allows the workflow to improve after expert review while preserving traceability.
 
@@ -169,7 +186,7 @@ KEL is the controlled learning layer. It prevents ad hoc feedback from becoming 
 | Graph-change request | States exactly what knowledge or rule should be changed | Markdown or JSON |
 | Lifecycle and promotion utilities | Validates, promotes, and closes accepted lessons | Python scripts plus lifecycle reports |
 
-This separation supports failure diagnosis. A weak output may be caused by problem parsing, component definition, assembly representation, evidence retrieval, evidence applicability, tool execution, visualization, workflow bypass, or missing study data. KEL uses that diagnosis to improve the workflow without turning unreviewed comments into official knowledge. The same architecture can be implemented with different software choices as long as the gates, records, and human-review responsibilities are preserved.
+This separation supports failure diagnosis. A weak output may be caused by problem parsing, component definition, assembly representation, evidence retrieval, evidence applicability, tool execution, deterministic plotting, visualization, workflow bypass, or missing study data. KEL uses that diagnosis to improve the workflow without turning unreviewed comments into official knowledge. The same architecture can be implemented with different software choices as long as the gates, records, and human-review responsibilities are preserved.
 
 ## 5. FBS-OAM for structural assembly knowledge
 
@@ -274,13 +291,13 @@ An organization should begin with a bounded use case: read-only retrieval, evide
 
 The current toolchain supports conceptual reasoning and evidence tracing. It does not perform final sizing, direct structural verification, fatigue assessment, fabrication approval, installation approval, or code compliance. The solver is first-pass and evidence-scoped. The EDIKB is bounded by the two source studies and curated case-study records. The vector index is a first-pass retrieval layer, not a validated production semantic search system.
 
-Future work should complete the R7/R8 claim-to-evidence matrix, run three controlled examples, archive EDPR/retrieval/solution/layout/plot/KEL artifacts, expand EDIKB with reviewed evidence and uncertainty metadata, and use future-study candidates to plan parametric FEA, correlation studies, and bounded surrogate models. In this sense, the paper is not the end point of the research chain; it is the transition from manually interpreted ILS evidence to an AI-assisted knowledge system that can later absorb ML-derived correlations.
+Future work should complete the R7/R8 claim-to-evidence matrix, run three controlled examples, archive EDPR/retrieval/solution/layout/plot/KEL artifacts, expand EDIKB with reviewed evidence and uncertainty metadata, and use structured EDES/EDAS layout exports to plan parametric FEA, correlation studies, physics-informed ML, and bounded surrogate models. In this sense, the paper is not the end point of the research chain; it is the transition from manually interpreted ILS evidence to an AI-assisted knowledge system that can later absorb ML-derived correlations.
 
 ## 11. Conclusions
 
 This case study frames engineering AI as governed knowledge work. The LLM interprets language, proposes problem records, plans retrieval, and explains results. The toolchain defines components, assemblies, evidence, gates, plots, feedback records, and lifecycle controls. Engineers confirm intent, judge evidence applicability, approve knowledge changes, and retain responsibility for project verification.
 
-For S-lay inline structures, the design object is an interacting assembly. Component identity, topology, connection systems, support/protection assumptions, behavior evidence, and response limits must be explicit before an AI-assisted recommendation can be trusted. The future path continues the original ILS research programme: governed knowledge graphs plus hybrid retrieval, symbolic grounding, deterministic tools, KEL root-cause learning, parametric studies, uncertainty-aware ML, and engineering review.
+For S-lay inline structures, the design object is an interacting assembly. Component identity, topology, connection systems, support/protection assumptions, behavior evidence, and response limits must be explicit before an AI-assisted recommendation can be trusted. The future path continues the original ILS research programme: governed knowledge graphs plus hybrid retrieval, symbolic grounding, deterministic plotting and tools, KEL root-cause learning, parametric FEA studies, physics-informed ML, uncertainty-aware surrogate models, and engineering review.
 
 ## Data, Software, and Reproducibility Statement
 
