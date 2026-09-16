@@ -110,3 +110,10 @@ Connector component labels are not required. The required plot labels are connec
 ## Q9 plot semantic-symbol rule
 
 For ILT plots, do not let analysis artifacts replace engineering symbols. Branch valves shall be drawn with a valve-body symbol even when represented internally as a `GD-B` point mass. Branch connector hardware shall be represented by the connection/support symbol, not by a mass star or tonnage label. Non-weld `GD-ST`/`GD-SB` connection labels (`F`, `P`, `S`, `D`) must be visibly labelled at the structure-side connection. Suppress unnecessary circular pipe-side connector node symbols. Anchor `GD-ST` labels to the top edge. Draw tee junctions as regular nodes. If the query asks for likely max strain or strain location, include a model-anchored `strain_watch` plot annotation before presenting the plot.
+
+## Inline valve with GD-SB base check
+
+When a header inline component such as GD-VLV is protected by GD-SB because it cannot contact or ride stinger rollers, the agent must not use generic EDAS base defaults as final layout dimensions. It must size GD-SB from the protected component envelope plus limited clearance, explicitly check the elevation/connector arm against EDIKB evidence that larger vertical offsets increase strain, and expose the basis in the design record. If the base is much lower than needed, the layout is not ready for review.
+
+For complete or paper-test plots, GD-SB/GD-ST connectors must be explicit GD-Con objects with pipe-side landing on GD-TP or another valid connector host. Do not connect a support connector directly to a GD-VLV end node or plain header pipe. If the user requests peak strain on the pipeline, place the strain marker on the pipeline near the connector/load-transfer station; if the exact station is uncertain, label it as probable/uncertain rather than anchoring to a support corner.
+

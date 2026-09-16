@@ -302,3 +302,15 @@ observed_error :: first Q9 implementation still duplicated the branch support la
 root_cause :: label ownership was split between component fallback drawing and association drawing; branch valve symbol was semantically correct but not reused from the GD-VLV visual grammar
 implemented_response :: association label is authoritative where present; component fallback suppresses duplicate support label; connector body symbols removed for review plots; branch valve visual grammar aligned with GD-VLV profile/stem style
 ```
+
+## Q10.01 Inline valve base EDAS/elevation gate
+
+```text
+kel_record :: Q10_01_INLINE_VALVE_BASE_EDAS_ELEVATION
+observed_error :: GD-SB was drawn much lower than necessary for the inline valve, pipeline high-strain marker was anchored to GD-SB corner, and support connector was placed at a valve end node rather than a GD-TP landing
+root_cause :: after EDPR confirmation the workflow bypassed EDAS/EDIKB re-checks during layout plotting; existing connector landing rule was not applied to the generated layout, and base depth had no deterministic clearance/elevation gate
+available_knowledge_missed :: EDAS GD-Con-to-GD-TP connector landing rule; EDES GD-VLV envelope; GD-SB P_v/P_vt parameters; EDIKB elevation-strain correlation showing larger vertical offsets increase strain
+edikb_gap :: medium; exact strain magnitude/location still requires analysis or validated correlation, but the directionality of elevation effect and connector landing requirement were already available
+implemented_response :: valve_base_geometry clearance/elevation gate; explicit complete-layout instruction for GD-Con landing on GD-TP; pipeline-anchored high-strain annotation rule
+```
+

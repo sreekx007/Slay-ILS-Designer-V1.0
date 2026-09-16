@@ -123,6 +123,35 @@ class LabelLayoutTests(unittest.TestCase):
         self.assertEqual(ils.components[0].geometry_nodes(),before)
         self.assertEqual(ils.definition,definition)
 
+    def test_inline_valve_base_geometry_gate_limits_elevation_arm(self):
+        over_deep = {
+            'schema_version': 1,
+            'ils': {'connection_system': 'PS', 'design_gate': 'complete'},
+            'pipeline': {'OD_pipe': 0.508, 't_pipe': 0.0254},
+            'design_basis': {
+                'base_depth': 'base clears valve envelope',
+                'base_length': 'base spans inline valve envelope',
+                'connector_spacing': 'P-S slots selected around protected valve',
+                'evidence': ['EDIKB elevation correlation: larger vertical offset increases strain'],
+            },
+            'components': [
+                {'id': 'VLV', 'code': 'GD-VLV', 'centre_x': 0.0,
+                 'L_body': 1.27, 'OD_body': 1.016, 't_body': 0.0889,
+                 'L_trans': 0.6096, 't_trans': 0.0508},
+                {'id': 'SB', 'code': 'GD-SB', 'centre_x': 0.0,
+                 'P_l1': 3.20, 'P_l2': 0.60, 'P_v': 1.55, 'P_vt': -0.65,
+                 'P_c1': 2.40, 'P_c2': 0.55},
+            ],
+        }
+        report = build_ils(over_deep).design_workflow_report()
+        self.assertEqual(report['valve_base_geometry']['status'], 'failed')
+        self.assertIn('SB.connector_arm_excessive_for_elevation_strain', report['unresolved_or_inactive_slots'])
+
+        fitted = copy.deepcopy(over_deep)
+        fitted['components'][1].update({'P_l1': 3.6, 'P_l2': 0.35, 'P_v': 0.88, 'P_vt': -0.23, 'P_c1': 3.10, 'P_c2': 0.20})
+        report = build_ils(fitted).design_workflow_report()
+        self.assertEqual(report['valve_base_geometry']['status'], 'passed')
+
 
 if __name__ == '__main__':
     unittest.main()

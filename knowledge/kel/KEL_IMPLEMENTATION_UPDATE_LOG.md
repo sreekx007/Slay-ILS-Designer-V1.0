@@ -122,3 +122,15 @@ plotters/component_plotter.py :: branch valve symbol now follows GD-VLV transiti
 layout record :: shortened strain annotation text to High strain
 validation :: py_compile + tools.test_plot_labels + tools.test_plot_cli passed
 ```
+
+### Q10 inline valve base EDAS/elevation gate - 2026-09-16
+
+```text
+trigger :: paper Test 02 review found GD-SB depth excessive relative to valve, pipeline high-strain marker anchored to GD-SB corner, and support connector attached at valve node rather than a GD-TP landing
+plotters/ils_builder.py :: valve_base_geometry now checks GD-SB bottom clearance to GD-VLV envelope and connector/elevation arm against bounded limits
+plotters/ils_builder.py :: valve_base_geometry exposes clearance/elevation status items in design_workflow_report
+workflow :: complete/paper-test layouts must use explicit GD-Con to valid GD-TP/GD-TT/GD-PIP/GD-BOSS landing, not simplified valve-node support attachment
+plot rule :: pipeline peak strain marker must anchor on the pipeline near connector/load-transfer region, with uncertainty stated if exact peak location is not evidenced
+validation :: added unit regression for excessive versus fitted GD-SB valve-base geometry
+```
+

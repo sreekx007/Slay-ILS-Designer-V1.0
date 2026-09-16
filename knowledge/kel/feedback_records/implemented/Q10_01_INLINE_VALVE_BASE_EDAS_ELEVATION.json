@@ -1,0 +1,29 @@
+{
+  "id": "Q10_01_INLINE_VALVE_BASE_EDAS_ELEVATION",
+  "status": "implemented",
+  "date": "2026-09-16",
+  "source": "paper_test_02_inline_valve_base_feedback",
+  "user_feedback": [
+    "GD-SB depth was too high/lower than the valve and would increase strain through elevation effect.",
+    "High-strain marker for pipeline peak strain was anchored to a GD-SB corner instead of the pipeline near the connector.",
+    "Connector on the header line was added at a valve end node instead of a GD-TP connector landing, indicating EDAS was not referred."
+  ],
+  "root_cause": "The layout workflow used generic/default support geometry and a simplified connector representation after the design response, rather than re-entering EDAS/EDIKB gates before plotting. Existing connector landing knowledge existed, but the inline-valve base depth did not have a deterministic elevation/clearance gate.",
+  "implemented_rules": [
+    "For GD-VLV protected by GD-SB, compute valve lower envelope and check GD-SB bottom clearance against a bounded clearance allowance.",
+    "For GD-VLV protected by GD-SB, check connector/elevation arm abs(P_vt) against a bounded maximum unless explicit EDIKB evidence justifies a larger value.",
+    "For complete/review plots, connector load paths must be represented by GD-Con parts landing on GD-TP/GD-TT/GD-PIP/GD-BOSS connector hosts, not directly on GD-VLV or plain header nodes.",
+    "Pipeline peak strain annotations must use pipeline/model-coordinate anchors near the connector or load-transfer region, and uncertainty must be stated if the exact location is not evidenced."
+  ],
+  "files_updated": [
+    "plotters/ils_builder.py",
+    "tools/test_plot_labels.py",
+    "knowledge/kel/KEL_LLM_WORKFLOW_INSTRUCTIONS.md",
+    "knowledge/kel/KEL_IMPLEMENTATION_UPDATE_LOG.md",
+    "knowledge/kel/KEL_ROOT_CAUSE_ERROR_LOG.md"
+  ],
+  "validation": [
+    "Unit regression added for over-deep versus fitted GD-SB valve-base geometry gate.",
+    "Corrected Test 02 layout to use fitted GD-SB dimensions, GD-TP pipe landing bodies, GD-Con connector objects, and pipeline-anchored high-strain annotation."
+  ]
+}

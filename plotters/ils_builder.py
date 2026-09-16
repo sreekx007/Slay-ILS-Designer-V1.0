@@ -1010,9 +1010,12 @@ class ILS:
             missing.append('GD-VLV.GD-SH.evidence_not_applied')
 
         support_sizing = []
+        valve_base_items = []
         component_defs = {entry.get('id', f'C{index+1}'): entry
                           for index, entry in enumerate(self.definition.get('components', []))
                           if isinstance(entry, dict)}
+        valve_objects = [(cid, comp) for cid, comp in zip(self.ids, self.components)
+                         if comp.code == 'GD-VLV']
         for cid, code in zip(self.ids, self.codes):
             if code == 'GD-SB' and 'GD-VLV' in self.codes:
                 required = ('P_l1', 'P_l2', 'P_v', 'P_vt')
@@ -1028,6 +1031,43 @@ class ILS:
                     'defaulted_parameters': defaulted,
                     'status': 'passed' if not defaulted else 'failed',
                     'rule': 'When GD-SB is provided to protect GD-VLV, its dimensions must be fitted to the valve envelope and clearance basis rather than left at generic EDAS defaults.'
+                })
+                sb = self.components[self.ids.index(cid)]
+                max_clearance_limit = float(basis.get('max_base_clearance_m', self.pipe.OD_pipe * 0.35))
+                max_connector_arm = float(basis.get('max_base_connector_arm_m', self.pipe.OD_pipe * 0.75))
+                clearance_items = []
+                for valve_id, valve in valve_objects:
+                    valve_low = max((node.y for node in valve.geometry_nodes()), default=self.pipe.OD_pipe / 2.0)
+                    bottom_clearance = sb.y_bottom - valve_low
+                    clearance_status = 'passed'
+                    if bottom_clearance < 0:
+                        clearance_status = 'failed'
+                        missing.append(f'{cid}.base_does_not_clear.{valve_id}')
+                    elif bottom_clearance > max_clearance_limit:
+                        clearance_status = 'failed'
+                        missing.append(f'{cid}.base_clearance_excessive_for_elevation_strain.{valve_id}')
+                    clearance_items.append({
+                        'valve_id': valve_id,
+                        'valve_lower_envelope_y_m': valve_low,
+                        'base_bottom_y_m': sb.y_bottom,
+                        'bottom_clearance_m': bottom_clearance,
+                        'max_clearance_m': max_clearance_limit,
+                        'status': clearance_status,
+                    })
+                connector_arm = abs(sb.P_vt)
+                connector_arm_status = 'passed'
+                if connector_arm > max_connector_arm:
+                    connector_arm_status = 'failed'
+                    missing.append(f'{cid}.connector_arm_excessive_for_elevation_strain')
+                valve_base_items.append({
+                    'component_id': cid,
+                    'code': code,
+                    'connector_arm_m': connector_arm,
+                    'max_connector_arm_m': max_connector_arm,
+                    'connector_arm_status': connector_arm_status,
+                    'clearance_items': clearance_items,
+                    'status': 'passed' if connector_arm_status == 'passed' and all(item['status'] == 'passed' for item in clearance_items) else 'failed',
+                    'rule': 'For GD-VLV protection by GD-SB, size the base from the valve envelope plus limited clearance and keep the connector/elevation arm small unless EDIKB evidence justifies a larger offset.'
                 })
             if code == 'GD-ST' and 'GD-B' in self.codes:
                 required = ('L_top', 'H_top', 'P_vt')
@@ -1124,7 +1164,10 @@ class ILS:
                     'rule': 'Branch-valve layouts must use a compatible ILT-L/ILT-Z standard anchor, keep the branch tee/entry, valve and end inside GD-ST, and avoid F2/F2D unless evidence justifies the header-strain penalty.'
                 },
                 'valve_base_geometry': {'active': valve_base, 'component_code': 'GD-SB' if valve_base else None,
-                                        'design_basis': basis, 'missing_basis': basis_missing},
+                                        'design_basis': basis, 'missing_basis': basis_missing,
+                                        'items': valve_base_items,
+                                        'status': 'not_applicable' if not valve_base_items else 'passed' if all(item['status'] == 'passed' for item in valve_base_items) else 'failed',
+                                        'rule': 'GD-SB depth must clear the protected GD-VLV envelope without introducing unnecessary elevation arm that is known to increase strain.'},
                 'shroud_stiff_evidence_gate': {
                     'required': shroud_stiff_active,
                     'status': 'not_applicable' if not shroud_stiff_active else 'passed' if not shroud_basis_missing else 'failed',
