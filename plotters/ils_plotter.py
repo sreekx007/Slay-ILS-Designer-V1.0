@@ -446,11 +446,36 @@ def _draw_plot_annotations(ax, ils):
     if results:
         setattr(ax.figure, '_plot_annotations', results)
 def _draw_connection_labels(ax, ils):
-    """Annotate declared non-weld connections with their connector type."""
+    """Annotate declared non-weld connections with their connector type.
+
+    A physical GD-Con normally has two associations: one to the pipe-side
+    landing body and one to the support structure. Without de-duplication the
+    same P/S/F connector is labelled twice, and the EA component's active-slot
+    fallback can add a third symbol. For assembly plots, keep one authoritative
+    label per GD-Con, preferring the structure-side association because that is
+    the connection type the human reviewer needs to see.
+    """
     assocs = getattr(ils, 'definition', {}).get('associations', []) or []
     ids = getattr(ils, 'ids', [])
     codes = getattr(ils, 'codes', [])
     code_by_id = dict(zip(ids, codes))
+    structure_codes = {'GD-ST', 'GD-SB'}
+    chosen_for_connector = {}
+    for idx, assoc in enumerate(assocs):
+        if assoc.get('type') != 'Connection' or assoc.get('connection') == 'W':
+            continue
+        left = assoc.get('from') or {}
+        right = assoc.get('to') or {}
+        ends = [left.get('component'), right.get('component')]
+        con_ids = [cid for cid in ends if code_by_id.get(cid) == 'GD-Con']
+        if not con_ids:
+            continue
+        con_id = con_ids[0]
+        other = next((cid for cid in ends if cid != con_id), None)
+        preferred = code_by_id.get(other) in structure_codes
+        if con_id not in chosen_for_connector or preferred:
+            chosen_for_connector[con_id] = idx
+
     labels = []
     used = []
     for index, assoc in enumerate(assocs):
@@ -463,6 +488,9 @@ def _draw_connection_labels(ax, ils):
         right = assoc.get('to') or {}
         a_id, b_id = left.get('component'), right.get('component')
         if not a_id or not b_id:
+            continue
+        con_ids = [cid for cid in (a_id, b_id) if code_by_id.get(cid) == 'GD-Con']
+        if con_ids and chosen_for_connector.get(con_ids[0]) != index:
             continue
         a_xy = ils.feature_xy(a_id, left.get('feature'))
         b_xy = ils.feature_xy(b_id, right.get('feature'))

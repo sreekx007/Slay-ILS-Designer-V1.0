@@ -152,6 +152,31 @@ class LabelLayoutTests(unittest.TestCase):
         report = build_ils(fitted).design_workflow_report()
         self.assertEqual(report['valve_base_geometry']['status'], 'passed')
 
+    def test_explicit_gdcon_uses_one_connection_label_per_connector(self):
+        spec = {
+            'schema_version': 1,
+            'ils': {'connection_system': 'PS'},
+            'pipeline': {'OD_pipe': 0.508, 't_pipe': 0.0254},
+            'components': [
+                {'id': 'TP_L', 'code': 'GD-TP', 'centre_x': -1.0, 'L_comp': 0.4, 't_comp': 0.0254},
+                {'id': 'TP_R', 'code': 'GD-TP', 'centre_x': 1.0, 'L_comp': 0.4, 't_comp': 0.0254},
+                {'id': 'SB', 'code': 'GD-SB', 'centre_x': 0.0, 'P_l1': 2.4, 'P_l2': 0.3,
+                 'P_v': 0.7, 'P_vt': -0.2, 'P_c1': 2.0, 'P_c2': 0.2},
+                {'id': 'CON_P', 'code': 'GD-Con', 'centre_x': -1.0, 'conn_type': 'P', 'y_struct': -0.2},
+                {'id': 'CON_S', 'code': 'GD-Con', 'centre_x': 1.0, 'conn_type': 'S', 'y_struct': -0.2},
+            ],
+            'associations': [
+                {'type': 'Connection', 'connection': 'P', 'from': {'component': 'CON_P', 'feature': 'pipeEnd'}, 'to': {'component': 'TP_L', 'feature': 'conMid'}},
+                {'type': 'Connection', 'connection': 'P', 'from': {'component': 'CON_P', 'feature': 'structEnd'}, 'to': {'component': 'SB', 'feature': 'slot2'}},
+                {'type': 'Connection', 'connection': 'S', 'from': {'component': 'CON_S', 'feature': 'pipeEnd'}, 'to': {'component': 'TP_R', 'feature': 'conMid'}},
+                {'type': 'Connection', 'connection': 'S', 'from': {'component': 'CON_S', 'feature': 'structEnd'}, 'to': {'component': 'SB', 'feature': 'slot4'}},
+            ],
+        }
+        fig = build_ils(spec).plot()
+        labels = getattr(fig, '_connection_labels', [])
+        self.assertEqual([item['text'] for item in labels].count('P'), 1)
+        self.assertEqual([item['text'] for item in labels].count('S'), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

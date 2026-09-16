@@ -134,3 +134,13 @@ plot rule :: pipeline peak strain marker must anchor on the pipeline near connec
 validation :: added unit regression for excessive versus fitted GD-SB valve-base geometry
 ```
 
+### Q10 duplicate GD-Con connection-label correction - 2026-09-17
+
+```text
+trigger :: Test Case 02 review found P and S labels repeated three ways on an explicit GD-Con/GD-TP/GD-SB inline valve base layout
+root_cause :: plotter labelled one physical GD-Con from active EA slot fallback plus both pipe-side and structure-side associations
+plotters/component_plotter.py :: suppresses EA active-slot connector symbol when assembly caller passes label=False
+plotters/ils_plotter.py :: de-duplicates connection labels to one authoritative label per GD-Con, preferring the structure-side association
+validation :: added explicit GD-Con duplicate-label regression; tools.test_plot_labels + tools.test_plot_cli passed
+```
+

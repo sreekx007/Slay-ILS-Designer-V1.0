@@ -314,3 +314,14 @@ edikb_gap :: medium; exact strain magnitude/location still requires analysis or 
 implemented_response :: valve_base_geometry clearance/elevation gate; explicit complete-layout instruction for GD-Con landing on GD-TP; pipeline-anchored high-strain annotation rule
 ```
 
+## Q10.02 GD-Con single connection label
+
+```text
+kel_record :: Q10_02_GDCON_SINGLE_CONNECTION_LABEL
+observed_error :: explicit inline valve base plot repeated P and S labels from the same physical connectors
+root_cause :: plotter label ownership was split between EA active-slot drawing and GD-Con association drawing; one physical GD-Con has two associations, causing duplicate labels unless de-duplicated
+available_knowledge_missed :: GD-Con is the physical connector object; association graph distinguishes pipe-side and structure-side links for the same connector
+edikb_gap :: none; visualization/reporting ownership issue
+implemented_response :: one authoritative visible connection label per GD-Con, preferring structure-side association for human review
+```
+

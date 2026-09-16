@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "ils": {
+    "purpose": "paper_test_02_inline_valve_base_corrected",
+    "connection_system": "PS",
+    "design_gate": "complete",
+    "ownership": "lowest",
+    "human_remaining_actions": [
+      "Review corrected GD-SB depth and connector landing before accepting case record.",
+      "Confirm whether detailed strain calculation is required after concept review."
+    ]
+  },
+  "pipeline": {
+    "OD_pipe": 0.508,
+    "t_pipe": 0.0254
+  },
+  "header": {
+    "half_length": 5.0
+  },
+  "design_basis": {
+    "base_depth": "GD-SB bottom set just below GD-VLV lower envelope with limited clearance to avoid unnecessary elevation strain.",
+    "base_length": "GD-SB flat length spans inline valve plus connector landing stations with reduced extra length.",
+    "connector_spacing": "P-S support connectors placed on GD-TP landings outside the valve weld/transition envelope.",
+    "evidence": [
+      "EDIKB elevation-strain correlation: larger support vertical offset increases strain; therefore minimize GD-SB P_vt and clearance."
+    ],
+    "max_base_clearance_m": 0.2,
+    "max_base_connector_arm_m": 0.4,
+    "peak_strain_basis": "Probable pipeline peak strain is expected near connector/load-transfer region; exact value/location remains uncertain without detailed analysis."
+  },
+  "components": [
+    {
+      "id": "TP_L",
+      "code": "GD-TP",
+      "centre_x": -1.55,
+      "L_comp": 0.5,
+      "t_comp": 0.0254
+    },
+    {
+      "id": "VLV",
+      "code": "GD-VLV",
+      "centre_x": 0.0,
+      "L_body": 1.27,
+      "OD_body": 1.016,
+      "t_body": 0.0889,
+      "L_trans": 0.6096,
+      "t_trans": 0.0508,
+      "L_stem": 1.27,
+      "OD_stem": 0.508,
+      "t_stem": 0.0508,
+      "m_extra": 5000
+    },
+    {
+      "id": "TP_R",
+      "code": "GD-TP",
+      "centre_x": 1.55,
+      "L_comp": 0.5,
+      "t_comp": 0.0254
+    },
+    {
+      "id": "SB",
+      "code": "GD-SB",
+      "centre_x": 0.0,
+      "P_l1": 3.6,
+      "P_l2": 0.35,
+      "P_v": 0.88,
+      "P_vt": -0.23,
+      "P_c1": 3.1,
+      "P_c2": 0.2,
+      "kB_ratio": 2.0
+    },
+    {
+      "id": "CON_P",
+      "code": "GD-Con",
+      "centre_x": -1.55,
+      "conn_type": "P",
+      "y_struct": -0.23
+    },
+    {
+      "id": "CON_S",
+      "code": "GD-Con",
+      "centre_x": 1.55,
+      "conn_type": "S",
+      "y_struct": -0.23
+    }
+  ],
+  "associations": [
+    {
+      "type": "Connection",
+      "connection": "P",
+      "from": {
+        "component": "CON_P",
+        "feature": "pipeEnd"
+      },
+      "to": {
+        "component": "TP_L",
+        "feature": "conMid"
+      }
+    },
+    {
+      "type": "Connection",
+      "connection": "P",
+      "from": {
+        "component": "CON_P",
+        "feature": "structEnd"
+      },
+      "to": {
+        "component": "SB",
+        "feature": "slot2"
+      }
+    },
+    {
+      "type": "Connection",
+      "connection": "S",
+      "from": {
+        "component": "CON_S",
+        "feature": "pipeEnd"
+      },
+      "to": {
+        "component": "TP_R",
+        "feature": "conMid"
+      }
+    },
+    {
+      "type": "Connection",
+      "connection": "S",
+      "from": {
+        "component": "CON_S",
+        "feature": "structEnd"
+      },
+      "to": {
+        "component": "SB",
+        "feature": "slot4"
+      }
+    }
+  ],
+  "plot_annotations": [
+    {
+      "id": "probable_pipeline_peak_strain_location",
+      "kind": "strain_watch",
+      "text": "High strain",
+      "anchor": {
+        "x": -1.55,
+        "y": 0.0
+      }
+    }
+  ]
+}

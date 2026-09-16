@@ -1,0 +1,25 @@
+{
+  "id": "Q10_02_GDCON_SINGLE_CONNECTION_LABEL",
+  "status": "implemented",
+  "date": "2026-09-17",
+  "source": "paper_test_02_inline_valve_base_plot_review",
+  "user_feedback": [
+    "P and S labels repeated three ways on inline valve base plot.",
+    "Need to know whether repeated labels were assembly build error or plotter error."
+  ],
+  "root_cause": "The assembly correctly contained one GD-Con for each physical connector, but the plotter labelled the same connector from active structure slots and from both pipe-side and structure-side associations.",
+  "implemented_rules": [
+    "Assembly plots with explicit GD-Con associations must show one connection label per physical GD-Con.",
+    "When a GD-Con has both pipe-side and structure-side associations, the structure-side association is the authoritative review label.",
+    "EA connector fallback symbols are suppressed when assembly association labels are present."
+  ],
+  "files_updated": [
+    "plotters/component_plotter.py",
+    "plotters/ils_plotter.py",
+    "tools/test_plot_labels.py"
+  ],
+  "validation": [
+    "Added regression test for one P and one S label for two explicit GD-Con connectors.",
+    "tools.test_plot_labels and tools.test_plot_cli passed."
+  ]
+}

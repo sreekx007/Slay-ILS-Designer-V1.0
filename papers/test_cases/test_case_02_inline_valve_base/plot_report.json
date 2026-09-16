@@ -1,0 +1,283 @@
+{
+  "name": null,
+  "n_components": 6,
+  "codes": [
+    "GD-TP",
+    "GD-VLV",
+    "GD-TP",
+    "GD-SB",
+    "GD-Con",
+    "GD-Con"
+  ],
+  "iw_ea_classes": [
+    "EA-O",
+    "EA-SB",
+    "IW-A",
+    "IW-P"
+  ],
+  "header_m": [
+    -5.0,
+    5.0
+  ],
+  "header_auto_sized": false,
+  "extent_m": [
+    -2.15,
+    2.15
+  ],
+  "span_m": 4.3,
+  "connection_system": "PS",
+  "ownership": "lowest",
+  "mass_kg": 10627.83424892483,
+  "mass_breakdown_kg": {
+    "pipe_steel_kg": 5627.83424892483,
+    "sleeve_steel_kg": 0,
+    "point_masses_kg": 5000.0,
+    "total_kg": 10627.83424892483
+  },
+  "mass_is_a_floor": true,
+  "mass_exclusions": [
+    "SB/GD-SB: no mass parameter exists on this component, so its structural steel is NOT counted. It carries geometry and a stiffness RATIO only.",
+    "An ILS cannot express a mass belonging to no component, so a bare inertia on the header is not representable."
+  ],
+  "unresolved_point_masses": [],
+  "cog_m": {
+    "x": 0.0,
+    "y": 0.0,
+    "frame": "ILS-local, y positive DOWN"
+  },
+  "lumped_mass_kg": 5000.0,
+  "modelling_boundaries": [
+    "IW-A PRESENT (GD-TP) alongside an EA structure. The published studies excluded bulkheads deliberately, so the connection-layout effect could be seen alone -- results here are NOT comparable with those benchmarks.",
+    "Connectors attach ON THE PIPE CENTRELINE: active_connectors() returns an axial station and a moment arm, carrying no offset from the pipe axis. Listed under Limitations in both studies.",
+    "SB/GD-SB: P_vt = -0.2300 m (signed position, y positive DOWN). The published EA-SB set used P_vt = 0 THROUGHOUT, against a non-zero default here -- so a defaulted GD-SB does not reproduce that set.",
+    "Strain reported downstream from this layout is for RELATIVE comparison between arrangements, not absolute code compliance."
+  ],
+  "design_workflow": {
+    "schema": "ils-design-workflow-report/0.2",
+    "gate_mode": "complete",
+    "purpose": "paper_test_02_inline_valve_base_corrected",
+    "status": "passed",
+    "ea_structures": [
+      {
+        "component_id": "SB",
+        "code": "GD-SB",
+        "canonical_parameters": {
+          "centre_x": 0.0,
+          "P_vt": -0.23,
+          "P_c1": 3.1,
+          "P_c2": 0.2,
+          "P_gap": null,
+          "P_l1": 3.6,
+          "P_l2": 0.35,
+          "P_v": 0.88,
+          "kB_ratio": 2.0
+        },
+        "active_connectors": [
+          {
+            "slot": 2,
+            "feature": "slot2",
+            "x_m": -1.55,
+            "type": "P",
+            "arm_m": 0.23,
+            "gap_m": null,
+            "connector_id": "CON_P",
+            "pipe_landing": "TP_L",
+            "associations": [
+              {
+                "index": 0,
+                "association": {
+                  "type": "Connection",
+                  "connection": "P",
+                  "from": {
+                    "component": "CON_P",
+                    "feature": "pipeEnd"
+                  },
+                  "to": {
+                    "component": "TP_L",
+                    "feature": "conMid"
+                  }
+                }
+              },
+              {
+                "index": 1,
+                "association": {
+                  "type": "Connection",
+                  "connection": "P",
+                  "from": {
+                    "component": "CON_P",
+                    "feature": "structEnd"
+                  },
+                  "to": {
+                    "component": "SB",
+                    "feature": "slot2"
+                  }
+                }
+              }
+            ],
+            "coverage": {
+              "connector_modelled": true,
+              "pipe_landing_modelled": true,
+              "pipe_association": true,
+              "structure_association": true
+            }
+          },
+          {
+            "slot": 4,
+            "feature": "slot4",
+            "x_m": 1.55,
+            "type": "S",
+            "arm_m": 0.23,
+            "gap_m": null,
+            "connector_id": "CON_S",
+            "pipe_landing": "TP_R",
+            "associations": [
+              {
+                "index": 2,
+                "association": {
+                  "type": "Connection",
+                  "connection": "S",
+                  "from": {
+                    "component": "CON_S",
+                    "feature": "pipeEnd"
+                  },
+                  "to": {
+                    "component": "TP_R",
+                    "feature": "conMid"
+                  }
+                }
+              },
+              {
+                "index": 3,
+                "association": {
+                  "type": "Connection",
+                  "connection": "S",
+                  "from": {
+                    "component": "CON_S",
+                    "feature": "structEnd"
+                  },
+                  "to": {
+                    "component": "SB",
+                    "feature": "slot4"
+                  }
+                }
+              }
+            ],
+            "coverage": {
+              "connector_modelled": true,
+              "pipe_landing_modelled": true,
+              "pipe_association": true,
+              "structure_association": true
+            }
+          }
+        ],
+        "inactive_connectors": [
+          {
+            "slot": 1,
+            "x_m": -1.75,
+            "status": "inactive"
+          },
+          {
+            "slot": 3,
+            "x_m": 0.0,
+            "status": "inactive"
+          },
+          {
+            "slot": 5,
+            "x_m": 1.75,
+            "status": "inactive"
+          }
+        ]
+      }
+    ],
+    "branch_gd_st_gate": {
+      "required": false,
+      "status": "not_applicable",
+      "branch_ids": [],
+      "gd_st_ids": [],
+      "unanchored_branch_ids": [],
+      "rule": "Every GD-B branch terminates at GD-ST through the compatible feature defined by the selected anchor; L terminals are horizontal and Z terminals are vertical."
+    },
+    "branch_structure_associations": [],
+    "support_sizing_gate": {
+      "required": true,
+      "status": "passed",
+      "items": [
+        {
+          "component_id": "SB",
+          "code": "GD-SB",
+          "sized_for": "GD-VLV",
+          "required_explicit_parameters": [
+            "P_l1",
+            "P_l2",
+            "P_v",
+            "P_vt"
+          ],
+          "defaulted_parameters": [],
+          "status": "passed",
+          "rule": "When GD-SB is provided to protect GD-VLV, its dimensions must be fitted to the valve envelope and clearance basis rather than left at generic EDAS defaults."
+        }
+      ]
+    },
+    "branch_valve_top_frame_gate": {
+      "required": false,
+      "status": "not_applicable",
+      "items": [],
+      "rule": "Branch-valve layouts must use a compatible ILT-L/ILT-Z standard anchor, keep the branch tee/entry, valve and end inside GD-ST, and avoid F2/F2D unless evidence justifies the header-strain penalty."
+    },
+    "valve_base_geometry": {
+      "active": true,
+      "component_code": "GD-SB",
+      "design_basis": {
+        "base_depth": "GD-SB bottom set just below GD-VLV lower envelope with limited clearance to avoid unnecessary elevation strain.",
+        "base_length": "GD-SB flat length spans inline valve plus connector landing stations with reduced extra length.",
+        "connector_spacing": "P-S support connectors placed on GD-TP landings outside the valve weld/transition envelope.",
+        "evidence": [
+          "EDIKB elevation-strain correlation: larger support vertical offset increases strain; therefore minimize GD-SB P_vt and clearance."
+        ],
+        "max_base_clearance_m": 0.2,
+        "max_base_connector_arm_m": 0.4,
+        "peak_strain_basis": "Probable pipeline peak strain is expected near connector/load-transfer region; exact value/location remains uncertain without detailed analysis."
+      },
+      "missing_basis": [],
+      "items": [
+        {
+          "component_id": "SB",
+          "code": "GD-SB",
+          "connector_arm_m": 0.23,
+          "max_connector_arm_m": 0.4,
+          "connector_arm_status": "passed",
+          "clearance_items": [
+            {
+              "valve_id": "VLV",
+              "valve_lower_envelope_y_m": 0.508,
+              "base_bottom_y_m": 0.65,
+              "bottom_clearance_m": 0.14200000000000002,
+              "max_clearance_m": 0.2,
+              "status": "passed"
+            }
+          ],
+          "status": "passed",
+          "rule": "For GD-VLV protection by GD-SB, size the base from the valve envelope plus limited clearance and keep the connector/elevation arm small unless EDIKB evidence justifies a larger offset."
+        }
+      ],
+      "status": "passed",
+      "rule": "GD-SB depth must clear the protected GD-VLV envelope without introducing unnecessary elevation arm that is known to increase strain."
+    },
+    "shroud_stiff_evidence_gate": {
+      "required": false,
+      "status": "not_applicable",
+      "missing_basis": [],
+      "required_basis_fields": [
+        "shroud_stiff_evidence_refs",
+        "shroud_dimensions_basis",
+        "stiff_component_position_basis",
+        "shroud_regions_basis",
+        "applicability_limits"
+      ],
+      "rule": "A GD-VLV inside/with GD-SH must apply analogous C1 GD-SH plus stiff-component EDIKB evidence to valve placement and shroud dimensions before the layout can be treated as evidence-applied."
+    },
+    "unresolved_or_inactive_slots": [],
+    "complete_design_claim_allowed": true
+  },
+  "findings": []
+}

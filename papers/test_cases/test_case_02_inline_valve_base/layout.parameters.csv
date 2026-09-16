@@ -1,0 +1,38 @@
+component_id,code,parameter,value
+TP_L,GD-TP,centre_x,-1.55
+TP_L,GD-TP,L_comp,0.5
+TP_L,GD-TP,t_comp,0.0254
+VLV,GD-VLV,centre_x,0.0
+VLV,GD-VLV,L_body,1.27
+VLV,GD-VLV,OD_body,1.016
+VLV,GD-VLV,t_body,0.0889
+VLV,GD-VLV,L_trans,0.6096
+VLV,GD-VLV,t_trans,0.0508
+VLV,GD-VLV,L_stem,1.27
+VLV,GD-VLV,OD_stem,0.508
+VLV,GD-VLV,t_stem,0.0508
+VLV,GD-VLV,m_extra,5000
+TP_R,GD-TP,centre_x,1.55
+TP_R,GD-TP,L_comp,0.5
+TP_R,GD-TP,t_comp,0.0254
+SB,GD-SB,centre_x,0.0
+SB,GD-SB,P_l1,3.6
+SB,GD-SB,P_l2,0.35
+SB,GD-SB,P_v,0.88
+SB,GD-SB,P_vt,-0.23
+SB,GD-SB,P_c1,3.1
+SB,GD-SB,P_c2,0.2
+SB,GD-SB,kB_ratio,2.0
+CON_P,GD-Con,centre_x,-1.55
+CON_P,GD-Con,conn_type,P
+CON_P,GD-Con,y_struct,-0.23
+CON_S,GD-Con,centre_x,1.55
+CON_S,GD-Con,conn_type,S
+CON_S,GD-Con,y_struct,-0.23
+DESIGN_BASIS,,base_depth,GD-SB bottom set just below GD-VLV lower envelope with limited clearance to avoid unnecessary elevation strain.
+DESIGN_BASIS,,base_length,GD-SB flat length spans inline valve plus connector landing stations with reduced extra length.
+DESIGN_BASIS,,connector_spacing,P-S support connectors placed on GD-TP landings outside the valve weld/transition envelope.
+DESIGN_BASIS,,evidence,"[""EDIKB elevation-strain correlation: larger support vertical offset increases strain; therefore minimize GD-SB P_vt and clearance.""]"
+DESIGN_BASIS,,max_base_clearance_m,0.2
+DESIGN_BASIS,,max_base_connector_arm_m,0.4
+DESIGN_BASIS,,peak_strain_basis,Probable pipeline peak strain is expected near connector/load-transfer region; exact value/location remains uncertain without detailed analysis.

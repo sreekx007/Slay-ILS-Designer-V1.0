@@ -390,14 +390,18 @@ def draw_connectors(ax, comp, system=None, label=True):
                     if (label and first) else None)
         # Do not draw connector-body symbols on the structure connector.
         # Review requires the connection type label, not an extra black body.
-        ax.annotate(connector_symbol(ctype), (x, y_face), textcoords='offset points',
-                    xytext=(0, -24 if y_face < 0 else 24), ha='center', va='center',
-                    fontsize=max(STYLE['fonts']['connection_label'], 12),
-                    color='0.05', fontweight='bold', zorder=18,
-                    bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=CONN,
-                              lw=STYLE['line_widths']['stroke_1_1'], alpha=0.96),
-                    arrowprops={'arrowstyle': '-', 'color': CONN,
-                                'lw': STYLE['line_widths']['stroke_1_1']})
+        # In assembly plots with explicit GD-Con associations, the declared
+        # association label is authoritative, so the caller can pass label=False
+        # to draw only the connector line and avoid duplicate P/S/F callouts.
+        if label:
+            ax.annotate(connector_symbol(ctype), (x, y_face), textcoords='offset points',
+                        xytext=(0, -24 if y_face < 0 else 24), ha='center', va='center',
+                        fontsize=max(STYLE['fonts']['connection_label'], 12),
+                        color='0.05', fontweight='bold', zorder=18,
+                        bbox=dict(boxstyle='round,pad=0.24', fc='white', ec=CONN,
+                                  lw=STYLE['line_widths']['stroke_1_1'], alpha=0.96),
+                        arrowprops={'arrowstyle': '-', 'color': CONN,
+                                    'lw': STYLE['line_widths']['stroke_1_1']})
         first = False
     if label and conns:
         # Symbols are patches, so they carry no automatic legend entry.
