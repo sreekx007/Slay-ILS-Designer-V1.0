@@ -1,4 +1,4 @@
-# Knowledge-Graph-Governed AI4D for Industrial Structural Design: An S-Lay Inline Structure Framework
+# Knowledge-Graph-Governed AI4D as a Continuation of S-Lay Inline Structure Research: An Industrial Structural Design Case Study
 
 **Working manuscript:** Paper 01A, Draft v0.3
 **Planned venue:** engrXiv
@@ -6,21 +6,21 @@
 **Corresponding author:** <u>[TO BE COMPLETED]</u>
 **Draft date:** 15 September 2026
 
-> <u>**Draft status.** This is a concise framework manuscript. It is not yet submission-ready and does not present validated design results. Underlined text marks pending author/originator work.</u>
+> <u>**Draft status.** This is a concise case-study manuscript. It is not yet submission-ready and does not present validated design results. Underlined text marks pending author/originator work.</u>
 
 ## Abstract
 
-Engineering organizations store reusable design knowledge in drawings, reports, finite-element studies, spreadsheets, review comments, and expert memory. Much of it is difficult to reuse because the component identity, assembly topology, load case, assumptions, response location, and design reasoning are not represented as connected records. This paper presents Slay-ILS-Designer, an ontology-grounded AI4D framework for conceptual reasoning about subsea inline structures installed by S-lay. The framework separates component definitions, assembly rules, behavior evidence, current problem representation, deterministic tools, and governed feedback into EDES, EDAS, EDIKB, EDPR, toolchain, and KEL layers. A large language model is used as a constrained language interface; deterministic tools validate, retrieve, build layouts, plot, and report. The paper explains the S-lay inline-structure ontology, FBS-OAM assembly framing, P-map/APF problem representation, hybrid RAG pipeline, and KEL feedback loop. It does not claim final design sizing, code compliance, validated optimization, or replacement of project-specific analysis.
+Engineering organizations store reusable design knowledge in drawings, reports, finite-element studies, spreadsheets, review comments, and expert memory. Much of it is difficult to reuse because component identity, assembly topology, load case, assumptions, response location, and design reasoning are not represented as connected records. This paper presents a case study in applying state-of-the-art AI methods to industrial structural design, using subsea inline structures installed by S-lay as the engineering domain. The work is positioned as a continuation of two earlier S-lay inline-structure studies by the authors: those studies generated the engineering evidence base, and the present paper examines how that evidence can be converted into an ontology-grounded, reviewable AI4D workflow for professional engineers. The case study separates component definitions, assembly rules, behavior evidence, current problem representation, deterministic tools, and governed feedback into EDES, EDAS, EDIKB, EDPR, toolchain, and KEL layers. A large language model is used as a constrained language interface; deterministic tools validate, retrieve, build layouts, plot, and report. The paper explains the S-lay inline-structure ontology, FBS-OAM assembly framing, P-map/APF problem representation, hybrid RAG pipeline, and KEL feedback loop. It does not claim final design sizing, code compliance, validated optimization, or replacement of project-specific analysis.
 
 **Keywords:** engineering knowledge management; AI4D; knowledge graph; hybrid RAG; S-lay installation; inline structure; FBS-OAM; P-map; APF; KEL
 
 ## 1. Introduction
 
-Industrial structural design rarely starts from a blank sheet. Engineers reuse previous layouts, installation lessons, analysis reports, review comments, and local practices. For subsea inline structures, that reuse is difficult because design behavior depends on coupled geometry, contact, stiffness, mass, connector behavior, installation boundary conditions, and response location.
+This paper is the third step in a continuing research chain on S-lay inline structures. The first two studies developed the domain evidence base for inline-structure concepts and installation response. The present work asks a different question: how can that engineering knowledge be organized so that modern AI methods can help a professional engineer retrieve, reason about, and improve it without hiding the assumptions or bypassing engineering review? Industrial structural design rarely starts from a blank sheet. Engineers reuse previous layouts, installation lessons, analysis reports, review comments, and local practices. For subsea inline structures, that reuse is difficult because design behavior depends on coupled geometry, contact, stiffness, mass, connector behavior, installation boundary conditions, and response location.
 
 LLMs make this knowledge easier to query, but fluent text is not engineering validity. An LLM can produce a plausible layout while omitting a required support, applying evidence outside its domain, or drawing a concept that hides a missing association. The practical question is therefore not whether an LLM can answer; it is whether the answer is traceable, evidence-bounded, tool-checkable, and reviewable.
 
-Slay-ILS-Designer treats engineering AI first as knowledge management and governance. The contribution is a layered framework that connects an S-lay inline-structure ontology, explicit problem representation, governed retrieval, deterministic layout/plot tools, and a feedback loop for reviewed knowledge evolution.
+The case study treats engineering AI first as knowledge management and governance. The contribution is a layered method that connects an S-lay inline-structure ontology, explicit problem representation, governed retrieval, deterministic layout/plot tools, and a feedback loop for reviewed knowledge evolution. The repository implementation is used as a reproducible vehicle for the case study, while the research contribution is the engineering workflow and knowledge-governance approach that can grow as further evidence, correlation data, and ML models are added.
 
 ```mermaid
 flowchart LR
@@ -35,23 +35,25 @@ flowchart LR
 
 > <u>**Figure 1 production note.** Replace with a publication-quality workflow diagram.</u>
 
+The intended reader is a practicing engineer who needs to understand how AI methods are being applied to a familiar structural-design problem. The paper therefore keeps the tool details secondary and presents the repository as an auditable case-study implementation of the research method.
+
 ## 2. Literature survey
 
-The framework combines four bodies of prior work. First, engineering-design AI has long used explicit knowledge representations to separate what a system is, what it does, and why it is needed. Gero's design-prototype work established design knowledge as reusable structure rather than isolated calculation notes [1]. Goel, Rugaber, and Vattam formalized structure-behavior-function modeling for complex engineered systems, giving a useful basis for separating physical objects, behavior, and purpose [2]. For S-lay inline structures, that separation is necessary but incomplete unless assembly features and relations are also represented.
+The case study combines four bodies of prior work. First, engineering-design AI has long used explicit knowledge representations to separate what a system is, what it does, and why it is needed. Gero's design-prototype work established design knowledge as reusable structure rather than isolated calculation notes [1]. Goel, Rugaber, and Vattam formalized structure-behavior-function modeling for complex engineered systems, giving a useful basis for separating physical objects, behavior, and purpose [2]. For S-lay inline structures, that separation is necessary but incomplete unless assembly features and relations are also represented.
 
 Second, assembly representation research provides the language needed to describe connected engineered objects. The NIST Open Assembly Model work represents parts, assembly features, liaisons, positions, orientations, and tolerances [3]. This paper adopts that assembly view for inline-structure concepts: a valve, shroud, branch, base structure, top structure, and connector are not only shapes; they are associated objects with interfaces, positions, orientations, load-transfer roles, and contact responsibilities.
 
-Third, design-problem formulation research motivates the EDPR layer. Dinar et al.'s Problem Map framework represents requirements, functions, artifacts, behaviors, and issues as linked problem-formulation records [4]. Automated Problem Formulation work similarly separates the action, product, and function of a request so that an AI system can distinguish designing, validating, comparing, ranking, clarifying, and explaining [5]. In this manuscript, EDPR applies those ideas to a bounded engineering workflow before any layout is generated.
+Third, design-problem formulation research motivates the EDPR layer. Dinar et al.'s Problem Map framework represents requirements, functions, artifacts, behaviors, and issues as linked problem-formulation records [4]. Automated Problem Formulation work similarly separates the action, product, and function of a request so that an AI system can distinguish designing, validating, comparing, ranking, clarifying, and explaining [5]. In this manuscript, EDPR applies those ideas to a bounded engineering workflow before any layout is generated, so the AI-assisted response starts from a reviewable design basis rather than from an uninspected prompt interpretation.
 
-Fourth, recent AI systems motivate retrieval and tool governance, but they do not remove the need for engineering controls. Retrieval-augmented generation showed that language models can combine generated answers with explicit retrieved memory [6]. ReAct and Toolformer showed that language models can coordinate reasoning with external actions or tools [7], [8]. Human-in-the-loop LLM and knowledge-graph design frameworks further support the need for reviewable interaction between human experts, graph records, and generated concepts [9]. Slay-ILS-Designer uses these ideas conservatively: retrieval supports recall, tools enforce deterministic checks, and KEL records expert-reviewed corrections rather than treating raw model output as design authority.
+Fourth, recent AI systems motivate retrieval and tool governance, but they do not remove the need for engineering controls. Retrieval-augmented generation showed that language models can combine generated answers with explicit retrieved memory [6]. ReAct and Toolformer showed that language models can coordinate reasoning with external actions or tools [7], [8]. Human-in-the-loop LLM and knowledge-graph design frameworks further support the need for reviewable interaction between human experts, graph records, and generated concepts [9]. This case study uses these ideas conservatively: retrieval supports recall, tools enforce deterministic checks, and KEL records expert-reviewed corrections rather than treating raw model output as design authority.
 
-The gap addressed here is therefore practical integration. The paper does not introduce a new general FBS, OAM, P-map, APF, or RAG theory. It adapts those ideas to a high-consequence structural assembly domain where component identity, assembly topology, evidence applicability, visualization quality, and feedback governance must be visible to engineering reviewers.
+The gap addressed here is therefore practical integration for professional engineering practice. The paper does not introduce a new general FBS, OAM, P-map, APF, or RAG theory. It shows how those ideas can be combined with prior S-lay inline-structure research to form a traceable AI4D case study where component identity, assembly topology, evidence applicability, visualization quality, and feedback governance must be visible to engineering reviewers. The planned next stage is to enrich the evidence base with additional simulation, correlation, and ML-derived knowledge rather than treating the current workflow as complete.
 
 ## 3. S-lay inline-structure ontology
 
 An S-lay inline structure is an interacting assembly, not a single object. It may include header pipe, inline valve or thickened section, branch pipe, top structure, base structure, shroud, connectors, supports, and transitions. During installation, the assembly passes through the firing line and stinger rollers, so local stiffness, elevation, mass, support position, and roller-contact path can affect strain and bending moment.
 
-The repository uses stable `GD-` identifiers so drawings, data records, plots, and validation reports refer to the same objects.
+The case-study knowledge model uses stable `GD-` identifiers so drawings, data records, plots, and validation reports refer to the same objects.
 
 | Code | Plain name | Engineering role |
 |---|---|---|
@@ -65,13 +67,13 @@ The repository uses stable `GD-` identifiers so drawings, data records, plots, a
 | `GD-SB` | Base structure | Lower protection/support, often roller-contact relevant |
 | `GD-Con` | Connector/support | Load-transfer element |
 
-The source papers used related external-structure notation such as `EA-ST` and `EA-SB`. This manuscript uses repository notation `GD-ST` and `GD-SB`; the change is terminology only. The underlying S-lay inline-structure evidence base comes from the two source ILT studies listed in the references [10], [11].
+The source papers used related external-structure notation such as `EA-ST` and `EA-SB`. This manuscript uses unified case-study notation `GD-ST` and `GD-SB`; the change is terminology only. The underlying S-lay inline-structure evidence base comes from the two source ILT studies listed in the references [10], [11].
 
 Associations are as important as components. A branch connector must terminate at a declared feature, not merely appear near a top frame. A base structure may own the roller-contact envelope while the pipeline or valve remains the structural section. These relations must be explicit because they cannot be inferred reliably from drawing proximity.
 
 ## 4. Knowledge architecture
 
-The framework separates knowledge by responsibility.
+The case-study architecture separates knowledge by responsibility.
 
 | Layer | Responsibility |
 |---|---|
@@ -86,7 +88,7 @@ This separation supports failure diagnosis. A weak output may be caused by probl
 
 ## 5. FBS-OAM for structural assembly knowledge
 
-Function-Behavior-Structure (FBS) is useful because inline structures exist to perform functions, produce behavior, and use physical structure [1], [2]. For this domain, FBS alone is not enough because the design object is an assembly. The framework therefore uses an FBS-OAM view: FBS captures function, behavior, and structure; OAM-style concepts make objects, assembly features, associations, positions, orientations, and load-transfer methods explicit [3].
+Function-Behavior-Structure (FBS) is useful because inline structures exist to perform functions, produce behavior, and use physical structure [1], [2]. For this domain, FBS alone is not enough because the design object is an assembly. The proposed knowledge model therefore uses an FBS-OAM view: FBS captures function, behavior, and structure; OAM-style concepts make objects, assembly features, associations, positions, orientations, and load-transfer methods explicit [3].
 
 | FBS-OAM item | ILS interpretation |
 |---|---|
@@ -118,9 +120,9 @@ The governed workflow requires EDPR confirmation before layout generation. In en
 
 ## 7. Hybrid RAG pipeline
 
-Symbolic records are necessary for engineering authority, but exact keyword matching is not enough. Engineers may say "strongback" when the repository term is `GD-ST`, or "valve cannot ride rollers" when the grounded meaning includes `GD-VLV`, `GD-SB`, roller-contact limits, missing roller geometry, moment evidence, and prior KEL lessons.
+Symbolic records are necessary for engineering authority, but exact keyword matching is not enough. Engineers may say "strongback" when the case-study ontology term is `GD-ST`, or "valve cannot ride rollers" when the grounded meaning includes `GD-VLV`, `GD-SB`, roller-contact limits, missing roller geometry, moment evidence, and prior KEL lessons.
 
-Hybrid RAG is used as semantic recall, not as final authority [6]. The related tool-use literature supports the idea that language models can coordinate external actions, but in this framework those actions remain gated by deterministic engineering checks [7], [8].
+Hybrid RAG is used as semantic recall, not as final authority [6]. The related tool-use literature supports the idea that language models can coordinate external actions, but in this case study those actions remain gated by deterministic engineering checks [7], [8].
 
 ```mermaid
 flowchart TD
@@ -144,7 +146,7 @@ A semantically similar paragraph becomes useful only after grounding, evidence c
 
 ## 8. Governed workflow and KEL
 
-The authoritative design entry point is `tools/run_design_workflow.py`. Lower-level tools validate EDPR, retrieve context, solve, materialize layouts, plot, and package review artifacts. A direct plot or lower-level output is not authoritative unless it passes through the governed workflow and receives the required design-governance stamp.
+In the repository implementation, the authoritative design entry point is `tools/run_design_workflow.py`. Lower-level tools validate EDPR, retrieve context, solve, materialize layouts, plot, and package review artifacts. A direct plot or lower-level output is not authoritative unless it passes through the governed workflow and receives the required design-governance stamp. This implementation detail is included to make the case study reproducible; the broader principle is that AI-assisted structural design must use a controlled workflow rather than isolated prompt responses.
 
 The workflow is:
 
@@ -152,10 +154,10 @@ The workflow is:
 2. retrieve and ground EDES, EDAS, EDIKB, KEL, and relevant documents;
 3. check topology, evidence, support/protection, and plot/report gates;
 4. emit an EDAS-compatible layout, explicit gap, or request for missing information;
-5. generate repository plot and machine-readable report;
+5. generate a reviewable plot and machine-readable report;
 6. capture feedback through KEL when correction or learning is needed.
 
-KEL records the experience, feedback, root cause, expert decision, implementation evidence, and promotion state. Its human-review role is consistent with recent human-in-the-loop LLM and knowledge-graph design work, but KEL adds repository-level lifecycle control for lessons and graph evolution [9]. Recent KEL work showed that root cause must be captured per implemented candidate. The same visible error can arise from missed retrieval, missing EDAS rule, insufficient EDIKB evidence, plot-report weakness, or workflow bypass.
+KEL records the experience, feedback, root cause, expert decision, implementation evidence, and promotion state. Its human-review role is consistent with recent human-in-the-loop LLM and knowledge-graph design work, but KEL adds lifecycle control for lessons and graph evolution [9]. Recent KEL work showed that root cause must be captured per implemented candidate. The same visible error can arise from missed retrieval, missing EDAS rule, insufficient EDIKB evidence, plot-report weakness, or workflow bypass.
 
 | Experience class | Principle captured |
 |---|---|
@@ -185,23 +187,23 @@ Reviewers should score requirement fidelity, topology validity, evidence precisi
 
 An organization should begin with a bounded use case: read-only retrieval, evidence tracing, EDPR drafting, governed plotting, and feedback capture. EDES should be owned by component specialists, EDAS by layout engineers, EDIKB by analysis specialists, EDPR by project engineering, and KEL lifecycle by a governance role.
 
-The current framework supports conceptual reasoning and evidence tracing. It does not perform final sizing, direct structural verification, fatigue assessment, fabrication approval, installation approval, or code compliance. The solver is first-pass and evidence-scoped. The EDIKB is bounded by source studies and repository records. The vector index is a first-pass retrieval layer, not a validated production semantic search system.
+The current case-study implementation supports conceptual reasoning and evidence tracing. It does not perform final sizing, direct structural verification, fatigue assessment, fabrication approval, installation approval, or code compliance. The solver is first-pass and evidence-scoped. The EDIKB is bounded by the two source studies and curated case-study records. The vector index is a first-pass retrieval layer, not a validated production semantic search system.
 
-Future work should complete the R7/R8 claim-to-evidence matrix, run three controlled examples, archive EDPR/retrieval/solution/layout/plot/KEL artifacts, expand EDIKB with reviewed evidence and uncertainty metadata, and use future-study candidates to plan parametric FEA, correlation studies, and bounded surrogate models.
+Future work should complete the R7/R8 claim-to-evidence matrix, run three controlled examples, archive EDPR/retrieval/solution/layout/plot/KEL artifacts, expand EDIKB with reviewed evidence and uncertainty metadata, and use future-study candidates to plan parametric FEA, correlation studies, and bounded surrogate models. In this sense, the paper is not the end point of the research chain; it is the transition from manually interpreted ILS evidence to an AI-assisted knowledge system that can later absorb ML-derived correlations.
 
 ## 11. Conclusions
 
-Slay-ILS-Designer frames engineering AI as governed knowledge work. The LLM interprets language, proposes problem records, plans retrieval, and explains results. The repository defines components, assemblies, evidence, gates, plots, feedback records, and lifecycle controls. Engineers confirm intent, judge evidence applicability, approve knowledge changes, and retain responsibility for project verification.
+This case study frames engineering AI as governed knowledge work. The LLM interprets language, proposes problem records, plans retrieval, and explains results. The implementation defines components, assemblies, evidence, gates, plots, feedback records, and lifecycle controls. Engineers confirm intent, judge evidence applicability, approve knowledge changes, and retain responsibility for project verification.
 
-For S-lay inline structures, the design object is an interacting assembly. Component identity, topology, connection systems, support/protection assumptions, behavior evidence, and response limits must be explicit before an AI-assisted recommendation can be trusted. The future path is governed knowledge graphs plus hybrid retrieval, symbolic grounding, deterministic tools, KEL root-cause learning, parametric studies, uncertainty-aware ML, and engineering review.
+For S-lay inline structures, the design object is an interacting assembly. Component identity, topology, connection systems, support/protection assumptions, behavior evidence, and response limits must be explicit before an AI-assisted recommendation can be trusted. The future path continues the original ILS research programme: governed knowledge graphs plus hybrid retrieval, symbolic grounding, deterministic tools, KEL root-cause learning, parametric studies, uncertainty-aware ML, and engineering review.
 
 ## Data, Software, and Reproducibility Statement
 
-The Slay-ILS-Designer repository is available at:
+The case-study repository used to make the workflow reproducible is available at:
 
 https://github.com/sreekx007/Slay-ILS-Designer-V1.0
 
-The reviewed source PDFs are not redistributed in the repository. Bibliographic records, checksums, and EDIKB source-family mappings identify the reviewed copies. <u>Generated run artifacts, controlled examples, and release tags should be frozen before submission.</u>
+The reviewed source PDFs are not redistributed. Bibliographic records, checksums, and EDIKB source-family mappings identify the reviewed copies. <u>Generated run artifacts, controlled examples, and release tags should be frozen before submission.</u>
 
 ## AI-Assistance Statement
 
